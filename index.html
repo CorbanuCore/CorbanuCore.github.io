@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Corbanu is the private AI trading workspace for on-chain traders.">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Corbanu — Private AI for on-chain traders">
+  <meta property="og:description" content="Research markets, build signals, backtest, and operate your trading stack in one wallet-native workspace.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23000' stroke='%23ccff00'/%3E%3Crect x='8' y='11' width='16' height='13' rx='4' fill='%23ccff00'/%3E%3Ccircle cx='13' cy='17' r='2'/%3E%3Ccircle cx='19' cy='17' r='2'/%3E%3C/svg%3E">
+  <title>Corbanu — Private AI for on-chain traders</title>
+  <style>
+    :root {
+      --bg: #000;
+      --ink: #fff;
+      --lime: #ccff00;
+      --muted: #b9bdb2;
+      --line: rgba(255,255,255,.2);
+      --panel: #080a08;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .skip { position: fixed; left: 1rem; top: -4rem; z-index: 100; background: var(--lime); color: #000; padding: .75rem 1rem; }
+    .skip:focus { top: 1rem; }
+
+    nav {
+      display: flex; align-items: center; gap: 2.2rem; min-height: 76px; padding: 1rem 3rem;
+      position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,.9);
+      border-bottom: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(14px);
+    }
+    .logo { display: flex; align-items: center; gap: .65rem; font-size: 1.4rem; font-weight: 700; text-decoration: none; margin-right: 1rem; }
+    .logo svg { width: 27px; height: 27px; }
+    .nav-links { display: flex; gap: 1.8rem; flex: 1; }
+    .nav-links a { color: #fff; font-size: .95rem; text-decoration: none; opacity: .9; }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--lime); opacity: 1; }
+    .nav-right { display: flex; align-items: center; gap: .8rem; }
+    .region { color: var(--lime); font-size: .85rem; letter-spacing: .06em; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: .72rem 1.55rem;
+      border: 1px solid transparent; border-radius: 999px; font-size: .98rem; font-weight: 600;
+      line-height: 1; text-decoration: none; transition: transform .16s ease, background .16s ease, color .16s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .btn-lime { background: var(--lime); color: #000; }
+    .btn-outline { border-color: var(--lime); color: var(--lime); }
+    .btn-outline:hover { background: var(--lime); color: #000; }
+    .btn-big { padding: 1rem 2.2rem; font-size: 1.08rem; }
+
+    .hero {
+      position: relative; min-height: calc(100vh - 76px); display: grid; place-items: center;
+      padding: 6rem 1.5rem 8rem; text-align: center; overflow: hidden;
+      background:
+        radial-gradient(ellipse 52% 45% at 69% 48%, rgba(55,71,108,.38), transparent 68%),
+        radial-gradient(ellipse 38% 40% at 27% 72%, rgba(46,65,40,.34), transparent 70%), #000;
+    }
+    .hero::after {
+      content: ""; position: absolute; inset: 0; opacity: .16; pointer-events: none;
+      background-image: linear-gradient(rgba(204,255,0,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(204,255,0,.16) 1px, transparent 1px);
+      background-size: 58px 58px; mask-image: linear-gradient(to bottom, transparent, #000 45%, transparent);
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 1050px; }
+    .eyebrow { color: var(--lime); font: 600 .78rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    .display { font-family: var(--serif); font-weight: 400; letter-spacing: -.025em; }
+    h1 { margin: 1.2rem auto 0; font-size: clamp(3.4rem, 8.8vw, 8.1rem); line-height: .96; max-width: 13ch; }
+    .hero-copy { margin: 2rem auto 0; max-width: 58ch; color: #eee; font-size: clamp(1.08rem, 1.7vw, 1.42rem); line-height: 1.55; }
+    .hero-actions { display: flex; justify-content: center; gap: .9rem; margin-top: 2.6rem; }
+    .hero-note { margin: 1.2rem 0 0; color: var(--muted); font-size: .78rem; }
+
+    .section { padding: 7rem 3rem; }
+    .section-head { max-width: 850px; margin: 0 auto 4.2rem; text-align: center; }
+    .section-head h2 { margin: .9rem auto 0; font-size: clamp(2.7rem, 6vw, 5.5rem); line-height: 1.02; }
+    .section-head p { margin: 1.5rem auto 0; max-width: 62ch; color: var(--muted); font-size: 1.15rem; line-height: 1.6; }
+
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; max-width: 1480px; margin: 0 auto; }
+    .card {
+      min-height: 650px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+      padding: 4rem 3rem 0; border: 1px solid var(--line); border-radius: 28px; text-align: center;
+      background: linear-gradient(180deg, #080908, #010201);
+    }
+    .card-kicker { color: var(--lime); font: 600 .74rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    .card h3 { margin: .8rem 0 0; font-size: clamp(2rem, 3vw, 3rem); font-weight: 500; letter-spacing: -.025em; }
+    .card > p { margin: 1.4rem 0 0; max-width: 44ch; color: #dedede; font-size: 1.08rem; line-height: 1.6; }
+    .card .btn { margin-top: 2rem; }
+    .card-visual { position: relative; width: 100%; min-height: 290px; margin-top: auto; }
+    .terminal-window {
+      position: absolute; left: 50%; bottom: -25px; transform: translateX(-50%); width: min(500px, 96%);
+      overflow: hidden; border: 1px solid rgba(204,255,0,.3); border-bottom: 0; border-radius: 14px 14px 0 0;
+      background: #090e09; box-shadow: 0 -18px 70px rgba(204,255,0,.1); text-align: left;
+    }
+    .terminal-bar { display: flex; gap: .45rem; align-items: center; padding: .65rem .85rem; background: #111711; border-bottom: 1px solid rgba(204,255,0,.16); }
+    .terminal-bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(204,255,0,.38); }
+    .terminal-bar span { margin-left: .5rem; color: #82916d; font: .61rem/1 var(--mono); letter-spacing: .08em; }
+    .terminal-body { margin: 0; padding: 1rem 1.1rem 1.4rem; color: #d9e6c8; font: .74rem/1.8 var(--mono); white-space: pre-wrap; }
+    .lime { color: var(--lime); } .blue { color: #8fd3ff; } .purple { color: #c9a0ff; } .dim { color: #7d8a75; }
+    .cursor { animation: blink 1.1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .shield-wrap { position: absolute; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 50% 70%, rgba(204,255,0,.17), transparent 45%), radial-gradient(circle at 50% 65%, rgba(145,96,218,.27), transparent 64%); }
+    .shield { width: 175px; filter: drop-shadow(0 0 32px rgba(204,255,0,.34)); }
+    .orbit { position: absolute; width: 290px; aspect-ratio: 1; border: 1px solid rgba(204,255,0,.23); border-radius: 50%; animation: spin 16s linear infinite; }
+    .orbit::before, .orbit::after { content: ""; position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 16px var(--lime); }
+    .orbit::before { top: 21px; left: 62px; } .orbit::after { right: 2px; bottom: 105px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .workspace { position: relative; overflow: hidden; background: linear-gradient(180deg, #13161b 0%, #444b56 52%, #82868d 100%); }
+    .workspace-inner { display: grid; grid-template-columns: 1.1fr .9fr; gap: 5rem; align-items: center; max-width: 1480px; margin: 0 auto; }
+    .monitor {
+      position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; padding: 1rem;
+      aspect-ratio: 16/9.2; border: 1px solid rgba(255,255,255,.2); border-radius: 15px; background: #0d1117;
+      box-shadow: 0 40px 100px rgba(0,0,0,.55);
+    }
+    .monitor::after { content: ""; position: absolute; left: 50%; bottom: -75px; transform: translateX(-50%); width: 110px; height: 75px; border-radius: 0 0 10px 10px; background: #262a30; }
+    .pane { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.06); border-radius: 8px; background: #11161f; }
+    .ticker, .price { position: absolute; top: 9px; z-index: 1; font: .56rem/1 var(--mono); }
+    .ticker { left: 10px; color: #9aa4b2; } .price { right: 10px; color: var(--lime); }
+    .candles { position: absolute; inset: 32px 9px 28px; display: flex; align-items: flex-end; gap: 3px; }
+    .candles span { flex: 1; min-width: 1px; border-radius: 1px; }
+    .spark { position: absolute; right: 9px; bottom: 9px; left: 9px; height: 16px; border-top: 1px solid rgba(204,255,0,.42); background: linear-gradient(90deg, transparent, rgba(204,255,0,.18), transparent, rgba(255,90,90,.16)); }
+    .workspace-copy .eyebrow { font-size: .8rem; }
+    .workspace-copy h2 { margin: .8rem 0 0; max-width: 13ch; font-size: clamp(2.4rem, 4vw, 4.3rem); line-height: 1.02; }
+    .workspace-copy p { margin: 1.7rem 0 0; max-width: 45ch; color: #f0f1f2; font-size: 1.16rem; line-height: 1.6; }
+    .workspace-copy .btn { margin-top: 2rem; }
+
+    .trust { background: #060706; }
+    .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; max-width: 1200px; margin: 0 auto; border: 1px solid var(--line); background: var(--line); }
+    .trust-item { min-height: 260px; padding: 2.2rem; background: #050605; }
+    .trust-index { color: var(--lime); font: .75rem/1 var(--mono); }
+    .trust-item h3 { margin: 3rem 0 .8rem; font-size: 1.55rem; font-weight: 500; }
+    .trust-item p { margin: 0; color: var(--muted); line-height: 1.55; }
+
+    .join { position: relative; min-height: 72vh; display: grid; place-items: center; overflow: hidden; padding: 7rem 1.5rem; text-align: center; background: #050503; }
+    .join-inner { position: relative; z-index: 2; }
+    .join h2 { margin: .8rem 0 0; font-size: clamp(3rem, 7vw, 6.5rem); line-height: .98; }
+    .join p { margin: 1.5rem auto 0; max-width: 52ch; color: var(--muted); font-size: 1.1rem; line-height: 1.55; }
+    .join .btn { margin-top: 2.4rem; }
+    .rain { position: absolute; inset: 0; pointer-events: none; }
+    .rain i { position: absolute; top: -100px; width: 2px; height: 70px; border-radius: 3px; background: linear-gradient(transparent, rgba(255,255,255,.65)); animation: fall linear infinite; }
+    @keyframes fall { to { transform: translateY(calc(100vh + 180px)); } }
+
+    footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 2.2rem 3rem; background: var(--lime); color: #000; }
+    footer a { font-weight: 600; text-underline-offset: 3px; }
+    .foot-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+    .footnote { flex-basis: 100%; font-size: .82rem; opacity: .78; }
+
+    @media (max-width: 1040px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      .region { display: none; }
+      .cards, .workspace-inner { grid-template-columns: 1fr; }
+      .workspace-copy { grid-row: 1; text-align: center; }
+      .workspace-copy h2, .workspace-copy p { margin-left: auto; margin-right: auto; }
+      .monitor { margin: 0 auto 4rem; width: min(820px, 100%); }
+    }
+    @media (max-width: 700px) {
+      nav { min-height: 66px; }
+      .logo { margin-right: auto; }
+      .nav-right .btn-outline { display: none; }
+      .nav-right .btn { min-height: 40px; padding: .65rem 1rem; font-size: .85rem; }
+      .hero { min-height: calc(100svh - 66px); padding: 5rem 1.1rem 6rem; }
+      h1 { font-size: clamp(3.25rem, 17vw, 5.5rem); }
+      .hero-actions { align-items: stretch; flex-direction: column; max-width: 310px; margin-left: auto; margin-right: auto; }
+      .section { padding: 5rem 1.1rem; }
+      .section-head { margin-bottom: 2.6rem; }
+      .card { min-height: 590px; padding: 3rem 1.25rem 0; border-radius: 20px; }
+      .terminal-body { font-size: .64rem; }
+      .trust-grid { grid-template-columns: 1fr; }
+      .trust-item { min-height: 220px; }
+      .monitor { grid-template-columns: 1fr; aspect-ratio: 1/1.15; }
+      .monitor .pane:nth-child(n+2) { display: none; }
+      footer { padding: 2rem 1.25rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .cursor, .orbit, .rain i { animation: none; }
+      .rain { opacity: .2; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <nav aria-label="Primary navigation">
+    <a class="logo" href="#top" aria-label="Corbanu home">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="17" r="13.5" stroke="#ccff00" stroke-width="1.6"/>
+        <rect x="8.5" y="11.5" width="15" height="12" rx="3.5" fill="#ccff00"/>
+        <rect x="11.5" y="15" width="3.6" height="3.2" rx="1.1" fill="#000"/>
+        <rect x="16.9" y="15" width="3.6" height="3.2" rx="1.1" fill="#000"/>
+        <rect x="12.5" y="20.2" width="7" height="1.5" rx=".75" fill="#000"/>
+        <path d="M16 11.5V7.5" stroke="#ccff00" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="16" cy="6.2" r="1.4" fill="#ccff00"/>
+      </svg>
+      Corbanu
+    </a>
+    <div class="nav-links">
+      <a href="#product">Product</a>
+      <a href="#terminal">Terminal</a>
+      <a href="#privacy">Privacy</a>
+      <a href="https://github.com/CorbanuCore">Developers</a>
+    </div>
+    <div class="nav-right">
+      <span class="region">⊕ GLOBAL</span>
+      <a class="btn btn-outline" href="https://github.com/agtico/PfTerminal">View source</a>
+      <a class="btn btn-lime" href="https://github.com/agtico/PfTerminal#readme">Get started</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-inner">
+        <div class="eyebrow">The private AI trading workspace</div>
+        <h1 class="display">AI agents for on-chain traders</h1>
+        <p class="hero-copy">Research markets, build signals, backtest in Python, maintain production pipelines, and understand your portfolio—inside one wallet-native workspace.</p>
+        <div class="hero-actions">
+          <a class="btn btn-lime btn-big" href="https://github.com/agtico/PfTerminal#readme">Open the terminal</a>
+          <a class="btn btn-outline btn-big" href="#product">Explore the stack</a>
+        </div>
+        <p class="hero-note">Execution and custody remain with the venues you choose.</p>
+      </div>
+    </section>
+
+    <section class="section" id="product">
+      <header class="section-head">
+        <div class="eyebrow">Core product</div>
+        <h2 class="display">One workspace. Your models. Your strategy.</h2>
+        <p>Corbanu starts with the daily trader workflow: a familiar coding agent, maintained market skills, wallet-paid inference, and a private boundary around sensitive work.</p>
+      </header>
+      <div class="cards">
+        <article class="card">
+          <div class="card-kicker">Available today</div>
+          <h3>Corbanu Terminal</h3>
+          <p>A multi-model coding agent for market research, data engineering, signal development, portfolio analysis, and repeatable trading operations.</p>
+          <a class="btn btn-lime" href="https://github.com/agtico/PfTerminal">View on GitHub</a>
+          <div class="card-visual" aria-hidden="true">
+            <div class="terminal-window">
+              <div class="terminal-bar"><i></i><i></i><i></i><span>CORBANU · TERMINAL</span></div>
+              <pre class="terminal-body"><span class="dim">default model</span>   <span class="lime">Ambient GLM 5.2</span>
+<span class="blue">/providers</span>      grant model access
+<span class="blue">/vault</span>          encrypted credentials
+<span class="blue">/wallet</span>         <span class="purple">Solana · USDC · locked</span>
+<span class="blue">/spawn</span>          orchestrate agents
+<span class="blue">/tasknode</span>       private collaboration
+<span class="lime">›</span> backtest this signal<span class="cursor">█</span></pre>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" id="privacy">
+          <div class="card-kicker">In development</div>
+          <h3>Ambient Private Inference</h3>
+          <p>An authenticated confidential-compute boundary that transforms sensitive work before it reaches untrusted inference operators.</p>
+          <a class="btn btn-lime" href="#trust">See the trust boundary</a>
+          <div class="card-visual" aria-hidden="true">
+            <div class="shield-wrap">
+              <div class="orbit"></div>
+              <svg class="shield" viewBox="0 0 64 64" fill="none">
+                <path d="M32 6 54 14v18q0 18-22 26Q10 50 10 32V14Z" stroke="#ccff00" stroke-width="2.5" fill="rgba(204,255,0,.08)"/>
+                <path d="m23 32 6.5 6.5L42 25" stroke="#ccff00" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section workspace" id="terminal">
+      <div class="workspace-inner">
+        <div class="monitor" aria-label="Illustrative market workspace">
+          <div class="pane"><span class="ticker">BTC-PERP</span><span class="price">LIVE</span><div class="candles" id="c1"></div><div class="spark"></div></div>
+          <div class="pane"><span class="ticker">EQUITY-PERP</span><span class="price">RESEARCH</span><div class="candles" id="c2"></div><div class="spark"></div></div>
+          <div class="pane"><span class="ticker">WTI-PERP</span><span class="price">SIGNAL</span><div class="candles" id="c3"></div><div class="spark"></div></div>
+        </div>
+        <div class="workspace-copy">
+          <div class="eyebrow">Built for the whole loop</div>
+          <h2 class="display">From question to production system</h2>
+          <p>Pull data. Investigate an instrument. Write a memo. Build and backtest a signal. Schedule the pipeline. Reconcile fills and explain P&amp;L. Corbanu keeps the work inspectable and under trader control.</p>
+          <a class="btn btn-lime" href="https://github.com/agtico/PfTerminal#readme">Explore Terminal</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section trust" id="trust">
+      <header class="section-head">
+        <div class="eyebrow">Designed around boundaries</div>
+        <h2 class="display">Agent competence without standing authority</h2>
+        <p>The workspace can help build and inspect systems. It does not custody assets, authorize orders, or replace venue-side permissions.</p>
+      </header>
+      <div class="trust-grid">
+        <article class="trust-item"><div class="trust-index">01 / CUSTODY</div><h3>Assets stay at the venue</h3><p>Your existing exchange or brokerage remains the custodian and source of account authority.</p></article>
+        <article class="trust-item"><div class="trust-index">02 / CREDENTIALS</div><h3>Secrets stay out of prompts</h3><p>The encrypted vault exposes scoped capabilities to approved tools without placing keys in ordinary model context.</p></article>
+        <article class="trust-item"><div class="trust-index">03 / EXECUTION</div><h3>The trader controls the loop</h3><p>Permissions are scoped at the venue. Any execution system connected to Corbanu output remains user-controlled.</p></article>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="rain" id="rain" aria-hidden="true"></div>
+      <div class="join-inner">
+        <div class="eyebrow">Private by design</div>
+        <h2 class="display">Your trading stack.<br>Your strategy.</h2>
+        <p>Join the open development of a standardized AI workspace for traders who want powerful agents without giving up control of their IP or capital.</p>
+        <a class="btn btn-lime btn-big" href="https://github.com/CorbanuCore">Follow CorbanuCore</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot-links">
+      <a href="https://github.com/CorbanuCore">GitHub</a>
+      <a href="https://github.com/agtico/PfTerminal">Terminal source</a>
+      <a href="#trust">Trust model</a>
+    </div>
+    <div>Corbanu · 2026</div>
+    <div class="footnote">Product vision. Not an offer to buy or sell any security or digital asset. Corbanu does not custody assets or hold trading authority.</div>
+  </footer>
+
+  <script>
+    function fillCandles(id, seed) {
+      const el = document.getElementById(id);
+      let height = 34 + (seed % 18);
+      for (let i = 0; i < 27; i += 1) {
+        const bar = document.createElement('span');
+        height += (Math.sin(i * seed * .7) + Math.cos(i * .9)) * 8;
+        height = Math.max(12, Math.min(90, height));
+        bar.style.height = `${height}%`;
+        bar.style.background = (Math.sin(i * seed) + Math.cos(i * 1.3)) > 0 ? '#c8f542' : '#ff6b6b';
+        el.appendChild(bar);
+      }
+    }
+    fillCandles('c1', 3); fillCandles('c2', 5); fillCandles('c3', 7);
+
+    const rain = document.getElementById('rain');
+    for (let i = 0; i < 55; i += 1) {
+      const tick = document.createElement('i');
+      tick.style.left = `${Math.random() * 100}%`;
+      tick.style.animationDuration = `${5 + Math.random() * 7}s`;
+      tick.style.animationDelay = `${-Math.random() * 10}s`;
+      tick.style.height = `${40 + Math.random() * 50}px`;
+      tick.style.opacity = .2 + Math.random() * .5;
+      rain.appendChild(tick);
+    }
+  </script>
+</body>
+</html>
