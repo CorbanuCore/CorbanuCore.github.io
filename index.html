@@ -93,10 +93,10 @@
     .section-head h2 { margin: .9rem auto 0; font-size: clamp(2.7rem, 6vw, 5.5rem); line-height: 1.02; }
     .section-head p { margin: 1.5rem auto 0; max-width: 62ch; color: var(--muted); font-size: 1.15rem; line-height: 1.6; }
 
-    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; max-width: 1480px; margin: 0 auto; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; max-width: 1480px; margin: 0 auto; }
     .card {
-      min-height: 650px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
-      padding: 4rem 3rem 0; border: 1px solid var(--line); border-radius: 28px; text-align: center;
+      min-height: 620px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+      padding: 3.2rem 2rem 0; border: 1px solid var(--line); border-radius: 28px; text-align: center;
       background: linear-gradient(180deg, #080908, #010201);
     }
     .card-kicker { color: var(--lime); font: 600 .74rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
@@ -142,6 +142,31 @@
     .workspace-copy p { margin: 1.7rem 0 0; max-width: 45ch; color: #f0f1f2; font-size: 1.16rem; line-height: 1.6; }
     .workspace-copy .btn { margin-top: 2rem; }
 
+    .why { background: #030403; border-top: 1px solid rgba(255,255,255,.06); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .why-inner { display: grid; grid-template-columns: 1.1fr .9fr; gap: 4.5rem; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .why-copy h2 { margin: .9rem 0 0; max-width: 15ch; font-size: clamp(2.5rem, 5vw, 4.6rem); line-height: 1.02; }
+    .why-copy p { margin: 1.6rem 0 0; max-width: 52ch; color: #d9dcd4; font-size: 1.12rem; line-height: 1.62; }
+    .why-ledger { border: 1px solid rgba(204,255,0,.25); border-radius: 14px; overflow: hidden; background: #070907; font: .8rem/1.7 var(--mono); }
+    .ledger-row { display: flex; justify-content: space-between; gap: 1.5rem; padding: 1.05rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,.07); color: #d9e6c8; }
+    .ledger-row:last-child { border-bottom: 0; }
+    .ledger-row .dim { flex-shrink: 0; }
+    .ledger-row.leak span:last-child { color: #ff8080; }
+    .ledger-row.keep { background: rgba(204,255,0,.06); }
+    .ledger-row.keep span:last-child { color: var(--lime); }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; max-width: 1200px; margin: 4rem auto 0; border: 1px solid var(--line); background: var(--line); }
+    .stat { padding: 2rem 2.2rem; background: #050605; }
+    .stat strong { display: block; color: var(--lime); font: 400 2.4rem/1.1 var(--serif); letter-spacing: -.02em; }
+    .stat span { display: block; margin-top: .6rem; color: var(--muted); font-size: .95rem; line-height: 1.5; }
+
+    .plans { background: #030403; border-top: 1px solid rgba(255,255,255,.06); }
+    .plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .plan-panel { padding: 2.4rem 2.2rem; border: 1px solid var(--line); border-radius: 18px; background: #050605; }
+    .plan-panel h3 { margin: 2.4rem 0 .8rem; font-size: 1.5rem; font-weight: 500; }
+    .plan-panel p { margin: 0; color: var(--muted); line-height: 1.6; }
+    .plan-panel.highlight { border-color: rgba(204,255,0,.5); background: linear-gradient(180deg, rgba(204,255,0,.08), #050605 65%); }
+    .plan-panel.highlight p { color: #e7ecda; }
+
     .trust { background: #060706; }
     .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; max-width: 1200px; margin: 0 auto; border: 1px solid var(--line); background: var(--line); }
     .trust-item { min-height: 260px; padding: 2.2rem; background: #050605; }
@@ -163,11 +188,15 @@
     .foot-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
     .footnote { flex-basis: 100%; font-size: .82rem; opacity: .78; }
 
+    @media (max-width: 1240px) {
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
     @media (max-width: 1040px) {
       nav { padding: 1rem 1.25rem; }
       .nav-links { display: none; }
       .region { display: none; }
-      .cards, .workspace-inner { grid-template-columns: 1fr; }
+      .cards, .workspace-inner, .why-inner, .plan-grid, .stats { grid-template-columns: 1fr; }
+      .why-copy h2, .why-copy p { max-width: none; }
       .workspace-copy { grid-row: 1; text-align: center; }
       .workspace-copy h2, .workspace-copy p { margin-left: auto; margin-right: auto; }
       .monitor { margin: 0 auto 4rem; width: min(820px, 100%); }
@@ -205,9 +234,11 @@
       Corbanu
     </a>
     <div class="nav-links">
+      <a href="#why">Why</a>
       <a href="#product">Product</a>
       <a href="#terminal">Terminal</a>
-      <a href="#privacy">Privacy</a>
+      <a href="#plans">Plans</a>
+      <a href="#trust">Trust</a>
       <a href="https://github.com/CorbanuCore">Developers</a>
     </div>
     <div class="nav-right">
@@ -232,17 +263,33 @@
       </div>
     </section>
 
+    <section class="section why" id="why">
+      <div class="why-inner">
+        <div class="why-copy">
+          <div class="eyebrow">The problem</div>
+        <h2 class="display">Your prompts are your positions.</h2>
+          <p>Every serious trader now works next to an AI agent. But a backtest request reveals your signal. A portfolio question reveals your book. Sending strategy to a generic AI provider hands your edge to a counterparty you cannot audit.</p>
+          <p>Basic trading expected value requires masking intent. Corbanu is a full AI workspace built around that boundary: your models, your credentials, your research — inside a perimeter you control.</p>
+        </div>
+        <div class="why-ledger" aria-hidden="true">
+          <div class="ledger-row"><span class="dim">prompt</span><span>"backtest my funding-rate signal"</span></div>
+          <div class="ledger-row leak"><span class="dim">generic API</span><span>strategy visible to provider</span></div>
+          <div class="ledger-row keep"><span class="dim">corbanu</span><span>strategy stays inside your boundary</span></div>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="product">
       <header class="section-head">
-        <div class="eyebrow">Core product</div>
+        <div class="eyebrow">The stack</div>
         <h2 class="display">One workspace. Your models. Your strategy.</h2>
-        <p>Corbanu starts with the daily trader workflow: a familiar coding agent, maintained market skills, wallet-paid inference, and a private boundary around sensitive work.</p>
+        <p>A coding agent built for the daily trading workflow, a private collaboration layer that already runs in production, and a confidential-inference boundary in development.</p>
       </header>
       <div class="cards">
         <article class="card">
-          <div class="card-kicker">Available today</div>
+          <div class="card-kicker">Shipping today</div>
           <h3>Corbanu Terminal</h3>
-          <p>A multi-model coding agent for market research, data engineering, signal development, portfolio analysis, and repeatable trading operations.</p>
+          <p>A multi-model coding agent for market research, data engineering, signal development, backtesting, and portfolio analysis — with an encrypted credential vault and wallet-paid inference.</p>
           <a class="btn btn-lime" href="https://github.com/agtico/PfTerminal">View on GitHub</a>
           <div class="card-visual" aria-hidden="true">
             <div class="terminal-window">
@@ -258,10 +305,28 @@
           </div>
         </article>
 
+        <article class="card" id="tasks">
+          <div class="card-kicker">Live in production</div>
+          <h3>Corbanu Tasks</h3>
+          <p>Private collaboration for traders: encrypted publishing with full version history, a task lifecycle with evidence and rewards, and wallet-linked reputation built from verified work.</p>
+          <a class="btn btn-lime" href="https://tasknode.postfiat.org">Open Tasks</a>
+          <div class="card-visual" aria-hidden="true">
+            <div class="terminal-window">
+              <div class="terminal-bar"><i></i><i></i><i></i><span>CORBANU · TASKS</span></div>
+              <pre class="terminal-body"><span class="dim">task</span>       <span class="blue">memory-sector momentum study</span>
+<span class="dim">evidence</span>   submitted · encrypted
+<span class="dim">verify</span>     <span class="lime">passed</span> · 2 reviewers
+<span class="dim">reward</span>     <span class="purple">PFT · on-chain</span>
+<span class="dim">reputation</span> +1 dot · semis / equities
+<span class="lime">›</span> request next task<span class="cursor">█</span></pre>
+            </div>
+          </div>
+        </article>
+
         <article class="card" id="privacy">
           <div class="card-kicker">In development</div>
           <h3>Ambient Private Inference</h3>
-          <p>An authenticated confidential-compute boundary that transforms sensitive work before it reaches untrusted inference operators.</p>
+          <p>An authenticated confidential-compute boundary that transforms sensitive work before it reaches untrusted inference operators. Your strategy is never plaintext outside the enclave.</p>
           <a class="btn btn-lime" href="#trust">See the trust boundary</a>
           <div class="card-visual" aria-hidden="true">
             <div class="shield-wrap">
@@ -273,6 +338,11 @@
             </div>
           </div>
         </article>
+      </div>
+      <div class="stats" role="list" aria-label="Published Terminal benchmarks">
+        <div class="stat" role="listitem"><strong>2–3×</strong><span>faster than leading coding agents on paired tasks</span></div>
+        <div class="stat" role="listitem"><strong>1.4–2.6×</strong><span>cheaper per completed task</span></div>
+        <div class="stat" role="listitem"><strong>Identical</strong><span>accuracy, with evidence and a reproduction script in-repo</span></div>
       </div>
     </section>
 
@@ -289,6 +359,31 @@
           <p>Pull data. Investigate an instrument. Write a memo. Build and backtest a signal. Schedule the pipeline. Reconcile fills and explain P&amp;L. Corbanu keeps the work inspectable and under trader control.</p>
           <a class="btn btn-lime" href="https://github.com/agtico/PfTerminal#readme">Explore Terminal</a>
         </div>
+      </div>
+    </section>
+
+    <section class="section plans" id="plans">
+      <header class="section-head">
+        <div class="eyebrow">Economics</div>
+        <h2 class="display">Trade more. Your AI gets cheaper.</h2>
+        <p>One wallet-paid plan, venue economics disclosed at the point of use, and a rebate that turns your own trading activity into inference credits.</p>
+      </header>
+      <div class="plan-grid">
+        <article class="plan-panel">
+          <div class="trust-index">01 / PLAN</div>
+          <h3>$200 / month, wallet-paid</h3>
+          <p>Pay in USDC from your wallet — no card, no work email. Frontier and private models, multi-provider routing, the encrypted vault, trader skills, and private collaboration.</p>
+        </article>
+        <article class="plan-panel">
+          <div class="trust-index">02 / DISCLOSURE</div>
+          <h3>Every fee visible</h3>
+          <p>Venue builder codes are disclosed before your first order, itemized on every fill, and published in a monthly ledger. One command opts out — globally or per venue.</p>
+        </article>
+        <article class="plan-panel highlight">
+          <div class="trust-index">03 / REBATE</div>
+          <h3>Fees come back as credits</h3>
+          <p>Subscribers earn their builder fees back as inference credits, up to the plan price. Generate $80 in fees, get $80 in credit. The more you trade, the less your AI costs.</p>
+        </article>
       </div>
     </section>
 
@@ -309,9 +404,12 @@
       <div class="rain" id="rain" aria-hidden="true"></div>
       <div class="join-inner">
         <div class="eyebrow">Private by design</div>
-        <h2 class="display">Your trading stack.<br>Your strategy.</h2>
-        <p>Join the open development of a standardized AI workspace for traders who want powerful agents without giving up control of their IP or capital.</p>
-        <a class="btn btn-lime btn-big" href="https://github.com/CorbanuCore">Follow CorbanuCore</a>
+        <h2 class="display">Your stack, standardized.<br>Your strategies, yours alone.</h2>
+        <p>Weekly research on equity, crypto, and commodity perps — and the open development of an AI workspace for traders who keep control of their IP and their capital.</p>
+        <div class="hero-actions">
+          <a class="btn btn-lime btn-big" href="https://goodalexander.com/subscribe/">Subscribe now</a>
+          <a class="btn btn-outline btn-big" href="https://github.com/CorbanuCore">Follow CorbanuCore</a>
+        </div>
       </div>
     </section>
   </main>
@@ -320,6 +418,7 @@
     <div class="foot-links">
       <a href="https://github.com/CorbanuCore">GitHub</a>
       <a href="https://github.com/agtico/PfTerminal">Terminal source</a>
+      <a href="https://tasknode.postfiat.org">Tasks</a>
       <a href="#trust">Trust model</a>
     </div>
     <div>Corbanu · 2026</div>
