@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Corbanu Terminal runs Anthropic, GLM 5.2, and GPT models in one place — roughly 2–3× faster and 1.4–2.6× cheaper than Claude Code and Hermes on the same models, at identical accuracy. Provider-billed benchmarks, full evidence, and a reproduction script.">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Corbanu Terminal — Benchmarks and Design">
+  <meta property="og:description" content="2–3× faster and 1.4–2.6× cheaper than Claude Code and Hermes on the same models, at identical accuracy. Provider-billed evidence.">
+  <meta property="og:type" content="article">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <title>Corbanu Terminal — Benchmarks and Design</title>
+  <style>
+    :root {
+      --bg: #000;
+      --ink: #fff;
+      --lime: #ccff00;
+      --muted: #b9bdb2;
+      --line: rgba(255,255,255,.2);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .skip { position: fixed; left: 1rem; top: -4rem; z-index: 100; background: var(--lime); color: #000; padding: .75rem 1rem; }
+    .skip:focus { top: 1rem; }
+
+    nav {
+      display: flex; align-items: center; gap: 2.2rem; min-height: 76px; padding: 1rem 3rem;
+      position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,.9);
+      border-bottom: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(14px);
+    }
+    .logo { display: flex; align-items: center; gap: .65rem; font-size: 1.4rem; font-weight: 700; text-decoration: none; margin-right: 1rem; }
+    .logo img { width: 48px; height: 48px; border: 1px solid rgba(204,255,0,.55); border-radius: 50%; object-fit: cover; box-shadow: 0 0 14px rgba(204,255,0,.18); }
+    .nav-links { display: flex; gap: 1.8rem; flex: 1; }
+    .nav-links a { color: #fff; font-size: .95rem; text-decoration: none; opacity: .9; }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--lime); opacity: 1; }
+    .nav-right { display: flex; align-items: center; gap: .8rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: .72rem 1.55rem;
+      border: 1px solid transparent; border-radius: 999px; font-size: .98rem; font-weight: 600;
+      line-height: 1; text-decoration: none; transition: transform .16s ease, background .16s ease, color .16s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .btn-lime { background: var(--lime); color: #000; }
+    .btn-outline { border-color: var(--lime); color: var(--lime); }
+    .btn-outline:hover { background: var(--lime); color: #000; }
+
+    .article-hero { padding: 6rem 1.5rem 4rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,.08);
+      background: radial-gradient(ellipse 52% 45% at 60% 30%, rgba(55,71,108,.32), transparent 68%), #000; }
+    .eyebrow { color: var(--lime); font: 600 .78rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+    .display { font-family: var(--serif); font-weight: 400; letter-spacing: -.025em; }
+    .article-hero h1 { margin: 1.1rem auto 0; max-width: 16ch; font-size: clamp(2.8rem, 6.5vw, 5.6rem); line-height: 1.0; }
+    .article-hero p { margin: 1.6rem auto 0; max-width: 62ch; color: #ddd; font-size: clamp(1.05rem, 1.6vw, 1.25rem); line-height: 1.55; }
+    .article-hero .meta { margin-top: 1.6rem; color: var(--muted); font: .8rem/1 var(--mono); letter-spacing: .06em; }
+    .article-hero .actions { display: flex; justify-content: center; gap: .9rem; margin-top: 2.2rem; flex-wrap: wrap; }
+
+    .headline-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; max-width: 900px; margin: 3.2rem auto 0; border: 1px solid var(--line); background: var(--line); text-align: left; }
+    .headline-stats .stat { padding: 1.6rem 1.8rem; background: #050605; }
+    .headline-stats strong { display: block; color: var(--lime); font: 400 2.1rem/1.1 var(--serif); }
+    .headline-stats span { display: block; margin-top: .5rem; color: var(--muted); font-size: .9rem; line-height: 1.45; }
+
+    article { max-width: 800px; margin: 0 auto; padding: 4rem 1.5rem 6rem; font-size: 1.06rem; line-height: 1.72; color: #e6e8e2; }
+    article h2 { margin: 3.4rem 0 1rem; font-family: var(--serif); font-weight: 400; font-size: clamp(1.9rem, 3.4vw, 2.6rem); line-height: 1.12; letter-spacing: -.02em; color: #fff; }
+    article h3 { margin: 2.6rem 0 .8rem; font-size: 1.25rem; font-weight: 600; color: #fff; }
+    article p { margin: 0 0 1.25rem; }
+    article ul { margin: 0 0 1.25rem; padding-left: 1.3rem; }
+    article li { margin: .45rem 0; }
+    article strong { color: #fff; }
+    article a { color: var(--lime); text-underline-offset: 3px; }
+    article code { font-family: var(--mono); font-size: .88em; background: #101410; border: 1px solid rgba(204,255,0,.18); border-radius: 5px; padding: .1rem .4rem; color: #d9e6c8; }
+    article pre { overflow-x: auto; margin: 1.4rem 0; padding: 1.1rem 1.3rem; background: #070907; border: 1px solid rgba(204,255,0,.25); border-radius: 12px; }
+    article pre code { background: none; border: 0; padding: 0; font-size: .85rem; line-height: 1.7; }
+
+    .table-wrap { overflow-x: auto; margin: 1.6rem 0; border: 1px solid var(--line); border-radius: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; min-width: 560px; }
+    thead th { padding: .8rem 1rem; text-align: left; background: #0c0f0c; color: var(--lime); font: 600 .72rem/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid var(--line); }
+    tbody td { padding: .7rem 1rem; border-bottom: 1px solid rgba(255,255,255,.08); color: #dfe2da; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr.total td { background: rgba(204,255,0,.06); color: #fff; font-weight: 600; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.mid, th.mid { text-align: center; }
+    .table-note { margin: -.6rem 0 1.6rem; color: var(--muted); font-size: .86rem; line-height: 1.55; }
+
+    .cta-band { margin: 3.4rem 0 0; padding: 2.2rem; border: 1px solid rgba(204,255,0,.35); border-radius: 18px; background: linear-gradient(180deg, rgba(204,255,0,.07), #050605 70%); text-align: center; }
+    .cta-band h2 { margin-top: 0; }
+    .cta-band .actions { display: flex; justify-content: center; gap: .9rem; flex-wrap: wrap; margin-top: 1.4rem; }
+
+    footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 2.2rem 3rem; background: var(--lime); color: #000; }
+    footer a { font-weight: 600; text-underline-offset: 3px; }
+    .foot-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+    .footnote { flex-basis: 100%; font-size: .82rem; opacity: .78; }
+
+    @media (max-width: 1040px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 700px) {
+      nav { min-height: 66px; }
+      .logo { margin-right: auto; }
+      .nav-right .btn-outline { display: none; }
+      .nav-right .btn { min-height: 40px; padding: .65rem 1rem; font-size: .85rem; }
+      .article-hero { padding: 4rem 1.1rem 3rem; }
+      .headline-stats { grid-template-columns: 1fr; }
+      article { padding: 3rem 1.1rem 4.5rem; }
+      footer { padding: 2rem 1.25rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <nav aria-label="Primary navigation">
+    <a class="logo" href="/" aria-label="Corbanu home">
+      <img src="/assets/corbanu-logo.webp" width="48" height="48" alt="">
+      Corbanu
+    </a>
+    <div class="nav-links">
+      <a href="/#why">Why</a>
+      <a href="/#product">Product</a>
+      <a href="/terminal/" aria-current="page">Terminal</a>
+      <a href="/#plans">Plans</a>
+      <a href="/#trust">Trust</a>
+      <a href="https://github.com/CorbanuCore">Developers</a>
+    </div>
+    <div class="nav-right">
+      <a class="btn btn-outline" href="https://github.com/agtico/PfTerminal">View source</a>
+      <a class="btn btn-lime" href="https://github.com/agtico/PfTerminal#readme">Get started</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <header class="article-hero">
+      <div class="eyebrow">Corbanu Terminal</div>
+      <h1 class="display">Same models. A fraction of the cost.</h1>
+      <p>Corbanu Terminal runs Anthropic, GLM 5.2, and GPT models in one place — roughly 2–3× faster and 1.4–2.6× cheaper than Claude Code and Hermes on the same models, at identical accuracy. Every dollar figure below is provider-billed, with full evidence and a reproduction script.</p>
+      <div class="meta">BY GOODALEXANDER · JULY 2026 · OPEN SOURCE &amp; FREE</div>
+      <div class="actions">
+        <a class="btn btn-lime" href="#benchmarks">See the benchmarks</a>
+        <a class="btn btn-outline" href="#getting-started">Install</a>
+      </div>
+      <div class="headline-stats" role="list" aria-label="Headline benchmark results">
+        <div class="stat" role="listitem"><strong>2–3×</strong><span>faster than Claude Code and Hermes on paired tasks</span></div>
+        <div class="stat" role="listitem"><strong>1.4–2.6×</strong><span>cheaper, measured in provider-billed dollars</span></div>
+        <div class="stat" role="listitem"><strong>100% = 100%</strong><span>identical task pass rate on both sides, every task</span></div>
+      </div>
+    </header>
+
+    <article>
+      <p>I spend all day in Terminals. Codex. Claude Code. And sometimes Hermes.</p>
+
+      <p>I spend a lot of money on AI. It's my largest business expense. Increasingly my workflow is painful. A Claude Code pane running Fable managing one pane with a modded Claude Code running GLM 5.2 (across Baseten, Vercel, and Z.AI plans), sometimes a Hermes pane with some OpenRouter models, and two Codex panes.</p>
+
+      <p>Something about Claude Code's UX sent me off. It has cute little status updates I can't seem to turn off. It tells me to "go to bed" instead of just doing what it's told. A leaked source showed "pets" built within Claude Code. Hermes comes installed with countless plugins I don't want.</p>
+
+      <p>Codex, on the other hand, is a beautiful project. It renders fast. It's concise. It shows what it's doing. It's open source and held to high coding-quality standards. It doesn't opine on things it's not asked about or waste my tokens on things I didn't ask for.</p>
+
+      <p>Corbanu Terminal — shipped open source as <a href="https://github.com/agtico/PfTerminal">PfTerminal</a> — is a fork of Codex designed to run Anthropic, GLM 5.2, and GPT models all in one place. It does so at a fraction of the cost and at an aggressively better speed than both Hermes and Claude Code. It's designed for my own workflows — crypto and trading — which means tight security practices like default use of vaults and provider keys built into the harness. It is open source, and free to use.</p>
+
+      <h2 id="benchmarks">The benchmarks</h2>
+
+      <p>What you're about to see is surprising. It surprised me. I did not realize the extent to which the excessive prompts and backend jobs were hurting the performance of the raw models.</p>
+
+      <p>The headline: running <strong>the same models</strong>, Corbanu Terminal is roughly <strong>2–3× faster</strong> and <strong>1.4–2.6× cheaper</strong> than Claude Code and Hermes — at <strong>identical accuracy</strong> (100% task pass rate on both sides, every task). The gains are pure harness overhead. On Opus 4.8, Claude Code burned <strong>2.5× more tokens</strong> than Corbanu Terminal to solve the exact same tasks.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Comparison (identical model)</th><th class="mid">Speed</th><th class="mid">Cost</th><th class="mid">Accuracy</th><th class="mid">Paired runs</th></tr></thead>
+          <tbody>
+            <tr><td><strong>GLM-5.2-fast</strong> — Terminal vs Hermes</td><td class="mid"><strong>1.8× faster</strong></td><td class="mid"><strong>2.0× cheaper</strong></td><td class="mid">100% = 100%</td><td class="mid">100</td></tr>
+            <tr><td><strong>Opus 4.8</strong> — Terminal vs Claude Code</td><td class="mid"><strong>2.9× faster</strong></td><td class="mid"><strong>2.6× cheaper</strong></td><td class="mid">100% = 100%</td><td class="mid">60</td></tr>
+            <tr><td><strong>Fable 5</strong> — Terminal vs Claude Code</td><td class="mid"><strong>1.9× faster</strong></td><td class="mid"><strong>1.4× cheaper</strong></td><td class="mid">100% = 100%</td><td class="mid">60</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Speed is the paired median wall-clock ratio; cost is provider-billed dollars (see methodology). Every paired difference is statistically significant (p &lt; 0.03; most p &lt; 0.001).</p>
+
+      <h3>GLM-5.2-fast — Corbanu Terminal vs Hermes</h3>
+
+      <p>Same model (<code>zai/glm-5.2-fast</code>) over Vercel, five Python tasks with hidden verifiers, 20 paired waves each (100 paired runs). Both sides passed 100%.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Task</th><th class="num">Terminal time</th><th class="num">Hermes time</th><th class="mid">Faster</th><th class="num">Terminal cost</th><th class="num">Hermes cost</th><th class="mid">Cheaper</th></tr></thead>
+          <tbody>
+            <tr><td>eventforge</td><td class="num">68.5s</td><td class="num">90.8s</td><td class="mid">1.4×</td><td class="num">$0.461</td><td class="num">$0.579</td><td class="mid">1.3×</td></tr>
+            <tr><td>rategate</td><td class="num">30.2s</td><td class="num">43.8s</td><td class="mid">1.6×</td><td class="num">$0.158</td><td class="num">$0.218</td><td class="mid">1.4×</td></tr>
+            <tr><td>confclerk</td><td class="num">24.9s</td><td class="num">46.9s</td><td class="mid">2.2×</td><td class="num">$0.169</td><td class="num">$0.332</td><td class="mid">2.1×</td></tr>
+            <tr><td>queuecraft</td><td class="num">51.3s</td><td class="num">89.2s</td><td class="mid">1.9×</td><td class="num">$0.586</td><td class="num">$1.462</td><td class="mid">2.6×</td></tr>
+            <tr><td>pipeflow</td><td class="num">57.8s</td><td class="num">111.5s</td><td class="mid">2.0×</td><td class="num">$0.471</td><td class="num">$1.066</td><td class="mid">2.4×</td></tr>
+            <tr class="total"><td>Overall</td><td class="num">46.5s</td><td class="num">76.5s</td><td class="mid">1.8×</td><td class="num">$0.37</td><td class="num">$0.73</td><td class="mid">2.0×</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Provider-billed totals for the run: Corbanu Terminal <strong>$18.46</strong>, Hermes <strong>$36.58</strong>.</p>
+
+      <h3>Opus 4.8 — Corbanu Terminal vs Claude Code</h3>
+
+      <p>Same model (<code>claude-opus-4-8</code>) direct to Anthropic, three tasks, 20 paired waves each. Both sides passed 100%.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Task</th><th class="num">Terminal time</th><th class="num">Claude Code time</th><th class="mid">Faster</th><th class="num">Terminal cost</th><th class="num">Claude Code cost</th><th class="mid">Cheaper</th></tr></thead>
+          <tbody>
+            <tr><td>queuecraft</td><td class="num">50.2s</td><td class="num">298.6s</td><td class="mid">6.0×</td><td class="num">$0.409</td><td class="num">$1.586</td><td class="mid">3.9×</td></tr>
+            <tr><td>textwright</td><td class="num">65.3s</td><td class="num">176.5s</td><td class="mid">2.8×</td><td class="num">$0.525</td><td class="num">$1.101</td><td class="mid">2.2×</td></tr>
+            <tr><td>queryforge</td><td class="num">154.7s</td><td class="num">381.8s</td><td class="mid">2.5×</td><td class="num">$0.553</td><td class="num">$1.145</td><td class="mid">2.1×</td></tr>
+            <tr class="total"><td>Overall</td><td class="num">90.1s</td><td class="num">285.6s</td><td class="mid">2.9× (median)</td><td class="num">$0.50</td><td class="num">$1.27</td><td class="mid">2.6×</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>This is the result that surprised me most. It's the <em>same</em> Opus 4.8 through the <em>same</em> Anthropic API — the only difference is the harness wrapped around it. On the hardest task, Claude Code took six times as long. Provider-billed totals: Corbanu Terminal <strong>$20.41</strong>, Claude Code <strong>$53.54</strong>.</p>
+
+      <h3>Fable 5 — Corbanu Terminal vs Claude Code</h3>
+
+      <p>Same model (<code>claude-fable-5</code>), three tasks, 20 paired waves each. Both sides passed 100%.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Task</th><th class="num">Terminal time</th><th class="num">Claude Code time</th><th class="mid">Faster</th><th class="num">Terminal cost</th><th class="num">Claude Code cost</th><th class="mid">Cheaper</th></tr></thead>
+          <tbody>
+            <tr><td>queuecraft</td><td class="num">85.8s</td><td class="num">176.0s</td><td class="mid">2.1×</td><td class="num">$0.969</td><td class="num">$1.615</td><td class="mid">1.7×</td></tr>
+            <tr><td>textwright</td><td class="num">73.6s</td><td class="num">138.7s</td><td class="mid">1.9×</td><td class="num">$0.857</td><td class="num">$1.159</td><td class="mid">1.4×</td></tr>
+            <tr><td>queryforge</td><td class="num">150.3s</td><td class="num">223.1s</td><td class="mid">1.6×</td><td class="num">$1.074</td><td class="num">$1.391</td><td class="mid">1.3×</td></tr>
+            <tr class="total"><td>Overall</td><td class="num">103.2s</td><td class="num">179.3s</td><td class="mid">1.9×</td><td class="num">$0.97</td><td class="num">$1.39</td><td class="mid">1.4×</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>How we measured cost — and why you can trust it</h3>
+
+      <p>Internal token counters lie. So we don't use them. <strong>Every dollar figure above is the provider's own billed amount:</strong></p>
+
+      <ul>
+        <li><strong>GLM (Vercel):</strong> we snapshot Vercel's <code>/v1/report</code> billing endpoint, grouped by API key, before and after each run, and take the delta.</li>
+        <li><strong>Opus &amp; Fable (Anthropic):</strong> we use the Anthropic Admin Usage API, billed by API key and model.</li>
+        <li><strong>Isolation:</strong> each side of every comparison ran on its own dedicated API key, so the two never mix — even when they run concurrently.</li>
+        <li><strong>Integrity check:</strong> on the clean lanes, the billed dollars <em>exactly</em> equal the model's published per-token price applied to the API-reported token counts. Opus reconciled to <strong>0.000%</strong> on both sides. That equality is the proof there's no hidden accounting trick.</li>
+      </ul>
+
+      <p>We hold ourselves to full disclosure. During the Fable run, the Claude Code baseline key picked up some interrupted-and-resumed attempts outside the counted set (about 16% of that key's tokens). Rather than let that inflate the number, we priced only the counted runs from their own API-reported tokens at Anthropic's published rate — a method we'd already validated to <strong>0.005%</strong> against real billing on the Opus lanes. The raw, un-cleaned Fable number would have looked <em>better</em> for us (1.66× vs the 1.43× we report). We report the clean one.</p>
+
+      <p>Why is the same model faster and cheaper under Corbanu Terminal? It sends leaner prompts and takes fewer round-trips to reach the same passing solution. It is not doing less — both sides pass the identical hidden verifier, and the produced code is comparable in size. It's simply less overhead per token of real work.</p>
+
+      <p>Full per-run data, billing artifacts, and a reproduction script are in the <a href="#appendix">appendix</a>.</p>
+
+      <h2>Why efficiency first</h2>
+
+      <p>There's a deeper reason this works, and it's core to what we're building.</p>
+
+      <p>Modern agent harnesses ship with heavy prompts — a large system prompt, a tool preamble, layers of generic rule-following scaffolding that run on every turn. For an orchestrator especially, that's already a big, very specific set of instructions riding on every single call. It's overhead. You pay for it in tokens and latency, every time.</p>
+
+      <p>But here's the thing about orchestration: a good orchestrator is <em>already</em> writing detailed prompts to its workers. When I spawn a task, the instructions I hand the individual contributor are often 200+ lines — specific, contextual, exactly what that job needs. That's where the real signal lives.</p>
+
+      <p>So when the harness stacks a second layer of generic rule-following on top of that, it isn't adding signal — it's adding cost. For an orchestrator system, that generic overhead is negative expected value. You're paying, on every call, for guardrails you already wrote yourself, more precisely, for the job at hand.</p>
+
+      <p>And as the benchmarks above show, accuracy doesn't drop when you strip it out. Same models, same tasks, 100% pass on both sides. The overhead wasn't buying correctness. It was just buying tokens.</p>
+
+      <p>To be fair: it's entirely possible that Claude Code's and Hermes's prompts and systems are additive to <em>your</em> process — for a lot of people they are. But when your PnL is heavily driven by AI spend — when this is your single largest business expense — we've found it's better to start from efficiency and layer on complexity where it earns its keep, rather than pay for complexity by default and try to claw it back later.</p>
+
+      <p>That's the bet Corbanu Terminal makes: lean by default. You add what you need.</p>
+
+      <h2>Coordination, panes, and vaults</h2>
+
+      <p>Corbanu Terminal adds four core features.</p>
+
+      <p><strong><code>/panes</code></strong> — lets you have multiple panes open in one tmux screen running different models and settings. You can create panes with either Codex (standard, performance-optimized) or a Claude wrapper. We plan on adding Cursor support soon.</p>
+
+      <p><strong><code>/vault</code></strong> — an easy way to store credentials without revealing them, which agents natively know how to interact with, without ever exposing keys.</p>
+
+      <p><strong><code>/providers</code></strong> — a place to manage all your API keys and have them seamlessly stored in the vault.</p>
+
+      <p><strong><code>/tasknode</code></strong> — a place to interact with <a href="https://tasknode.postfiat.org">Corbanu Tasks</a>, the private collaboration and work-ledger layer that natively integrates with the Terminal. It's a personal productivity system I use every day, along with our community.</p>
+
+      <p><strong><code>/spawn</code></strong> is the orchestration layer. It's entirely optional, and fairly early. The cost benefits you get from Corbanu Terminal work fine without it. In our collaboration platform we ran into a problem where it was hard to tell AI agents apart from humans. Codex solved this by giving Greek names to their agent spawns. Corbanu Terminal uses Mordor-themed terminology: <strong>Nazgûls</strong> are the powerful entities (like CTOs), <strong>Trolls</strong> are managers (like VP Eng/Product), and <strong>Orcs</strong> are individual contributors.</p>
+
+      <p><code>/spawn</code> means you can use Corbanu Terminal out of the box with the popular orchestration method you see on X — Fable managing Codex.</p>
+
+      <h2 id="getting-started">Getting started</h2>
+
+      <p>Corbanu Terminal is open source and free. Install it with:</p>
+
+      <pre><code>curl -fsSL https://github.com/agtico/PfTerminal/releases/latest/download/install.sh | sh</code></pre>
+
+      <p>Works on Linux, macOS, and Windows. Source and docs: <a href="https://github.com/agtico/PfTerminal">github.com/agtico/PfTerminal</a>.</p>
+
+      <h2 id="appendix">Appendix: evidence &amp; reproduction</h2>
+
+      <p>Every number in this post is backed by raw, downloadable data. Nothing here is a token estimate.</p>
+
+      <p><strong>Test conditions.</strong> Shipped binary <code>pfterminal 0.1.8</code>. Ten Python coding tasks with hidden, held-out verifiers; a task "passes" only if its verifier passes. Runs are <em>paired</em> (Terminal and the baseline run the same task in the same wave, same day) because provider conditions swing enough day-to-day that only same-day pairs compare fairly. Speed is wall-clock time to a verifier-passing solution. Significance is a paired test (Wilcoxon / paired-t) per task.</p>
+
+      <p><strong>Full evidence report</strong> (methodology, every lane total, all per-task tables, CIs, p-values, and the billing reconciliation):</p>
+      <ul>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/phase1-evidence-report.md">phase1-evidence-report.md</a></li>
+      </ul>
+
+      <p><strong>Raw data:</strong></p>
+      <ul>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/raw-waves.csv">raw-waves.csv</a> — one row per run: task, agent, wave, pass/fail, tests passed, wall-clock seconds, billed cost, cost source, route verification.</li>
+      </ul>
+
+      <p><strong>Provider billing artifacts (the cost ground truth):</strong></p>
+      <ul>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/vercel-report-settle.json">vercel-report-settle.json</a> — Vercel <code>/v1/report</code> before/after billing by API key (GLM).</li>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/frontier-token-reconciliation.json">frontier-token-reconciliation.json</a> — Anthropic Admin Usage tokens vs counted-run tokens, per key (Opus &amp; Fable).</li>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/frontier-row-priced-cost-recovery.json">frontier-row-priced-cost-recovery.json</a> — the clean Fable cost derivation and the 0.005% Opus validation.</li>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/frontier-fairness-controls.json">frontier-fairness-controls.json</a> — same-model fairness checks (matched effort disclosure, equivalent-output proxy, cost-vs-token-ratio gate).</li>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/key-scan.json">key-scan.json</a> — automated secret scan of all evidence artifacts (0 hits).</li>
+      </ul>
+
+      <p><strong>Reproduce it yourself:</strong></p>
+      <ul>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/reproduce/README.md">reproduce/README.md</a> — exact commands.</li>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/reproduce/runner.py">reproduce/runner.py</a> — the config-driven, stdlib-only benchmark harness (multi-provider, provider-billed cost, route verification, secret scanning, and a no-spend <code>validate-stored</code> path that re-checks the published rows without spending a cent).</li>
+        <li><a href="https://postfiat.org/research/pfterminal-benchmark/reproduce/config.example.json">reproduce/config.example.json</a> — a sanitized config template (key files and paths are placeholders).</li>
+      </ul>
+
+      <pre><code># no-spend: re-derive and validate the published numbers from the stored raw artifacts
+python3 runner.py --config config.example.json validate-stored
+
+# dry-run plan (no spend):
+python3 runner.py --config config.example.json plan
+
+# scan all artifacts for accidentally-committed secrets:
+python3 runner.py scan-keys
+
+# live run (spends real provider credits; keys are read from files/vault, never inline):
+python3 runner.py --config config.example.json run</code></pre>
+
+      <p class="table-note"><em>Cost figures were validated against provider billing, not internal token counters. Where a billing window contained non-benchmark traffic, it is disclosed above and excluded by a method independently validated against real billing.</em></p>
+
+      <div class="cta-band">
+        <h2 class="display">Lean by default. You add what you need.</h2>
+        <div class="actions">
+          <a class="btn btn-lime" href="https://github.com/agtico/PfTerminal">Get Corbanu Terminal</a>
+          <a class="btn btn-outline" href="https://goodalexander.com/subscribe/">Subscribe to the newsletter</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="foot-links">
+      <a href="https://github.com/CorbanuCore">GitHub</a>
+      <a href="https://github.com/agtico/PfTerminal">Terminal source</a>
+      <a href="https://tasknode.postfiat.org">Tasks</a>
+      <a href="/#trust">Trust model</a>
+    </div>
+    <div>Corbanu · 2026</div>
+    <div class="footnote">Product vision. Not an offer to buy or sell any security or digital asset. Corbanu does not custody assets or hold trading authority.</div>
+  </footer>
+</body>
+</html>
