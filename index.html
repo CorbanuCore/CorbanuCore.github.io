@@ -219,8 +219,9 @@
 
   <main id="main">
     <section class="hero" id="top">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="/assets/aigent2-poster.webp" aria-hidden="true">
-        <source src="/assets/aigent2-background.mp4" type="video/mp4">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="/assets/agentblockchain-desktop-poster.webp" aria-hidden="true">
+        <source media="(max-width: 700px)" src="/assets/agentblockchain-mobile.mp4" type="video/mp4">
+        <source src="/assets/agentblockchain-desktop.mp4" type="video/mp4">
       </video>
       <div class="hero-inner">
         <h1 class="display">AI Agents Trading on the Blockchain</h1>
@@ -341,6 +342,9 @@
     fillCandles('c1', 3); fillCandles('c2', 5); fillCandles('c3', 7);
 
     const heroVideo = document.querySelector('.hero-video');
+    if (window.matchMedia('(max-width: 700px)').matches) {
+      heroVideo.poster = '/assets/agentblockchain-mobile-poster.webp';
+    }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       heroVideo.removeAttribute('autoplay');
       heroVideo.pause();
