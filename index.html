@@ -66,12 +66,20 @@
         radial-gradient(ellipse 52% 45% at 69% 48%, rgba(55,71,108,.38), transparent 68%),
         radial-gradient(ellipse 38% 40% at 27% 72%, rgba(46,65,40,.34), transparent 70%), #000;
     }
+    .hero-video {
+      position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover;
+      object-position: center; opacity: .68;
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.32) 48%, rgba(0,0,0,.7));
+    }
     .hero::after {
-      content: ""; position: absolute; inset: 0; opacity: .16; pointer-events: none;
+      content: ""; position: absolute; inset: 0; z-index: 1; opacity: .12; pointer-events: none;
       background-image: linear-gradient(rgba(204,255,0,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(204,255,0,.16) 1px, transparent 1px);
       background-size: 58px 58px; mask-image: linear-gradient(to bottom, transparent, #000 45%, transparent);
     }
-    .hero-inner { position: relative; z-index: 1; max-width: 1050px; }
+    .hero-inner { position: relative; z-index: 2; max-width: 1050px; }
     .eyebrow { color: var(--lime); font: 600 .78rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
     h1, h2, h3, p { margin-top: 0; }
     .display { font-family: var(--serif); font-weight: 400; letter-spacing: -.025em; }
@@ -211,6 +219,9 @@
 
   <main id="main">
     <section class="hero" id="top">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="/assets/aigent2-poster.webp" aria-hidden="true">
+        <source src="/assets/aigent2-background.mp4" type="video/mp4">
+      </video>
       <div class="hero-inner">
         <h1 class="display">AI Agents Trading on the Blockchain</h1>
         <p class="hero-copy">Subscribe to the Weekly Corbanu Newsletter covering equity, crypto, and commodity perps.</p>
@@ -328,6 +339,12 @@
       }
     }
     fillCandles('c1', 3); fillCandles('c2', 5); fillCandles('c3', 7);
+
+    const heroVideo = document.querySelector('.hero-video');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      heroVideo.removeAttribute('autoplay');
+      heroVideo.pause();
+    }
 
     const rain = document.getElementById('rain');
     for (let i = 0; i < 55; i += 1) {
