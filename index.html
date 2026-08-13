@@ -520,7 +520,7 @@
           });
           const payload = await response.json().catch(() => ({}));
           if (!response.ok || !payload.ok) throw new Error(payload.message || 'Signup could not be completed.');
-          status.textContent = payload.message || 'Check your inbox to confirm your subscription.';
+          status.textContent = payload.message || 'Your subscription request was received.';
           status.dataset.state = 'success';
           form.reset();
         } catch (error) {
