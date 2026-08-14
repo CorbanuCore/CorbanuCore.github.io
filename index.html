@@ -79,7 +79,7 @@
       background-image: linear-gradient(rgba(204,255,0,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(204,255,0,.16) 1px, transparent 1px);
       background-size: 58px 58px; mask-image: linear-gradient(to bottom, transparent, #000 45%, transparent);
     }
-    .hero-inner { position: relative; z-index: 2; width: min(1050px, 100%); }
+    .hero-inner { position: relative; z-index: 2; width: min(1050px, 100%); min-width: 0; }
     .eyebrow { color: var(--lime); font: 600 .78rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
     h1, h2, h3, p { margin-top: 0; }
     .display { font-family: var(--serif); font-weight: 400; letter-spacing: -.025em; }
@@ -120,6 +120,52 @@
     .community-link + .community-link { border-left-color: rgba(255,255,255,.12); border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
     .community-link svg { width: 16px; height: 16px; flex: 0 0 auto; }
     .community-link-handle { color: #969c91; font-weight: 500; }
+    .terminal-install-cta {
+      width: min(820px, 100%); max-width: 100%; min-width: 0; margin: 1.15rem auto 0; padding: 1.15rem;
+      border: 1px solid rgba(204,255,0,.28); border-radius: 20px; text-align: left;
+      background: linear-gradient(135deg, rgba(7,10,7,.92), rgba(0,0,0,.76));
+      box-shadow: 0 22px 65px rgba(0,0,0,.34); backdrop-filter: blur(18px);
+    }
+    .terminal-install-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
+    .terminal-install-kicker {
+      display: block; margin-bottom: .4rem; color: var(--lime); font: 600 .67rem/1 var(--mono);
+      letter-spacing: .14em; text-transform: uppercase;
+    }
+    .terminal-install-title { margin: 0; font-size: 1.2rem; line-height: 1.2; letter-spacing: -.01em; }
+    .terminal-install-title a { color: #fff; text-decoration: none; }
+    .terminal-install-title a:hover { color: var(--lime); }
+    .terminal-install-subtitle { margin: .35rem 0 0; color: #b9bdb2; font-size: .91rem; line-height: 1.35; }
+    .terminal-install-learn {
+      flex: 0 0 auto; padding: .2rem 0; color: #dce3d3; font: 600 .72rem/1.3 var(--mono);
+      text-decoration: none; text-transform: uppercase; letter-spacing: .08em;
+    }
+    .terminal-install-learn:hover { color: var(--lime); }
+    .install-console { min-width: 0; max-width: 100%; margin-top: 1rem; overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 13px; background: rgba(0,0,0,.72); }
+    .install-console-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .45rem .55rem .45rem .8rem; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .install-console-label { color: #737a6f; font: 500 .66rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+    .install-os-tabs { display: flex; gap: .2rem; }
+    .install-os-tab {
+      min-height: 30px; padding: .35rem .7rem; border: 1px solid transparent; border-radius: 8px;
+      background: transparent; color: #a9afa4; font: 600 .68rem/1 var(--mono); cursor: pointer;
+    }
+    .install-os-tab:hover { color: #fff; }
+    .install-os-tab[aria-selected="true"] { border-color: rgba(204,255,0,.34); background: rgba(204,255,0,.1); color: var(--lime); }
+    .install-os-tab:focus-visible { outline: 2px solid var(--lime); outline-offset: 1px; }
+    .install-command-panel { display: flex; align-items: center; min-width: 0; gap: .75rem; padding: .8rem; }
+    .install-command-panel[hidden] { display: none; }
+    .install-command {
+      min-width: 0; flex: 1; overflow-x: auto; padding: .55rem .65rem;
+      border-radius: 8px; background: #050705; color: #edf1e7; scrollbar-width: thin;
+    }
+    .install-command code { display: block; width: max-content; font: .72rem/1.4 var(--mono); white-space: nowrap; }
+    .install-command-prompt { color: var(--lime); }
+    .install-copy {
+      flex: 0 0 auto; min-height: 36px; padding: .55rem .8rem; border: 1px solid rgba(204,255,0,.44);
+      border-radius: 999px; background: transparent; color: var(--lime); font: 600 .68rem/1 var(--mono); cursor: pointer;
+    }
+    .install-copy:hover { background: var(--lime); color: #000; }
+    .install-copy:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .install-copy-status { min-height: 1em; margin: .45rem .1rem 0; color: var(--lime); font: .65rem/1.3 var(--mono); }
     .form-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
@@ -255,6 +301,16 @@
       .community-link + .community-link { border-left-color: rgba(255,255,255,.1); border-radius: 12px; }
       .community-link:first-of-type { border-radius: 12px; }
       .community-link-handle { display: none; }
+      .terminal-install-cta { margin-top: 1rem; padding: 1rem; border-radius: 18px; }
+      .terminal-install-head { display: block; }
+      .terminal-install-title { font-size: 1.08rem; }
+      .terminal-install-subtitle { font-size: .84rem; }
+      .terminal-install-learn { display: inline-block; margin-top: .75rem; }
+      .install-console-head { align-items: flex-start; flex-direction: column; gap: .55rem; padding: .65rem; }
+      .install-os-tabs { width: 100%; }
+      .install-os-tab { flex: 1; min-height: 36px; padding-inline: .35rem; }
+      .install-command-panel { align-items: stretch; flex-direction: column; gap: .55rem; padding: .65rem; }
+      .install-copy { align-self: flex-end; min-width: 82px; }
       .section { padding: 5rem 1.1rem; }
       .section-head { margin-bottom: 2.6rem; }
       .card { min-height: 590px; padding: 3rem 1.25rem 0; border-radius: 20px; }
@@ -325,6 +381,39 @@
             <span>Join Discord</span>
           </a>
         </div>
+        <section class="terminal-install-cta" aria-labelledby="terminal-install-title">
+          <div class="terminal-install-head">
+            <div>
+              <span class="terminal-install-kicker">One-line install</span>
+              <h2 class="terminal-install-title" id="terminal-install-title"><a href="/terminal/">Install Corbanu Terminal</a></h2>
+              <p class="terminal-install-subtitle">The Multi Agent Coding Harness for Professional Speculators</p>
+            </div>
+            <a class="terminal-install-learn" href="/terminal/">Explore Terminal&nbsp; →</a>
+          </div>
+          <div class="install-console">
+            <div class="install-console-head">
+              <span class="install-console-label">Choose your operating system</span>
+              <div class="install-os-tabs" role="tablist" aria-label="Operating system">
+                <button class="install-os-tab" id="install-tab-linux" type="button" role="tab" aria-selected="true" aria-controls="install-panel-linux" data-install-os="linux">Linux</button>
+                <button class="install-os-tab" id="install-tab-macos" type="button" role="tab" aria-selected="false" aria-controls="install-panel-macos" data-install-os="macos" tabindex="-1">macOS</button>
+                <button class="install-os-tab" id="install-tab-windows" type="button" role="tab" aria-selected="false" aria-controls="install-panel-windows" data-install-os="windows" tabindex="-1">Windows</button>
+              </div>
+            </div>
+            <div class="install-command-panel" id="install-panel-linux" role="tabpanel" aria-labelledby="install-tab-linux" data-install-panel="linux">
+              <div class="install-command"><code id="install-command-linux"><span class="install-command-prompt" aria-hidden="true">$ </span>curl -fsSL https://github.com/CorbanuCore/CorbanuTerminal/releases/latest/download/install.sh | sh</code></div>
+              <button class="install-copy" type="button" data-copy-install="install-command-linux">Copy</button>
+            </div>
+            <div class="install-command-panel" id="install-panel-macos" role="tabpanel" aria-labelledby="install-tab-macos" data-install-panel="macos" hidden>
+              <div class="install-command"><code id="install-command-macos"><span class="install-command-prompt" aria-hidden="true">$ </span>curl -fsSL https://github.com/CorbanuCore/CorbanuTerminal/releases/latest/download/install.sh | sh</code></div>
+              <button class="install-copy" type="button" data-copy-install="install-command-macos">Copy</button>
+            </div>
+            <div class="install-command-panel" id="install-panel-windows" role="tabpanel" aria-labelledby="install-tab-windows" data-install-panel="windows" hidden>
+              <div class="install-command"><code id="install-command-windows"><span class="install-command-prompt" aria-hidden="true">&gt; </span>Invoke-RestMethod https://github.com/CorbanuCore/CorbanuTerminal/releases/latest/download/install.ps1 | Invoke-Expression</code></div>
+              <button class="install-copy" type="button" data-copy-install="install-command-windows">Copy</button>
+            </div>
+          </div>
+          <p class="install-copy-status" data-install-copy-status role="status" aria-live="polite"></p>
+        </section>
       </div>
     </section>
 
@@ -523,6 +612,65 @@
       heroVideo.removeAttribute('autoplay');
       heroVideo.pause();
     }
+
+    const installTabs = Array.from(document.querySelectorAll('[data-install-os]'));
+    const installPanels = Array.from(document.querySelectorAll('[data-install-panel]'));
+    const setInstallOs = (os, moveFocus = false) => {
+      installTabs.forEach((tab) => {
+        const selected = tab.dataset.installOs === os;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        if (selected && moveFocus) tab.focus();
+      });
+      installPanels.forEach((panel) => { panel.hidden = panel.dataset.installPanel !== os; });
+    };
+    installTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => setInstallOs(tab.dataset.installOs));
+      tab.addEventListener('keydown', (event) => {
+        let nextIndex;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % installTabs.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + installTabs.length) % installTabs.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = installTabs.length - 1;
+        if (nextIndex === undefined) return;
+        event.preventDefault();
+        setInstallOs(installTabs[nextIndex].dataset.installOs, true);
+      });
+    });
+    const platform = `${navigator.userAgentData?.platform || ''} ${navigator.platform || ''} ${navigator.userAgent}`.toLowerCase();
+    setInstallOs(platform.includes('win') ? 'windows' : platform.includes('mac') ? 'macos' : 'linux');
+
+    const copyText = async (value) => {
+      if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(value);
+      const temporary = document.createElement('textarea');
+      temporary.value = value;
+      temporary.setAttribute('readonly', '');
+      temporary.style.position = 'fixed';
+      temporary.style.opacity = '0';
+      document.body.appendChild(temporary);
+      temporary.select();
+      const copied = document.execCommand('copy');
+      temporary.remove();
+      if (!copied) throw new Error('Copy failed');
+    };
+    document.querySelectorAll('[data-copy-install]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const command = document.getElementById(button.dataset.copyInstall)?.textContent.replace(/^[$>]\s*/, '').trim();
+        const status = document.querySelector('[data-install-copy-status]');
+        if (!command) return;
+        try {
+          await copyText(command);
+          button.textContent = 'Copied';
+          status.textContent = 'Install command copied to clipboard.';
+        } catch (error) {
+          status.textContent = 'Copy failed. Select the command manually.';
+        }
+        window.setTimeout(() => {
+          button.textContent = 'Copy';
+          status.textContent = '';
+        }, 1800);
+      });
+    });
 
     const rain = document.getElementById('rain');
     for (let i = 0; i < 55; i += 1) {
