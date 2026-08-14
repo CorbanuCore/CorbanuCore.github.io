@@ -229,6 +229,42 @@
     .orbit::before { top: 21px; left: 62px; } .orbit::after { right: 2px; bottom: 105px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    .private-inference {
+      position: relative; overflow: hidden; border-top: 1px solid rgba(204,255,0,.16); border-bottom: 1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 74% 12%, rgba(204,255,0,.08), transparent 31%),
+        radial-gradient(circle at 88% 72%, rgba(242,113,140,.07), transparent 28%), #050605;
+    }
+    .private-inference::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .12;
+      background-image: linear-gradient(rgba(204,255,0,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(204,255,0,.13) 1px, transparent 1px);
+      background-size: 56px 56px; mask-image: linear-gradient(180deg, #000, transparent 78%);
+    }
+    .private-inference-inner { position: relative; max-width: 1320px; margin: 0 auto; }
+    .private-inference-head { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .6fr); gap: 3rem; align-items: end; margin-bottom: 2.4rem; }
+    .private-inference-head h2 { margin: .9rem 0 0; max-width: 14ch; font-size: clamp(2.7rem, 5vw, 5rem); line-height: .98; }
+    .private-inference-intro { margin: 0; max-width: 42ch; color: #d9dcd4; font-size: 1.08rem; line-height: 1.62; }
+    .private-inference-status { display: inline-flex; align-items: center; gap: .65rem; margin-bottom: 1rem; color: #dce1d7; font: 600 .72rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    .private-inference-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #ffd166; box-shadow: 0 0 14px rgba(255,209,102,.7); }
+    .private-figure { margin: 0; }
+    .private-scroll-note { display: none; margin: 0 0 .65rem; color: #aeb5a6; font: 600 .7rem/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    .private-diagram-scroll { max-width: 100%; overflow-x: auto; overflow-y: hidden; border-radius: 28px; scrollbar-color: rgba(204,255,0,.55) rgba(255,255,255,.08); scrollbar-width: thin; }
+    .private-diagram-scroll:focus-visible { outline: 2px solid var(--lime); outline-offset: 4px; }
+    .private-diagram { display: block; width: 100%; min-width: 920px; height: auto; }
+    .private-diagram .pi-mono { font-family: var(--mono); }
+    .private-diagram .pi-route { animation: private-route 1.5s linear infinite; }
+    .private-diagram .pi-step { transform-box: fill-box; transform-origin: center; animation: private-step 4.8s ease-in-out infinite; }
+    .private-diagram .pi-step-2 { animation-delay: 1.2s; }
+    .private-diagram .pi-step-3 { animation-delay: 2.4s; }
+    .private-diagram .pi-step-4 { animation-delay: 3.6s; }
+    .private-figure figcaption { margin: 1rem auto 0; max-width: 76ch; color: #aeb5a6; font-size: .92rem; line-height: 1.55; text-align: center; }
+    @keyframes private-route { to { stroke-dashoffset: -26; } }
+    @keyframes private-step { 0%, 16%, 100% { opacity: .55; transform: scale(.92); } 7% { opacity: 1; transform: scale(1.08); } }
+    .private-boundaries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 2rem; overflow: hidden; border: 1px solid rgba(255,255,255,.13); border-radius: 14px; background: rgba(255,255,255,.13); }
+    .private-boundary { padding: 1.35rem 1.45rem; background: rgba(5,7,5,.96); }
+    .private-boundary strong { display: block; color: var(--lime); font: 600 .7rem/1 var(--mono); letter-spacing: .11em; text-transform: uppercase; }
+    .private-boundary span { display: block; margin-top: .65rem; color: #d9dcd4; font-size: .95rem; line-height: 1.5; }
+
     .workspace {
       position: relative; overflow: hidden; border-top: 1px solid rgba(255,255,255,.07); border-bottom: 1px solid rgba(255,255,255,.07);
       background: radial-gradient(circle at 17% 52%, rgba(68,92,56,.2), transparent 32%), radial-gradient(circle at 82% 28%, rgba(53,70,105,.18), transparent 34%), #080a08;
@@ -324,6 +360,9 @@
       .nav-right .btn-outline { display: none; }
       .region { display: none; }
       .cards, .workspace-inner, .why-inner, .plan-grid, .stats { grid-template-columns: 1fr; }
+      .private-inference-head { grid-template-columns: 1fr; gap: 1.4rem; }
+      .private-inference-head h2 { max-width: 16ch; }
+      .private-inference-intro { max-width: 58ch; }
       .why-copy h2, .why-copy p { max-width: none; }
       .workspace-copy { grid-row: 1; text-align: center; }
       .workspace-copy h2, .workspace-copy p { margin-left: auto; margin-right: auto; }
@@ -364,6 +403,11 @@
       .install-copy-status { margin-top: .55rem; font-size: .72rem; }
       .section { padding: 5rem 1.1rem; }
       .section-head { margin-bottom: 2.6rem; }
+      .private-inference-head { margin-bottom: 2rem; }
+      .private-scroll-note { display: block; }
+      .private-diagram-scroll { margin-right: -1.1rem; padding-right: 1.1rem; border-radius: 18px 0 0 18px; }
+      .private-diagram { width: 820px; min-width: 820px; }
+      .private-boundaries { grid-template-columns: 1fr; }
       .cards, .plan-grid, .trust-grid, .stats {
         display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 88%; gap: .85rem;
         width: 100%; max-width: none; overflow-x: auto; overflow-y: hidden; padding: 0 0 1rem;
@@ -385,7 +429,7 @@
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .cursor, .orbit, .rain i { animation: none; }
+      .cursor, .orbit, .rain i, .private-diagram .pi-route, .private-diagram .pi-step { animation: none; }
       .rain { opacity: .2; }
     }
   </style>
@@ -554,7 +598,7 @@
           <div class="card-kicker">In development</div>
           <h3>Ambient Private Inference</h3>
           <p>An authenticated confidential-compute boundary that transforms sensitive work before it reaches untrusted inference operators. Your strategy is never plaintext outside the enclave.</p>
-          <a class="btn btn-lime" href="#trust">See the trust boundary</a>
+          <a class="btn btn-lime" href="#private-inference">See how it works</a>
           <div class="card-visual" aria-hidden="true">
             <div class="shield-wrap">
               <div class="orbit"></div>
@@ -570,6 +614,117 @@
         <div class="stat" role="listitem"><strong>2–3×</strong><span>faster than leading coding agents on paired tasks</span></div>
         <div class="stat" role="listitem"><strong>1.4–2.6×</strong><span>cheaper per completed task</span></div>
         <div class="stat" role="listitem"><strong>Identical</strong><span>accuracy, with evidence and a reproduction script in-repo</span></div>
+      </div>
+    </section>
+
+    <section class="section private-inference" id="private-inference" aria-labelledby="private-inference-title">
+      <div class="private-inference-inner">
+        <header class="private-inference-head">
+          <div>
+            <div class="eyebrow">Private inference · target architecture</div>
+            <h2 class="display" id="private-inference-title">The model does the work. It never reads your strategy.</h2>
+          </div>
+          <div>
+            <div class="private-inference-status">In development</div>
+            <p class="private-inference-intro">Plaintext enters an attested trusted enclave, becomes sealed tokens for computation, and is restored only inside the enclave on the way back to you.</p>
+          </div>
+        </header>
+
+        <figure class="private-figure">
+          <p class="private-scroll-note" id="private-scroll-note">Swipe to trace the request →</p>
+          <div class="private-diagram-scroll" tabindex="0" role="region" aria-label="Private inference trust-boundary diagram" aria-describedby="private-scroll-note private-inference-caption">
+            <svg class="private-diagram" viewBox="0 0 1200 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="private-diagram-title private-diagram-desc">
+              <title id="private-diagram-title">How Corbanu private inference is designed to work</title>
+              <desc id="private-diagram-desc">A user's plaintext enters a trusted enclave, is encoded, runs on an untrusted operator as sealed tokens, and is decoded back to plaintext inside the enclave.</desc>
+              <defs>
+                <filter id="privateGlowLime" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                <filter id="privateGlowRose" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                <marker id="privateArrowLime" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ccff00"/></marker>
+                <marker id="privateArrowViolet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c4b0f5"/></marker>
+                <radialGradient id="privateVignette" cx="72%" cy="10%" r="80%"><stop offset="0%" stop-color="#ccff00" stop-opacity=".07"/><stop offset="60%" stop-color="#ccff00" stop-opacity="0"/></radialGradient>
+              </defs>
+
+              <rect x="2" y="2" width="1196" height="656" rx="28" fill="#070806"/>
+              <rect x="2" y="2" width="1196" height="656" rx="28" fill="url(#privateVignette)"/>
+              <rect x="2" y="2" width="1196" height="656" rx="28" fill="none" stroke="#fff" stroke-opacity=".09"/>
+
+              <text class="pi-mono" x="56" y="66" font-size="12" letter-spacing="3" fill="#ccff00">⊕ PRIVATE INFERENCE</text>
+              <text x="56" y="106" font-size="30" font-weight="700" letter-spacing="-.5" fill="#eef1e6">A sealed circuit for sensitive work</text>
+              <line x1="836" y1="92" x2="876" y2="92" stroke="#ccff00" stroke-width="2.5"/>
+              <text class="pi-mono" x="886" y="96" font-size="11" letter-spacing="1.5" fill="#aeb5a6">PLAINTEXT</text>
+              <line x1="994" y1="92" x2="1034" y2="92" stroke="#c4b0f5" stroke-width="2.5" stroke-dasharray="6 5"/>
+              <text class="pi-mono" x="1044" y="96" font-size="11" letter-spacing="1.5" fill="#aeb5a6">SEALED</text>
+
+              <rect x="292" y="152" width="386" height="428" rx="22" fill="#ccff00" fill-opacity=".035"/>
+              <rect x="292" y="152" width="386" height="428" rx="22" fill="none" stroke="#ccff00" stroke-opacity=".55" stroke-width="1.6" stroke-dasharray="10 7" filter="url(#privateGlowLime)"/>
+              <text class="pi-mono" x="316" y="184" font-size="12" letter-spacing="2.5" fill="#ccff00">TRUSTED ENCLAVE · TEE</text>
+
+              <rect x="322" y="212" width="326" height="118" rx="14" fill="#0c0e09" stroke="#ccff00" stroke-opacity=".35"/>
+              <circle cx="342" cy="234" r="4" fill="#3a4030"/><circle cx="356" cy="234" r="4" fill="#3a4030"/><circle cx="370" cy="234" r="4" fill="#3a4030"/>
+              <text class="pi-mono" x="384" y="238" font-size="10.5" letter-spacing="2" fill="#79816f">ENCODE</text>
+              <text x="342" y="272" font-size="16.5" font-weight="700" fill="#eef1e6">Prompt is sealed</text>
+              <text x="342" y="296" font-size="12.5" fill="#aeb5a6">Tokens map into a private namespace</text>
+              <text x="342" y="314" font-size="12.5" fill="#aeb5a6">using a recipe that stays in the enclave</text>
+
+              <line x1="322" y1="366" x2="648" y2="366" stroke="#fff" stroke-opacity=".08"/>
+              <rect x="373" y="352" width="12" height="9" rx="2" fill="#ccff00"/>
+              <path d="M375.5 352v-3a3.5 3.5 0 0 1 7 0v3" fill="none" stroke="#ccff00" stroke-width="1.6"/>
+              <text class="pi-mono" x="395" y="361" font-size="11" letter-spacing="1.5" fill="#ccff00">SECRET RECIPE LIVES HERE</text>
+
+              <rect x="322" y="402" width="326" height="118" rx="14" fill="#0c0e09" stroke="#ccff00" stroke-opacity=".35"/>
+              <circle cx="342" cy="424" r="4" fill="#3a4030"/><circle cx="356" cy="424" r="4" fill="#3a4030"/><circle cx="370" cy="424" r="4" fill="#3a4030"/>
+              <text class="pi-mono" x="384" y="428" font-size="10.5" letter-spacing="2" fill="#79816f">DECODE</text>
+              <text x="342" y="462" font-size="16.5" font-weight="700" fill="#eef1e6">Answer is restored</text>
+              <text x="342" y="486" font-size="12.5" fill="#aeb5a6">Sealed output is verified and translated</text>
+              <text x="342" y="504" font-size="12.5" fill="#aeb5a6">back into readable text</text>
+              <text x="485" y="558" text-anchor="middle" font-size="12" fill="#d4dacb">Plaintext exists only here — and with you.</text>
+
+              <rect x="812" y="152" width="332" height="428" rx="22" fill="#f2718c" fill-opacity=".03"/>
+              <rect x="812" y="152" width="332" height="428" rx="22" fill="none" stroke="#f2718c" stroke-opacity=".45" stroke-width="1.4" stroke-dasharray="10 7" filter="url(#privateGlowRose)"/>
+              <text class="pi-mono" x="836" y="184" font-size="12" letter-spacing="2.5" fill="#f58aa1">UNTRUSTED OPERATOR</text>
+              <rect x="842" y="282" width="272" height="156" rx="14" fill="#0c0e09" stroke="#f2718c" stroke-opacity=".35"/>
+              <circle cx="862" cy="304" r="4" fill="#3a4030"/><circle cx="876" cy="304" r="4" fill="#3a4030"/><circle cx="890" cy="304" r="4" fill="#3a4030"/>
+              <text class="pi-mono" x="904" y="308" font-size="10.5" letter-spacing="2" fill="#79816f">SEALED MODEL</text>
+              <text x="862" y="344" font-size="16.5" font-weight="700" fill="#eef1e6">Runs the work blind</text>
+              <text x="862" y="368" font-size="12.5" fill="#aeb5a6">A transformed model computes on tokens</text>
+              <text x="862" y="386" font-size="12.5" fill="#aeb5a6">it cannot interpret — no recipe,</text>
+              <text x="862" y="404" font-size="12.5" fill="#aeb5a6">no plaintext</text>
+              <text x="978" y="558" text-anchor="middle" font-size="12" fill="#d4dacb">Sees only ciphertext-like work.</text>
+
+              <rect x="56" y="300" width="176" height="132" rx="14" fill="#0c0e09" stroke="#fff" stroke-opacity=".16"/>
+              <circle cx="76" cy="322" r="4" fill="#3a4030"/><circle cx="90" cy="322" r="4" fill="#3a4030"/><circle cx="104" cy="322" r="4" fill="#3a4030"/>
+              <text class="pi-mono" x="118" y="326" font-size="10.5" letter-spacing="2" fill="#79816f">USER</text>
+              <text x="76" y="362" font-size="16.5" font-weight="700" fill="#eef1e6">You</text>
+              <text x="76" y="386" font-size="12.5" fill="#aeb5a6">Ask in plain language,</text>
+              <text x="76" y="404" font-size="12.5" fill="#aeb5a6">get a plain answer</text>
+
+              <path d="M232 330C264 320 282 296 318 278" fill="none" stroke="#ccff00" stroke-width="2.5" marker-end="url(#privateArrowLime)"/>
+              <g class="pi-step pi-step-1"><circle cx="252" cy="300" r="11" fill="#ccff00"/><text x="252" y="304.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0c04">1</text></g>
+              <text class="pi-mono" x="252" y="279" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#ccff00">PROMPT</text>
+
+              <path class="pi-route" d="M652 271C730 271 770 300 838 320" fill="none" stroke="#c4b0f5" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#privateArrowViolet)"/>
+              <g class="pi-step pi-step-2"><circle cx="745" cy="279" r="11" fill="#c4b0f5"/><text x="745" y="283.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0c04">2</text></g>
+              <text class="pi-mono" x="745" y="258" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#c4b0f5">SEALED TOKENS</text>
+
+              <path class="pi-route" d="M838 402C770 424 730 452 652 456" fill="none" stroke="#c4b0f5" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#privateArrowViolet)"/>
+              <g class="pi-step pi-step-3"><circle cx="745" cy="437" r="11" fill="#c4b0f5"/><text x="745" y="441.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0c04">3</text></g>
+              <text class="pi-mono" x="745" y="470" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#c4b0f5">SEALED OUTPUT</text>
+
+              <path d="M318 458C282 442 264 418 236 404" fill="none" stroke="#ccff00" stroke-width="2.5" marker-end="url(#privateArrowLime)"/>
+              <g class="pi-step pi-step-4"><circle cx="262" cy="436" r="11" fill="#ccff00"/><text x="262" y="440.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0c04">4</text></g>
+              <text class="pi-mono" x="262" y="466" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#ccff00">ANSWER</text>
+
+              <text x="600" y="628" text-anchor="middle" font-size="13" fill="#aeb5a6">Your words are sealed in a trusted enclave, computed on by operators who cannot read them, and restored only on the way back to you.</text>
+            </svg>
+          </div>
+          <figcaption id="private-inference-caption">The operator supplies compute, not trust. Enclave attestation establishes the boundary; the transformation recipe stays inside it.</figcaption>
+        </figure>
+
+        <div class="private-boundaries" role="list" aria-label="Private inference boundaries">
+          <div class="private-boundary" role="listitem"><strong>01 / Plaintext</strong><span>Readable prompts and answers stay with you and inside the trusted enclave.</span></div>
+          <div class="private-boundary" role="listitem"><strong>02 / Compute</strong><span>The operator receives sealed token work and returns sealed output.</span></div>
+          <div class="private-boundary" role="listitem"><strong>03 / Verification</strong><span>Attestation is designed to prove which enclave code is handling the request.</span></div>
+        </div>
       </div>
     </section>
 
