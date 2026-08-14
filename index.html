@@ -101,6 +101,25 @@
     .subscribe-status { min-height: 1.25rem; margin: .65rem 0 0; color: #e4e7df; font-size: .88rem; text-align: center; }
     .subscribe-status[data-state="success"] { color: var(--lime); }
     .subscribe-status[data-state="error"] { color: #ff9b9b; }
+    .community-cta {
+      display: inline-flex; align-items: center; gap: .45rem; margin-top: .25rem; padding: .35rem;
+      border: 1px solid rgba(255,255,255,.18); border-radius: 999px;
+      background: rgba(0,0,0,.64); box-shadow: 0 16px 42px rgba(0,0,0,.28); backdrop-filter: blur(14px);
+    }
+    .community-label {
+      padding: 0 .65rem 0 .8rem; color: #9da397; font: 600 .68rem/1 var(--mono);
+      letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
+    }
+    .community-link {
+      display: inline-flex; align-items: center; gap: .5rem; min-height: 38px; padding: .55rem .85rem;
+      border: 1px solid transparent; border-radius: 999px; color: #f4f5f1; font-size: .82rem;
+      font-weight: 600; text-decoration: none; transition: border-color .16s ease, background .16s ease, color .16s ease, transform .16s ease;
+    }
+    .community-link:hover { transform: translateY(-1px); border-color: rgba(204,255,0,.45); background: rgba(204,255,0,.08); color: var(--lime); }
+    .community-link:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .community-link + .community-link { border-left-color: rgba(255,255,255,.12); border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+    .community-link svg { width: 16px; height: 16px; flex: 0 0 auto; }
+    .community-link-handle { color: #969c91; font-weight: 500; }
     .form-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
@@ -230,6 +249,12 @@
       .subscribe-form { width: 100%; }
       .subscribe-fields { flex-direction: column; }
       .subscribe-form .btn { width: 100%; }
+      .community-cta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; margin-top: .4rem; padding: .35rem; border-radius: 18px; }
+      .community-label { grid-column: 1 / -1; padding: .45rem .4rem .15rem; text-align: center; }
+      .community-link { justify-content: center; min-height: 44px; padding: .65rem .45rem; border-color: rgba(255,255,255,.1); background: rgba(255,255,255,.035); }
+      .community-link + .community-link { border-left-color: rgba(255,255,255,.1); border-radius: 12px; }
+      .community-link:first-of-type { border-radius: 12px; }
+      .community-link-handle { display: none; }
       .section { padding: 5rem 1.1rem; }
       .section-head { margin-bottom: 2.6rem; }
       .card { min-height: 590px; padding: 3rem 1.25rem 0; border-radius: 20px; }
@@ -288,6 +313,17 @@
             </div>
             <p class="subscribe-status" data-subscribe-status aria-live="polite"></p>
           </form>
+        </div>
+        <div class="community-cta" aria-label="Join the Corbanu community">
+          <span class="community-label">Join the network</span>
+          <a class="community-link" href="https://x.com/corbanuAI" target="_blank" rel="noopener noreferrer" aria-label="Follow Corbanu AI on X">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.77 7.74L23.2 22h-6.24l-4.89-6.39L6.48 22H3.36l7.26-8.3L2.98 2h6.4l4.42 5.84L18.9 2Zm-1.1 17.84h1.73L8.44 4.05H6.59L17.8 19.84Z"/></svg>
+            <span>Follow on X</span><span class="community-link-handle">@corbanuAI</span>
+          </a>
+          <a class="community-link" href="https://discord.gg/U6HjgDSmhR" target="_blank" rel="noopener noreferrer" aria-label="Join Corbanu on Discord">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.54 5.34A16.42 16.42 0 0 0 15.44 4l-.5 1.02a15.2 15.2 0 0 0-5.88 0L8.55 4c-1.44.25-2.82.7-4.1 1.34C1.86 9.2 1.16 12.96 1.5 16.67A16.72 16.72 0 0 0 6.52 19.2l1.22-1.67a10.7 10.7 0 0 1-1.93-.93l.48-.37c3.72 1.72 7.75 1.72 11.43 0l.48.37c-.62.37-1.27.68-1.94.93l1.22 1.67a16.64 16.64 0 0 0 5.02-2.53c.4-4.3-.69-8.03-2.96-11.33ZM8.67 14.4c-1.12 0-2.04-1.03-2.04-2.29s.9-2.29 2.04-2.29c1.15 0 2.06 1.04 2.04 2.29 0 1.26-.9 2.29-2.04 2.29Zm6.66 0c-1.12 0-2.04-1.03-2.04-2.29s.9-2.29 2.04-2.29c1.15 0 2.06 1.04 2.04 2.29 0 1.26-.89 2.29-2.04 2.29Z"/></svg>
+            <span>Join Discord</span>
+          </a>
         </div>
       </div>
     </section>
@@ -456,6 +492,8 @@
       <a href="https://github.com/CorbanuCore">GitHub</a>
       <a href="https://github.com/CorbanuCore/CorbanuTerminal">Terminal source</a>
       <a href="https://tasknode.postfiat.org">Task Node</a>
+      <a href="https://x.com/corbanuAI">X</a>
+      <a href="https://discord.gg/U6HjgDSmhR">Discord</a>
       <a href="#trust">Trust model</a>
     </div>
     <div>Corbanu · 2026</div>
