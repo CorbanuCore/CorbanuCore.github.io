@@ -7,9 +7,13 @@ The site is intentionally dependency-free: edit `index.html`, commit, and push t
 Market Lens pages are generated from the local navstrategies spot/perp index
 artifacts. Refresh the verified on-chain wrapper catalog and direct venue market
 data first, then rebuild the pages. The refresh reads Binance and LBank order
-books, Meteora pool state, official multiplier-adjusted Robinhood reference
-quotes, and direct Uniswap V3/USDG quoter depth on Robinhood Chain. Robinhood
-underlying share volume is excluded from direct venue turnover; order-book and
+books, Meteora pool state, direct PancakeSwap V3/USDT pool quotes on BNB Chain,
+official multiplier-adjusted Robinhood reference quotes, and direct Uniswap
+V3/USDG quoter depth where a simple pool exists on Robinhood Chain. PancakeSwap
+pool identity, quotes, and depth are verified on-chain; 24-hour pool volume and
+TVL use an indexed event snapshot. Robinhood custom Uniswap/Pleiades routes are
+labeled unmeasured when the adapter cannot quote them, never zero-liquidity.
+Underlying share volume is excluded from direct venue turnover; order-book and
 quoted V3 depth use a 2% execution band, while pool TVL remains a separate
 metric:
 

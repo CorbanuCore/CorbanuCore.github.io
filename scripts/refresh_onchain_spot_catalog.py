@@ -170,7 +170,14 @@ ROBINHOOD_USDG = "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"
 ROBINHOOD_UNISWAP_V3_FACTORY = "0x1f7d7550b1b028f7571e69a784071f0205fd2efa"
 ROBINHOOD_UNISWAP_QUOTER = "0x33e885ed0ec9bf04ecfb19341582aadcb4c8a9e7"
 ROBINHOOD_UNISWAP_TRADE = "https://app.uniswap.org/swap?chain=robinhood"
+BSC_RPC = "https://bsc-dataseed.binance.org"
+BSC_USDT = "0x55d398326f99059fF775485246999027B3197955"
+PANCAKE_V3_FACTORY = "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865"
+PANCAKE_V3_QUOTER = "0xB048Bbc1Ee6b733FFfCFb9e9CeF7375518e25997"
+PANCAKE_SWAP = "https://pancakeswap.finance/swap?chain=bsc"
+DEXSCREENER_PAIR_API = "https://api.dexscreener.com/latest/dex/pairs/bsc"
 UNISWAP_V3_FEES = (100, 500, 3000, 10000)
+PANCAKE_V3_FEES = (100, 500, 2500, 10000)
 DEPTH_BAND_PCT = 2.0
 MAJOR_SOLANA_QUOTES = {
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": "USDC",
@@ -374,11 +381,15 @@ def robinhood_reference(asset: dict[str, Any]) -> dict[str, Any]:
             f"{ROBINHOOD_UNISWAP_TRADE}"
             f"&outputCurrency={contract}"
         ),
+        "routeVenue": "Uniswap / Pleiades",
+        "liquidityMeasurement": "unmeasured",
         "referenceOnly": True,
     }
 
 
-def rpc_eth_calls(calls: list[tuple[str, str]]) -> list[str | None]:
+def rpc_eth_calls(
+    calls: list[tuple[str, str]], rpc_url: str = ROBINHOOD_RPC
+) -> list[str | None]:
     payload = [
         {
             "jsonrpc": "2.0",
@@ -389,7 +400,7 @@ def rpc_eth_calls(calls: list[tuple[str, str]]) -> list[str | None]:
         for index, (address, data) in enumerate(calls)
     ]
     request = Request(
-        ROBINHOOD_RPC,
+        rpc_url,
         data=json.dumps(payload).encode(),
         headers={
             "Accept": "application/json",
@@ -416,13 +427,14 @@ def quoter_call(
     token_out: str,
     amount_in: int,
     fee: int,
+    quoter_address: str = ROBINHOOD_UNISWAP_QUOTER,
 ) -> tuple[str, str]:
     data = contract_call_data(
         "quoteExactInputSingle((address,address,uint256,uint24,uint160))",
         ["(address,address,uint256,uint24,uint160)"],
         [(token_in, token_out, amount_in, fee, 0)],
     )
-    return ROBINHOOD_UNISWAP_QUOTER, data
+    return quoter_address, data
 
 
 def decode_quote(result: str | None) -> int | None:
@@ -449,6 +461,8 @@ def quoted_depth(
     output_decimals: int,
     baseline_input: float,
     adverse_side: str,
+    rpc_url: str = ROBINHOOD_RPC,
+    quoter_address: str = ROBINHOOD_UNISWAP_QUOTER,
 ) -> tuple[float, float, bool]:
     """Return output at the largest sampled input within 2% of baseline execution."""
     sizes = [baseline_input * (2**index) for index in range(20)]
@@ -456,7 +470,11 @@ def quoted_depth(
     outputs = [
         decode_quote(result)
         for result in rpc_eth_calls(
-            [quoter_call(token_in, token_out, amount, fee) for amount in raw_inputs]
+            [
+                quoter_call(token_in, token_out, amount, fee, quoter_address)
+                for amount in raw_inputs
+            ],
+            rpc_url,
         )
     ]
 
@@ -497,9 +515,10 @@ def quoted_depth(
             decode_quote(result)
             for result in rpc_eth_calls(
                 [
-                    quoter_call(token_in, token_out, amount, fee)
+                    quoter_call(token_in, token_out, amount, fee, quoter_address)
                     for amount in refinement_inputs
-                ]
+                ],
+                rpc_url,
             )
         ]
         for size, output in zip(refinements, refinement_outputs):
@@ -636,6 +655,157 @@ def uniswap_v3_pool(
         "tradeUrl": (
             f"{ROBINHOOD_UNISWAP_TRADE}"
             f"&inputCurrency={ROBINHOOD_USDG}"
+            f"&outputCurrency={token}"
+        ),
+        "poolAddress": pool,
+        "feeTier": fee,
+    }
+
+
+def pancakeswap_v3_pool(
+    token: str,
+    token_symbol: str,
+) -> dict[str, Any] | None:
+    """Return a factory-verified PancakeSwap V3 USDT pool and direct quote depth."""
+    decimals_result = rpc_eth_calls(
+        [(token, contract_call_data("decimals()", [], []))], BSC_RPC
+    )[0]
+    if not decimals_result:
+        raise RuntimeError("token decimals call failed")
+    token_decimals = int(decimals_result, 16)
+
+    factory_calls = [
+        (
+            PANCAKE_V3_FACTORY,
+            contract_call_data(
+                "getPool(address,address,uint24)",
+                ["address", "address", "uint24"],
+                [BSC_USDT, token, fee],
+            ),
+        )
+        for fee in PANCAKE_V3_FEES
+    ]
+    pool_results = rpc_eth_calls(factory_calls, BSC_RPC)
+    pools = [
+        (fee, "0x" + result[-40:])
+        for fee, result in zip(PANCAKE_V3_FEES, pool_results)
+        if result and int(result, 16) != 0
+    ]
+    if not pools:
+        return None
+
+    baseline_usdt = 10.0
+    buy_results = rpc_eth_calls(
+        [
+            quoter_call(
+                BSC_USDT,
+                token,
+                int(baseline_usdt * 10**18),
+                fee,
+                PANCAKE_V3_QUOTER,
+            )
+            for fee, _ in pools
+        ],
+        BSC_RPC,
+    )
+    sell_calls: list[tuple[str, str]] = []
+    sell_inputs: list[int | None] = []
+    for (fee, _), buy_result in zip(pools, buy_results):
+        bought_raw = decode_quote(buy_result)
+        sell_inputs.append(bought_raw)
+        sell_calls.append(
+            quoter_call(
+                token,
+                BSC_USDT,
+                int(bought_raw or 1),
+                fee,
+                PANCAKE_V3_QUOTER,
+            )
+        )
+    sell_results = rpc_eth_calls(sell_calls, BSC_RPC)
+
+    candidates: list[tuple[float, int, str, float, float, float]] = []
+    for (fee, pool), bought_raw, sell_result in zip(pools, sell_inputs, sell_results):
+        sold_raw = decode_quote(sell_result)
+        if not bought_raw or not sold_raw:
+            continue
+        bought = bought_raw / 10**token_decimals
+        sold_usdt = sold_raw / 10**18
+        buy_price = baseline_usdt / bought
+        sell_price = sold_usdt / bought
+        if buy_price <= 0.0 or sell_price <= 0.0 or buy_price < sell_price:
+            continue
+        spread_bps = (buy_price / sell_price - 1.0) * 10_000.0
+        candidates.append((spread_bps, fee, pool, buy_price, sell_price, bought))
+    if not candidates:
+        return None
+    _, fee, pool, buy_price, sell_price, baseline_token = min(candidates)
+
+    buy_input_usd, _, buy_reached_cap = quoted_depth(
+        token_in=BSC_USDT,
+        token_out=token,
+        fee=fee,
+        input_decimals=18,
+        output_decimals=token_decimals,
+        baseline_input=baseline_usdt,
+        adverse_side="lower",
+        rpc_url=BSC_RPC,
+        quoter_address=PANCAKE_V3_QUOTER,
+    )
+    _, sell_output_usd, sell_reached_cap = quoted_depth(
+        token_in=token,
+        token_out=BSC_USDT,
+        fee=fee,
+        input_decimals=token_decimals,
+        output_decimals=18,
+        baseline_input=baseline_token,
+        adverse_side="lower",
+        rpc_url=BSC_RPC,
+        quoter_address=PANCAKE_V3_QUOTER,
+    )
+
+    pool_stats: dict[str, Any] = {}
+    stats_url = f"{DEXSCREENER_PAIR_API}/{pool}"
+    try:
+        stats_payload = fetch_json(stats_url)
+        pool_stats = next(
+            (
+                row
+                for row in stats_payload.get("pairs", [])
+                if str(row.get("pairAddress", "")).lower() == pool.lower()
+                and str(row.get("dexId", "")).lower() == "pancakeswap"
+            ),
+            {},
+        )
+    except Exception as error:
+        print(f"warning: PancakeSwap pool stats {pool}: {error}")
+
+    return {
+        "kind": "ammQuoteDepth",
+        "venue": "PancakeSwap V3",
+        "pair": f"{token_symbol}/USDT",
+        "baseSymbol": token_symbol,
+        "quoteSymbol": "USDT",
+        "lastPrice": (buy_price + sell_price) / 2.0,
+        "midPrice": (buy_price + sell_price) / 2.0,
+        "bestBid": sell_price,
+        "bestAsk": buy_price,
+        "spreadBps": (buy_price / sell_price - 1.0) * 10_000.0,
+        "feePct": fee / 10_000.0,
+        "depthBandPct": DEPTH_BAND_PCT,
+        "buyDepthUsd": buy_input_usd,
+        "sellDepthUsd": sell_output_usd,
+        "buyDepthComplete": not buy_reached_cap,
+        "sellDepthComplete": not sell_reached_cap,
+        "poolTvlUsd": float(pool_stats.get("liquidity", {}).get("usd") or 0.0),
+        "quoteVolume24hUsd": float(pool_stats.get("volume", {}).get("h24") or 0.0),
+        "volumeMethod": "DexScreener indexed pool events",
+        "observedAt": utc_iso(),
+        "sourceUrl": f"https://bscscan.com/address/{pool}",
+        "statsUrl": str(pool_stats.get("url") or stats_url),
+        "tradeUrl": (
+            f"{PANCAKE_SWAP}"
+            f"&inputCurrency={BSC_USDT}"
             f"&outputCurrency={token}"
         ),
         "poolAddress": pool,
@@ -842,6 +1012,26 @@ def main() -> None:
                     except Exception as error:
                         print(f"warning: LBank {lbank_pair}: {error}")
 
+            bsc_deployments = [
+                deployment
+                for deployment in row.get("deployments", [])
+                if deployment.get("network") == "BNB Chain"
+            ]
+            for deployment in bsc_deployments:
+                try:
+                    pool = pancakeswap_v3_pool(
+                        str(deployment["address"]), token_symbol
+                    )
+                except Exception as error:
+                    print(
+                        f"warning: PancakeSwap {symbol} "
+                        f"{deployment['address']}: {error}"
+                    )
+                    pool = None
+                if pool:
+                    direct_venues.append(pool)
+                    break
+
             solana_deployments = [
                 deployment
                 for deployment in row.get("deployments", [])
@@ -880,11 +1070,11 @@ def main() -> None:
             preferred_assigned = preferred_assigned or row["preferred"]
 
     payload = {
-        "version": 4,
+        "version": 5,
         "generatedAt": utc_iso(),
-        "volumeSource": "direct Binance, LBank, and Meteora venue APIs; Robinhood reference volume is excluded",
-        "liquiditySource": "direct order books and Uniswap V3 quotes within 2% of baseline, direct Meteora pool state, and official multiplier-adjusted Robinhood reference quotes",
-        "preferenceBasis": "highest summed 24-hour turnover across directly queried venues",
+        "volumeSource": "direct Binance, LBank, and Meteora venue APIs plus factory-verified PancakeSwap V3 pool-event volume indexed by DexScreener; Robinhood reference volume is excluded",
+        "liquiditySource": "direct order books, PancakeSwap and Uniswap V3 quoter depth within 2% of baseline, direct Meteora pool state, and official multiplier-adjusted Robinhood reference quotes",
+        "preferenceBasis": "highest summed 24-hour turnover across queried CEX books and verified DEX pools",
         "instruments": instruments,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)

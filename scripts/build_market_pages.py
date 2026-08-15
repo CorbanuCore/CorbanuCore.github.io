@@ -158,7 +158,7 @@ def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
           <header class="onchain-head">
             <div>
               <h2 id="onchain-title">On-chain Spot Markets</h2>
-              <span>Issuer wrappers ranked by directly observed venue turnover</span>
+              <span>Issuer wrappers ranked by measured venue and verified-pool turnover</span>
             </div>
             <div class="onchain-status">
               <strong id="onchain-preferred">Determining preferred wrapper…</strong>
@@ -173,7 +173,7 @@ def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
               <div class="onchain-loading">Loading verified contracts…</div>
             </div>
           </div>
-          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed 24-hour turnover across the venues queried directly. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. Robinhood reference bid and ask apply the current token multiplier; underlying share volume is excluded from venue turnover. Uniswap V3 depth is obtained directly from the deployed USDG pool quoter. AMM pool TVL is shown separately and is never labeled as executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
+          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed measured 24-hour turnover. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. PancakeSwap V3 price and depth come directly from the factory-verified USDT pool and quoter; its 24-hour volume and TVL are indexed pool-event statistics. Robinhood bid and ask are official multiplier-adjusted reference prices. A Robinhood route marked unmeasured means the custom Uniswap/Pleiades route exists but its executable depth and turnover are unavailable to this adapter; it does not mean zero liquidity. Underlying share volume is excluded. AMM TVL is shown separately from executable depth. Issuer, custody, redemption, eligibility, fees, slippage, and venue risk differ.</p>
         </section>
       </div>
       <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions.</p>

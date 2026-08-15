@@ -245,14 +245,15 @@ main { min-height: 80vh; }
 .direct-venue-cell small { display: block; margin-top: .28rem; color: #676e63; font: .51rem/1.25 var(--mono); }
 .direct-venue-cell.venue > div { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
 .direct-venue-cell.venue a { display: inline-block; margin-top: .32rem; color: #9ba395; font: 600 .55rem/1.3 var(--mono); text-decoration-color: rgba(204, 255, 0, .24); text-underline-offset: 3px; }
-.direct-venue-cell.venue a:hover, .direct-venue-cell.venue a:focus-visible, .venue-source:hover, .venue-source:focus-visible { color: var(--lime); }
+.direct-venue-cell.venue a:hover, .direct-venue-cell.venue a:focus-visible, .venue-source a:hover, .venue-source a:focus-visible { color: var(--lime); }
 .venue-state { width: 6px; height: 6px; border-radius: 50%; }
 .venue-state.live { background: var(--lime); box-shadow: 0 0 9px rgba(204, 255, 0, .7); }
 .venue-state.snapshot { background: #848b80; }
 .venue-state.reference { background: #7eb6ff; box-shadow: 0 0 8px rgba(126, 182, 255, .45); }
 .direct-venue-row.reference-row { background: linear-gradient(90deg, rgba(76, 139, 220, .055), transparent 48%); }
 .venue-status { color: #6f766b; font: 700 .47rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
-.venue-source { grid-column: 1 / -1; margin-top: .5rem; padding-top: .45rem; color: #5d6459; border-top: 1px solid rgba(255, 255, 255, .055); font: .49rem/1.2 var(--mono); text-decoration: none; }
+.venue-source { grid-column: 1 / -1; margin-top: .5rem; padding-top: .45rem; color: #5d6459; border-top: 1px solid rgba(255, 255, 255, .055); font: .49rem/1.2 var(--mono); }
+.venue-source a { color: inherit; text-decoration: none; }
 .direct-venue-empty { grid-column: 1 / -1; margin-top: .15rem; padding: .8rem; color: #70776d; border: 1px dashed rgba(255, 255, 255, .1); border-radius: 7px; font: .57rem/1.45 var(--mono); }
 .onchain-loading, .onchain-empty { padding: 1.4rem 1rem; color: var(--muted); font: .7rem/1.55 var(--mono); }
 .onchain-note { margin: .8rem 2rem 1.35rem; color: var(--dim); font: .59rem/1.5 var(--mono); }
