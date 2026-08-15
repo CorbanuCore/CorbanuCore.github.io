@@ -28,26 +28,11 @@
   </header>
 
   <main id="main">
-    <section class="market-hero" aria-labelledby="market-title">
-      <div>
-        <div class="eyebrow">Corbanu Market Lens · Equity perpetual</div>
-        <h1 id="market-title"><span class="ticker" id="market-symbol">AMD</span><br>spot and swap, one return scale.</h1>
-        <p class="hero-copy"><span id="market-name">Advanced Micro Devices</span> spot total return and long perpetual-swap total return, including realized funding. Each series begins at its available history and shares a 100 close on the first common session.</p>
-        <p class="hero-asof">Artifact build <span id="generated-at">Loading</span></p>
-      </div>
-      <dl class="hero-ledger" aria-label="Latest comparison">
-        <div><dt>Swap minus spot total return</dt><dd id="latest-basis" class="lime">—</dd></div>
-        <div><dt>Spot since shared anchor</dt><dd id="spot-return">—</dd></div>
-        <div><dt>Swap since shared anchor</dt><dd id="perp-return">—</dd></div>
-        <div><dt>Latest funding paid by long</dt><dd id="latest-funding">—</dd></div>
-      </dl>
-    </section>
-
     <section class="chart-section" aria-labelledby="chart-title">
       <div class="chart-frame">
         <header class="chart-head">
           <div>
-            <div class="chart-title-row"><h2 id="chart-title">Total-return history</h2><span>Rebased at first shared close</span></div>
+            <div class="chart-title-row"><h1 id="chart-title">AMD Spot and Perp Total Returns</h1></div>
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>Perp total return · long</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>Spot total return</span>
@@ -62,7 +47,7 @@
         </header>
         <p class="mobile-scroll-note">Swipe chart horizontally · use arrow keys to inspect dates</p>
         <div class="chart-scroll">
-          <div id="market-chart-stage" class="chart-stage" tabindex="0" role="region" aria-label="Interactive total-return chart" aria-describedby="chart-method">
+          <div id="market-chart-stage" class="chart-stage" tabindex="0" role="region" aria-label="Interactive total-return chart" aria-describedby="chart-disclosure">
             <div class="chart-loading">Loading spot and swap history…</div>
           </div>
         </div>
@@ -74,12 +59,7 @@
           <div><small>Exact 30-minute sessions</small><strong id="exact-start">—</strong></div>
         </div>
       </div>
-
-      <div class="method-strip" id="chart-method">
-        <article class="method-item"><span class="method-index">01 / SAME SCALE</span><h3>Comparable from the first shared close</h3><p>Spot history can begin earlier. Both series equal 100 at the first session where spot and swap observations coexist.</p></article>
-        <article class="method-item"><span class="method-index">02 / FUNDING INCLUDED</span><h3>The candles represent a held long swap</h3><p>Each candlestick compounds Hyperliquid price return and subtracts realized funding paid by the long. Positive funding is a long cash cost.</p></article>
-        <article class="method-item"><span class="method-index">03 / BOUNDARY PRECISION</span><h3>Exact recent tape, disclosed hourly history</h3><p>Solid candles use exact 09:30–16:00 30-minute bars. Faded candles use the 09:00 hourly open and exact 16:00 close; their range includes 09:00–09:30.</p></article>
-      </div>
+      <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; faded candles use the 09:00 hourly open and exact 16:00 close.</p>
     </section>
   </main>
 

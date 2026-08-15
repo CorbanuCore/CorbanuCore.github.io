@@ -23,13 +23,6 @@
     return `${parsed >= 0 ? "+" : ""}${parsed.toFixed(digits == null ? 2 : digits)}%`;
   }
 
-  function signed(node, value) {
-    if (!node) return;
-    node.classList.remove("positive", "negative");
-    const parsed = Number(value);
-    if (Number.isFinite(parsed)) node.classList.add(parsed >= 0 ? "positive" : "negative");
-  }
-
   function dateLabel(value, long) {
     if (!value) return "—";
     const date = new Date(`${value}T12:00:00Z`);
@@ -58,23 +51,10 @@
 
   function updateCopy(data) {
     document.title = `${data.symbol} Spot and Swap Total Return — Corbanu`;
-    text("market-symbol", data.symbol);
-    text("market-name", data.name);
-    text("generated-at", String(data.generatedAt || "").replace("T", " ").slice(0, 19) + " UTC");
     text("spot-start", dateLabel(data.spotStart, true));
     text("perp-start", dateLabel(data.perpStart, true));
     text("anchor-date", dateLabel(data.anchorDate, true));
     text("exact-start", dateLabel(data.exactStart, true));
-
-    const summary = data.summary || {};
-    text("latest-basis", percent(summary.totalReturnSpreadPct));
-    text("spot-return", percent(summary.spotReturnSinceAnchorPct));
-    text("perp-return", percent(summary.perpReturnSinceAnchorPct));
-    text("latest-funding", percent(summary.latestFundingPct, 3));
-    signed($("latest-basis"), summary.totalReturnSpreadPct);
-    signed($("spot-return"), summary.spotReturnSinceAnchorPct);
-    signed($("perp-return"), summary.perpReturnSinceAnchorPct);
-    signed($("latest-funding"), -Number(summary.latestFundingPct));
   }
 
   function cutoffForRange(data) {
