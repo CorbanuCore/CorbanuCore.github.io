@@ -32,6 +32,16 @@
     ).format(date);
   }
 
+  function timestampLabel(value) {
+    if (!value) return "unknown cutoff";
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return "unknown cutoff";
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
+      hour12: false, timeZone: "UTC",
+    }).format(parsed);
+  }
+
   function escapeHtml(value) {
     return String(value == null ? "" : value).replace(/[&<>"']/g, (character) => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -95,7 +105,10 @@
   }
 
   function cutoffForRange(data) {
-    if (state.range === "MAX") return new Date(`${data.spotStart}T00:00:00Z`);
+    if (state.range === "MAX") {
+      const first = [data.spotStart, data.perpStart].filter(Boolean).sort()[0];
+      return new Date(`${first}T00:00:00Z`);
+    }
     const last = new Date(`${data.endDate}T00:00:00Z`);
     if (state.range === "YTD") return new Date(Date.UTC(last.getUTCFullYear(), 0, 1));
     const months = state.range === "3M" ? 3 : 6;
@@ -103,9 +116,9 @@
     return last;
   }
 
-  function visibleRows(data) {
+  function visibleSeries(data, key) {
     const cutoff = cutoffForRange(data).getTime();
-    return data.spot.filter((row) => new Date(`${row.d}T00:00:00Z`).getTime() >= cutoff);
+    return data[key].filter((row) => new Date(`${row.d}T00:00:00Z`).getTime() >= cutoff);
   }
 
   function svgNode(name, attributes) {
@@ -118,13 +131,16 @@
     const data = state.data;
     const stage = $("market-chart-stage");
     if (!data || !stage) return;
-    const spotRows = visibleRows(data);
-    const spotDates = new Set(spotRows.map((row) => row.d));
-    const perpRows = data.perp.filter((row) => spotDates.has(row.d));
-    state.rows = spotRows;
-    state.focusIndex = spotRows.length - 1;
+    const spotRows = visibleSeries(data, "spot");
+    const perpRows = visibleSeries(data, "perp");
+    const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
+    const perpByDate = new Map(perpRows.map((row) => [row.d, row]));
+    const dates = [...new Set([...spotByDate.keys(), ...perpByDate.keys()])].sort();
+    const timelineRows = dates.map((date) => ({ d: date, spot: spotByDate.get(date), perp: perpByDate.get(date) }));
+    state.rows = timelineRows;
+    state.focusIndex = timelineRows.length - 1;
 
-    if (!spotRows.length) {
+    if (!timelineRows.length) {
       stage.innerHTML = '<div class="chart-error">No observations in this window.</div>';
       return;
     }
@@ -134,8 +150,8 @@
     const margin = { top: 40, right: 76, bottom: 50, left: 72 };
     const plotWidth = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;
-    const startMs = new Date(`${spotRows[0].d}T00:00:00Z`).getTime();
-    const endMs = new Date(`${spotRows[spotRows.length - 1].d}T00:00:00Z`).getTime();
+    const startMs = new Date(`${dates[0]}T00:00:00Z`).getTime();
+    const endMs = new Date(`${dates[dates.length - 1]}T00:00:00Z`).getTime();
     const span = Math.max(endMs - startMs, 86400000);
     const x = (date) => margin.left + (new Date(`${date}T00:00:00Z`).getTime() - startMs) / span * plotWidth;
     const values = spotRows.map((row) => row.c);
@@ -151,7 +167,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} spot total-return line and long perpetual-swap total-return candlesticks from ${spotRows[0].d} through ${spotRows[spotRows.length - 1].d}`,
+      "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks from ${dates[0]} through ${dates[dates.length - 1]}`,
     });
 
     const exactTime = data.exactStart ? new Date(`${data.exactStart}T00:00:00Z`).getTime() : null;
@@ -176,7 +192,8 @@
     const candleWidth = Math.max(2.2, Math.min(8, plotWidth / Math.max(perpRows.length, 1) * .58));
     perpRows.forEach((row) => {
       const px = x(row.d);
-      const group = svgNode("g", { class: row.p === "hourly" ? "market-proxy" : "market-exact" });
+      const groupClass = row.p === "partial" ? "market-partial" : row.p === "hourly" ? "market-proxy" : "market-exact";
+      const group = svgNode("g", { class: groupClass });
       group.appendChild(svgNode("line", { x1: px, y1: y(row.h), x2: px, y2: y(row.l), class: "market-wick" }));
       const top = Math.min(y(row.o), y(row.c));
       const bodyHeight = Math.max(Math.abs(y(row.o) - y(row.c)), 1.4);
@@ -191,12 +208,12 @@
     });
 
     const line = spotRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.c).toFixed(2)}`).join(" ");
-    svg.appendChild(svgNode("path", { d: line, class: "market-spot" }));
+    if (line) svg.appendChild(svgNode("path", { d: line, class: "market-spot" }));
 
     const labelCount = 5;
     for (let index = 0; index < labelCount; index += 1) {
-      const rowIndex = Math.round((spotRows.length - 1) * index / (labelCount - 1));
-      const row = spotRows[rowIndex];
+      const rowIndex = Math.round((timelineRows.length - 1) * index / (labelCount - 1));
+      const row = timelineRows[rowIndex];
       const label = svgNode("text", {
         x: x(row.d),
         y: height - 18,
@@ -220,34 +237,43 @@
     tooltip.hidden = true;
     stage.appendChild(tooltip);
 
-    const perpByDate = new Map(perpRows.map((row) => [row.d, row]));
     function focusAt(index, pointerX, pointerY) {
-      const bounded = Math.max(0, Math.min(index, spotRows.length - 1));
+      const bounded = Math.max(0, Math.min(index, timelineRows.length - 1));
       state.focusIndex = bounded;
-      const spot = spotRows[bounded];
-      const perp = perpByDate.get(spot.d);
-      const px = x(spot.d);
+      const row = timelineRows[bounded];
+      const spot = row.spot;
+      const perp = row.perp;
+      const focusValue = spot ? spot.c : perp.c;
+      const px = x(row.d);
       crosshair.setAttribute("x1", px);
       crosshair.setAttribute("x2", px);
       crosshair.setAttribute("visibility", "visible");
+      focusDot.setAttribute("class", spot ? "market-focus-dot" : "market-focus-dot perp-only");
       focusDot.setAttribute("cx", px);
-      focusDot.setAttribute("cy", y(spot.c));
+      focusDot.setAttribute("cy", y(focusValue));
       focusDot.setAttribute("visibility", "visible");
+      const precision = !perp
+        ? ""
+        : perp.p === "partial"
+        ? `Live partial session through ${timestampLabel(perp.t)} UTC`
+        : perp.p === "exact"
+        ? "Exact 09:30–16:00 from 30-minute bars"
+        : "Hourly proxy: 09:00 open; exact 16:00 close";
       tooltip.innerHTML = [
-        `<div class="tooltip-date">${dateLabel(spot.d, true).toUpperCase()}</div>`,
-        `<div class="tooltip-row spot"><span>Spot close</span><strong>${number(spot.c)}</strong></div>`,
+        `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
+        spot ? `<div class="tooltip-row spot"><span>Spot close</span><strong>${number(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
         perp ? `<div class="tooltip-row"><span>Swap O / C</span><strong>${number(perp.o)} / ${number(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Swap</span><strong>Not listed</strong></div>',
         perp ? `<div class="tooltip-row"><span>Swap H / L</span><strong>${number(perp.h)} / ${number(perp.l)}</strong></div>` : "",
-        perp ? `<div class="tooltip-row"><span>Funding to close</span><strong>${percent(perp.f * 100, 3)}</strong></div>` : "",
-        perp ? `<p class="tooltip-precision">${perp.p === "exact" ? "Exact 09:30–16:00 from 30-minute bars" : "Hourly proxy: 09:00 open; exact 16:00 close"}</p>` : "",
+        perp ? `<div class="tooltip-row"><span>${perp.p === "partial" ? "Funding observed" : "Funding to close"}</span><strong>${percent(perp.f * 100, 3)}</strong></div>` : "",
+        precision ? `<p class="tooltip-precision">${precision}</p>` : "",
       ].join("");
       tooltip.hidden = false;
       const stageRect = stage.getBoundingClientRect();
       const cssX = pointerX == null ? px / width * stageRect.width : pointerX;
-      const cssY = pointerY == null ? y(spot.c) / height * stageRect.height : pointerY;
+      const cssY = pointerY == null ? y(focusValue) / height * stageRect.height : pointerY;
       tooltip.style.left = `${Math.min(Math.max(cssX + 14, 8), stageRect.width - 243)}px`;
       tooltip.style.top = `${Math.min(Math.max(cssY - 78, 8), stageRect.height - tooltip.offsetHeight - 8)}px`;
-      text("chart-live", `${spot.d}. Spot ${number(spot.c)}.${perp ? ` Swap open ${number(perp.o)}, high ${number(perp.h)}, low ${number(perp.l)}, close ${number(perp.c)}.` : " Swap not yet available."}`);
+      text("chart-live", `${row.d}. ${spot ? `Spot ${number(spot.c)}.` : "Cash spot closed."}${perp ? ` Swap open ${number(perp.o)}, high ${number(perp.h)}, low ${number(perp.l)}, close ${number(perp.c)}.` : " Swap not yet available."}`);
     }
 
     svg.addEventListener("pointermove", (event) => {
@@ -256,7 +282,7 @@
       const timestamp = startMs + (svgX - margin.left) / plotWidth * span;
       let nearest = 0;
       let distance = Infinity;
-      spotRows.forEach((row, index) => {
+      timelineRows.forEach((row, index) => {
         const current = Math.abs(new Date(`${row.d}T00:00:00Z`).getTime() - timestamp);
         if (current < distance) { nearest = index; distance = current; }
       });
@@ -266,7 +292,7 @@
     stage.onkeydown = (event) => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
-      const next = event.key === "Home" ? 0 : event.key === "End" ? spotRows.length - 1 : state.focusIndex + (event.key === "ArrowRight" ? 1 : -1);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? timelineRows.length - 1 : state.focusIndex + (event.key === "ArrowRight" ? 1 : -1);
       focusAt(next);
     };
     if (window.matchMedia("(max-width: 620px)").matches) {
@@ -281,17 +307,27 @@
     const data = state.data;
     const stage = $("ratio-chart-stage");
     if (!data || !stage) return;
-    const spotRows = visibleRows(data);
-    const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
-    const ratioRows = data.perp
-      .filter((row) => spotByDate.has(row.d))
-      .map((row) => ({ d: row.d, ratio: Number(row.c) / Number(spotByDate.get(row.d).c) }))
-      .filter((row) => Number.isFinite(row.ratio));
+    const spotRows = visibleSeries(data, "spot");
+    const perpRows = visibleSeries(data, "perp");
+    const ratioRows = [];
+    let spotCursor = 0;
+    let latestSpot = null;
+    perpRows.forEach((perp) => {
+      while (spotCursor < spotRows.length && spotRows[spotCursor].d <= perp.d) {
+        latestSpot = spotRows[spotCursor];
+        spotCursor += 1;
+      }
+      if (!latestSpot) return;
+      const ratio = Number(perp.c) / Number(latestSpot.c);
+      if (Number.isFinite(ratio)) {
+        ratioRows.push({ d: perp.d, ratio, spotDate: latestSpot.d, spotHeld: latestSpot.d !== perp.d });
+      }
+    });
     state.ratioRows = ratioRows;
     state.ratioFocusIndex = ratioRows.length - 1;
 
-    if (!spotRows.length || !ratioRows.length) {
-      stage.innerHTML = '<div class="chart-error">No shared spot and swap observations in this window.</div>';
+    if (!ratioRows.length) {
+      stage.innerHTML = '<div class="chart-error">No anchored spot and swap observations in this window.</div>';
       text("ratio-latest", "—");
       return;
     }
@@ -301,8 +337,8 @@
     const margin = { top: 18, right: 76, bottom: 40, left: 72 };
     const plotWidth = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;
-    const startMs = new Date(`${spotRows[0].d}T00:00:00Z`).getTime();
-    const endMs = new Date(`${spotRows[spotRows.length - 1].d}T00:00:00Z`).getTime();
+    const startMs = new Date(`${ratioRows[0].d}T00:00:00Z`).getTime();
+    const endMs = new Date(`${ratioRows[ratioRows.length - 1].d}T00:00:00Z`).getTime();
     const span = Math.max(endMs - startMs, 86400000);
     const x = (date) => margin.left + (new Date(`${date}T00:00:00Z`).getTime() - startMs) / span * plotWidth;
     const extent = Math.max(...ratioRows.map((row) => Math.abs(row.ratio - 1)), .005) * 1.12;
@@ -335,8 +371,8 @@
 
     const labelCount = 5;
     for (let index = 0; index < labelCount; index += 1) {
-      const rowIndex = Math.round((spotRows.length - 1) * index / (labelCount - 1));
-      const row = spotRows[rowIndex];
+      const rowIndex = Math.round((ratioRows.length - 1) * index / (labelCount - 1));
+      const row = ratioRows[rowIndex];
       const label = svgNode("text", {
         x: x(row.d),
         y: height - 13,
@@ -361,7 +397,7 @@
     const latest = ratioRows[ratioRows.length - 1];
     const latestNode = $("ratio-latest");
     if (latestNode) {
-      latestNode.textContent = `${number(latest.ratio, 4)}× · ${percent((latest.ratio - 1) * 100, 2)}`;
+      latestNode.textContent = `${number(latest.ratio, 4)}× · ${percent((latest.ratio - 1) * 100, 2)}${latest.spotHeld ? ` · spot ${dateLabel(latest.spotDate, false)}` : ""}`;
       latestNode.classList.toggle("positive", latest.ratio >= 1);
       latestNode.classList.toggle("negative", latest.ratio < 1);
     }
@@ -382,6 +418,7 @@
         `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
         `<div class="tooltip-row"><span>Perp / spot</span><strong>${number(row.ratio, 4)}×</strong></div>`,
         `<div class="tooltip-row"><span>Perp vs spot</span><strong>${percent((row.ratio - 1) * 100, 2)}</strong></div>`,
+        row.spotHeld ? `<p class="tooltip-precision">Spot reference held at ${dateLabel(row.spotDate, true)} cash close</p>` : "",
       ].join("");
       tooltip.hidden = false;
       const stageRect = stage.getBoundingClientRect();
@@ -389,7 +426,7 @@
       const cssY = pointerY == null ? py / height * stageRect.height : pointerY;
       tooltip.style.left = `${Math.min(Math.max(cssX + 14, 8), stageRect.width - 243)}px`;
       tooltip.style.top = `${Math.min(Math.max(cssY - 58, 8), stageRect.height - tooltip.offsetHeight - 8)}px`;
-      text("ratio-live", `${row.d}. Perp long divided by spot long is ${number(row.ratio, 4)}. Perp cumulative return versus spot is ${percent((row.ratio - 1) * 100, 2)}.`);
+      text("ratio-live", `${row.d}. Perp long divided by spot long is ${number(row.ratio, 4)}. Perp cumulative return versus spot is ${percent((row.ratio - 1) * 100, 2)}.${row.spotHeld ? ` Spot reference is held at the ${row.spotDate} cash close.` : ""}`);
     }
 
     svg.addEventListener("pointermove", (event) => {

@@ -110,11 +110,14 @@ main { min-height: 80vh; }
 .market-body-down { fill: rgba(255, 139, 124, .58); stroke: var(--coral); }
 .market-proxy .market-wick { stroke-dasharray: 2 2; opacity: .4; }
 .market-proxy rect { opacity: .52; }
+.market-partial .market-wick { stroke: var(--lime); stroke-width: 1.5; stroke-dasharray: 3 2; opacity: 1; }
+.market-partial rect { fill: rgba(3, 4, 3, .88); stroke-width: 2; stroke-dasharray: 4 2; }
 .market-proxy-zone { fill: rgba(255, 255, 255, .023); }
 .market-exact-line { stroke: rgba(204, 255, 0, .5); stroke-width: 1; stroke-dasharray: 4 6; vector-effect: non-scaling-stroke; }
 .market-exact-label { fill: var(--lime); font: 9px var(--mono); letter-spacing: .08em; }
 .market-crosshair { stroke: rgba(255, 255, 255, .44); stroke-width: 1; stroke-dasharray: 3 4; vector-effect: non-scaling-stroke; pointer-events: none; }
 .market-focus-dot { fill: var(--blue); stroke: #061015; stroke-width: 2; pointer-events: none; }
+.market-focus-dot.perp-only { fill: var(--lime); stroke: #101400; }
 .chart-tooltip {
   position: absolute; z-index: 4; width: 235px; padding: .9rem 1rem;
   color: var(--ink); border: 1px solid rgba(204, 255, 0, .34); background: rgba(4, 6, 4, .95);

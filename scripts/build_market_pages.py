@@ -49,6 +49,12 @@ def _date(value: Any) -> str:
     return pd.Timestamp(value).date().isoformat()
 
 
+def _timestamp(value: Any) -> str | None:
+    if value is None or pd.isna(value):
+        return None
+    return pd.Timestamp(value).isoformat().replace("+00:00", "Z")
+
+
 def _page_html(*, slug: str, symbol: str, name: str) -> str:
     return f"""<!doctype html>
 <html lang="en">
@@ -86,7 +92,7 @@ def _page_html(*, slug: str, symbol: str, name: str) -> str:
           <div>
             <div class="chart-title-row"><h1 id="chart-title">{symbol} Spot and Perp Total Returns</h1></div>
             <div class="legend" aria-label="Chart legend">
-              <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>Perp total return · long</span>
+              <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>Perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>Spot total return</span>
             </div>
           </div>
@@ -114,7 +120,7 @@ def _page_html(*, slug: str, symbol: str, name: str) -> str:
           <header class="ratio-head">
             <div>
               <h2 id="ratio-title">Perp Long / Spot Long Total Return Ratio</h2>
-              <span>1.00 = equal return since shared anchor</span>
+              <span>1.00 = equal return since shared anchor · spot held at its last close between cash sessions</span>
             </div>
             <strong id="ratio-latest">—</strong>
           </header>
@@ -147,7 +153,7 @@ def _page_html(*, slug: str, symbol: str, name: str) -> str:
           <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest indexed 24-hour spot volume across centralized and decentralized venues. Volume is turnover, while DEX pool TVL is capital in major-quote pools; neither is guaranteed executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
         </section>
       </div>
-      <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; faded candles use the 09:00 hourly open and exact 16:00 close.</p>
+      <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions.</p>
     </section>
   </main>
 
@@ -177,12 +183,14 @@ def build(nav_root: Path) -> None:
         name = NAMES.get(symbol, symbol)
         spot_group = spot.loc[spot["raw_symbol"].eq(raw_symbol)].sort_values("date").copy()
         perp_group = perp.loc[perp["raw_symbol"].eq(raw_symbol)].sort_values("date").copy()
-        anchor_date = perp_group["date"].min()
+        shared_dates = sorted(set(spot_group["date"]) & set(perp_group["date"]))
+        if not shared_dates:
+            raise RuntimeError(f"missing shared spot/perp anchor for {raw_symbol}")
+        anchor_date = shared_dates[0]
         spot_anchor = spot_group.loc[spot_group["date"].eq(anchor_date), "close_index"]
-        if spot_anchor.empty:
-            raise RuntimeError(f"missing shared spot anchor for {raw_symbol} {anchor_date}")
+        perp_anchor = perp_group.loc[perp_group["date"].eq(anchor_date), "long_close_index"]
         spot_scale = 100.0 / float(spot_anchor.iloc[0])
-        perp_scale = 100.0 / float(perp_group.iloc[0]["long_close_index"])
+        perp_scale = 100.0 / float(perp_anchor.iloc[0])
 
         spot_rows = [
             {"d": _date(row.date), "c": _json_value(row.close_index * spot_scale)}
@@ -196,7 +204,15 @@ def build(nav_root: Path) -> None:
                 "l": _json_value(row.long_low_index * perp_scale),
                 "c": _json_value(row.long_close_index * perp_scale),
                 "f": _json_value(row.funding_rate_paid_by_long_to_close, 9),
-                "p": "exact" if str(row.price_boundary_precision).startswith("exact_30m") else "hourly",
+                "p": (
+                    "partial"
+                    if str(getattr(row, "session_status", "complete")) == "live_partial"
+                    else "exact"
+                    if str(row.price_boundary_precision).startswith("exact_30m")
+                    else "hourly"
+                ),
+                "s": str(getattr(row, "session_status", "complete")),
+                "t": _timestamp(getattr(row, "observed_through_utc", None)),
             }
             for row in perp_group.itertuples(index=False)
         ]
@@ -215,7 +231,7 @@ def build(nav_root: Path) -> None:
             "perpStart": perp_rows[0]["d"],
             "anchorDate": _date(anchor_date),
             "exactStart": _date(exact["date"].min()) if not exact.empty else None,
-            "endDate": spot_rows[-1]["d"],
+            "endDate": max(spot_rows[-1]["d"], perp_rows[-1]["d"]),
             "basis": "both series close at 100 on the first shared session",
             "spot": spot_rows,
             "perp": perp_rows,
@@ -245,7 +261,7 @@ def build(nav_root: Path) -> None:
                 "name": name,
                 "spotStart": spot_rows[0]["d"],
                 "perpStart": perp_rows[0]["d"],
-                "endDate": spot_rows[-1]["d"],
+                "endDate": max(spot_rows[-1]["d"], perp_rows[-1]["d"]),
             }
         )
 
