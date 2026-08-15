@@ -55,7 +55,7 @@ def _timestamp(value: Any) -> str | None:
     return pd.Timestamp(value).isoformat().replace("+00:00", "Z")
 
 
-def _page_html(*, slug: str, symbol: str, name: str) -> str:
+def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -69,10 +69,10 @@ def _page_html(*, slug: str, symbol: str, name: str) -> str:
   <meta property="og:url" content="https://corbanu.com/{slug}/">
   <link rel="canonical" href="https://corbanu.com/{slug}/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v={asset_version}">
   <title>{symbol} Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="{slug}">
+<body data-market-slug="{slug}" data-market-version="{asset_version}">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -184,7 +184,7 @@ def _page_html(*, slug: str, symbol: str, name: str) -> str:
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js"></script>
+  <script src="/assets/js/market-lens.js?v={asset_version}"></script>
 </body>
 </html>
 """
@@ -196,6 +196,7 @@ def build(nav_root: Path) -> None:
     perp = pd.read_parquet(source / "perp_ohlc.parquet")
     funding_forecasts = pd.read_parquet(source / "funding_forecasts.parquet")
     metadata = json.loads((source / "metadata.json").read_text())
+    asset_version = pd.Timestamp(metadata["finished_at_utc"]).strftime("%Y%m%d%H%M%S")
     catalog_path = SITE_ROOT / "assets" / "market-data" / "onchain-spot-catalog.json"
     onchain_catalog = json.loads(catalog_path.read_text()) if catalog_path.exists() else {"generatedAt": None, "instruments": {}}
     instruments: list[dict[str, Any]] = []
@@ -300,7 +301,15 @@ def build(nav_root: Path) -> None:
             SITE_ROOT / "assets/market-data" / f"{slug}.json",
             json.dumps(payload, separators=(",", ":"), allow_nan=False) + "\n",
         )
-        _atomic_text(SITE_ROOT / slug / "index.html", _page_html(slug=slug, symbol=symbol, name=name))
+        _atomic_text(
+            SITE_ROOT / slug / "index.html",
+            _page_html(
+                slug=slug,
+                symbol=symbol,
+                name=name,
+                asset_version=asset_version,
+            ),
+        )
         instruments.append(
             {
                 "slug": slug,

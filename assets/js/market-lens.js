@@ -3,6 +3,7 @@
 
   const page = document.body;
   const slug = page.dataset.marketSlug;
+  const marketVersion = page.dataset.marketVersion || "";
   const state = { data: null, range: "MAX", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1 };
   const NS = "http://www.w3.org/2000/svg";
   const $ = (id) => document.getElementById(id);
@@ -77,6 +78,11 @@
       Tron: `https://tronscan.org/#/token20/${encoded}`,
     };
     return routes[network] || "";
+  }
+
+  function marketAssetUrl(url) {
+    if (!marketVersion) return url;
+    return `${url}${url.includes("?") ? "&" : "?"}v=${encodeURIComponent(marketVersion)}`;
   }
 
   async function json(url) {
@@ -642,8 +648,8 @@
     wireRanges();
     try {
       const [universe, data] = await Promise.all([
-        json("/assets/market-data/universe.json"),
-        json(`/assets/market-data/${slug}.json`),
+        json(marketAssetUrl("/assets/market-data/universe.json")),
+        json(marketAssetUrl(`/assets/market-data/${slug}.json`)),
       ]);
       state.data = data;
       populateUniverse(universe);
