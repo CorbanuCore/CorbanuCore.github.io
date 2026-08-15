@@ -133,6 +133,23 @@ main { min-height: 80vh; }
 .chart-foot > div:last-child { border-right: 0; }
 .chart-foot small { display: block; color: var(--dim); font: .62rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
 .chart-foot strong { display: block; margin-top: .55rem; font: 600 clamp(.85rem, 1.4vw, 1.05rem)/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.ratio-panel { border-top: 1px solid var(--line); background: rgba(3, 4, 3, .76); }
+.ratio-head {
+  display: flex; align-items: end; justify-content: space-between; gap: 1.5rem;
+  padding: 1.2rem 2rem .85rem;
+}
+.ratio-head h2 { margin: 0; font: 500 clamp(1rem, 1.6vw, 1.3rem)/1.2 var(--sans); }
+.ratio-head span { display: block; margin-top: .38rem; color: var(--dim); font: .62rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.ratio-head strong { color: var(--ink); font: 600 1rem/1 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ratio-stage { position: relative; min-width: 820px; height: clamp(190px, 18vw, 245px); min-height: 190px; }
+.ratio-stage:focus-visible { outline: 2px solid var(--lime); outline-offset: -4px; }
+.ratio-stage svg { display: block; width: 100%; height: 100%; touch-action: pan-x; }
+.ratio-area { fill: rgba(204, 255, 0, .055); }
+.ratio-line { fill: none; stroke: var(--lime); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; filter: drop-shadow(0 0 4px rgba(204, 255, 0, .24)); }
+.ratio-baseline { stroke: rgba(255, 255, 255, .46); stroke-width: 1; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; }
+.ratio-crosshair { stroke: rgba(255, 255, 255, .44); stroke-width: 1; stroke-dasharray: 3 4; vector-effect: non-scaling-stroke; pointer-events: none; }
+.ratio-focus-dot { fill: var(--lime); stroke: #101400; stroke-width: 2; pointer-events: none; }
+.ratio-tooltip .tooltip-row strong { color: var(--lime); }
 .positive { color: var(--lime) !important; }
 .negative { color: var(--coral) !important; }
 
@@ -173,6 +190,9 @@ footer {
   .range-controls button { flex: 1; min-width: 44px; }
   .mobile-scroll-note { display: block; }
   .chart-stage { height: 460px; }
+  .ratio-head { align-items: start; padding: 1.1rem 1.15rem .75rem; }
+  .ratio-head span { max-width: 28ch; }
+  .ratio-stage { height: 210px; }
   .chart-foot { grid-template-columns: 1fr 1fr; }
   .chart-foot > div { padding: .95rem; }
   footer { grid-template-columns: 1fr; }

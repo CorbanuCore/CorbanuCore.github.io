@@ -110,6 +110,21 @@ def _page_html(*, slug: str, symbol: str, name: str) -> str:
           <div><small>Shared 100 anchor</small><strong id="anchor-date">—</strong></div>
           <div><small>Exact 30-minute sessions</small><strong id="exact-start">—</strong></div>
         </div>
+        <section class="ratio-panel" aria-labelledby="ratio-title">
+          <header class="ratio-head">
+            <div>
+              <h2 id="ratio-title">Perp Long / Spot Long Total Return Ratio</h2>
+              <span>1.00 = equal return since shared anchor</span>
+            </div>
+            <strong id="ratio-latest">—</strong>
+          </header>
+          <div class="chart-scroll">
+            <div id="ratio-chart-stage" class="ratio-stage" tabindex="0" role="region" aria-label="Interactive perp long divided by spot long total-return ratio chart" aria-describedby="chart-disclosure">
+              <div class="chart-loading">Loading return ratio…</div>
+            </div>
+          </div>
+          <p id="ratio-live" class="sr-only" aria-live="polite"></p>
+        </section>
       </div>
       <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; faded candles use the 09:00 hourly open and exact 16:00 close.</p>
     </section>

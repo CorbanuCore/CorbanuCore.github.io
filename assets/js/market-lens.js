@@ -3,7 +3,7 @@
 
   const page = document.body;
   const slug = page.dataset.marketSlug;
-  const state = { data: null, range: "MAX", rows: [], focusIndex: -1 };
+  const state = { data: null, range: "MAX", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1 };
   const NS = "http://www.w3.org/2000/svg";
   const $ = (id) => document.getElementById(id);
 
@@ -240,12 +240,163 @@
     }
   }
 
+  function renderRatioChart() {
+    const data = state.data;
+    const stage = $("ratio-chart-stage");
+    if (!data || !stage) return;
+    const spotRows = visibleRows(data);
+    const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
+    const ratioRows = data.perp
+      .filter((row) => spotByDate.has(row.d))
+      .map((row) => ({ d: row.d, ratio: Number(row.c) / Number(spotByDate.get(row.d).c) }))
+      .filter((row) => Number.isFinite(row.ratio));
+    state.ratioRows = ratioRows;
+    state.ratioFocusIndex = ratioRows.length - 1;
+
+    if (!spotRows.length || !ratioRows.length) {
+      stage.innerHTML = '<div class="chart-error">No shared spot and swap observations in this window.</div>';
+      text("ratio-latest", "—");
+      return;
+    }
+
+    const width = 1280;
+    const height = 250;
+    const margin = { top: 18, right: 76, bottom: 40, left: 72 };
+    const plotWidth = width - margin.left - margin.right;
+    const plotHeight = height - margin.top - margin.bottom;
+    const startMs = new Date(`${spotRows[0].d}T00:00:00Z`).getTime();
+    const endMs = new Date(`${spotRows[spotRows.length - 1].d}T00:00:00Z`).getTime();
+    const span = Math.max(endMs - startMs, 86400000);
+    const x = (date) => margin.left + (new Date(`${date}T00:00:00Z`).getTime() - startMs) / span * plotWidth;
+    const extent = Math.max(...ratioRows.map((row) => Math.abs(row.ratio - 1)), .005) * 1.12;
+    const low = 1 - extent;
+    const high = 1 + extent;
+    const y = (value) => margin.top + (high - Number(value)) / (high - low) * plotHeight;
+    const baselineY = y(1);
+
+    stage.innerHTML = "";
+    const svg = svgNode("svg", {
+      viewBox: `0 0 ${width} ${height}`,
+      role: "img",
+      "aria-label": `${data.symbol} perp long divided by spot long total-return ratio from ${ratioRows[0].d} through ${ratioRows[ratioRows.length - 1].d}`,
+    });
+
+    for (let index = 0; index < 5; index += 1) {
+      const value = high - (high - low) * index / 4;
+      const py = y(value);
+      if (index !== 2) svg.appendChild(svgNode("line", { x1: margin.left, y1: py, x2: width - margin.right, y2: py, class: "market-grid" }));
+      const label = svgNode("text", { x: width - margin.right + 10, y: py + 4, class: "market-axis" });
+      label.textContent = `${number(value, 3)}×`;
+      svg.appendChild(label);
+    }
+    svg.appendChild(svgNode("line", { x1: margin.left, y1: baselineY, x2: width - margin.right, y2: baselineY, class: "ratio-baseline" }));
+
+    const line = ratioRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.ratio).toFixed(2)}`).join(" ");
+    const area = `${line} L${x(ratioRows[ratioRows.length - 1].d).toFixed(2)},${baselineY.toFixed(2)} L${x(ratioRows[0].d).toFixed(2)},${baselineY.toFixed(2)} Z`;
+    svg.appendChild(svgNode("path", { d: area, class: "ratio-area" }));
+    svg.appendChild(svgNode("path", { d: line, class: "ratio-line" }));
+
+    const labelCount = 5;
+    for (let index = 0; index < labelCount; index += 1) {
+      const rowIndex = Math.round((spotRows.length - 1) * index / (labelCount - 1));
+      const row = spotRows[rowIndex];
+      const label = svgNode("text", {
+        x: x(row.d),
+        y: height - 13,
+        class: "market-axis",
+        "text-anchor": index === 0 ? "start" : index === labelCount - 1 ? "end" : "middle",
+      });
+      label.textContent = dateLabel(row.d, false);
+      svg.appendChild(label);
+    }
+
+    const crosshair = svgNode("line", { y1: margin.top, y2: height - margin.bottom, class: "ratio-crosshair", visibility: "hidden" });
+    const focusDot = svgNode("circle", { r: 4.5, class: "ratio-focus-dot", visibility: "hidden" });
+    svg.appendChild(crosshair);
+    svg.appendChild(focusDot);
+    stage.appendChild(svg);
+    const tooltip = document.createElement("div");
+    tooltip.id = "ratio-tooltip";
+    tooltip.className = "chart-tooltip ratio-tooltip";
+    tooltip.hidden = true;
+    stage.appendChild(tooltip);
+
+    const latest = ratioRows[ratioRows.length - 1];
+    const latestNode = $("ratio-latest");
+    if (latestNode) {
+      latestNode.textContent = `${number(latest.ratio, 4)}× · ${percent((latest.ratio - 1) * 100, 2)}`;
+      latestNode.classList.toggle("positive", latest.ratio >= 1);
+      latestNode.classList.toggle("negative", latest.ratio < 1);
+    }
+
+    function focusAt(index, pointerX, pointerY) {
+      const bounded = Math.max(0, Math.min(index, ratioRows.length - 1));
+      state.ratioFocusIndex = bounded;
+      const row = ratioRows[bounded];
+      const px = x(row.d);
+      const py = y(row.ratio);
+      crosshair.setAttribute("x1", px);
+      crosshair.setAttribute("x2", px);
+      crosshair.setAttribute("visibility", "visible");
+      focusDot.setAttribute("cx", px);
+      focusDot.setAttribute("cy", py);
+      focusDot.setAttribute("visibility", "visible");
+      tooltip.innerHTML = [
+        `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
+        `<div class="tooltip-row"><span>Perp / spot</span><strong>${number(row.ratio, 4)}×</strong></div>`,
+        `<div class="tooltip-row"><span>Perp vs spot</span><strong>${percent((row.ratio - 1) * 100, 2)}</strong></div>`,
+      ].join("");
+      tooltip.hidden = false;
+      const stageRect = stage.getBoundingClientRect();
+      const cssX = pointerX == null ? px / width * stageRect.width : pointerX;
+      const cssY = pointerY == null ? py / height * stageRect.height : pointerY;
+      tooltip.style.left = `${Math.min(Math.max(cssX + 14, 8), stageRect.width - 243)}px`;
+      tooltip.style.top = `${Math.min(Math.max(cssY - 58, 8), stageRect.height - tooltip.offsetHeight - 8)}px`;
+      text("ratio-live", `${row.d}. Perp long divided by spot long is ${number(row.ratio, 4)}. Perp cumulative return versus spot is ${percent((row.ratio - 1) * 100, 2)}.`);
+    }
+
+    svg.addEventListener("pointermove", (event) => {
+      const rect = svg.getBoundingClientRect();
+      const svgX = (event.clientX - rect.left) / rect.width * width;
+      const timestamp = startMs + (svgX - margin.left) / plotWidth * span;
+      let nearest = 0;
+      let distance = Infinity;
+      ratioRows.forEach((row, index) => {
+        const current = Math.abs(new Date(`${row.d}T00:00:00Z`).getTime() - timestamp);
+        if (current < distance) { nearest = index; distance = current; }
+      });
+      focusAt(nearest, event.clientX - rect.left, event.clientY - rect.top);
+    });
+    svg.addEventListener("pointerleave", () => {
+      tooltip.hidden = true;
+      crosshair.setAttribute("visibility", "hidden");
+      focusDot.setAttribute("visibility", "hidden");
+    });
+    stage.onkeydown = (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const next = event.key === "Home" ? 0 : event.key === "End" ? ratioRows.length - 1 : state.ratioFocusIndex + (event.key === "ArrowRight" ? 1 : -1);
+      focusAt(next);
+    };
+    if (window.matchMedia("(max-width: 620px)").matches) {
+      window.requestAnimationFrame(() => {
+        const scroller = stage.closest(".chart-scroll");
+        if (scroller) scroller.scrollLeft = scroller.scrollWidth - scroller.clientWidth;
+      });
+    }
+  }
+
+  function renderAllCharts() {
+    renderChart();
+    renderRatioChart();
+  }
+
   function wireRanges() {
     document.querySelectorAll("[data-range]").forEach((button) => {
       button.addEventListener("click", () => {
         state.range = button.dataset.range;
         document.querySelectorAll("[data-range]").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-        renderChart();
+        renderAllCharts();
       });
     });
   }
@@ -261,10 +412,12 @@
       state.data = data;
       populateUniverse(universe);
       updateCopy(data);
-      renderChart();
+      renderAllCharts();
     } catch (error) {
       const stage = $("market-chart-stage");
       if (stage) stage.innerHTML = `<div class="chart-error">Market history unavailable.<br>${String(error.message || error)}</div>`;
+      const ratioStage = $("ratio-chart-stage");
+      if (ratioStage) ratioStage.innerHTML = '<div class="chart-error">Return ratio unavailable.</div>';
     }
   }
 
