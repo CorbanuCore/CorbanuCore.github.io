@@ -102,6 +102,36 @@
     text("perp-start", dateLabel(data.perpStart, true));
     text("anchor-date", dateLabel(data.anchorDate, true));
     text("exact-start", dateLabel(data.exactStart, true));
+    renderFundingForecast(data.fundingForecast);
+  }
+
+  function renderFundingForecast(forecast) {
+    const asOf = forecast && forecast.asOf;
+    text("funding-forecast-asof", asOf ? `As of ${timestampLabel(asOf)} UTC` : "Forecast unavailable");
+    [
+      ["1d", forecast && forecast.oneDayLongApyPct],
+      ["7d", forecast && forecast.sevenDayLongApyPct],
+    ].forEach(([horizon, value]) => {
+      const valueNode = $(`funding-forecast-${horizon}`);
+      const directionNode = $(`funding-forecast-${horizon}-direction`);
+      const parsed = value == null ? NaN : Number(value);
+      if (!Number.isFinite(parsed)) {
+        if (valueNode) valueNode.textContent = "—";
+        if (directionNode) directionNode.textContent = "Unavailable";
+        return;
+      }
+      const earns = parsed > 0;
+      const pays = parsed < 0;
+      const className = earns ? "positive" : pays ? "negative" : "";
+      if (valueNode) {
+        valueNode.textContent = percent(parsed, 2);
+        valueNode.className = className;
+      }
+      if (directionNode) {
+        directionNode.textContent = earns ? "Long earns" : pays ? "Long pays" : "Flat";
+        directionNode.className = className;
+      }
+    });
   }
 
   function cutoffForRange(data) {
