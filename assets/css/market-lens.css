@@ -258,6 +258,57 @@ main { min-height: 80vh; }
 .onchain-loading, .onchain-empty { padding: 1.4rem 1rem; color: var(--muted); font: .7rem/1.55 var(--mono); }
 .onchain-note { margin: .8rem 2rem 1.35rem; color: var(--dim); font: .59rem/1.5 var(--mono); }
 .onchain-note strong { color: var(--ink); }
+.onchain-table.venue-split-mode { border: 0; border-radius: 0; overflow: visible; background: transparent; }
+.onchain-table.venue-split-mode > .onchain-table-head { display: none; }
+.venue-split-shell { display: grid; gap: 1.1rem; }
+.venue-class-section { overflow: hidden; border: 1px solid rgba(255, 255, 255, .11); border-radius: 9px; background: rgba(0, 0, 0, .28); }
+.venue-class-section > header { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; padding: .85rem 1rem; border-bottom: 1px solid rgba(255, 255, 255, .09); }
+.venue-class-section > header h3 { margin: .2rem 0 0; color: var(--ink); font: 650 1rem/1.1 var(--sans); }
+.venue-class-section > header p { margin: 0; color: #6f776b; font: .54rem/1.45 var(--mono); text-align: right; }
+.venue-class-kicker { font: 700 .5rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.cex-section { box-shadow: inset 3px 0 0 #6fa8ff; }
+.cex-section .venue-class-kicker { color: #83b5ff; }
+.dex-section { box-shadow: inset 3px 0 0 var(--lime); }
+.dex-section .venue-class-kicker { color: var(--lime); }
+.venue-split-head, .venue-split-row { display: grid; align-items: start; column-gap: .72rem; }
+.cex-split-table .venue-split-head, .cex-market-row { grid-template-columns: minmax(130px, 1.05fr) minmax(125px, .9fr) 68px minmax(100px, .78fr) minmax(95px, .74fr) minmax(95px, .74fr) minmax(105px, .8fr); }
+.dex-split-table .venue-split-head, .dex-market-row { grid-template-columns: minmax(135px, .8fr) minmax(290px, 1.85fr) minmax(90px, .58fr) minmax(100px, .65fr) minmax(100px, .62fr) minmax(90px, .58fr); }
+.venue-split-head { padding: .55rem .75rem; color: #747c70; border-bottom: 1px solid rgba(255, 255, 255, .08); background: rgba(255, 255, 255, .025); font: 700 .5rem/1.2 var(--mono); letter-spacing: .075em; text-transform: uppercase; }
+.venue-split-row { position: relative; padding: .78rem .75rem; border-bottom: 1px solid rgba(255, 255, 255, .07); }
+.venue-split-row:last-child { border-bottom: 0; }
+.cex-market-row.market-leader { background: linear-gradient(90deg, rgba(80, 139, 224, .13), rgba(80, 139, 224, .02) 48%, transparent); }
+.dex-market-row.routed-dex { background: linear-gradient(90deg, rgba(204, 255, 0, .075), rgba(204, 255, 0, .012) 52%, transparent); }
+.split-cell { min-width: 0; }
+.split-cell strong { display: block; color: var(--ink); font: 650 .71rem/1.25 var(--mono); font-variant-numeric: tabular-nums; }
+.split-cell small { display: block; margin-top: .25rem; color: #697066; font: .5rem/1.35 var(--mono); }
+.split-cell.venue { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .42rem; }
+.split-cell.venue > strong { font-size: .78rem; }
+.split-cell.venue > a, .split-cell.venue > small { flex-basis: 100%; }
+.split-cell.venue > a { color: #abb3a5; font: 600 .56rem/1.35 var(--mono); text-decoration-color: rgba(204, 255, 0, .28); text-underline-offset: 3px; }
+.split-cell.venue > a:hover, .split-cell.venue > a:focus-visible { color: var(--lime); }
+.venue-class-badge { padding: .24rem .34rem; border-radius: 3px; font: 800 .45rem/1 var(--mono); letter-spacing: .1em; }
+.venue-class-badge.cex { color: #d9e9ff; border: 1px solid rgba(111, 168, 255, .45); background: rgba(68, 127, 215, .16); }
+.venue-class-badge.dex { color: #dfff5e; border: 1px solid rgba(204, 255, 0, .42); background: rgba(204, 255, 0, .09); }
+.leader-badge, .route-badge { padding: .24rem .34rem; border-radius: 3px; font: 750 .43rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.leader-badge { color: #e6f0ff; background: rgba(111, 168, 255, .18); }
+.route-badge { color: #dfff5e; background: rgba(204, 255, 0, .1); }
+.split-source { grid-column: 1 / -1; margin-top: .5rem; padding-top: .42rem; color: #5d655a; border-top: 1px solid rgba(255, 255, 255, .05); font: .48rem/1.25 var(--mono); }
+.split-source a { color: inherit; text-decoration: none; }
+.split-source a:hover, .split-source a:focus-visible { color: var(--lime); }
+.dex-contract-stack { display: grid; gap: .55rem; }
+.dex-token-contract, .dex-pool-contracts { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: .5rem; align-items: start; }
+.dex-token-contract > span, .dex-pool-contracts > span { color: #70786d; font: 700 .48rem/1.35 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.dex-contract-link, .dex-route-contract a { color: #d9dfd5; font: .57rem/1.35 var(--mono); overflow-wrap: anywhere; text-decoration-color: rgba(204, 255, 0, .35); text-underline-offset: 3px; }
+.dex-contract-link:hover, .dex-contract-link:focus-visible, .dex-route-contract a:hover, .dex-route-contract a:focus-visible { color: var(--lime); }
+.dex-route-contract { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: .42rem; margin-bottom: .25rem; }
+.dex-route-contract span { color: #8a9285; font: .49rem/1.35 var(--mono); }
+.contract-missing { color: var(--coral) !important; text-transform: none !important; }
+.dex-quote-ladder { grid-column: 1 / -1; display: flex; align-items: center; gap: .75rem; margin-top: .62rem; padding: .55rem .65rem; border: 1px solid rgba(204, 255, 0, .13); border-radius: 5px; background: rgba(204, 255, 0, .035); }
+.dex-quote-ladder > span { flex: 0 0 auto; color: #899181; font: 700 .48rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.dex-quote-ladder > div { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dex-quote-ladder > div > span { display: inline-flex; gap: .35rem; padding: .27rem .38rem; color: #aab1a4; border: 1px solid rgba(255, 255, 255, .09); border-radius: 3px; font: .51rem/1 var(--mono); }
+.dex-quote-ladder b { color: var(--ink); font-weight: 700; }
+
 .positive { color: var(--lime) !important; }
 .negative { color: var(--coral) !important; }
 
@@ -308,6 +359,21 @@ footer {
   .direct-venue-cell.sell-depth::before { content: "Sell liquidity"; }
   .direct-venue-cell.turnover::before { content: "24h turnover"; }
   .direct-venue-cell.pool-tvl::before { content: "Pool TVL"; }
+  .venue-class-section > header { align-items: start; }
+  .venue-class-section > header p { max-width: 48%; }
+  .venue-split-head { display: none; }
+  .cex-market-row, .dex-market-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .8rem 1rem; }
+  .cex-market-row .split-cell.venue, .dex-market-row .split-cell.venue, .dex-market-row .dex-contracts, .split-source, .dex-quote-ladder { grid-column: 1 / -1; }
+  .split-cell::before { display: block; margin-bottom: .35rem; color: #60675d; font: 700 .46rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+  .split-cell.venue::before, .split-cell.dex-contracts::before { display: none; }
+  .split-cell.product::before { content: "Token product"; }
+  .split-cell.rank::before { content: "CEX volume rank"; }
+  .split-cell.price::before { content: "Price / spread"; }
+  .split-cell.buy-depth::before { content: "Buy depth"; }
+  .split-cell.sell-depth::before { content: "Sell depth"; }
+  .split-cell.turnover::before { content: "24h volume"; }
+  .split-cell.spread::before { content: "Execution"; }
+  .split-cell.pool-tvl::before { content: "Pool TVL"; }
 }
 
 @media (max-width: 620px) {

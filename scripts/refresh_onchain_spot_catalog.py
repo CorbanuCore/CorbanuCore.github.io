@@ -189,8 +189,15 @@ NETWORK_ORDER = {
     )
 }
 BINANCE_API = "https://data-api.binance.vision/api/v3"
+BITGET_API = "https://api.bitget.com/api/v2"
+BYBIT_API = "https://api.bybit.com/v5"
+OKX_API = "https://www.okx.com/api/v5"
 LBANK_API = "https://api.lbkex.com/v2"
 METEORA_API = "https://dlmm.datapi.meteora.ag"
+JUPITER_QUOTE_API = "https://lite-api.jup.ag/swap/v1/quote"
+JUPITER_USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+JUPITER_SWAP = "https://jup.ag/swap"
+GOOGLX_SOLANA = "XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN"
 ROBINHOOD_PRICE_API = "https://api.robinhood.com/rhj/prices"
 ROBINHOOD_RPC = "https://rpc.mainnet.chain.robinhood.com"
 ROBINHOOD_USDG = "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"
@@ -306,6 +313,78 @@ def binance_book(base_symbol: str, pair: str) -> dict[str, Any]:
     )
 
 
+def bitget_book(base_symbol: str, pair: str) -> dict[str, Any]:
+    depth_url = f"{BITGET_API}/spot/market/orderbook?symbol={pair}&type=step0&limit=150"
+    ticker_url = f"{BITGET_API}/spot/market/tickers?symbol={pair}"
+    depth_payload = fetch_json(depth_url)
+    ticker_payload = fetch_json(ticker_url)
+    depth = depth_payload["data"]
+    ticker = ticker_payload["data"][0]
+    snapshot = order_book_snapshot(
+        venue="Bitget",
+        pair=f"{base_symbol}/USDT",
+        base_symbol=base_symbol,
+        bids=depth["bids"],
+        asks=depth["asks"],
+        last_price=ticker["lastPr"],
+        quote_volume=ticker.get("usdtVolume") or ticker.get("quoteVolume") or 0.0,
+        observed_at=utc_iso(ticker.get("ts") or depth.get("ts") or ticker_payload.get("requestTime")),
+        source_url=depth_url,
+        trade_url=f"https://www.bitget.com/spot/{pair}",
+        live_adapter="bitgetSpot",
+    )
+    snapshot.update({"apiSymbol": pair, "product": "Reality", "productDetail": "rToken"})
+    return snapshot
+
+
+def bybit_book(base_symbol: str, pair: str) -> dict[str, Any]:
+    depth_url = f"{BYBIT_API}/market/orderbook?category=spot&symbol={pair}&limit=200"
+    ticker_url = f"{BYBIT_API}/market/tickers?category=spot&symbol={pair}"
+    depth_payload = fetch_json(depth_url)
+    ticker_payload = fetch_json(ticker_url)
+    depth = depth_payload["result"]
+    ticker = ticker_payload["result"]["list"][0]
+    snapshot = order_book_snapshot(
+        venue="Bybit",
+        pair=f"{base_symbol}/USDT",
+        base_symbol=base_symbol,
+        bids=depth["b"],
+        asks=depth["a"],
+        last_price=ticker["lastPrice"],
+        quote_volume=ticker.get("turnover24h") or 0.0,
+        observed_at=utc_iso(ticker_payload.get("time")),
+        source_url=depth_url,
+        trade_url=f"https://www.bybit.com/en/trade/spot/{base_symbol}/USDT",
+        live_adapter="bybitSpot",
+    )
+    snapshot.update({"apiSymbol": pair, "product": "xStocks", "productDetail": "Backed Finance"})
+    return snapshot
+
+
+def okx_book(base_symbol: str, pair: str) -> dict[str, Any]:
+    depth_url = f"{OKX_API}/market/books?instId={pair}&sz=400"
+    ticker_url = f"{OKX_API}/market/ticker?instId={pair}"
+    depth_payload = fetch_json(depth_url)
+    ticker_payload = fetch_json(ticker_url)
+    depth = depth_payload["data"][0]
+    ticker = ticker_payload["data"][0]
+    snapshot = order_book_snapshot(
+        venue="OKX",
+        pair=f"{base_symbol}/USDT",
+        base_symbol=base_symbol,
+        bids=[row[:2] for row in depth["bids"]],
+        asks=[row[:2] for row in depth["asks"]],
+        last_price=ticker["last"],
+        quote_volume=ticker.get("volCcy24h") or 0.0,
+        observed_at=utc_iso(ticker.get("ts")),
+        source_url=depth_url,
+        trade_url=f"https://www.okx.com/trade-spot/{pair.lower()}",
+        live_adapter="okxSpot",
+    )
+    snapshot.update({"apiSymbol": pair, "product": "Unified Tokenized Stocks", "productDetail": "Currently xStocks-backed"})
+    return snapshot
+
+
 def lbank_book(base_symbol: str, pair: str) -> dict[str, Any]:
     depth_url = f"{LBANK_API}/depth.do?symbol={pair}&size=200"
     ticker_url = f"{LBANK_API}/ticker/24hr.do?symbol={pair}"
@@ -363,9 +442,74 @@ def meteora_pool(token_address: str) -> dict[str, Any] | None:
         "observedAt": utc_iso(),
         "sourceUrl": f"{METEORA_API}/pools/{address}",
         "tradeUrl": f"https://app.meteora.ag/dlmm/{address}",
+        "network": "Solana",
+        "assetContract": token_address,
         "poolAddress": address,
         "targetSide": "x" if target_is_x else "y",
         "liveAdapter": "meteoraDlmm",
+    }
+
+
+def jupiter_googlx_route() -> dict[str, Any] | None:
+    """Measure executable GOOGLx/USDC routes directly through Jupiter."""
+    notionals = (100, 1_000, 10_000, 50_000, 100_000)
+    ladder: list[dict[str, Any]] = []
+    route_contracts: dict[str, dict[str, str]] = {}
+    representative_source = ""
+    for notional in notionals:
+        buy_url = f"{JUPITER_QUOTE_API}?{urlencode({'inputMint': JUPITER_USDC, 'outputMint': GOOGLX_SOLANA, 'amount': int(notional * 10**6), 'slippageBps': 50})}"
+        buy = fetch_json(buy_url)
+        bought_raw = int(buy.get("outAmount") or 0)
+        if bought_raw <= 0:
+            continue
+        sell_url = f"{JUPITER_QUOTE_API}?{urlencode({'inputMint': GOOGLX_SOLANA, 'outputMint': JUPITER_USDC, 'amount': bought_raw, 'slippageBps': 50})}"
+        sell = fetch_json(sell_url)
+        returned_usdc = int(sell.get("outAmount") or 0) / 10**6
+        round_trip_bps = max(0.0, (1.0 - returned_usdc / notional) * 10_000.0)
+        bought_tokens = bought_raw / 10**8
+        for quote in (buy, sell):
+            for leg in quote.get("routePlan", []):
+                info = leg.get("swapInfo", {})
+                address = str(info.get("ammKey") or "")
+                if not address:
+                    continue
+                route_contracts[address] = {
+                    "venue": str(info.get("label") or "Solana AMM"),
+                    "address": address,
+                    "explorerUrl": f"https://solscan.io/account/{address}",
+                }
+        ladder.append(
+            {
+                "notionalUsd": float(notional),
+                "buyPriceUsd": notional / bought_tokens,
+                "roundTripReturnUsd": returned_usdc,
+                "roundTripCostBps": round_trip_bps,
+            }
+        )
+        if not representative_source or notional == 10_000:
+            representative_source = buy_url
+    if not ladder:
+        return None
+    representative = next((row for row in ladder if row["notionalUsd"] == 1_000), ladder[0])
+    return {
+        "kind": "aggregatorQuote",
+        "venue": "Jupiter",
+        "pair": "GOOGLx/USDC",
+        "baseSymbol": "GOOGLx",
+        "quoteSymbol": "USDC",
+        "lastPrice": representative["buyPriceUsd"],
+        "midPrice": representative["buyPriceUsd"],
+        "spreadBps": representative["roundTripCostBps"],
+        "network": "Solana",
+        "assetContract": GOOGLX_SOLANA,
+        "quoteContract": JUPITER_USDC,
+        "routeContracts": list(route_contracts.values()),
+        "quoteLadder": ladder,
+        "quoteVolume24hUsd": 0.0,
+        "observedAt": utc_iso(),
+        "sourceUrl": representative_source,
+        "tradeUrl": f"{JUPITER_SWAP}/USDC-{GOOGLX_SOLANA}",
+        "measurement": "direct Jupiter round-trip executable quotes",
     }
 
 
@@ -1016,6 +1160,8 @@ def pancakeswap_v3_pool(
             f"&inputCurrency={BSC_USDT}"
             f"&outputCurrency={token}"
         ),
+        "network": "BNB Chain",
+        "assetContract": token,
         "poolAddress": pool,
         "feeTier": fee,
     }
@@ -1322,6 +1468,15 @@ def main() -> None:
                 direct_venues.append(pool)
                 break
 
+        if symbol == "googl" and row.get("issuer") == "xStocks":
+            try:
+                route = jupiter_googlx_route()
+            except Exception as error:
+                print(f"warning: Jupiter GOOGLx: {error}")
+                route = None
+            if route:
+                direct_venues.append(route)
+
         direct_venues.sort(
             key=lambda venue: float(venue.get("quoteVolume24hUsd") or 0.0),
             reverse=True,
@@ -1353,12 +1508,57 @@ def main() -> None:
             row["preferred"] = bool(not preferred_assigned and has_volume)
             preferred_assigned = preferred_assigned or row["preferred"]
 
+    googl_cex: list[dict[str, Any]] = []
+    googl_cex_specs = (
+        ("Binance", "GOOGLB", "GOOGLBUSDT", binance_book, "BTech / Binance", "ADGM-listed certificate"),
+        ("Bitget", "RGOOGL", "RGOOGLUSDT", bitget_book, "Reality", "rToken"),
+        ("Bybit", "GOOGLX", "GOOGLXUSDT", bybit_book, "xStocks", "Backed Finance"),
+        ("OKX", "XGOOGL", "XGOOGL-USDT", okx_book, "Unified Tokenized Stocks", "Currently xStocks-backed"),
+    )
+    for venue_name, base_symbol, pair, adapter, product, product_detail in googl_cex_specs:
+        try:
+            snapshot = adapter(base_symbol, pair)
+            snapshot.update(
+                {
+                    "apiSymbol": pair,
+                    "product": product,
+                    "productDetail": product_detail,
+                    "venueClass": "cex",
+                    "listed": True,
+                }
+            )
+            googl_cex.append(snapshot)
+        except Exception as error:
+            print(f"warning: {venue_name} GOOGL market {pair}: {error}")
+            googl_cex.append(
+                {
+                    "kind": "unavailable",
+                    "venue": venue_name,
+                    "pair": f"{base_symbol}/USDT",
+                    "baseSymbol": base_symbol,
+                    "apiSymbol": pair,
+                    "product": product,
+                    "productDetail": product_detail,
+                    "venueClass": "cex",
+                    "listed": False,
+                    "status": "Direct market snapshot unavailable",
+                    "observedAt": utc_iso(),
+                }
+            )
+    googl_cex.sort(
+        key=lambda row: float(row.get("quoteVolume24hUsd") or 0.0), reverse=True
+    )
+    for rank, row in enumerate(googl_cex, start=1):
+        row["reportedVolumeRank"] = rank if row.get("listed") else None
+        row["marketLeader"] = rank == 1 and bool(row.get("listed"))
+
     payload = {
-        "version": 5,
+        "version": 6,
         "generatedAt": utc_iso(),
-        "volumeSource": "direct Binance, LBank, and Meteora venue APIs plus factory-verified PancakeSwap V3 pool-event volume indexed by DexScreener; Ethereum Uniswap V3 and Robinhood reference volume are excluded",
-        "liquiditySource": "direct order books, Ethereum and Robinhood-chain Uniswap V3 plus PancakeSwap V3 quoter depth within 2% of baseline, direct Meteora pool state, and official multiplier-adjusted Robinhood reference quotes",
-        "preferenceBasis": "highest summed 24-hour turnover across queried CEX books and verified DEX pools",
+        "volumeSource": "direct Binance, Bitget, Bybit, OKX, LBank, and Meteora venue APIs plus factory-verified PancakeSwap V3 pool-event volume indexed by DexScreener; DEX quote routes without indexed pool-event volume are excluded",
+        "liquiditySource": "direct CEX order books; direct Ethereum, Robinhood-chain, and PancakeSwap V3 quoter depth; direct Meteora pool state; and direct Jupiter executable round-trip quotes",
+        "preferenceBasis": "legacy wrapper ranking only; GOOGL displays separate CEX reported-volume and contract-backed DEX execution sections",
+        "cexMarkets": {"googl": googl_cex},
         "instruments": instruments,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)

@@ -188,14 +188,14 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
           <header class="onchain-head">
             <div>
               <h2 id="onchain-title">On-chain Spot Markets</h2>
-              <span>Issuer wrappers ranked by measured venue and verified-pool turnover</span>
+              <span id="onchain-subtitle">Issuer wrappers ranked by measured venue and verified-pool turnover</span>
             </div>
             <div class="onchain-status">
               <strong id="onchain-preferred">Determining preferred wrapper…</strong>
               <span id="onchain-live-stamp" class="onchain-live-stamp">Loading direct venue books…</span>
             </div>
           </header>
-          <div class="onchain-table" role="table" aria-label="On-chain spot wrappers, contracts, and direct venue market data">
+          <div id="onchain-table" class="onchain-table" role="table" aria-label="On-chain spot wrappers, contracts, and direct venue market data">
             <div class="onchain-table-head" role="row">
               <span role="columnheader">Token and structure</span><span role="columnheader">Networks</span><span role="columnheader">Primary contract</span><span role="columnheader">Direct 24h</span><span role="columnheader">Venue coverage</span>
             </div>
@@ -203,7 +203,7 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
               <div class="onchain-loading">Loading verified contracts…</div>
             </div>
           </div>
-          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed measured 24-hour turnover. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. Ethereum Uniswap V3 and PancakeSwap V3 price and depth come directly from factory-verified pools and quoter calls; PancakeSwap 24-hour volume and TVL are indexed pool-event statistics. Robinhood bid and ask are official multiplier-adjusted reference prices. A Robinhood route marked unmeasured means the custom Uniswap/Pleiades route exists but its executable depth and turnover are unavailable to this adapter; it does not mean zero liquidity. Underlying share volume is excluded. AMM TVL is shown separately from executable depth. Issuer, custody, redemption, eligibility, fees, slippage, and venue risk differ.</p>
+          <p id="onchain-note" class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed measured 24-hour turnover. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. Ethereum Uniswap V3 and PancakeSwap V3 price and depth come directly from factory-verified pools and quoter calls; PancakeSwap 24-hour volume and TVL are indexed pool-event statistics. Robinhood bid and ask are official multiplier-adjusted reference prices. A Robinhood route marked unmeasured means the custom Uniswap/Pleiades route exists but its executable depth and turnover are unavailable to this adapter; it does not mean zero liquidity. Underlying share volume is excluded. AMM TVL is shown separately from executable depth. Issuer, custody, redemption, eligibility, fees, slippage, and venue risk differ.</p>
         </section>
       </div>
       <p class="chart-disclosure" id="chart-disclosure">{chart_disclosure}</p>
@@ -339,7 +339,9 @@ def build(nav_root: Path) -> None:
                 "preferenceBasis": onchain_catalog.get("preferenceBasis"),
                 "volumeSource": onchain_catalog.get("volumeSource"),
                 "liquiditySource": onchain_catalog.get("liquiditySource"),
+                "cexMarkets": onchain_catalog.get("cexMarkets", {}).get(slug, []),
                 "markets": onchain_catalog.get("instruments", {}).get(slug, []),
+                "venueSplit": slug == "googl",
             },
         }
         _atomic_text(

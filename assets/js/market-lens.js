@@ -608,6 +608,132 @@
     </div>`;
   }
 
+  function cexMarketRowMarkup(venue, index) {
+    const listed = venue.listed !== false && venue.kind !== "unavailable";
+    const leader = Boolean(venue.marketLeader);
+    const rank = venue.reportedVolumeRank ? `#${venue.reportedVolumeRank}` : "—";
+    const trade = venue.tradeUrl || venue.sourceUrl;
+    return `<div class="venue-split-row cex-market-row${leader ? " market-leader" : ""}" role="row">
+      <div class="split-cell venue" role="cell">
+        <span class="venue-class-badge cex">CEX</span>
+        <strong>${escapeHtml(venue.venue)}</strong>
+        ${leader ? '<span class="leader-badge">Volume leader</span>' : ""}
+        ${trade ? `<a href="${escapeHtml(trade)}" target="_blank" rel="noopener noreferrer">${escapeHtml(venue.pair)} ↗</a>` : `<span>${escapeHtml(venue.pair)}</span>`}
+      </div>
+      <div class="split-cell product" role="cell"><strong>${escapeHtml(venue.product || "—")}</strong><small>${escapeHtml(venue.productDetail || "")}</small></div>
+      <div class="split-cell rank" role="cell"><strong>${rank}</strong><small>Among named CEXs</small></div>
+      <div class="split-cell price" role="cell"><strong>${listed ? priceMoney(venue.midPrice || venue.lastPrice) : "Unavailable"}</strong><small>${listed ? `${number(venue.spreadBps, 1)} bps spread` : escapeHtml(venue.status || "No direct pair")}</small></div>
+      <div class="split-cell buy-depth" role="cell"><strong>${listed ? depthMoney(venue.buyDepthUsd, venue.buyDepthComplete) : "—"}</strong><small>Asks ≤ +2%</small></div>
+      <div class="split-cell sell-depth" role="cell"><strong>${listed ? depthMoney(venue.sellDepthUsd, venue.sellDepthComplete) : "—"}</strong><small>Bids ≥ −2%</small></div>
+      <div class="split-cell turnover" role="cell"><strong>${listed ? compactMoney(venue.quoteVolume24hUsd) : "—"}</strong><small>Venue-reported 24h</small></div>
+      <span class="split-source">${venue.sourceUrl ? `<a href="${escapeHtml(venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">Direct API · ${escapeHtml(timestampLabel(venue.observedAt))} UTC ↗</a>` : `Checked ${escapeHtml(timestampLabel(venue.observedAt))} UTC`}</span>
+    </div>`;
+  }
+
+  function tokenContractForDex(market, venue) {
+    if (venue.assetContract) return { network: venue.network || market.primaryDeployment.network, address: venue.assetContract };
+    const deployments = market.deployments || [];
+    const matched = deployments.find((deployment) => deployment.network === venue.network);
+    return matched || market.primaryDeployment;
+  }
+
+  function accountExplorerUrl(network, address) {
+    const encoded = encodeURIComponent(address);
+    const routes = {
+      "Robinhood Chain": `https://robinhoodchain.blockscout.com/address/${encoded}`,
+      Ethereum: `https://etherscan.io/address/${encoded}`,
+      Solana: `https://solscan.io/account/${encoded}`,
+      HyperEVM: `https://hyperevmscan.io/address/${encoded}`,
+      Arbitrum: `https://arbiscan.io/address/${encoded}`,
+      "BNB Chain": `https://bscscan.com/address/${encoded}`,
+      Base: `https://basescan.org/address/${encoded}`,
+      Optimism: `https://optimistic.etherscan.io/address/${encoded}`,
+      Mantle: `https://mantlescan.xyz/address/${encoded}`,
+      "X Layer": `https://www.oklink.com/xlayer/address/${encoded}`,
+    };
+    return routes[network] || "";
+  }
+
+  function dexContractMarkup(market, venue) {
+    const token = tokenContractForDex(market, venue);
+    const tokenMarkup = token ? contractLink(token, "dex-contract-link") : "—";
+    const routeContracts = Array.isArray(venue.routeContracts) ? venue.routeContracts : [];
+    const routeMarkup = routeContracts.length
+      ? routeContracts.map((route) => `<div class="dex-route-contract"><span>${escapeHtml(route.venue)}</span><a href="${escapeHtml(route.explorerUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(route.address)}</a></div>`).join("")
+      : venue.poolAddress
+        ? `<div class="dex-route-contract"><span>Pool</span><a href="${escapeHtml(accountExplorerUrl(venue.network || (token && token.network), venue.poolAddress) || venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(venue.poolAddress)}</a></div>`
+        : '<span class="contract-missing">No pool contract reported</span>';
+    return `<div class="dex-contract-stack">
+      <div class="dex-token-contract"><span>Token contract · ${escapeHtml(token ? token.network : venue.network || "Unknown")}</span>${tokenMarkup}</div>
+      <div class="dex-pool-contracts"><span>Pool / route contract${routeContracts.length === 1 ? "" : "s"}</span>${routeMarkup}</div>
+    </div>`;
+  }
+
+  function dexQuoteLadderMarkup(venue) {
+    const ladder = Array.isArray(venue.quoteLadder) ? venue.quoteLadder : [];
+    if (!ladder.length) return "";
+    return `<div class="dex-quote-ladder"><span>Round-trip executable cost</span><div>${ladder.map((row) => `<span><b>${compactMoney(row.notionalUsd)}</b>${number(row.roundTripCostBps, 1)} bps</span>`).join("")}</div></div>`;
+  }
+
+  function dexMarketRowMarkup(entry, index) {
+    const { market, venue } = entry;
+    const aggregator = venue.kind === "aggregatorQuote";
+    const quoted = venue.kind === "ammQuoteDepth";
+    const execution = aggregator ? `${number(venue.spreadBps, 1)} bps` : quoted ? `${number(venue.spreadBps, 1)} bps` : `${number(venue.feePct, 2)}% fee`;
+    const executionLabel = aggregator ? "$1k round trip" : quoted ? "Direct quoted spread" : "Pool fee";
+    return `<div class="venue-split-row dex-market-row${aggregator ? " routed-dex" : ""}" role="row">
+      <div class="split-cell venue" role="cell">
+        <span class="venue-class-badge dex">DEX</span>
+        <strong>${escapeHtml(venue.venue)}</strong>
+        ${aggregator ? '<span class="route-badge">Aggregated route</span>' : ""}
+        <a href="${escapeHtml(venue.tradeUrl || venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(venue.pair)} ↗</a>
+        <small>${escapeHtml(market.tokenSymbol)} · ${escapeHtml(market.issuer)}</small>
+      </div>
+      <div class="split-cell dex-contracts" role="cell">${dexContractMarkup(market, venue)}</div>
+      <div class="split-cell price" role="cell"><strong>${priceMoney(venue.midPrice || venue.lastPrice)}</strong><small>${aggregator ? "Executable buy quote" : "Observed route mid"}</small></div>
+      <div class="split-cell spread" role="cell"><strong>${execution}</strong><small>${executionLabel}</small></div>
+      <div class="split-cell turnover" role="cell"><strong>${Number(venue.quoteVolume24hUsd) > 0 ? compactMoney(venue.quoteVolume24hUsd) : "Not reported"}</strong><small>DEX-only 24h</small></div>
+      <div class="split-cell pool-tvl" role="cell"><strong>${venue.poolTvlUsd == null ? "Not reported" : compactMoney(venue.poolTvlUsd)}</strong><small>Direct pool TVL</small></div>
+      ${dexQuoteLadderMarkup(venue)}
+      <span class="split-source"><a href="${escapeHtml(venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">Direct route source · ${escapeHtml(timestampLabel(venue.observedAt))} UTC ↗</a>${venue.statsUrl ? ` · <a href="${escapeHtml(venue.statsUrl)}" target="_blank" rel="noopener noreferrer">pool stats ↗</a>` : ""}</span>
+    </div>`;
+  }
+
+  function venueSplitMarkup(cexMarkets, markets) {
+    const cexRows = [...cexMarkets].sort((left, right) => Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0));
+    cexRows.forEach((venue, index) => {
+      venue.reportedVolumeRank = venue.listed === false ? null : index + 1;
+      venue.marketLeader = venue.listed !== false && index === 0;
+    });
+    const dexRows = [];
+    markets.forEach((market) => {
+      (market.directVenues || []).forEach((venue) => {
+        if (["ammPool", "ammQuoteDepth", "aggregatorQuote"].includes(venue.kind)) dexRows.push({ market, venue });
+      });
+    });
+    dexRows.sort((left, right) => {
+      if (left.venue.kind === "aggregatorQuote" && right.venue.kind !== "aggregatorQuote") return -1;
+      if (right.venue.kind === "aggregatorQuote" && left.venue.kind !== "aggregatorQuote") return 1;
+      return Number(right.venue.quoteVolume24hUsd || 0) - Number(left.venue.quoteVolume24hUsd || 0);
+    });
+    return `<div class="venue-split-shell">
+      <section class="venue-class-section cex-section" aria-labelledby="cex-market-title">
+        <header><div><span class="venue-class-kicker">Centralized exchanges</span><h3 id="cex-market-title">CEX markets</h3></div><p>Binance · Bitget · Bybit · OKX<br>ranked only by each venue’s reported 24h turnover</p></header>
+        <div class="venue-split-table cex-split-table" role="table" aria-label="GOOGL centralized exchange markets">
+          <div class="venue-split-head" role="row"><span>Venue / pair</span><span>Token product</span><span>Rank</span><span>Price / spread</span><span>Buy depth</span><span>Sell depth</span><span>24h volume</span></div>
+          <div role="rowgroup">${cexRows.map(cexMarketRowMarkup).join("")}</div>
+        </div>
+      </section>
+      <section class="venue-class-section dex-section" aria-labelledby="dex-market-title">
+        <header><div><span class="venue-class-kicker">On-chain execution</span><h3 id="dex-market-title">DEX markets</h3></div><p>Every route is tied to an exact token contract<br>and pool or routed AMM contract</p></header>
+        <div class="venue-split-table dex-split-table" role="table" aria-label="GOOGL decentralized exchange markets and contracts">
+          <div class="venue-split-head" role="row"><span>Venue / pair</span><span>Token + route contracts</span><span>Price</span><span>Execution</span><span>DEX 24h</span><span>Pool TVL</span></div>
+          <div role="rowgroup">${dexRows.length ? dexRows.map(dexMarketRowMarkup).join("") : '<div class="direct-venue-empty">No contract-backed DEX route is currently measured.</div>'}</div>
+        </div>
+      </section>
+    </div>`;
+  }
+
   function liveBookMetrics(snapshot, depth, ticker) {
     const bids = (depth.bids || []).map(([price, quantity]) => [Number(price), Number(quantity)]).sort((a, b) => b[0] - a[0]);
     const asks = (depth.asks || []).map(([price, quantity]) => [Number(price), Number(quantity)]).sort((a, b) => a[0] - b[0]);
@@ -643,6 +769,49 @@
       ]);
       return { ...liveBookMetrics(venue, depth, ticker), liveObserved: true };
     }
+    if (venue.liveAdapter === "bitgetSpot") {
+      const symbol = venue.apiSymbol || `${venue.baseSymbol}USDT`;
+      const [depthPayload, tickerPayload] = await Promise.all([
+        json(`https://api.bitget.com/api/v2/spot/market/orderbook?symbol=${encodeURIComponent(symbol)}&type=step0&limit=150`),
+        json(`https://api.bitget.com/api/v2/spot/market/tickers?symbol=${encodeURIComponent(symbol)}`),
+      ]);
+      const ticker = tickerPayload.data[0];
+      return { ...liveBookMetrics(venue, depthPayload.data, {
+        lastPrice: ticker.lastPr,
+        quoteVolume: ticker.usdtVolume || ticker.quoteVolume,
+        closeTime: ticker.ts || tickerPayload.requestTime,
+      }), liveObserved: true };
+    }
+    if (venue.liveAdapter === "bybitSpot") {
+      const symbol = venue.apiSymbol || `${venue.baseSymbol}USDT`;
+      const [depthPayload, tickerPayload] = await Promise.all([
+        json(`https://api.bybit.com/v5/market/orderbook?category=spot&symbol=${encodeURIComponent(symbol)}&limit=200`),
+        json(`https://api.bybit.com/v5/market/tickers?category=spot&symbol=${encodeURIComponent(symbol)}`),
+      ]);
+      const ticker = tickerPayload.result.list[0];
+      return { ...liveBookMetrics(venue, { bids: depthPayload.result.b, asks: depthPayload.result.a }, {
+        lastPrice: ticker.lastPrice,
+        quoteVolume: ticker.turnover24h,
+        closeTime: tickerPayload.time,
+      }), liveObserved: true };
+    }
+    if (venue.liveAdapter === "okxSpot") {
+      const symbol = venue.apiSymbol;
+      const [depthPayload, tickerPayload] = await Promise.all([
+        json(`https://www.okx.com/api/v5/market/books?instId=${encodeURIComponent(symbol)}&sz=400`),
+        json(`https://www.okx.com/api/v5/market/ticker?instId=${encodeURIComponent(symbol)}`),
+      ]);
+      const book = depthPayload.data[0];
+      const ticker = tickerPayload.data[0];
+      return { ...liveBookMetrics(venue, {
+        bids: book.bids.map((row) => row.slice(0, 2)),
+        asks: book.asks.map((row) => row.slice(0, 2)),
+      }, {
+        lastPrice: ticker.last,
+        quoteVolume: ticker.volCcy24h,
+        closeTime: ticker.ts,
+      }), liveObserved: true };
+    }
     if (venue.liveAdapter === "meteoraDlmm") {
       const pool = await json(venue.sourceUrl);
       const rawPrice = Number(pool.current_price);
@@ -659,6 +828,35 @@
     return null;
   }
 
+  async function renderVenueSplit(data, markets, rowsNode, stampNode, preferredNode) {
+    const cexMarkets = Array.isArray(data.onchainSpot.cexMarkets) ? data.onchainSpot.cexMarkets : [];
+    const table = $("onchain-table");
+    const title = $("onchain-title");
+    const subtitle = $("onchain-subtitle");
+    const note = $("onchain-note");
+    if (table) table.classList.add("venue-split-mode");
+    if (title) title.textContent = `${data.symbol} Tokenized Spot Markets`;
+    if (subtitle) subtitle.textContent = "CEX order books and contract-backed DEX routes shown separately";
+    if (note) note.innerHTML = "<strong>CEX volume and DEX liquidity are never combined.</strong> CEX ranks use venue-reported 24-hour quote turnover from Binance, Bitget, Bybit, and OKX. DEX rows identify both the asset token contract and the exact pool or AMM route contracts. Order-book depth is resting dollar notional within 2% of mid. DEX quote costs, pool TVL, and indexed pool-event volume are separate measures and are never treated as CEX turnover.";
+    rowsNode.innerHTML = venueSplitMarkup(cexMarkets, markets);
+    const leader = [...cexMarkets].filter((venue) => venue.listed !== false).sort((left, right) => Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0))[0];
+    if (preferredNode) preferredNode.textContent = leader ? `CEX volume leader · ${leader.venue} ${leader.pair} · ${compactMoney(leader.quoteVolume24hUsd)}` : "No live CEX leader";
+
+    const refreshes = cexMarkets.map((venue, index) => {
+      if (!venue.liveAdapter) return Promise.resolve(null);
+      return refreshDirectVenue(venue).then((refreshed) => {
+        if (refreshed) cexMarkets[index] = refreshed;
+        return refreshed;
+      });
+    });
+    const results = await Promise.allSettled(refreshes);
+    const liveCount = results.filter((result) => result.status === "fulfilled" && result.value).length;
+    rowsNode.innerHTML = venueSplitMarkup(cexMarkets, markets);
+    const refreshedLeader = [...cexMarkets].filter((venue) => venue.listed !== false).sort((left, right) => Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0))[0];
+    if (preferredNode) preferredNode.textContent = refreshedLeader ? `CEX volume leader · ${refreshedLeader.venue} ${refreshedLeader.pair} · ${compactMoney(refreshedLeader.quoteVolume24hUsd)}` : "No live CEX leader";
+    if (stampNode) stampNode.textContent = `${cexMarkets.length} direct CEX API snapshots · ${liveCount} refreshed in browser · DEX contracts verified ${timestampLabel(data.onchainSpot.generatedAt)} UTC`;
+  }
+
   async function renderOnchainMarkets(data) {
     const rowsNode = $("onchain-market-rows");
     const stampNode = $("onchain-live-stamp");
@@ -669,6 +867,10 @@
       rowsNode.innerHTML = '<div class="onchain-empty">No verified on-chain spot wrapper found in the indexed issuer registries.</div>';
       if (preferredNode) preferredNode.textContent = "No indexed wrapper";
       if (stampNode) stampNode.textContent = "Registries checked";
+      return;
+    }
+    if (data.onchainSpot && data.onchainSpot.venueSplit) {
+      await renderVenueSplit(data, markets, rowsNode, stampNode, preferredNode);
       return;
     }
     const preferred = markets.find((market) => market.preferred);
