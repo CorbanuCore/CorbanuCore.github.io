@@ -459,12 +459,23 @@
 
   function onchainRowMarkup(market, index) {
     const issuerClass = String(market.issuer || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
-    return `<div class="onchain-market-row issuer-${issuerClass}" role="row">
-      <div class="onchain-cell token" role="cell"><div class="onchain-token"><i class="issuer-mark" aria-hidden="true"></i><strong>${escapeHtml(market.tokenSymbol)}</strong><a href="${escapeHtml(market.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(market.issuer)} ↗</a></div></div>
+    const volume = Number(market.allVenueVolumeUsd);
+    const hasVolume = market.allVenueVolumeUsd != null && Number.isFinite(volume);
+    const volumeLabel = hasVolume ? compactMoney(volume) : "Not indexed";
+    const volumeTitle = hasVolume ? `$${volume.toLocaleString("en-US", { maximumFractionDigits: 2 })}` : "No aggregate venue volume available";
+    const issuerUrl = market.issuerUrl || market.sourceUrl;
+    const marketDataLink = market.marketDataUrl
+      ? `<a href="${escapeHtml(market.marketDataUrl)}" target="_blank" rel="noopener noreferrer">CoinGecko aggregate ↗</a>`
+      : "No aggregate feed";
+    return `<div class="onchain-market-row issuer-${issuerClass}${market.preferred ? " preferred-market" : ""}" role="row">
+      <div class="onchain-cell token" role="cell">
+        <div class="onchain-token"><i class="issuer-mark" aria-hidden="true"></i><strong>${escapeHtml(market.tokenSymbol)}</strong><a href="${escapeHtml(issuerUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(market.issuer)} ↗</a>${market.preferred ? '<span class="preferred-badge">Preferred</span>' : ""}</div>
+        <span class="onchain-structure">${escapeHtml(market.legalStructure || "Issuer-linked token")}</span>
+      </div>
       <div class="onchain-cell networks" role="cell">${networkMarkup(market.deployments || [])}</div>
       <div class="onchain-cell contracts" role="cell">${contractMarkup(market)}</div>
+      <div class="onchain-cell volume onchain-metric" role="cell"><strong title="${escapeHtml(volumeTitle)}">${volumeLabel}</strong><small>${marketDataLink}</small></div>
       <div id="onchain-liquidity-${index}" class="onchain-cell liquidity onchain-metric" role="cell"><strong>Indexing…</strong><small>Major-quote pools</small></div>
-      <div id="onchain-volume-${index}" class="onchain-cell volume onchain-metric" role="cell"><strong>Indexing…</strong><small>Rolling 24 hours</small></div>
     </div>`;
   }
 
@@ -507,33 +518,45 @@
   async function renderOnchainMarkets(data) {
     const rowsNode = $("onchain-market-rows");
     const stampNode = $("onchain-live-stamp");
+    const preferredNode = $("onchain-preferred");
     if (!rowsNode) return;
     const markets = data.onchainSpot && Array.isArray(data.onchainSpot.markets) ? data.onchainSpot.markets : [];
     if (!markets.length) {
-      rowsNode.innerHTML = '<div class="onchain-empty">No verified spot token found in the Robinhood, Ondo, or xStocks registries.</div>';
+      rowsNode.innerHTML = '<div class="onchain-empty">No verified on-chain spot wrapper found in the indexed issuer registries.</div>';
+      if (preferredNode) preferredNode.textContent = "No indexed wrapper";
       if (stampNode) stampNode.textContent = "Registries checked";
       return;
+    }
+    const preferred = markets.find((market) => market.preferred);
+    if (preferredNode) {
+      preferredNode.textContent = preferred
+        ? `Preferred by 24h volume · ${preferred.tokenSymbol} / ${preferred.issuer}`
+        : "No volume-ranked preference";
     }
     rowsNode.innerHTML = markets.map(onchainRowMarkup).join("");
     const results = await Promise.allSettled(markets.map(liquidityForMarket));
     let liveCount = 0;
     results.forEach((result, index) => {
       const liquidityNode = $(`onchain-liquidity-${index}`);
-      const volumeNode = $(`onchain-volume-${index}`);
-      if (!liquidityNode || !volumeNode) return;
+      if (!liquidityNode) return;
       if (result.status === "rejected") {
-        liquidityNode.innerHTML = "<strong>Unavailable</strong><small>Contracts remain verified</small>";
-        volumeNode.innerHTML = "<strong>—</strong><small>Index request failed</small>";
+        liquidityNode.innerHTML = "<strong>Unavailable</strong><small>Contract remains verified</small>";
         return;
       }
       liveCount += 1;
       const value = result.value;
-      liquidityNode.innerHTML = `<strong title="$${value.liquidity.toLocaleString("en-US", { maximumFractionDigits: 2 })}">${value.pools ? compactMoney(value.liquidity) : "No indexed pool"}</strong><small>${value.pools} major-quote pool${value.pools === 1 ? "" : "s"}</small>`;
-      volumeNode.innerHTML = `<strong title="$${value.volume.toLocaleString("en-US", { maximumFractionDigits: 2 })}">${value.pools ? compactMoney(value.volume) : "—"}</strong><small>Rolling 24 hours</small>`;
+      const dexVolume = value.pools ? compactMoney(value.volume) : "—";
+      liquidityNode.innerHTML = `<strong title="$${value.liquidity.toLocaleString("en-US", { maximumFractionDigits: 2 })}">${value.pools ? compactMoney(value.liquidity) : "No indexed pool"}</strong><small>${dexVolume} DEX volume · ${value.pools} pool${value.pools === 1 ? "" : "s"}</small>`;
     });
     if (stampNode) {
-      const time = new Intl.DateTimeFormat("en-US", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" }).format(new Date());
-      stampNode.textContent = liveCount ? `Live index · ${time} UTC` : "Liquidity index unavailable";
+      const formatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" });
+      const dexTime = formatter.format(new Date());
+      const venueTime = data.onchainSpot && data.onchainSpot.generatedAt
+        ? formatter.format(new Date(data.onchainSpot.generatedAt))
+        : "unknown";
+      stampNode.textContent = liveCount
+        ? `Venue snapshot ${venueTime} UTC · DEX live ${dexTime} UTC`
+        : `Venue snapshot ${venueTime} UTC · DEX index unavailable`;
     }
   }
 

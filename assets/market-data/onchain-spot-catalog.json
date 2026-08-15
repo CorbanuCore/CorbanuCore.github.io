@@ -1,67 +1,48 @@
 {
-  "version": 1,
-  "generatedAt": "2026-08-15T15:08:49.923460Z",
+  "version": 2,
+  "generatedAt": "2026-08-15T15:49:25.114019Z",
+  "volumeSource": "https://api.coingecko.com/api/v3/coins/markets",
   "liquiditySource": "https://api.dexscreener.com/latest/dex/tokens/{address}",
+  "preferenceBasis": "highest aggregate 24-hour spot volume across indexed CEX and DEX venues",
   "instruments": {
     "aapl": [
       {
-        "issuer": "Robinhood",
-        "tokenSymbol": "AAPL",
-        "name": "Apple • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "AAPLB",
+        "name": "Apple (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/apple-bstocks-tokenized-stock",
+        "coingeckoId": "apple-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-bstocks-tokenized-stock",
         "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9"
+          "network": "BNB Chain",
+          "address": "0x431a3bee82e2ca41e49895cbece5bb0f76a89b7a"
         },
         "deployments": [
-          {
-            "network": "Robinhood Chain",
-            "address": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9"
-          }
-        ],
-        "queryAddresses": [
-          "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9"
-        ]
-      },
-      {
-        "issuer": "Ondo",
-        "tokenSymbol": "AAPLon",
-        "name": "Apple (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/aaplon",
-        "primaryDeployment": {
-          "network": "Ethereum",
-          "address": "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c"
-        },
-        "deployments": [
-          {
-            "network": "Ethereum",
-            "address": "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c"
-          },
-          {
-            "network": "Solana",
-            "address": "123mYEnRLM2LLYsJW3K6oyYh8uP1fngj732iG638ondo"
-          },
-          {
-            "network": "HyperEVM",
-            "address": "0x81db0df77669b3be563e7a0591685a2c8c3ee1c5"
-          },
           {
             "network": "BNB Chain",
-            "address": "0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4"
+            "address": "0x431a3bee82e2ca41e49895cbece5bb0f76a89b7a"
           }
         ],
         "queryAddresses": [
-          "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c",
-          "123mYEnRLM2LLYsJW3K6oyYh8uP1fngj732iG638ondo",
-          "0x81db0df77669b3be563e7a0591685a2c8c3ee1c5",
-          "0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4"
-        ]
+          "0x431a3bee82e2ca41e49895cbece5bb0f76a89b7a"
+        ],
+        "allVenueVolumeUsd": 3572013,
+        "marketCapUsd": 5704664,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "AAPLx",
         "name": "Apple xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "apple-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp"
@@ -117,34 +98,151 @@
           "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp",
           "EQDsjAwfKo-6FVZv2EYt-1CaZTY_ZL-pfkSId6jeQchNwmdo",
           "TZ7nsyCuQq1cusCtex6V4qbzWcb3NbibAM"
-        ]
-      }
-    ],
-    "amd": [
+        ],
+        "allVenueVolumeUsd": 1642385,
+        "marketCapUsd": 12405885,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Reality",
+        "issuerUrl": "https://www.bitget.com/academy/what-is-raapl-apple-tokenized-stock-bitget",
+        "legalStructure": "Brokerage-backed economic exposure token",
+        "tokenSymbol": "rAAPL",
+        "name": "Apple (Reality Protocol)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/apple-reality-protocol",
+        "coingeckoId": "apple-reality-protocol",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-reality-protocol",
+        "primaryDeployment": {
+          "network": "Arbitrum",
+          "address": "0xaba5e0c80e9f58e391214689fb342049c0d31892"
+        },
+        "deployments": [
+          {
+            "network": "Arbitrum",
+            "address": "0xaba5e0c80e9f58e391214689fb342049c0d31892"
+          }
+        ],
+        "queryAddresses": [
+          "0xaba5e0c80e9f58e391214689fb342049c0d31892"
+        ],
+        "allVenueVolumeUsd": 1471502,
+        "marketCapUsd": 822431,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "AAPLon",
+        "name": "Apple (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/aaplon",
+        "coingeckoId": "apple-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-ondo-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Ethereum",
+          "address": "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c"
+        },
+        "deployments": [
+          {
+            "network": "Ethereum",
+            "address": "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c"
+          },
+          {
+            "network": "Solana",
+            "address": "123mYEnRLM2LLYsJW3K6oyYh8uP1fngj732iG638ondo"
+          },
+          {
+            "network": "HyperEVM",
+            "address": "0x81db0df77669b3be563e7a0591685a2c8c3ee1c5"
+          },
+          {
+            "network": "BNB Chain",
+            "address": "0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4"
+          }
+        ],
+        "queryAddresses": [
+          "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c",
+          "123mYEnRLM2LLYsJW3K6oyYh8uP1fngj732iG638ondo",
+          "0x81db0df77669b3be563e7a0591685a2c8c3ee1c5",
+          "0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4"
+        ],
+        "allVenueVolumeUsd": 933285,
+        "marketCapUsd": 8379514,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
+      },
       {
         "issuer": "Robinhood",
-        "tokenSymbol": "AMD",
-        "name": "AMD • Robinhood Token",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "AAPL",
+        "name": "Apple • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "apple-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
-          "address": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC"
+          "address": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9"
         },
         "deployments": [
           {
             "network": "Robinhood Chain",
-            "address": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC"
+            "address": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9"
           }
         ],
         "queryAddresses": [
-          "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC"
-        ]
+          "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9"
+        ],
+        "allVenueVolumeUsd": 390956,
+        "marketCapUsd": 1830829,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 5,
+        "preferred": false
       },
       {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "AAPL",
+        "name": "Apple (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/apple-backpack-securities",
+        "coingeckoId": "apple-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "AAPLEDt8RpzPgXyhvFzkMBofvFSQw9gpeMCoUdPdLnB8"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "AAPLEDt8RpzPgXyhvFzkMBofvFSQw9gpeMCoUdPdLnB8"
+          }
+        ],
+        "queryAddresses": [
+          "AAPLEDt8RpzPgXyhvFzkMBofvFSQw9gpeMCoUdPdLnB8"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
+      }
+    ],
+    "amd": [
+      {
         "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
         "tokenSymbol": "AMDon",
         "name": "AMD (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/amdon",
+        "coingeckoId": "amd-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/amd-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x0c1f3412a44ff99e40bf14e06e5ea321ae7b3938"
@@ -172,13 +270,50 @@
           "14diAn5z8kjrKwSC8WLqvBqqe5YmihJhjxRxd8Z6ondo",
           "0x33706203a7a7c82b6f6c09dd9ae4e6e881d36386",
           "0x9f16e46c73b43bdb70861247d537bee4ea18f639"
-        ]
+        ],
+        "allVenueVolumeUsd": 1047114,
+        "marketCapUsd": 9167838,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "AMD",
+        "name": "AMD • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "amd-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/amd-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC"
+          }
+        ],
+        "queryAddresses": [
+          "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC"
+        ],
+        "allVenueVolumeUsd": 307426,
+        "marketCapUsd": 1141049,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "AMDx",
         "name": "AMD xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "amd-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/amd-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsXcJ6GZ9kVnjqGsjBnktRcuwMBmvKWh8S93RefZ1rF"
@@ -234,68 +369,80 @@
           "XsXcJ6GZ9kVnjqGsjBnktRcuwMBmvKWh8S93RefZ1rF",
           "EQC0gyePHOKu2qG8jfqc7wAIOOB-dVKfDeOiqXuCAsGzarL9",
           "TSrLhu1fVjPDtGbZD6Fn4ra9gHFUUAjzkN"
-        ]
+        ],
+        "allVenueVolumeUsd": 50849,
+        "marketCapUsd": 4088096,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "AMD",
+        "name": "Advanced Micro Devices (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/advanced-micro-devices-backpack-securities",
+        "coingeckoId": "advanced-micro-devices-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/advanced-micro-devices-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "AMD8XwJXgQ9WV45Wyj9yFLejxzf2J6VM1PJY8bJEjeES"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "AMD8XwJXgQ9WV45Wyj9yFLejxzf2J6VM1PJY8bJEjeES"
+          }
+        ],
+        "queryAddresses": [
+          "AMD8XwJXgQ9WV45Wyj9yFLejxzf2J6VM1PJY8bJEjeES"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
       }
     ],
     "crcl": [
       {
-        "issuer": "Robinhood",
-        "tokenSymbol": "CRCL",
-        "name": "Circle Internet Group • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "CRCLB",
+        "name": "Circle Internet Group (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/circle-internet-group-bstock",
+        "coingeckoId": "circle-internet-group-bstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-internet-group-bstock",
         "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5"
+          "network": "BNB Chain",
+          "address": "0x80f3d493ebce97e343c53d29a137942416b4ffc0"
         },
         "deployments": [
-          {
-            "network": "Robinhood Chain",
-            "address": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5"
-          }
-        ],
-        "queryAddresses": [
-          "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5"
-        ]
-      },
-      {
-        "issuer": "Ondo",
-        "tokenSymbol": "CRCLon",
-        "name": "Circle Internet Group (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/crclon",
-        "primaryDeployment": {
-          "network": "Ethereum",
-          "address": "0x3632dea96a953c11dac2f00b4a05a32cd1063fae"
-        },
-        "deployments": [
-          {
-            "network": "Ethereum",
-            "address": "0x3632dea96a953c11dac2f00b4a05a32cd1063fae"
-          },
-          {
-            "network": "Solana",
-            "address": "6xHEyem9hmkGtVq6XGCiQUGpPsHBaoYuYdFNZa5ondo"
-          },
-          {
-            "network": "HyperEVM",
-            "address": "0x13a81c5e8b4ab05fc721dff7ba95e250b29458f8"
-          },
           {
             "network": "BNB Chain",
-            "address": "0x992879cd8ce0c312d98648875b5a8d6d042cbf34"
+            "address": "0x80f3d493ebce97e343c53d29a137942416b4ffc0"
           }
         ],
         "queryAddresses": [
-          "0x3632dea96a953c11dac2f00b4a05a32cd1063fae",
-          "6xHEyem9hmkGtVq6XGCiQUGpPsHBaoYuYdFNZa5ondo",
-          "0x13a81c5e8b4ab05fc721dff7ba95e250b29458f8",
-          "0x992879cd8ce0c312d98648875b5a8d6d042cbf34"
-        ]
+          "0x80f3d493ebce97e343c53d29a137942416b4ffc0"
+        ],
+        "allVenueVolumeUsd": 3928405,
+        "marketCapUsd": 65323121,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "CRCLx",
         "name": "Circle xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "circle-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1"
@@ -351,35 +498,124 @@
           "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
           "EQB-RPtAAQeFSGW3gIj0zREh4N92MGXfqFzxAc6TRvu-zvYT",
           "TRXfha1owZvFk5ru7cmd5SXDX1uKtcCRJN"
-        ]
+        ],
+        "allVenueVolumeUsd": 2780575,
+        "marketCapUsd": 54769288,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "CRCLon",
+        "name": "Circle Internet Group (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/crclon",
+        "coingeckoId": "circle-internet-group-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-internet-group-ondo-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Ethereum",
+          "address": "0x3632dea96a953c11dac2f00b4a05a32cd1063fae"
+        },
+        "deployments": [
+          {
+            "network": "Ethereum",
+            "address": "0x3632dea96a953c11dac2f00b4a05a32cd1063fae"
+          },
+          {
+            "network": "Solana",
+            "address": "6xHEyem9hmkGtVq6XGCiQUGpPsHBaoYuYdFNZa5ondo"
+          },
+          {
+            "network": "HyperEVM",
+            "address": "0x13a81c5e8b4ab05fc721dff7ba95e250b29458f8"
+          },
+          {
+            "network": "BNB Chain",
+            "address": "0x992879cd8ce0c312d98648875b5a8d6d042cbf34"
+          }
+        ],
+        "queryAddresses": [
+          "0x3632dea96a953c11dac2f00b4a05a32cd1063fae",
+          "6xHEyem9hmkGtVq6XGCiQUGpPsHBaoYuYdFNZa5ondo",
+          "0x13a81c5e8b4ab05fc721dff7ba95e250b29458f8",
+          "0x992879cd8ce0c312d98648875b5a8d6d042cbf34"
+        ],
+        "allVenueVolumeUsd": 369048,
+        "marketCapUsd": 99714974,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "CRCL",
+        "name": "Circle Internet Group • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "circle-internet-group-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-internet-group-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5"
+          }
+        ],
+        "queryAddresses": [
+          "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5"
+        ],
+        "allVenueVolumeUsd": 76856,
+        "marketCapUsd": 570029,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "CRCL",
+        "name": "Circle Internet Group (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/circle-internet-group-backpack-securities",
+        "coingeckoId": "circle-internet-group-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-internet-group-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "CRCL4kkDNmBCRjfrKJGqSnx7UsboEnjFpTTEvs5KmNmi"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "CRCL4kkDNmBCRjfrKJGqSnx7UsboEnjFpTTEvs5KmNmi"
+          }
+        ],
+        "queryAddresses": [
+          "CRCL4kkDNmBCRjfrKJGqSnx7UsboEnjFpTTEvs5KmNmi"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
       }
     ],
     "cxmt": [],
     "googl": [
       {
-        "issuer": "Robinhood",
-        "tokenSymbol": "GOOGL",
-        "name": "Alphabet Class A • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
-        "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3"
-        },
-        "deployments": [
-          {
-            "network": "Robinhood Chain",
-            "address": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3"
-          }
-        ],
-        "queryAddresses": [
-          "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3"
-        ]
-      },
-      {
         "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
         "tokenSymbol": "GOOGLon",
         "name": "Alphabet Class A (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/googlon",
+        "coingeckoId": "alphabet-class-a-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-class-a-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xba47214edd2bb43099611b208f75e4b42fdcfedc"
@@ -407,13 +643,22 @@
           "bbahNA5vT9WJeYft8tALrH1LXWffjwqVoUbqYa1ondo",
           "0x4d34798f18eb747f7225663f0553ea2d880cf75d",
           "0x091fc7778e6932d4009b087b191d1ee3bac5729a"
-        ]
+        ],
+        "allVenueVolumeUsd": 2959711,
+        "marketCapUsd": 21266816,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "GOOGLx",
         "name": "Alphabet xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "alphabet-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN"
@@ -469,34 +714,108 @@
           "XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN",
           "EQALwJzXnxFjckNsurCi9O2kVg_0b1KdtjOSfvOedlY37iZc",
           "TX34MBKqsHzvon1JX4mokJ8CLeh5QmBqNd"
-        ]
-      }
-    ],
-    "intc": [
+        ],
+        "allVenueVolumeUsd": 2471531,
+        "marketCapUsd": 35438321,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "GOOGLB",
+        "name": "Alphabet (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/alphabet-bstocks-tokenized-stock",
+        "coingeckoId": "alphabet-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-bstocks-tokenized-stock",
+        "primaryDeployment": {
+          "network": "BNB Chain",
+          "address": "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
+        },
+        "deployments": [
+          {
+            "network": "BNB Chain",
+            "address": "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
+          }
+        ],
+        "queryAddresses": [
+          "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
+        ],
+        "allVenueVolumeUsd": 1751201,
+        "marketCapUsd": 18335037,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
       {
         "issuer": "Robinhood",
-        "tokenSymbol": "INTC",
-        "name": "Intel • Robinhood Token",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "GOOGL",
+        "name": "Alphabet Class A • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "alphabet-class-a-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-class-a-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
-          "address": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
+          "address": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3"
         },
         "deployments": [
           {
             "network": "Robinhood Chain",
-            "address": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
+            "address": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3"
           }
         ],
         "queryAddresses": [
-          "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
-        ]
+          "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3"
+        ],
+        "allVenueVolumeUsd": 45076,
+        "marketCapUsd": 1088948,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
       },
       {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "GOOGL",
+        "name": "Alphabet (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/alphabet-backpack-securities",
+        "coingeckoId": "alphabet-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "GooGLMvZtJZXHdNZy95RUrAMCCKxV6ghK3qE5ddBgVm5"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "GooGLMvZtJZXHdNZy95RUrAMCCKxV6ghK3qE5ddBgVm5"
+          }
+        ],
+        "queryAddresses": [
+          "GooGLMvZtJZXHdNZy95RUrAMCCKxV6ghK3qE5ddBgVm5"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
+      }
+    ],
+    "intc": [
+      {
         "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
         "tokenSymbol": "INTCon",
         "name": "Intel (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/intcon",
+        "coingeckoId": "intel-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/intel-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xfda09936dbd717368de0835ba441d9e62069d36f"
@@ -524,13 +843,22 @@
           "cJpUMp5R7rZ6fGeLHbHhrRuJzK9mkyKDjZqNpT3ondo",
           "0x7bf529bb5db370d679f33f4fe5420f48ee234bb7",
           "0xa528caaa2f96090e379d43f90834c75df54d6e74"
-        ]
+        ],
+        "allVenueVolumeUsd": 815589,
+        "marketCapUsd": 17955742,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "INTCx",
         "name": "Intel xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "intel-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/intel-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XshPgPdXFRWB8tP1j82rebb2Q9rPgGX37RuqzohmArM"
@@ -586,68 +914,80 @@
           "XshPgPdXFRWB8tP1j82rebb2Q9rPgGX37RuqzohmArM",
           "EQBBnSFyNZkNmq7I4E9yWhZDZQurcQhGkFeGBV_UXibFlv4-",
           "TMkWtCUBF9zatuda6onxoPeAUvkGiwaCHP"
-        ]
-      }
-    ],
-    "meta": [
+        ],
+        "allVenueVolumeUsd": 64728,
+        "marketCapUsd": 7170865,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
       {
         "issuer": "Robinhood",
-        "tokenSymbol": "META",
-        "name": "Meta Platforms • Robinhood Token",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "INTC",
+        "name": "Intel • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "intel-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/intel-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
-          "address": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
+          "address": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
         },
         "deployments": [
           {
             "network": "Robinhood Chain",
-            "address": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
+            "address": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
           }
         ],
         "queryAddresses": [
-          "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
-        ]
+          "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
+        ],
+        "allVenueVolumeUsd": 42184,
+        "marketCapUsd": 668475,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
       },
       {
-        "issuer": "Ondo",
-        "tokenSymbol": "METAon",
-        "name": "Meta Platforms (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/metaon",
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "INTC",
+        "name": "Intel (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/intel-backpack-securities",
+        "coingeckoId": "intel-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/intel-backpack-securities",
         "primaryDeployment": {
-          "network": "Ethereum",
-          "address": "0x59644165402b611b350645555b50afb581c71eb2"
+          "network": "Solana",
+          "address": "iNTCy1qTsUEZQe3DSocLz1ZXXai34Gdw8THQh5rxFaF"
         },
         "deployments": [
           {
-            "network": "Ethereum",
-            "address": "0x59644165402b611b350645555b50afb581c71eb2"
-          },
-          {
             "network": "Solana",
-            "address": "fDxs5y12E7x7jBwCKBXGqt71uJmCWsAQ3Srkte6ondo"
-          },
-          {
-            "network": "HyperEVM",
-            "address": "0x46fa18ffe2707bbecc46d457d40efbe6b932f711"
-          },
-          {
-            "network": "BNB Chain",
-            "address": "0xd7df5863a3e742f0c767768cdfcb63f09e0422f6"
+            "address": "iNTCy1qTsUEZQe3DSocLz1ZXXai34Gdw8THQh5rxFaF"
           }
         ],
         "queryAddresses": [
-          "0x59644165402b611b350645555b50afb581c71eb2",
-          "fDxs5y12E7x7jBwCKBXGqt71uJmCWsAQ3Srkte6ondo",
-          "0x46fa18ffe2707bbecc46d457d40efbe6b932f711",
-          "0xd7df5863a3e742f0c767768cdfcb63f09e0422f6"
-        ]
-      },
+          "iNTCy1qTsUEZQe3DSocLz1ZXXai34Gdw8THQh5rxFaF"
+        ],
+        "allVenueVolumeUsd": 36720,
+        "marketCapUsd": 517029,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
+      }
+    ],
+    "meta": [
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "METAx",
         "name": "Meta xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "meta-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "Xsa62P5mvPszXL1krVUnU5ar38bBSVcWAB6fmPCo5Zu"
@@ -703,34 +1043,151 @@
           "Xsa62P5mvPszXL1krVUnU5ar38bBSVcWAB6fmPCo5Zu",
           "EQD3cgQg432BiCSRli-hMswoVuvNnO42FuMdc-AXqd83SfcV",
           "TGJaEbWPNmM6NErggxJwWQ5ChRH7KxXF3a"
-        ]
-      }
-    ],
-    "mrvl": [
+        ],
+        "allVenueVolumeUsd": 1608537,
+        "marketCapUsd": 6905102,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
+      },
+      {
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "METAB",
+        "name": "Meta Platforms (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/meta-platforms-bstocks-tokenized-stock",
+        "coingeckoId": "meta-platforms-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-platforms-bstocks-tokenized-stock",
+        "primaryDeployment": {
+          "network": "BNB Chain",
+          "address": "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
+        },
+        "deployments": [
+          {
+            "network": "BNB Chain",
+            "address": "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
+          }
+        ],
+        "queryAddresses": [
+          "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
+        ],
+        "allVenueVolumeUsd": 1056919,
+        "marketCapUsd": 922253,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "METAon",
+        "name": "Meta Platforms (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/metaon",
+        "coingeckoId": "meta-platforms-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-platforms-ondo-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Ethereum",
+          "address": "0x59644165402b611b350645555b50afb581c71eb2"
+        },
+        "deployments": [
+          {
+            "network": "Ethereum",
+            "address": "0x59644165402b611b350645555b50afb581c71eb2"
+          },
+          {
+            "network": "Solana",
+            "address": "fDxs5y12E7x7jBwCKBXGqt71uJmCWsAQ3Srkte6ondo"
+          },
+          {
+            "network": "HyperEVM",
+            "address": "0x46fa18ffe2707bbecc46d457d40efbe6b932f711"
+          },
+          {
+            "network": "BNB Chain",
+            "address": "0xd7df5863a3e742f0c767768cdfcb63f09e0422f6"
+          }
+        ],
+        "queryAddresses": [
+          "0x59644165402b611b350645555b50afb581c71eb2",
+          "fDxs5y12E7x7jBwCKBXGqt71uJmCWsAQ3Srkte6ondo",
+          "0x46fa18ffe2707bbecc46d457d40efbe6b932f711",
+          "0xd7df5863a3e742f0c767768cdfcb63f09e0422f6"
+        ],
+        "allVenueVolumeUsd": 782658,
+        "marketCapUsd": 10097542,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
       {
         "issuer": "Robinhood",
-        "tokenSymbol": "MRVL",
-        "name": "Marvell Technology • Robinhood Token",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "META",
+        "name": "Meta Platforms • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "meta-platforms-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-platforms-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
-          "address": "0x62fd0668e10D8B72339BE2DCF7643001688ff13B"
+          "address": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
         },
         "deployments": [
           {
             "network": "Robinhood Chain",
-            "address": "0x62fd0668e10D8B72339BE2DCF7643001688ff13B"
+            "address": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
           }
         ],
         "queryAddresses": [
-          "0x62fd0668e10D8B72339BE2DCF7643001688ff13B"
-        ]
+          "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
+        ],
+        "allVenueVolumeUsd": 82700,
+        "marketCapUsd": 729312,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
       },
       {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "META",
+        "name": "Meta Platforms (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/meta-platforms-backpack-securities",
+        "coingeckoId": "meta-platforms-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-platforms-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "METAaH6MMZZgy2CTEJq3QdNi7AFVTV3NxHFBfFgLEDd"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "METAaH6MMZZgy2CTEJq3QdNi7AFVTV3NxHFBfFgLEDd"
+          }
+        ],
+        "queryAddresses": [
+          "METAaH6MMZZgy2CTEJq3QdNi7AFVTV3NxHFBfFgLEDd"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
+      }
+    ],
+    "mrvl": [
+      {
         "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
         "tokenSymbol": "MRVLon",
         "name": "Marvell Technology (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/mrvlon",
+        "coingeckoId": "marvell-technology-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-technology-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xf404e5f887dbd5508e16a1198fcdd5de1a4296b8"
@@ -753,13 +1210,50 @@
           "0xf404e5f887dbd5508e16a1198fcdd5de1a4296b8",
           "FovBwhoV5KQjZCdhoM6jgXYwXLX3F8vgAfvmLH7ondo",
           "0x1501ec83ffef405b4331cc4f73277a40fb0c627d"
-        ]
+        ],
+        "allVenueVolumeUsd": 1282700,
+        "marketCapUsd": 18168404,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
+      },
+      {
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "MRVLB",
+        "name": "Marvell Technology (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/marvell-technology-bstocks-tokenized-stock",
+        "coingeckoId": "marvell-technology-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-technology-bstocks-tokenized-stock",
+        "primaryDeployment": {
+          "network": "BNB Chain",
+          "address": "0x16cd4fe7e8880ecc3ba222795229e20489fc2c76"
+        },
+        "deployments": [
+          {
+            "network": "BNB Chain",
+            "address": "0x16cd4fe7e8880ecc3ba222795229e20489fc2c76"
+          }
+        ],
+        "queryAddresses": [
+          "0x16cd4fe7e8880ecc3ba222795229e20489fc2c76"
+        ],
+        "allVenueVolumeUsd": 421765,
+        "marketCapUsd": 7346582,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "MRVLx",
         "name": "Marvell xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "marvell-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsuxRGDzbLjnJ72v74b7p9VY6N66uYgTCyfwwRjVCJA"
@@ -815,34 +1309,108 @@
           "XsuxRGDzbLjnJ72v74b7p9VY6N66uYgTCyfwwRjVCJA",
           "EQDr0UNbQ3fLjH9czsFp-Uq9AG_BLP87yc6abzKfQS727x51",
           "TB6SgnNZyqz2KnFRw6yQM7AqVSCphfvBXy"
-        ]
-      }
-    ],
-    "msft": [
+        ],
+        "allVenueVolumeUsd": 38329,
+        "marketCapUsd": 5297706,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
       {
         "issuer": "Robinhood",
-        "tokenSymbol": "MSFT",
-        "name": "Microsoft • Robinhood Token",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "MRVL",
+        "name": "Marvell Technology • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "marvell-technology-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-technology-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
-          "address": "0xe93237C50D904957Cf27E7B1133b510C669c2e74"
+          "address": "0x62fd0668e10D8B72339BE2DCF7643001688ff13B"
         },
         "deployments": [
           {
             "network": "Robinhood Chain",
-            "address": "0xe93237C50D904957Cf27E7B1133b510C669c2e74"
+            "address": "0x62fd0668e10D8B72339BE2DCF7643001688ff13B"
           }
         ],
         "queryAddresses": [
-          "0xe93237C50D904957Cf27E7B1133b510C669c2e74"
-        ]
+          "0x62fd0668e10D8B72339BE2DCF7643001688ff13B"
+        ],
+        "allVenueVolumeUsd": 11.13,
+        "marketCapUsd": 5595.12,
+        "marketDataUpdatedAt": "2026-08-15T15:25:40.000Z",
+        "volumeRank": 4,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "MRVL",
+        "name": "Marvell Technology (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/marvell-technology-backpack-securities",
+        "coingeckoId": "marvell-technology-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-technology-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "MRVLSjkR2ceUBukujaD3xCyHP1H3B2SzpsNTZF546jo"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "MRVLSjkR2ceUBukujaD3xCyHP1H3B2SzpsNTZF546jo"
+          }
+        ],
+        "queryAddresses": [
+          "MRVLSjkR2ceUBukujaD3xCyHP1H3B2SzpsNTZF546jo"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
+      }
+    ],
+    "msft": [
+      {
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "MSFTB",
+        "name": "Microsoft (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/microsoft-bstocks-tokenized-stock",
+        "coingeckoId": "microsoft-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/microsoft-bstocks-tokenized-stock",
+        "primaryDeployment": {
+          "network": "BNB Chain",
+          "address": "0x80106cb3ead06659a5ad19df39d9b4733863b9b0"
+        },
+        "deployments": [
+          {
+            "network": "BNB Chain",
+            "address": "0x80106cb3ead06659a5ad19df39d9b4733863b9b0"
+          }
+        ],
+        "queryAddresses": [
+          "0x80106cb3ead06659a5ad19df39d9b4733863b9b0"
+        ],
+        "allVenueVolumeUsd": 954497,
+        "marketCapUsd": 0.0,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
         "tokenSymbol": "MSFTon",
         "name": "Microsoft (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/msfton",
+        "coingeckoId": "microsoft-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/microsoft-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xb812837b81a3a6b81d7cd74cfb19a7f2784555e5"
@@ -870,13 +1438,50 @@
           "FRmH6iRkMr33DLG6zVLR7EM4LojBFAuq6NtFzG6ondo",
           "0xd53471f6d493f7ed766181d88ba9c2bfc371399a",
           "0x6bfe75d1ad432050ea973c3a3dcd88f02e2444c3"
-        ]
+        ],
+        "allVenueVolumeUsd": 817936,
+        "marketCapUsd": 8957905,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "MSFT",
+        "name": "Microsoft • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "microsoft-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/microsoft-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0xe93237C50D904957Cf27E7B1133b510C669c2e74"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0xe93237C50D904957Cf27E7B1133b510C669c2e74"
+          }
+        ],
+        "queryAddresses": [
+          "0xe93237C50D904957Cf27E7B1133b510C669c2e74"
+        ],
+        "allVenueVolumeUsd": 48134,
+        "marketCapUsd": 824567,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "MSFTx",
         "name": "Microsoft xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "microsoft-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/microsoft-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX"
@@ -932,34 +1537,52 @@
           "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX",
           "EQDI9JwkYTEHM2TSFPSWFbwznBq07_I4Apy9TBhxsDlZaBvg",
           "TDVHfwqTFimf8bAYSkzvQe3vwArRDMdcFh"
-        ]
+        ],
+        "allVenueVolumeUsd": 26233,
+        "marketCapUsd": 7200305,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
       }
     ],
     "mu": [
       {
-        "issuer": "Robinhood",
-        "tokenSymbol": "MU",
-        "name": "Micron Technology • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "MUB",
+        "name": "Micron Technology (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/micron-technology-bstock",
+        "coingeckoId": "micron-technology-bstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-bstock",
         "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD"
+          "network": "BNB Chain",
+          "address": "0xcdf2f3e0fa43c47a6662a91c9e4a7c5f69762699"
         },
         "deployments": [
           {
-            "network": "Robinhood Chain",
-            "address": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD"
+            "network": "BNB Chain",
+            "address": "0xcdf2f3e0fa43c47a6662a91c9e4a7c5f69762699"
           }
         ],
         "queryAddresses": [
-          "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD"
-        ]
+          "0xcdf2f3e0fa43c47a6662a91c9e4a7c5f69762699"
+        ],
+        "allVenueVolumeUsd": 3894024,
+        "marketCapUsd": 49611012,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
         "tokenSymbol": "MUon",
         "name": "Micron Technology (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/muon",
+        "coingeckoId": "micron-technology-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x050362ab1072cb2ce74d74770e22a3203ad04ee5"
@@ -987,13 +1610,78 @@
           "Fz9edBpaURPPzpKVRR1A8PENYDEgHqwx5D5th28ondo",
           "0x0f8e33f5cdefae9c2e59de8fb61fed347046d046",
           "0x8b6acf6041a81567f012ff6a4c6d96d5818d74bf"
-        ]
+        ],
+        "allVenueVolumeUsd": 2686761,
+        "marketCapUsd": 45876934,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "MU",
+        "name": "Micron Technology (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/micron-technology-backpack-securities",
+        "coingeckoId": "micron-technology-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1"
+          }
+        ],
+        "queryAddresses": [
+          "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1"
+        ],
+        "allVenueVolumeUsd": 729880,
+        "marketCapUsd": 7172216,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "MU",
+        "name": "Micron Technology • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "micron-technology-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD"
+          }
+        ],
+        "queryAddresses": [
+          "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD"
+        ],
+        "allVenueVolumeUsd": 219938,
+        "marketCapUsd": 695334,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "MUx",
         "name": "Micron Technology xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "micron-technology-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsQLZycSZ7QnBBdBXQaTbQdiUcbRqjNJgyBGAMzhHav"
@@ -1044,68 +1732,52 @@
           "0xf6a873bae4ba1b304e45df52a4b7d176e1c6a8c4",
           "XsQLZycSZ7QnBBdBXQaTbQdiUcbRqjNJgyBGAMzhHav",
           "EQCnPM-kDm6ijBqBxR7R6lkoLzLJ8Oyi5CrEclZ0oVc16dFe"
-        ]
+        ],
+        "allVenueVolumeUsd": 52076,
+        "marketCapUsd": 0.0,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 5,
+        "preferred": false
       }
     ],
     "nvda": [
       {
-        "issuer": "Robinhood",
-        "tokenSymbol": "NVDA",
-        "name": "NVIDIA • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "NVDAB",
+        "name": "NVIDIA (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/nvidia-bstocks",
+        "coingeckoId": "nvidia-bstocks",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-bstocks",
         "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
+          "network": "BNB Chain",
+          "address": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436"
         },
         "deployments": [
-          {
-            "network": "Robinhood Chain",
-            "address": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
-          }
-        ],
-        "queryAddresses": [
-          "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
-        ]
-      },
-      {
-        "issuer": "Ondo",
-        "tokenSymbol": "NVDAon",
-        "name": "NVIDIA (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/nvdaon",
-        "primaryDeployment": {
-          "network": "Ethereum",
-          "address": "0x2d1f7226bd1f780af6b9a49dcc0ae00e8df4bdee"
-        },
-        "deployments": [
-          {
-            "network": "Ethereum",
-            "address": "0x2d1f7226bd1f780af6b9a49dcc0ae00e8df4bdee"
-          },
-          {
-            "network": "Solana",
-            "address": "gEGtLTPNQ7jcg25zTetkbmF7teoDLcrfTnQfmn2ondo"
-          },
-          {
-            "network": "HyperEVM",
-            "address": "0xb989ad9b91886b1aaed8daadb26f028b29b40945"
-          },
           {
             "network": "BNB Chain",
-            "address": "0xa9ee28c80f960b889dfbd1902055218cba016f75"
+            "address": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436"
           }
         ],
         "queryAddresses": [
-          "0x2d1f7226bd1f780af6b9a49dcc0ae00e8df4bdee",
-          "gEGtLTPNQ7jcg25zTetkbmF7teoDLcrfTnQfmn2ondo",
-          "0xb989ad9b91886b1aaed8daadb26f028b29b40945",
-          "0xa9ee28c80f960b889dfbd1902055218cba016f75"
-        ]
+          "0x02fca66c1d1afb4e2a7884261eb00f63598a7436"
+        ],
+        "allVenueVolumeUsd": 6042061,
+        "marketCapUsd": 9767808,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "NVDAx",
         "name": "NVIDIA xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "nvidia-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh"
@@ -1161,34 +1833,151 @@
           "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
           "EQCva-Of7acQdU_piADdlcbzsFtA-xJwZoctz8ZOXBdBoaB8",
           "TNMR6r9Z4cL7eWNrNQ4e4sm2XPhhifexZU"
-        ]
-      }
-    ],
-    "skhx": [
+        ],
+        "allVenueVolumeUsd": 3105024,
+        "marketCapUsd": 36353206,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
       {
         "issuer": "Robinhood",
-        "tokenSymbol": "SKHY",
-        "name": "SK hynix Inc. American Depositary Shares • Robinhood Token",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "NVDA",
+        "name": "NVIDIA • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "nvidia-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
-          "address": "0x84CAb63bc87912E71ad199ff14A0bA45de68FeF8"
+          "address": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
         },
         "deployments": [
           {
             "network": "Robinhood Chain",
-            "address": "0x84CAb63bc87912E71ad199ff14A0bA45de68FeF8"
+            "address": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
           }
         ],
         "queryAddresses": [
-          "0x84CAb63bc87912E71ad199ff14A0bA45de68FeF8"
-        ]
+          "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
+        ],
+        "allVenueVolumeUsd": 2085223,
+        "marketCapUsd": 4006340,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
       },
       {
         "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "NVDAon",
+        "name": "NVIDIA (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/nvdaon",
+        "coingeckoId": "nvidia-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-ondo-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Ethereum",
+          "address": "0x2d1f7226bd1f780af6b9a49dcc0ae00e8df4bdee"
+        },
+        "deployments": [
+          {
+            "network": "Ethereum",
+            "address": "0x2d1f7226bd1f780af6b9a49dcc0ae00e8df4bdee"
+          },
+          {
+            "network": "Solana",
+            "address": "gEGtLTPNQ7jcg25zTetkbmF7teoDLcrfTnQfmn2ondo"
+          },
+          {
+            "network": "HyperEVM",
+            "address": "0xb989ad9b91886b1aaed8daadb26f028b29b40945"
+          },
+          {
+            "network": "BNB Chain",
+            "address": "0xa9ee28c80f960b889dfbd1902055218cba016f75"
+          }
+        ],
+        "queryAddresses": [
+          "0x2d1f7226bd1f780af6b9a49dcc0ae00e8df4bdee",
+          "gEGtLTPNQ7jcg25zTetkbmF7teoDLcrfTnQfmn2ondo",
+          "0xb989ad9b91886b1aaed8daadb26f028b29b40945",
+          "0xa9ee28c80f960b889dfbd1902055218cba016f75"
+        ],
+        "allVenueVolumeUsd": 742431,
+        "marketCapUsd": 42218877,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "NVDA",
+        "name": "Nvidia (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/nvidia-backpack-securities",
+        "coingeckoId": "nvidia-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "NVDAVuiB7hwd3m5Wa1JuHNovPaPG6BH1QNztbKFxNjv"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "NVDAVuiB7hwd3m5Wa1JuHNovPaPG6BH1QNztbKFxNjv"
+          }
+        ],
+        "queryAddresses": [
+          "NVDAVuiB7hwd3m5Wa1JuHNovPaPG6BH1QNztbKFxNjv"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
+      }
+    ],
+    "skhx": [
+      {
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "SKHYB",
+        "name": "SK Hynix (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/sk-hynix-bstocks-tokenized-stock",
+        "coingeckoId": "sk-hynix-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/sk-hynix-bstocks-tokenized-stock",
+        "primaryDeployment": {
+          "network": "BNB Chain",
+          "address": "0xca750ef65f295bbecd685abf54e82caf297bdb61"
+        },
+        "deployments": [
+          {
+            "network": "BNB Chain",
+            "address": "0xca750ef65f295bbecd685abf54e82caf297bdb61"
+          }
+        ],
+        "queryAddresses": [
+          "0xca750ef65f295bbecd685abf54e82caf297bdb61"
+        ],
+        "allVenueVolumeUsd": 2145145,
+        "marketCapUsd": 19920832,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
+      },
+      {
+        "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
         "tokenSymbol": "SKHYon",
         "name": "SK Hynix (Ondo Tokenized)",
         "sourceUrl": "https://app.ondo.finance/assets/skhyon",
+        "coingeckoId": "sk-hynix-ondo-tokenized",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/sk-hynix-ondo-tokenized",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xc0fe36f4ffbdf1b38e192215073590a68f9a2af7"
@@ -1211,35 +2000,109 @@
           "0xc0fe36f4ffbdf1b38e192215073590a68f9a2af7",
           "Huyb2fyDDjSuDKCRWsN9ci2rmcgPo6NFiLbx9ZDondo",
           "0x4268f2bfb23a7496504aa5ed1ee325248586299f"
-        ]
+        ],
+        "allVenueVolumeUsd": 1119855,
+        "marketCapUsd": 1605692,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "SKHY",
+        "name": "SK Hynix (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/sk-hynix-backpack-securities",
+        "coingeckoId": "sk-hynix-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/sk-hynix-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "SKHYhSjuRWHgikq8eRKbtBbpABgJSkd7ytQV14i9EQ3"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "SKHYhSjuRWHgikq8eRKbtBbpABgJSkd7ytQV14i9EQ3"
+          }
+        ],
+        "queryAddresses": [
+          "SKHYhSjuRWHgikq8eRKbtBbpABgJSkd7ytQV14i9EQ3"
+        ],
+        "allVenueVolumeUsd": 921160,
+        "marketCapUsd": 2789972,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "SKHY",
+        "name": "SK hynix Inc. American Depositary Shares • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": null,
+        "marketDataUrl": null,
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0x84CAb63bc87912E71ad199ff14A0bA45de68FeF8"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0x84CAb63bc87912E71ad199ff14A0bA45de68FeF8"
+          }
+        ],
+        "queryAddresses": [
+          "0x84CAb63bc87912E71ad199ff14A0bA45de68FeF8"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
       }
     ],
     "smsn": [],
     "sndk": [
       {
-        "issuer": "Robinhood",
-        "tokenSymbol": "SNDK",
-        "name": "Sandisk Corporation • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "SNDKB",
+        "name": "SanDisk (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/sandisk-bstocks-tokenized-stock",
+        "coingeckoId": "sandisk-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-bstocks-tokenized-stock",
         "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
+          "network": "BNB Chain",
+          "address": "0x3ee4df61bd4f867e349beae8bfe07bc31b4850fb"
         },
         "deployments": [
           {
-            "network": "Robinhood Chain",
-            "address": "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
+            "network": "BNB Chain",
+            "address": "0x3ee4df61bd4f867e349beae8bfe07bc31b4850fb"
           }
         ],
         "queryAddresses": [
-          "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
-        ]
+          "0x3ee4df61bd4f867e349beae8bfe07bc31b4850fb"
+        ],
+        "allVenueVolumeUsd": 23866792,
+        "marketCapUsd": 35440418,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
         "tokenSymbol": "SNDKon",
         "name": "SanDisk (Ondo Tokenized)",
         "sourceUrl": "https://app.ondo.finance/assets/sndkon",
+        "coingeckoId": "sandisk-ondo-tokenized",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-ondo-tokenized",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x71e2400cf1cb83204f33794ed326636a71a9aafc"
@@ -1267,13 +2130,22 @@
           "EJmUVvDqAdfH5zEohkdS4234bi3c6iunqEMobjmondo",
           "0xb8927cff399e23328eec0e457e75c709dcfcf382",
           "0x4fd67cb8cfedc718bac984b5936abe3330d0a2a4"
-        ]
+        ],
+        "allVenueVolumeUsd": 2156345,
+        "marketCapUsd": 7020937,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "SNDKx",
         "name": "Sandisk Corporation xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "sandisk-corporation-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-corporation-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "Xswbpc8UqU6e1j9QZEWCjBMjyvz4twqD7PCy6j2e7jj"
@@ -1320,63 +2192,108 @@
           "0xb63efbc28860c8097e341de1fcf59456161e9d98",
           "Xswbpc8UqU6e1j9QZEWCjBMjyvz4twqD7PCy6j2e7jj",
           "EQDueP2yEIESbcrwJrH6WI8JOym4Zjb6zw1hTclaQ-r0aP5n"
-        ]
-      }
-    ],
-    "spcx": [
+        ],
+        "allVenueVolumeUsd": 975219,
+        "marketCapUsd": 13281419,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "SNDK",
+        "name": "Sandisk (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/sandisk-backpack-securities",
+        "coingeckoId": "sandisk-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
+          }
+        ],
+        "queryAddresses": [
+          "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
+        ],
+        "allVenueVolumeUsd": 411774,
+        "marketCapUsd": 1675881,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
+      },
       {
         "issuer": "Robinhood",
-        "tokenSymbol": "SPCX",
-        "name": "Space Exploration Technologies Corp. Class A Common Stock • Robinhood Token",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "SNDK",
+        "name": "Sandisk Corporation • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "sandisk-corporation-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-corporation-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
-          "address": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
+          "address": "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
         },
         "deployments": [
           {
             "network": "Robinhood Chain",
-            "address": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
+            "address": "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
           }
         ],
         "queryAddresses": [
-          "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
-        ]
-      },
+          "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
+        ],
+        "allVenueVolumeUsd": 201684,
+        "marketCapUsd": 1138878,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 5,
+        "preferred": false
+      }
+    ],
+    "spcx": [
       {
-        "issuer": "Ondo",
-        "tokenSymbol": "SPCXon",
-        "name": "SpaceX (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/spcxon",
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "SPCXB",
+        "name": "SpaceX (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/spacex-bstocks-tokenized-stock",
+        "coingeckoId": "spacex-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-bstocks-tokenized-stock",
         "primaryDeployment": {
-          "network": "Ethereum",
-          "address": "0xc9eef266834730340a55b6cc24621b31baf55581"
+          "network": "BNB Chain",
+          "address": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1"
         },
         "deployments": [
           {
-            "network": "Ethereum",
-            "address": "0xc9eef266834730340a55b6cc24621b31baf55581"
-          },
-          {
-            "network": "Solana",
-            "address": "wzAyQTorWyoVXuJKj2x8EqKEGJpS13z6EWE9z5Aondo"
-          },
-          {
             "network": "BNB Chain",
-            "address": "0xd0a58bc9d88d3ff48c0294cb7e45937d0e41a928"
+            "address": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1"
           }
         ],
         "queryAddresses": [
-          "0xc9eef266834730340a55b6cc24621b31baf55581",
-          "wzAyQTorWyoVXuJKj2x8EqKEGJpS13z6EWE9z5Aondo",
-          "0xd0a58bc9d88d3ff48c0294cb7e45937d0e41a928"
-        ]
+          "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1"
+        ],
+        "allVenueVolumeUsd": 25359546,
+        "marketCapUsd": 66659244,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "SPCXx",
         "name": "SpaceX xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "spacex-xstocks",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-xstocks",
         "primaryDeployment": {
           "network": "Solana",
           "address": "Xs3oZwbHvqis4NYcf4YKWmEia2eC84wSiVrcYcTqpH8"
@@ -1427,68 +2344,174 @@
           "0x68fa48b1c2fe52b3d776e1953e0e782b5044ce28",
           "Xs3oZwbHvqis4NYcf4YKWmEia2eC84wSiVrcYcTqpH8",
           "EQAAsfl1a-BA8dSSUX2VpLCveFYzDOLrJX9ll89baSbmvl2V"
-        ]
-      }
-    ],
-    "tsla": [
+        ],
+        "allVenueVolumeUsd": 4155794,
+        "marketCapUsd": 36313135,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "SPCX",
+        "name": "SpaceX (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/spacex-backpack-securities",
+        "coingeckoId": "spacex-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
+          }
+        ],
+        "queryAddresses": [
+          "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
+        ],
+        "allVenueVolumeUsd": 2358625,
+        "marketCapUsd": 6275472,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
       {
         "issuer": "Robinhood",
-        "tokenSymbol": "TSLA",
-        "name": "Tesla • Robinhood Token",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "SPCX",
+        "name": "Space Exploration Technologies Corp. Class A Common Stock • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "spacex-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
-          "address": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
+          "address": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
         },
         "deployments": [
           {
             "network": "Robinhood Chain",
-            "address": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
+            "address": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
           }
         ],
         "queryAddresses": [
-          "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
-        ]
+          "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
+        ],
+        "allVenueVolumeUsd": 1622575,
+        "marketCapUsd": 2484252,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
       },
       {
         "issuer": "Ondo",
-        "tokenSymbol": "TSLAon",
-        "name": "Tesla (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/tslaon",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "SPCXon",
+        "name": "SpaceX (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/spcxon",
+        "coingeckoId": "spacex-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
-          "address": "0xf6b1117ec07684d3958cad8beb1b302bfd21103f"
+          "address": "0xc9eef266834730340a55b6cc24621b31baf55581"
         },
         "deployments": [
           {
             "network": "Ethereum",
-            "address": "0xf6b1117ec07684d3958cad8beb1b302bfd21103f"
+            "address": "0xc9eef266834730340a55b6cc24621b31baf55581"
           },
           {
             "network": "Solana",
-            "address": "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo"
-          },
-          {
-            "network": "HyperEVM",
-            "address": "0x417883b1709545f1211a25b00ad13455fc7f1bc5"
+            "address": "wzAyQTorWyoVXuJKj2x8EqKEGJpS13z6EWE9z5Aondo"
           },
           {
             "network": "BNB Chain",
-            "address": "0x2494b603319d4d9f9715c9f4496d9e0364b59d93"
+            "address": "0xd0a58bc9d88d3ff48c0294cb7e45937d0e41a928"
           }
         ],
         "queryAddresses": [
-          "0xf6b1117ec07684d3958cad8beb1b302bfd21103f",
-          "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo",
-          "0x417883b1709545f1211a25b00ad13455fc7f1bc5",
-          "0x2494b603319d4d9f9715c9f4496d9e0364b59d93"
-        ]
+          "0xc9eef266834730340a55b6cc24621b31baf55581",
+          "wzAyQTorWyoVXuJKj2x8EqKEGJpS13z6EWE9z5Aondo",
+          "0xd0a58bc9d88d3ff48c0294cb7e45937d0e41a928"
+        ],
+        "allVenueVolumeUsd": 912657,
+        "marketCapUsd": 10073321,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 5,
+        "preferred": false
+      },
+      {
+        "issuer": "Reality",
+        "issuerUrl": "https://www.bitget.com/academy/what-is-raapl-apple-tokenized-stock-bitget",
+        "legalStructure": "Brokerage-backed economic exposure token",
+        "tokenSymbol": "rSPCX",
+        "name": "SpaceX (Reality Protocol)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/spacex-reality-protocol",
+        "coingeckoId": "spacex-reality-protocol",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-reality-protocol",
+        "primaryDeployment": {
+          "network": "Arbitrum",
+          "address": "0x5181b7dd097b42d7787ee78efab86f43d4e12f44"
+        },
+        "deployments": [
+          {
+            "network": "Arbitrum",
+            "address": "0x5181b7dd097b42d7787ee78efab86f43d4e12f44"
+          }
+        ],
+        "queryAddresses": [
+          "0x5181b7dd097b42d7787ee78efab86f43d4e12f44"
+        ],
+        "allVenueVolumeUsd": 704719,
+        "marketCapUsd": 5714540,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 6,
+        "preferred": false
+      }
+    ],
+    "tsla": [
+      {
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "TSLAB",
+        "name": "Tesla (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/tesla-bstocks-tokenized-stock",
+        "coingeckoId": "tesla-bstocks-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-bstocks-tokenized-stock",
+        "primaryDeployment": {
+          "network": "BNB Chain",
+          "address": "0x5b1910eaad6450e50f816082aa078c41f10c292f"
+        },
+        "deployments": [
+          {
+            "network": "BNB Chain",
+            "address": "0x5b1910eaad6450e50f816082aa078c41f10c292f"
+          }
+        ],
+        "queryAddresses": [
+          "0x5b1910eaad6450e50f816082aa078c41f10c292f"
+        ],
+        "allVenueVolumeUsd": 3415472,
+        "marketCapUsd": 13081941,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 1,
+        "preferred": true
       },
       {
         "issuer": "xStocks",
+        "issuerUrl": "https://xstocks.com/",
+        "legalStructure": "1:1 collateralized tracker certificate",
         "tokenSymbol": "TSLAx",
         "name": "Tesla xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
+        "coingeckoId": "tesla-xstock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB"
@@ -1544,7 +2567,111 @@
           "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB",
           "EQB4IwqWZPUczntdry8vSN2tsJKt-9F7iIb7gEFREYYOB563",
           "TTfj39Vm7ATpNJMsfDUWYVzxK8mPPA4yYE"
-        ]
+        ],
+        "allVenueVolumeUsd": 2644454,
+        "marketCapUsd": 65084037,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "TSLAon",
+        "name": "Tesla (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/tslaon",
+        "coingeckoId": "tesla-ondo-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-ondo-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Ethereum",
+          "address": "0xf6b1117ec07684d3958cad8beb1b302bfd21103f"
+        },
+        "deployments": [
+          {
+            "network": "Ethereum",
+            "address": "0xf6b1117ec07684d3958cad8beb1b302bfd21103f"
+          },
+          {
+            "network": "Solana",
+            "address": "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo"
+          },
+          {
+            "network": "HyperEVM",
+            "address": "0x417883b1709545f1211a25b00ad13455fc7f1bc5"
+          },
+          {
+            "network": "BNB Chain",
+            "address": "0x2494b603319d4d9f9715c9f4496d9e0364b59d93"
+          }
+        ],
+        "queryAddresses": [
+          "0xf6b1117ec07684d3958cad8beb1b302bfd21103f",
+          "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo",
+          "0x417883b1709545f1211a25b00ad13455fc7f1bc5",
+          "0x2494b603319d4d9f9715c9f4496d9e0364b59d93"
+        ],
+        "allVenueVolumeUsd": 1858931,
+        "marketCapUsd": 16101572,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "TSLA",
+        "name": "Tesla • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "tesla-robinhood-tokenized-stock",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
+          }
+        ],
+        "queryAddresses": [
+          "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
+        ],
+        "allVenueVolumeUsd": 306929,
+        "marketCapUsd": 1581491,
+        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "volumeRank": 4,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "TSLA",
+        "name": "Tesla (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/tesla-backpack-securities",
+        "coingeckoId": "tesla-backpack-securities",
+        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "TSLAqBbv4CNCnzWFeB7LmydAyEiNMJtve7DYKLpdK4S"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "TSLAqBbv4CNCnzWFeB7LmydAyEiNMJtve7DYKLpdK4S"
+          }
+        ],
+        "queryAddresses": [
+          "TSLAqBbv4CNCnzWFeB7LmydAyEiNMJtve7DYKLpdK4S"
+        ],
+        "allVenueVolumeUsd": null,
+        "marketCapUsd": null,
+        "marketDataUpdatedAt": null,
+        "volumeRank": null,
+        "preferred": false
       }
     ]
   }

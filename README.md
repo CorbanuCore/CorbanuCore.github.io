@@ -5,9 +5,12 @@ Static organization site for [CorbanuCore](https://github.com/CorbanuCore), publ
 The site is intentionally dependency-free: edit `index.html`, commit, and push to `main`.
 
 Market Lens pages are generated from the local navstrategies spot/perp index
-artifacts. Run the generator with the navstrategies Python environment:
+artifacts. Refresh the verified on-chain wrapper catalog and aggregate venue
+volume first, then rebuild the pages:
 
 ```bash
+python3 scripts/refresh_onchain_spot_catalog.py
+
 /home/postfiat/repos/navstrategies/.venv/bin/python \
   scripts/build_market_pages.py
 ```

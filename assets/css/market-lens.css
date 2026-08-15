@@ -156,25 +156,33 @@ main { min-height: 80vh; }
   padding: 1.35rem 2rem 1rem;
 }
 .onchain-head h2 { margin: 0; font: 500 clamp(1rem, 1.6vw, 1.3rem)/1.2 var(--sans); }
-.onchain-head > div > span { display: block; margin-top: .38rem; color: var(--dim); font: .62rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
-.onchain-live-stamp { color: var(--lime); font: 600 .62rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
+.onchain-head > div:first-child > span { display: block; margin-top: .38rem; color: var(--dim); font: .62rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.onchain-status { display: grid; justify-items: end; gap: .45rem; text-align: right; }
+.onchain-status strong { max-width: 52ch; color: var(--ink); font: 600 .68rem/1.35 var(--mono); font-variant-numeric: tabular-nums; }
+.onchain-live-stamp { color: var(--lime); font: 600 .58rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
 .onchain-table { margin: 0 2rem; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: rgba(0, 0, 0, .2); }
 .onchain-table-head, .onchain-market-row {
   display: grid; grid-template-columns: minmax(145px, .8fr) minmax(165px, 1fr) minmax(280px, 1.6fr) minmax(115px, .65fr) minmax(115px, .65fr);
   gap: 1rem; align-items: start;
 }
 .onchain-table-head { padding: .7rem 1rem; color: var(--dim); border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .025); font: 600 .59rem/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-.onchain-market-row { padding: 1rem; border-bottom: 1px solid var(--line); }
+.onchain-market-row { position: relative; padding: 1rem; border-bottom: 1px solid var(--line); }
 .onchain-market-row:last-child { border-bottom: 0; }
+.onchain-market-row.preferred-market { background: linear-gradient(90deg, rgba(204, 255, 0, .085), rgba(204, 255, 0, .015) 38%, transparent); box-shadow: inset 3px 0 0 var(--lime); }
 .onchain-cell { min-width: 0; }
-.onchain-token { display: flex; align-items: center; gap: .55rem; }
+.onchain-token { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .55rem; }
 .onchain-token strong { font: 700 .92rem/1 var(--mono); }
 .onchain-token a { color: var(--dim); font: 600 .58rem/1 var(--mono); text-decoration: none; text-transform: uppercase; letter-spacing: .06em; }
 .onchain-token a:hover, .onchain-token a:focus-visible { color: var(--lime); }
+.onchain-structure { display: block; margin: .5rem 0 0 1.05rem; color: var(--muted); font: .58rem/1.45 var(--mono); }
+.preferred-badge { padding: .27rem .4rem; color: #101300; border-radius: 3px; background: var(--lime); font: 800 .52rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .issuer-mark { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); box-shadow: 0 0 10px currentColor; }
 .issuer-robinhood .issuer-mark { color: var(--lime); background: var(--lime); }
 .issuer-ondo .issuer-mark { color: var(--blue); background: var(--blue); }
 .issuer-xstocks .issuer-mark { color: var(--coral); background: var(--coral); }
+.issuer-btechbinance .issuer-mark { color: #ffcb6b; background: #ffcb6b; }
+.issuer-backpack .issuer-mark { color: #bc9cff; background: #bc9cff; }
+.issuer-reality .issuer-mark { color: #4ee6c1; background: #4ee6c1; }
 .network-list { display: flex; flex-wrap: wrap; gap: .35rem; }
 .network-badge { padding: .28rem .42rem; color: #bfc5ba; border: 1px solid rgba(255, 255, 255, .12); border-radius: 4px; background: rgba(255, 255, 255, .025); font: .58rem/1 var(--mono); white-space: nowrap; }
 .network-details summary, .contract-details summary { color: var(--muted); cursor: pointer; font: .62rem/1.35 var(--mono); }
@@ -190,8 +198,11 @@ main { min-height: 80vh; }
 .contract-deployment a { color: #aeb5a8; font: .59rem/1.45 var(--mono); overflow-wrap: anywhere; }
 .onchain-metric strong { display: block; color: var(--ink); font: 700 .88rem/1.1 var(--mono); font-variant-numeric: tabular-nums; }
 .onchain-metric small { display: block; margin-top: .35rem; color: var(--dim); font: .57rem/1.35 var(--mono); }
+.onchain-metric small a { color: var(--dim); text-decoration-color: rgba(204, 255, 0, .28); text-underline-offset: 3px; }
+.onchain-metric small a:hover, .onchain-metric small a:focus-visible { color: var(--lime); }
 .onchain-loading, .onchain-empty { padding: 1.4rem 1rem; color: var(--muted); font: .7rem/1.55 var(--mono); }
 .onchain-note { margin: .8rem 2rem 1.35rem; color: var(--dim); font: .59rem/1.5 var(--mono); }
+.onchain-note strong { color: var(--ink); }
 .positive { color: var(--lime) !important; }
 .negative { color: var(--coral) !important; }
 
@@ -227,8 +238,8 @@ footer {
   .onchain-cell.token::before { content: "Token"; }
   .onchain-cell.networks::before { content: "Networks"; }
   .onchain-cell.contracts::before { content: "Primary contract"; }
-  .onchain-cell.liquidity::before { content: "DEX liquidity"; }
-  .onchain-cell.volume::before { content: "24h volume"; }
+  .onchain-cell.liquidity::before { content: "DEX pool TVL"; }
+  .onchain-cell.volume::before { content: "All-venue 24h"; }
 }
 
 @media (max-width: 620px) {
@@ -249,7 +260,8 @@ footer {
   .ratio-head span { max-width: 28ch; }
   .ratio-stage { height: 210px; }
   .onchain-head { align-items: start; padding: 1.15rem; }
-  .onchain-live-stamp { max-width: 13ch; text-align: right; white-space: normal; }
+  .onchain-status { max-width: 48%; }
+  .onchain-status strong, .onchain-live-stamp { text-align: right; white-space: normal; }
   .onchain-table { margin: 0 1.15rem; }
   .onchain-note { margin: .75rem 1.15rem 1.2rem; }
   .chart-foot { grid-template-columns: 1fr 1fr; }
