@@ -17,20 +17,39 @@ DEFAULT_NAV_ROOT = Path("/home/postfiat/repos/navstrategies")
 NAMES = {
     "AAPL": "Apple",
     "AMD": "Advanced Micro Devices",
+    "AMZN": "Amazon",
+    "BE": "Bloom Energy",
+    "BRENTOIL": "Brent crude oil",
+    "CBRS": "Cerebras Systems",
+    "CL": "WTI crude oil",
+    "COIN": "Coinbase",
+    "COPPER": "Copper",
     "CRCL": "Circle Internet Group",
     "CXMT": "CXMT Corp. Class A",
+    "DRAM": "Roundhill Memory ETF",
+    "EWY": "iShares MSCI South Korea ETF",
+    "GOLD": "Gold",
     "GOOGL": "Alphabet",
     "INTC": "Intel",
     "META": "Meta Platforms",
     "MRVL": "Marvell Technology",
+    "MSTR": "Strategy",
     "MSFT": "Microsoft",
     "MU": "Micron Technology",
+    "NATGAS": "Natural gas",
+    "NBIS": "Nebius Group",
     "NVDA": "NVIDIA",
-    "SKHX": "SK hynix",
+    "PLTR": "Palantir Technologies",
+    "SILVER": "Silver",
+    "SKHX": "SK hynix common",
+    "SKHY": "SK hynix ADR",
     "SMSN": "Samsung Electronics",
     "SNDK": "Sandisk",
+    "SOXL": "Direxion Daily Semiconductor Bull 3X Shares",
+    "SP500": "S&P 500",
     "SPCX": "SpaceX",
     "TSLA": "Tesla",
+    "XYZ100": "Nasdaq-100",
 }
 
 
@@ -56,7 +75,7 @@ def _timestamp(value: Any) -> str | None:
     return pd.Timestamp(value).isoformat().replace("+00:00", "Z")
 
 
-def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
+def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_version: str) -> str:
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -93,8 +112,8 @@ def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
           <div>
             <div class="chart-title-row"><h1 id="chart-title">{symbol} Spot and Perp Total Returns</h1></div>
             <div class="legend" aria-label="Chart legend">
-              <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>Perp total return · long · seven-day</span>
-              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>Spot total return</span>
+              <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>{symbol} perp total return · long · seven-day</span>
+              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>{spot_symbol} spot total return</span>
             </div>
           </div>
           <div class="range-controls" role="group" aria-label="Chart window">
@@ -112,7 +131,7 @@ def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
         <div class="chart-foot" aria-label="Data availability">
-          <div><small>Spot begins</small><strong id="spot-start">—</strong></div>
+          <div><small>{spot_symbol} spot begins</small><strong id="spot-start">—</strong></div>
           <div><small>Swap begins</small><strong id="perp-start">—</strong></div>
           <div><small>Shared 100 anchor</small><strong id="anchor-date">—</strong></div>
           <div><small>Exact 30-minute sessions</small><strong id="exact-start">—</strong></div>
@@ -142,7 +161,7 @@ def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
         <section class="ratio-panel" aria-labelledby="ratio-title">
           <header class="ratio-head">
             <div>
-              <h2 id="ratio-title">Perp Long / Spot Long Total Return Ratio</h2>
+              <h2 id="ratio-title">{symbol} Perp Long / {spot_symbol} Spot Long Total Return Ratio</h2>
               <span>1.00 = equal return since shared anchor · spot held at its last close between cash sessions</span>
             </div>
             <strong id="ratio-latest">—</strong>
@@ -217,6 +236,8 @@ def build(nav_root: Path) -> None:
         slug = symbol.lower()
         name = NAMES.get(symbol, symbol)
         spot_group = spot.loc[spot["raw_symbol"].eq(raw_symbol)].sort_values("date").copy()
+        spot_symbol = str(spot_group.iloc[0].get("spot_reference_symbol") or symbol)
+        spot_source = str(spot_group.iloc[-1].get("return_source") or "unknown")
         perp_group = perp.loc[perp["raw_symbol"].eq(raw_symbol)].sort_values("date").copy()
         shared_dates = sorted(set(spot_group["date"]) & set(perp_group["date"]))
         if not shared_dates:
@@ -272,6 +293,8 @@ def build(nav_root: Path) -> None:
             "symbol": symbol,
             "rawSymbol": raw_symbol,
             "name": name,
+            "spotReferenceSymbol": spot_symbol,
+            "spotReturnSource": spot_source,
             "spotStart": spot_rows[0]["d"],
             "perpStart": perp_rows[0]["d"],
             "anchorDate": _date(anchor_date),
@@ -317,6 +340,7 @@ def build(nav_root: Path) -> None:
             _page_html(
                 slug=slug,
                 symbol=symbol,
+                spot_symbol=spot_symbol,
                 name=name,
                 asset_version=asset_version,
             ),
@@ -326,6 +350,7 @@ def build(nav_root: Path) -> None:
                 "slug": slug,
                 "symbol": symbol,
                 "name": name,
+                "spotReferenceSymbol": spot_symbol,
                 "spotStart": spot_rows[0]["d"],
                 "perpStart": perp_rows[0]["d"],
                 "endDate": max(spot_rows[-1]["d"], perp_rows[-1]["d"]),

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -14,42 +15,58 @@ from urllib.request import Request, urlopen
 SITE_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = SITE_ROOT / "assets" / "market-data" / "onchain-spot-catalog.json"
 SYMBOLS = (
-    "AAPL",
-    "AMD",
-    "CRCL",
-    "CXMT",
-    "GOOGL",
-    "INTC",
-    "META",
-    "MRVL",
-    "MSFT",
-    "MU",
-    "NVDA",
-    "SKHX",
-    "SMSN",
-    "SNDK",
-    "SPCX",
-    "TSLA",
+    "AAPL", "AMD", "AMZN", "BE", "BRENTOIL", "CBRS", "CL", "COIN",
+    "COPPER", "CRCL", "CXMT", "DRAM", "EWY", "GOLD", "GOOGL", "INTC",
+    "META", "MRVL", "MSTR", "MSFT", "MU", "NATGAS", "NBIS", "NVDA",
+    "PLTR", "SILVER", "SKHX", "SKHY", "SMSN", "SNDK", "SOXL", "SP500",
+    "SPCX", "TSLA", "XYZ100",
 )
-ROBINHOOD_SYMBOLS = {"SKHX": "SKHY"}
+SPOT_REGISTRY_SYMBOLS = {
+    "BRENTOIL": "BNO",
+    "CL": "USO",
+    "COPPER": "CPER",
+    "GOLD": "GLD",
+    "NATGAS": "UNG",
+    "SILVER": "SLV",
+    "SKHX": "SKHY",
+    "SP500": "SPY",
+    "XYZ100": "QQQ",
+}
 ONDO_IDS = {
     "AAPL": "apple-ondo-tokenized-stock",
     "AMD": "amd-ondo-tokenized-stock",
+    "AMZN": "amazon-ondo-tokenized-stock",
+    "BE": "bloom-energy-ondo-tokenized",
+    "BRENTOIL": "us-brent-oil-fund-ondo-tokenized",
+    "CBRS": "cerebras-systems-ondo-tokenized",
+    "CL": "united-states-oil-fund-ondo-tokenized",
+    "COIN": "coinbase-ondo-tokenized-stock",
+    "COPPER": "us-copper-index-fund-ondo-tokenized",
     "CRCL": "circle-internet-group-ondo-tokenized-stock",
+    "DRAM": "roundhill-memory-etf-ondo-tokenized",
+    "EWY": "ishares-msci-south-korea-etf-ondo-tokenized",
+    "GOLD": "spdr-gold-shares-ondo-tokenized",
     "GOOGL": "alphabet-class-a-ondo-tokenized-stock",
     "INTC": "intel-ondo-tokenized-stock",
     "META": "meta-platforms-ondo-tokenized-stock",
     "MRVL": "marvell-technology-ondo-tokenized-stock",
+    "MSTR": "microstrategy-ondo-tokenized-stock",
     "MSFT": "microsoft-ondo-tokenized-stock",
     "MU": "micron-technology-ondo-tokenized-stock",
+    "NATGAS": "us-natural-gas-fund-ondo-tokenized",
+    "NBIS": "nebius-group-ondo-tokenized",
     "NVDA": "nvidia-ondo-tokenized-stock",
+    "PLTR": "palantir-technologies-ondo-tokenized-stock",
+    "SILVER": "ishares-silver-trust-ondo-tokenized-stock",
     "SKHX": "sk-hynix-ondo-tokenized",
+    "SKHY": "sk-hynix-ondo-tokenized",
     "SNDK": "sandisk-ondo-tokenized",
+    "SOXL": "direxion-daily-semi-bull-3x-etf-ondo-tokenized",
+    "SP500": "spdr-s-p-500-etf-ondo-tokenized-etf",
     "SPCX": "spacex-ondo-tokenized-stock",
     "TSLA": "tesla-ondo-tokenized-stock",
+    "XYZ100": "invesco-qqq-etf-ondo-tokenized-etf",
 }
-ONDO_TOKEN_SYMBOLS = {symbol: f"{symbol}on" for symbol in ONDO_IDS}
-ONDO_TOKEN_SYMBOLS["SKHX"] = "SKHYon"
 ADDITIONAL_COINGECKO_IDS = {
     "BTech / Binance": {
         "AAPL": "apple-bstocks-tokenized-stock",
@@ -112,6 +129,11 @@ ISSUER_DETAILS = {
         "issuerUrl": "https://www.bitget.com/academy/what-is-raapl-apple-tokenized-stock-bitget",
         "legalStructure": "Brokerage-backed economic exposure token",
         "primaryNetwork": "Arbitrum",
+    },
+    "Paxos": {
+        "issuerUrl": "https://www.paxos.com/paxgold",
+        "legalStructure": "Allocated physical gold token",
+        "primaryNetwork": "Ethereum",
     },
 }
 NETWORK_NAMES = {
@@ -873,6 +895,13 @@ def additional_token_symbol(issuer: str, asset: dict[str, Any]) -> str:
     return symbol.upper()
 
 
+def ondo_token_symbol(asset: dict[str, Any]) -> str:
+    symbol = str(asset["symbol"])
+    if symbol.casefold().endswith("on"):
+        return f"{symbol[:-2].upper()}on"
+    return symbol.upper()
+
+
 def main() -> None:
     robinhood = fetch_json("https://api.robinhood.com/rhj/assets")["assets"]
     robinhood_by_symbol = {row["tokenSymbol"]: row for row in robinhood if row.get("status") == "ASSET_STATUS_ACTIVE"}
@@ -895,7 +924,8 @@ def main() -> None:
     for symbol in SYMBOLS:
         rows: list[dict[str, Any]] = []
 
-        robinhood_symbol = ROBINHOOD_SYMBOLS.get(symbol, symbol)
+        registry_symbol = SPOT_REGISTRY_SYMBOLS.get(symbol, symbol)
+        robinhood_symbol = registry_symbol
         robinhood_asset = robinhood_by_symbol.get(robinhood_symbol)
         if robinhood_asset:
             robinhood_coingecko_id = coingecko_id_for_token(
@@ -925,20 +955,20 @@ def main() -> None:
             rows.append(
                 market(
                     issuer="Ondo",
-                    token_symbol=ONDO_TOKEN_SYMBOLS[symbol],
+                    token_symbol=ondo_token_symbol(ondo_asset),
                     name=ondo_asset["name"],
                     deployments=[
                         {"network": network, "address": address}
                         for network, address in ondo_asset.get("platforms", {}).items()
                         if address
                     ],
-                    source_url=f"https://app.ondo.finance/assets/{ONDO_TOKEN_SYMBOLS[symbol].lower()}",
+                    source_url=f"https://app.ondo.finance/assets/{ondo_token_symbol(ondo_asset).lower()}",
                     primary_network="Ethereum",
                     coingecko_id=ondo_id,
                 )
             )
 
-        xstock = xstocks_by_symbol.get(symbol)
+        xstock = xstocks_by_symbol.get(registry_symbol)
         if xstock:
             xstock_coingecko_id = coingecko_id_for_token(
                 coingecko, xstock["symbol"], "xStock"
@@ -952,6 +982,23 @@ def main() -> None:
                     source_url="https://api.backed.fi/rest/tokens",
                     primary_network="Solana",
                     coingecko_id=xstock_coingecko_id,
+                )
+            )
+
+        if symbol == "GOLD":
+            rows.append(
+                market(
+                    issuer="Paxos",
+                    token_symbol="PAXG",
+                    name="Pax Gold",
+                    deployments=[
+                        {
+                            "network": "Ethereum",
+                            "address": "0x45804880De22913dAFE09f4980848ECE6EcbAf78",
+                        }
+                    ],
+                    source_url="https://www.paxos.com/paxgold",
+                    primary_network="Ethereum",
                 )
             )
 
@@ -979,85 +1026,89 @@ def main() -> None:
 
         instruments[symbol.lower()] = rows
 
-    for symbol, rows in instruments.items():
-        for row in rows:
-            direct_venues: list[dict[str, Any]] = []
-            token_symbol = str(row["tokenSymbol"])
-            if row.get("issuer") == "Robinhood":
-                robinhood_asset = robinhood_by_symbol.get(token_symbol)
-                if robinhood_asset:
-                    try:
-                        reference = robinhood_reference(robinhood_asset)
-                        direct_venues.append(reference)
-                        pool = uniswap_v3_pool(robinhood_asset, reference)
-                        if pool:
-                            direct_venues.append(pool)
-                    except Exception as error:
-                        print(f"warning: Robinhood / Uniswap {token_symbol}: {error}")
-            # Robinhood tokens settle on Robinhood Chain. A CEX pair sharing an
-            # equity ticker can be an unrelated crypto asset (for example META),
-            # so never attach symbol-only CEX matches to Robinhood deployments.
-            if row.get("issuer") != "Robinhood":
-                binance_pair = f"{token_symbol.upper()}USDT"
-                if binance_pair in binance_pairs:
-                    try:
-                        direct_venues.append(binance_book(token_symbol.upper(), binance_pair))
-                    except Exception as error:
-                        print(f"warning: Binance {binance_pair}: {error}")
-
-                lbank_pair = f"{token_symbol.lower()}_usdt"
-                if lbank_pair in lbank_pairs:
-                    try:
-                        direct_venues.append(lbank_book(token_symbol.upper(), lbank_pair))
-                    except Exception as error:
-                        print(f"warning: LBank {lbank_pair}: {error}")
-
-            bsc_deployments = [
-                deployment
-                for deployment in row.get("deployments", [])
-                if deployment.get("network") == "BNB Chain"
-            ]
-            for deployment in bsc_deployments:
+    def hydrate_direct_venues(task: tuple[str, dict[str, Any]]) -> None:
+        symbol, row = task
+        direct_venues: list[dict[str, Any]] = []
+        token_symbol = str(row["tokenSymbol"])
+        if row.get("issuer") == "Robinhood":
+            robinhood_asset = robinhood_by_symbol.get(token_symbol)
+            if robinhood_asset:
                 try:
-                    pool = pancakeswap_v3_pool(
-                        str(deployment["address"]), token_symbol
-                    )
+                    reference = robinhood_reference(robinhood_asset)
+                    direct_venues.append(reference)
+                    pool = uniswap_v3_pool(robinhood_asset, reference)
+                    if pool:
+                        direct_venues.append(pool)
                 except Exception as error:
-                    print(
-                        f"warning: PancakeSwap {symbol} "
-                        f"{deployment['address']}: {error}"
-                    )
-                    pool = None
-                if pool:
-                    direct_venues.append(pool)
-                    break
-
-            solana_deployments = [
-                deployment
-                for deployment in row.get("deployments", [])
-                if deployment.get("network") == "Solana"
-            ]
-            for deployment in solana_deployments:
+                    print(f"warning: Robinhood / Uniswap {token_symbol}: {error}")
+        # Robinhood tokens settle on Robinhood Chain. A CEX pair sharing an
+        # equity ticker can be an unrelated crypto asset (for example META),
+        # so never attach symbol-only CEX matches to Robinhood deployments.
+        if row.get("issuer") != "Robinhood":
+            binance_pair = f"{token_symbol.upper()}USDT"
+            if binance_pair in binance_pairs:
                 try:
-                    pool = meteora_pool(str(deployment["address"]))
+                    direct_venues.append(binance_book(token_symbol.upper(), binance_pair))
                 except Exception as error:
-                    print(f"warning: Meteora {symbol} {deployment['address']}: {error}")
-                    pool = None
-                if pool:
-                    direct_venues.append(pool)
-                    break
+                    print(f"warning: Binance {binance_pair}: {error}")
 
-            direct_venues.sort(
-                key=lambda venue: float(venue.get("quoteVolume24hUsd") or 0.0),
-                reverse=True,
-            )
-            row["directVenues"] = direct_venues
-            row["directVenueVolumeUsd"] = sum(
-                float(venue.get("quoteVolume24hUsd") or 0.0)
-                for venue in direct_venues
-            )
-            row.pop("marketDataUrl", None)
+            lbank_pair = f"{token_symbol.lower()}_usdt"
+            if lbank_pair in lbank_pairs:
+                try:
+                    direct_venues.append(lbank_book(token_symbol.upper(), lbank_pair))
+                except Exception as error:
+                    print(f"warning: LBank {lbank_pair}: {error}")
 
+        bsc_deployments = [
+            deployment
+            for deployment in row.get("deployments", [])
+            if deployment.get("network") == "BNB Chain"
+        ]
+        for deployment in bsc_deployments:
+            try:
+                pool = pancakeswap_v3_pool(str(deployment["address"]), token_symbol)
+            except Exception as error:
+                print(f"warning: PancakeSwap {symbol} {deployment['address']}: {error}")
+                pool = None
+            if pool:
+                direct_venues.append(pool)
+                break
+
+        solana_deployments = [
+            deployment
+            for deployment in row.get("deployments", [])
+            if deployment.get("network") == "Solana"
+        ]
+        for deployment in solana_deployments:
+            try:
+                pool = meteora_pool(str(deployment["address"]))
+            except Exception as error:
+                print(f"warning: Meteora {symbol} {deployment['address']}: {error}")
+                pool = None
+            if pool:
+                direct_venues.append(pool)
+                break
+
+        direct_venues.sort(
+            key=lambda venue: float(venue.get("quoteVolume24hUsd") or 0.0),
+            reverse=True,
+        )
+        row["directVenues"] = direct_venues
+        row["directVenueVolumeUsd"] = sum(
+            float(venue.get("quoteVolume24hUsd") or 0.0)
+            for venue in direct_venues
+        )
+        row.pop("marketDataUrl", None)
+
+    venue_tasks = [
+        (symbol, row)
+        for symbol, rows in instruments.items()
+        for row in rows
+    ]
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        list(executor.map(hydrate_direct_venues, venue_tasks))
+
+    for rows in instruments.values():
         rows.sort(
             key=lambda row: float(row.get("directVenueVolumeUsd") or 0.0),
             reverse=True,
