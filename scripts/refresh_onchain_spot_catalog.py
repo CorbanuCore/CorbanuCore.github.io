@@ -7,6 +7,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
@@ -160,12 +161,165 @@ NETWORK_ORDER = {
         )
     )
 }
+BINANCE_API = "https://data-api.binance.vision/api/v3"
+LBANK_API = "https://api.lbkex.com/v2"
+METEORA_API = "https://dlmm.datapi.meteora.ag"
+DEPTH_BAND_PCT = 2.0
+MAJOR_SOLANA_QUOTES = {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": "USDC",
+    "Es9vMFrzaCERmJfrF4H2FYD6K2eY4W7WMsF6gQ8h4uK": "USDT",
+}
 
 
 def fetch_json(url: str) -> Any:
     request = Request(url, headers={"Accept": "application/json", "User-Agent": "Corbanu-Market-Lens/1.0"})
     with urlopen(request, timeout=30) as response:
         return json.load(response)
+
+
+def utc_iso(timestamp_ms: int | float | None = None) -> str:
+    observed = (
+        datetime.fromtimestamp(float(timestamp_ms) / 1000.0, tz=timezone.utc)
+        if timestamp_ms is not None
+        else datetime.now(timezone.utc)
+    )
+    return observed.isoformat().replace("+00:00", "Z")
+
+
+def order_book_snapshot(
+    *,
+    venue: str,
+    pair: str,
+    base_symbol: str,
+    bids: list[list[str]],
+    asks: list[list[str]],
+    last_price: str | float,
+    quote_volume: str | float,
+    observed_at: str,
+    source_url: str,
+    trade_url: str,
+    live_adapter: str | None = None,
+) -> dict[str, Any]:
+    normalized_bids = sorted(
+        ((float(price), float(quantity)) for price, quantity in bids), reverse=True
+    )
+    normalized_asks = sorted(
+        (float(price), float(quantity)) for price, quantity in asks
+    )
+    if not normalized_bids or not normalized_asks:
+        raise RuntimeError(f"{venue} returned an empty book for {pair}")
+    best_bid = normalized_bids[0][0]
+    best_ask = normalized_asks[0][0]
+    mid = (best_bid + best_ask) / 2.0
+    lower = mid * (1.0 - DEPTH_BAND_PCT / 100.0)
+    upper = mid * (1.0 + DEPTH_BAND_PCT / 100.0)
+    sell_depth = sum(price * quantity for price, quantity in normalized_bids if price >= lower)
+    buy_depth = sum(price * quantity for price, quantity in normalized_asks if price <= upper)
+    return {
+        "kind": "orderBook",
+        "venue": venue,
+        "pair": pair,
+        "baseSymbol": base_symbol,
+        "quoteSymbol": "USDT",
+        "lastPrice": float(last_price),
+        "bestBid": best_bid,
+        "bestAsk": best_ask,
+        "midPrice": mid,
+        "spreadBps": (best_ask / best_bid - 1.0) * 10_000.0,
+        "depthBandPct": DEPTH_BAND_PCT,
+        "buyDepthUsd": buy_depth,
+        "sellDepthUsd": sell_depth,
+        "buyDepthComplete": normalized_asks[-1][0] >= upper,
+        "sellDepthComplete": normalized_bids[-1][0] <= lower,
+        "quoteVolume24hUsd": float(quote_volume),
+        "observedAt": observed_at,
+        "sourceUrl": source_url,
+        "tradeUrl": trade_url,
+        "liveAdapter": live_adapter,
+    }
+
+
+def binance_book(base_symbol: str, pair: str) -> dict[str, Any]:
+    depth_url = f"{BINANCE_API}/depth?symbol={pair}&limit=1000"
+    ticker_url = f"{BINANCE_API}/ticker/24hr?symbol={pair}"
+    depth = fetch_json(depth_url)
+    ticker = fetch_json(ticker_url)
+    return order_book_snapshot(
+        venue="Binance",
+        pair=f"{base_symbol}/USDT",
+        base_symbol=base_symbol,
+        bids=depth["bids"],
+        asks=depth["asks"],
+        last_price=ticker["lastPrice"],
+        quote_volume=ticker["quoteVolume"],
+        observed_at=utc_iso(ticker["closeTime"]),
+        source_url=depth_url,
+        trade_url=f"https://www.binance.com/en/trade/{base_symbol}_USDT?type=spot",
+        live_adapter="binanceSpot",
+    )
+
+
+def lbank_book(base_symbol: str, pair: str) -> dict[str, Any]:
+    depth_url = f"{LBANK_API}/depth.do?symbol={pair}&size=200"
+    ticker_url = f"{LBANK_API}/ticker/24hr.do?symbol={pair}"
+    depth = fetch_json(depth_url)["data"]
+    ticker_payload = fetch_json(ticker_url)
+    ticker_row = ticker_payload["data"][0]
+    ticker = ticker_row["ticker"]
+    return order_book_snapshot(
+        venue="LBank",
+        pair=f"{base_symbol}/USDT",
+        base_symbol=base_symbol,
+        bids=depth["bids"],
+        asks=depth["asks"],
+        last_price=ticker["latest"],
+        quote_volume=ticker["turnover"],
+        observed_at=utc_iso(ticker_row.get("timestamp") or ticker_payload.get("ts")),
+        source_url=depth_url,
+        trade_url=f"https://www.lbank.com/trade/{pair}",
+    )
+
+
+def meteora_pool(token_address: str) -> dict[str, Any] | None:
+    query_url = f"{METEORA_API}/pools?{urlencode({'query': token_address, 'page_size': 100, 'sort_by': 'tvl:desc'})}"
+    payload = fetch_json(query_url)
+    eligible: list[tuple[dict[str, Any], dict[str, Any], bool]] = []
+    for pool in payload.get("data", []):
+        token_x = pool.get("token_x", {})
+        token_y = pool.get("token_y", {})
+        target_is_x = str(token_x.get("address")) == token_address
+        target_is_y = str(token_y.get("address")) == token_address
+        quote = token_y if target_is_x else token_x if target_is_y else {}
+        if (
+            str(quote.get("address")) in MAJOR_SOLANA_QUOTES
+            and float(pool.get("current_price") or 0.0) > 0.0
+            and float(pool.get("tvl") or 0.0) > 0.0
+        ):
+            eligible.append((pool, quote, target_is_x))
+    if not eligible:
+        return None
+    pool, quote, target_is_x = max(
+        eligible, key=lambda item: float(item[0].get("tvl") or 0.0)
+    )
+    raw_price = float(pool["current_price"])
+    price = raw_price if target_is_x else 1.0 / raw_price
+    address = str(pool["address"])
+    return {
+        "kind": "ammPool",
+        "venue": "Meteora",
+        "pair": str(pool["name"]),
+        "quoteSymbol": str(quote.get("symbol") or MAJOR_SOLANA_QUOTES[str(quote["address"])]),
+        "lastPrice": price,
+        "poolTvlUsd": float(pool.get("tvl") or 0.0),
+        "quoteVolume24hUsd": float(pool.get("volume", {}).get("24h") or 0.0),
+        "feePct": float(pool.get("dynamic_fee_pct") or pool.get("pool_config", {}).get("base_fee_pct") or 0.0),
+        "observedAt": utc_iso(),
+        "sourceUrl": f"{METEORA_API}/pools/{address}",
+        "tradeUrl": f"https://app.meteora.ag/dlmm/{address}",
+        "poolAddress": address,
+        "targetSide": "x" if target_is_x else "y",
+        "liveAdapter": "meteoraDlmm",
+    }
 
 
 def normalize_address(value: str) -> str:
@@ -239,6 +393,12 @@ def main() -> None:
     }
     coingecko = fetch_json("https://api.coingecko.com/api/v3/coins/list?include_platform=true")
     coingecko_by_id = {row["id"]: row for row in coingecko}
+    binance_pairs = {
+        str(row["symbol"])
+        for row in fetch_json(f"{BINANCE_API}/exchangeInfo")["symbols"]
+        if row.get("status") == "TRADING" and row.get("quoteAsset") == "USDT"
+    }
+    lbank_pairs = set(fetch_json(f"{LBANK_API}/currencyPairs.do")["data"])
 
     instruments: dict[str, list[dict[str, Any]]] = {}
     for symbol in SYMBOLS:
@@ -328,44 +488,67 @@ def main() -> None:
 
         instruments[symbol.lower()] = rows
 
-    coingecko_ids = sorted(
-        {
-            row["coingeckoId"]
-            for rows in instruments.values()
-            for row in rows
-            if row.get("coingeckoId")
-        }
-    )
-    market_stats = fetch_json(
-        "https://api.coingecko.com/api/v3/coins/markets"
-        f"?vs_currency=usd&ids={','.join(coingecko_ids)}&sparkline=false"
-    )
-    stats_by_id = {row["id"]: row for row in market_stats}
-    for rows in instruments.values():
+    for symbol, rows in instruments.items():
         for row in rows:
-            stats = stats_by_id.get(row.get("coingeckoId"), {})
-            row["allVenueVolumeUsd"] = stats.get("total_volume")
-            row["marketCapUsd"] = stats.get("market_cap")
-            row["marketDataUpdatedAt"] = stats.get("last_updated")
+            direct_venues: list[dict[str, Any]] = []
+            token_symbol = str(row["tokenSymbol"])
+            binance_pair = f"{token_symbol.upper()}USDT"
+            if binance_pair in binance_pairs:
+                try:
+                    direct_venues.append(binance_book(token_symbol.upper(), binance_pair))
+                except Exception as error:
+                    print(f"warning: Binance {binance_pair}: {error}")
+
+            lbank_pair = f"{token_symbol.lower()}_usdt"
+            if lbank_pair in lbank_pairs:
+                try:
+                    direct_venues.append(lbank_book(token_symbol.upper(), lbank_pair))
+                except Exception as error:
+                    print(f"warning: LBank {lbank_pair}: {error}")
+
+            solana_deployments = [
+                deployment
+                for deployment in row.get("deployments", [])
+                if deployment.get("network") == "Solana"
+            ]
+            for deployment in solana_deployments:
+                try:
+                    pool = meteora_pool(str(deployment["address"]))
+                except Exception as error:
+                    print(f"warning: Meteora {symbol} {deployment['address']}: {error}")
+                    pool = None
+                if pool:
+                    direct_venues.append(pool)
+                    break
+
+            direct_venues.sort(
+                key=lambda venue: float(venue.get("quoteVolume24hUsd") or 0.0),
+                reverse=True,
+            )
+            row["directVenues"] = direct_venues
+            row["directVenueVolumeUsd"] = sum(
+                float(venue.get("quoteVolume24hUsd") or 0.0)
+                for venue in direct_venues
+            )
+            row.pop("marketDataUrl", None)
+
         rows.sort(
-            key=lambda row: (
-                float(row["allVenueVolumeUsd"]) if row.get("allVenueVolumeUsd") is not None else -1.0,
-                float(row["marketCapUsd"]) if row.get("marketCapUsd") is not None else -1.0,
-            ),
+            key=lambda row: float(row.get("directVenueVolumeUsd") or 0.0),
             reverse=True,
         )
         preferred_assigned = False
         for rank, row in enumerate(rows, start=1):
-            row["volumeRank"] = rank if row.get("allVenueVolumeUsd") is not None else None
-            row["preferred"] = bool(not preferred_assigned and row.get("allVenueVolumeUsd", 0) > 0)
+            has_volume = float(row.get("directVenueVolumeUsd") or 0.0) > 0
+            row["volumeRank"] = rank if has_volume else None
+            row["preferred"] = bool(not preferred_assigned and has_volume)
             preferred_assigned = preferred_assigned or row["preferred"]
 
     payload = {
-        "version": 2,
-        "generatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-        "volumeSource": "https://api.coingecko.com/api/v3/coins/markets",
-        "liquiditySource": "https://api.dexscreener.com/latest/dex/tokens/{address}",
-        "preferenceBasis": "highest aggregate 24-hour spot volume across indexed CEX and DEX venues",
+        "version": 3,
+        "generatedAt": utc_iso(),
+        "volumeSource": "direct Binance, LBank, and Meteora venue APIs",
+        "liquiditySource": "direct order books within 2% of mid and direct Meteora pool state",
+        "preferenceBasis": "highest summed 24-hour turnover across directly queried venues",
         "instruments": instruments,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)

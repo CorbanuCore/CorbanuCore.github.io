@@ -1,9 +1,9 @@
 {
-  "version": 2,
-  "generatedAt": "2026-08-15T15:49:25.114019Z",
-  "volumeSource": "https://api.coingecko.com/api/v3/coins/markets",
-  "liquiditySource": "https://api.dexscreener.com/latest/dex/tokens/{address}",
-  "preferenceBasis": "highest aggregate 24-hour spot volume across indexed CEX and DEX venues",
+  "version": 3,
+  "generatedAt": "2026-08-15T17:10:47.583415Z",
+  "volumeSource": "direct Binance, LBank, and Meteora venue APIs",
+  "liquiditySource": "direct order books within 2% of mid and direct Meteora pool state",
+  "preferenceBasis": "highest summed 24-hour turnover across directly queried venues",
   "instruments": {
     "aapl": [
       {
@@ -14,7 +14,6 @@
         "name": "Apple (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/apple-bstocks-tokenized-stock",
         "coingeckoId": "apple-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-bstocks-tokenized-stock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0x431a3bee82e2ca41e49895cbece5bb0f76a89b7a"
@@ -28,11 +27,135 @@
         "queryAddresses": [
           "0x431a3bee82e2ca41e49895cbece5bb0f76a89b7a"
         ],
-        "allVenueVolumeUsd": 3572013,
-        "marketCapUsd": 5704664,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "AAPLB/USDT",
+            "baseSymbol": "AAPLB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 305.92,
+            "bestBid": 305.79,
+            "bestAsk": 305.92,
+            "midPrice": 305.855,
+            "spreadBps": 4.251283560612329,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 193853.23612,
+            "sellDepthUsd": 454247.96657,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1227023.19603,
+            "observedAt": "2026-08-15T17:10:10.471000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=AAPLBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/AAPLB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          },
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "AAPLB/USDT",
+            "baseSymbol": "AAPLB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 305.87,
+            "bestBid": 305.79,
+            "bestAsk": 305.92,
+            "midPrice": 305.855,
+            "spreadBps": 4.251283560612329,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 196207.11475,
+            "sellDepthUsd": 487283.01035999996,
+            "buyDepthComplete": false,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1117319.13,
+            "observedAt": "2026-08-15T17:10:27.168000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=aaplb_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/aaplb_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 2344342.32603,
         "volumeRank": 1,
         "preferred": true
+      },
+      {
+        "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "AAPLon",
+        "name": "Apple (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/aaplon",
+        "coingeckoId": "apple-ondo-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Ethereum",
+          "address": "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c"
+        },
+        "deployments": [
+          {
+            "network": "Ethereum",
+            "address": "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c"
+          },
+          {
+            "network": "Solana",
+            "address": "123mYEnRLM2LLYsJW3K6oyYh8uP1fngj732iG638ondo"
+          },
+          {
+            "network": "HyperEVM",
+            "address": "0x81db0df77669b3be563e7a0591685a2c8c3ee1c5"
+          },
+          {
+            "network": "BNB Chain",
+            "address": "0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4"
+          }
+        ],
+        "queryAddresses": [
+          "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c",
+          "123mYEnRLM2LLYsJW3K6oyYh8uP1fngj732iG638ondo",
+          "0x81db0df77669b3be563e7a0591685a2c8c3ee1c5",
+          "0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4"
+        ],
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "AAPLON/USDT",
+            "baseSymbol": "AAPLON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 307.33,
+            "bestBid": 306.23,
+            "bestAsk": 307.33,
+            "midPrice": 306.78,
+            "spreadBps": 35.92071318943235,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 5644.480309999999,
+            "sellDepthUsd": 207851.42908,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 357078.79,
+            "observedAt": "2026-08-15T17:10:25.182000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=aaplon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/aaplon_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "AAPLon-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 303.4428710839708,
+            "poolTvlUsd": 885.1037014492342,
+            "quoteVolume24hUsd": 4.798065978248021,
+            "feePct": 0.0117188,
+            "observedAt": "2026-08-15T17:10:26.482547Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/Eooam7ShtPZhQzq42ZeX1sAqFTtdhUCMjSYDAff334Hg",
+            "tradeUrl": "https://app.meteora.ag/dlmm/Eooam7ShtPZhQzq42ZeX1sAqFTtdhUCMjSYDAff334Hg",
+            "poolAddress": "Eooam7ShtPZhQzq42ZeX1sAqFTtdhUCMjSYDAff334Hg",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 357083.58806597826,
+        "volumeRank": 2,
+        "preferred": false
       },
       {
         "issuer": "xStocks",
@@ -42,7 +165,6 @@
         "name": "Apple xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "apple-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp"
@@ -99,81 +221,48 @@
           "EQDsjAwfKo-6FVZv2EYt-1CaZTY_ZL-pfkSId6jeQchNwmdo",
           "TZ7nsyCuQq1cusCtex6V4qbzWcb3NbibAM"
         ],
-        "allVenueVolumeUsd": 1642385,
-        "marketCapUsd": 12405885,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 2,
-        "preferred": false
-      },
-      {
-        "issuer": "Reality",
-        "issuerUrl": "https://www.bitget.com/academy/what-is-raapl-apple-tokenized-stock-bitget",
-        "legalStructure": "Brokerage-backed economic exposure token",
-        "tokenSymbol": "rAAPL",
-        "name": "Apple (Reality Protocol)",
-        "sourceUrl": "https://www.coingecko.com/en/coins/apple-reality-protocol",
-        "coingeckoId": "apple-reality-protocol",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-reality-protocol",
-        "primaryDeployment": {
-          "network": "Arbitrum",
-          "address": "0xaba5e0c80e9f58e391214689fb342049c0d31892"
-        },
-        "deployments": [
+        "directVenues": [
           {
-            "network": "Arbitrum",
-            "address": "0xaba5e0c80e9f58e391214689fb342049c0d31892"
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "AAPLX/USDT",
+            "baseSymbol": "AAPLX",
+            "quoteSymbol": "USDT",
+            "lastPrice": 306.67,
+            "bestBid": 306.64,
+            "bestAsk": 306.69,
+            "midPrice": 306.66499999999996,
+            "spreadBps": 1.6305765718760412,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 172035.52215,
+            "sellDepthUsd": 52812.54206,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 346831.02,
+            "observedAt": "2026-08-15T17:10:26.186000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=aaplx_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/aaplx_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "AAPLx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 297.76566936766915,
+            "poolTvlUsd": 64.75468488947168,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 0.25,
+            "observedAt": "2026-08-15T17:10:26.852443Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/3Kv3cpXaUXWhcq5gQFd2iRubaam9nMLtEcCQb21b7ySp",
+            "tradeUrl": "https://app.meteora.ag/dlmm/3Kv3cpXaUXWhcq5gQFd2iRubaam9nMLtEcCQb21b7ySp",
+            "poolAddress": "3Kv3cpXaUXWhcq5gQFd2iRubaam9nMLtEcCQb21b7ySp",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
           }
         ],
-        "queryAddresses": [
-          "0xaba5e0c80e9f58e391214689fb342049c0d31892"
-        ],
-        "allVenueVolumeUsd": 1471502,
-        "marketCapUsd": 822431,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenueVolumeUsd": 346831.02,
         "volumeRank": 3,
-        "preferred": false
-      },
-      {
-        "issuer": "Ondo",
-        "issuerUrl": "https://ondo.finance/ondo-stocks",
-        "legalStructure": "Equity-backed total-return token",
-        "tokenSymbol": "AAPLon",
-        "name": "Apple (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/aaplon",
-        "coingeckoId": "apple-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-ondo-tokenized-stock",
-        "primaryDeployment": {
-          "network": "Ethereum",
-          "address": "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c"
-        },
-        "deployments": [
-          {
-            "network": "Ethereum",
-            "address": "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c"
-          },
-          {
-            "network": "Solana",
-            "address": "123mYEnRLM2LLYsJW3K6oyYh8uP1fngj732iG638ondo"
-          },
-          {
-            "network": "HyperEVM",
-            "address": "0x81db0df77669b3be563e7a0591685a2c8c3ee1c5"
-          },
-          {
-            "network": "BNB Chain",
-            "address": "0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4"
-          }
-        ],
-        "queryAddresses": [
-          "0x14c3abf95cb9c93a8b82c1cdcb76d72cb87b2d4c",
-          "123mYEnRLM2LLYsJW3K6oyYh8uP1fngj732iG638ondo",
-          "0x81db0df77669b3be563e7a0591685a2c8c3ee1c5",
-          "0x390a684ef9cade28a7ad0dfa61ab1eb3842618c4"
-        ],
-        "allVenueVolumeUsd": 933285,
-        "marketCapUsd": 8379514,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
         "preferred": false
       },
       {
@@ -184,7 +273,6 @@
         "name": "Apple • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": "apple-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9"
@@ -198,10 +286,9 @@
         "queryAddresses": [
           "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9"
         ],
-        "allVenueVolumeUsd": 390956,
-        "marketCapUsd": 1830829,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 5,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -212,7 +299,6 @@
         "name": "Apple (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/apple-backpack-securities",
         "coingeckoId": "apple-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/apple-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "AAPLEDt8RpzPgXyhvFzkMBofvFSQw9gpeMCoUdPdLnB8"
@@ -226,9 +312,34 @@
         "queryAddresses": [
           "AAPLEDt8RpzPgXyhvFzkMBofvFSQw9gpeMCoUdPdLnB8"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
+        "preferred": false
+      },
+      {
+        "issuer": "Reality",
+        "issuerUrl": "https://www.bitget.com/academy/what-is-raapl-apple-tokenized-stock-bitget",
+        "legalStructure": "Brokerage-backed economic exposure token",
+        "tokenSymbol": "rAAPL",
+        "name": "Apple (Reality Protocol)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/apple-reality-protocol",
+        "coingeckoId": "apple-reality-protocol",
+        "primaryDeployment": {
+          "network": "Arbitrum",
+          "address": "0xaba5e0c80e9f58e391214689fb342049c0d31892"
+        },
+        "deployments": [
+          {
+            "network": "Arbitrum",
+            "address": "0xaba5e0c80e9f58e391214689fb342049c0d31892"
+          }
+        ],
+        "queryAddresses": [
+          "0xaba5e0c80e9f58e391214689fb342049c0d31892"
+        ],
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
         "volumeRank": null,
         "preferred": false
       }
@@ -242,7 +353,6 @@
         "name": "AMD (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/amdon",
         "coingeckoId": "amd-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/amd-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x0c1f3412a44ff99e40bf14e06e5ea321ae7b3938"
@@ -271,9 +381,47 @@
           "0x33706203a7a7c82b6f6c09dd9ae4e6e881d36386",
           "0x9f16e46c73b43bdb70861247d537bee4ea18f639"
         ],
-        "allVenueVolumeUsd": 1047114,
-        "marketCapUsd": 9167838,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "AMDON/USDT",
+            "baseSymbol": "AMDON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 514.92,
+            "bestBid": 513.57,
+            "bestAsk": 514.93,
+            "midPrice": 514.25,
+            "spreadBps": 26.48129758358042,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 39473.23878,
+            "sellDepthUsd": 39065.43816,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 364674.26,
+            "observedAt": "2026-08-15T17:10:26.271000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=amdon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/amdon_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "AMDon-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 451.56259407566387,
+            "poolTvlUsd": 96.59413429099448,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 10.0,
+            "observedAt": "2026-08-15T17:10:28.158000Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/Ew1rQWctC8tDDy14tCzAGmgQ72NWobhowNK76BZrVHT7",
+            "tradeUrl": "https://app.meteora.ag/dlmm/Ew1rQWctC8tDDy14tCzAGmgQ72NWobhowNK76BZrVHT7",
+            "poolAddress": "Ew1rQWctC8tDDy14tCzAGmgQ72NWobhowNK76BZrVHT7",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 364674.26,
         "volumeRank": 1,
         "preferred": true
       },
@@ -285,7 +433,6 @@
         "name": "AMD • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": "amd-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/amd-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC"
@@ -299,10 +446,9 @@
         "queryAddresses": [
           "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC"
         ],
-        "allVenueVolumeUsd": 307426,
-        "marketCapUsd": 1141049,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 2,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -313,7 +459,6 @@
         "name": "AMD xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "amd-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/amd-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsXcJ6GZ9kVnjqGsjBnktRcuwMBmvKWh8S93RefZ1rF"
@@ -370,10 +515,26 @@
           "EQC0gyePHOKu2qG8jfqc7wAIOOB-dVKfDeOiqXuCAsGzarL9",
           "TSrLhu1fVjPDtGbZD6Fn4ra9gHFUUAjzkN"
         ],
-        "allVenueVolumeUsd": 50849,
-        "marketCapUsd": 4088096,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 3,
+        "directVenues": [
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "AMDx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 502.75239166172423,
+            "poolTvlUsd": 1660.1759901713467,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 10.0,
+            "observedAt": "2026-08-15T17:10:28.203704Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/5JjaEZfYzxQn3DAbAjDi8expi4b4aVnFTYDuonx15w5N",
+            "tradeUrl": "https://app.meteora.ag/dlmm/5JjaEZfYzxQn3DAbAjDi8expi4b4aVnFTYDuonx15w5N",
+            "poolAddress": "5JjaEZfYzxQn3DAbAjDi8expi4b4aVnFTYDuonx15w5N",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 0.0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -384,7 +545,6 @@
         "name": "Advanced Micro Devices (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/advanced-micro-devices-backpack-securities",
         "coingeckoId": "advanced-micro-devices-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/advanced-micro-devices-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "AMD8XwJXgQ9WV45Wyj9yFLejxzf2J6VM1PJY8bJEjeES"
@@ -398,9 +558,8 @@
         "queryAddresses": [
           "AMD8XwJXgQ9WV45Wyj9yFLejxzf2J6VM1PJY8bJEjeES"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
         "volumeRank": null,
         "preferred": false
       }
@@ -414,7 +573,6 @@
         "name": "Circle Internet Group (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/circle-internet-group-bstock",
         "coingeckoId": "circle-internet-group-bstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-internet-group-bstock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0x80f3d493ebce97e343c53d29a137942416b4ffc0"
@@ -428,9 +586,53 @@
         "queryAddresses": [
           "0x80f3d493ebce97e343c53d29a137942416b4ffc0"
         ],
-        "allVenueVolumeUsd": 3928405,
-        "marketCapUsd": 65323121,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "CRCLB/USDT",
+            "baseSymbol": "CRCLB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 71.25,
+            "bestBid": 71.24,
+            "bestAsk": 71.25,
+            "midPrice": 71.245,
+            "spreadBps": 1.4037057832694266,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 578239.5857,
+            "sellDepthUsd": 339834.9852,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1897078.8548,
+            "observedAt": "2026-08-15T17:09:01.579000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=CRCLBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/CRCLB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          },
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "CRCLB/USDT",
+            "baseSymbol": "CRCLB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 71.25,
+            "bestBid": 71.24,
+            "bestAsk": 71.25,
+            "midPrice": 71.245,
+            "spreadBps": 1.4037057832694266,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 321252.0577,
+            "sellDepthUsd": 344930.35370000004,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1555827.56,
+            "observedAt": "2026-08-15T17:10:28.845000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=crclb_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/crclb_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 3452906.4148000004,
         "volumeRank": 1,
         "preferred": true
       },
@@ -442,7 +644,6 @@
         "name": "Circle xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "circle-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1"
@@ -499,9 +700,47 @@
           "EQB-RPtAAQeFSGW3gIj0zREh4N92MGXfqFzxAc6TRvu-zvYT",
           "TRXfha1owZvFk5ru7cmd5SXDX1uKtcCRJN"
         ],
-        "allVenueVolumeUsd": 2780575,
-        "marketCapUsd": 54769288,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "CRCLX/USDT",
+            "baseSymbol": "CRCLX",
+            "quoteSymbol": "USDT",
+            "lastPrice": 71.33,
+            "bestBid": 71.32,
+            "bestAsk": 71.34,
+            "midPrice": 71.33,
+            "spreadBps": 2.804262478970365,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 31958.011199999997,
+            "sellDepthUsd": 34566.1127,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 381325.2,
+            "observedAt": "2026-08-15T17:10:28.233000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=crclx_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/crclx_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "CRCLx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 74.10956172916035,
+            "poolTvlUsd": 1774.6043445290393,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 0.25,
+            "observedAt": "2026-08-15T17:10:29.049363Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/CLULkoamsGqcv2pFn26NNqK7X7v1RvCd7mUB4HnqEe4t",
+            "tradeUrl": "https://app.meteora.ag/dlmm/CLULkoamsGqcv2pFn26NNqK7X7v1RvCd7mUB4HnqEe4t",
+            "poolAddress": "CLULkoamsGqcv2pFn26NNqK7X7v1RvCd7mUB4HnqEe4t",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 381325.2,
         "volumeRank": 2,
         "preferred": false
       },
@@ -513,7 +752,6 @@
         "name": "Circle Internet Group (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/crclon",
         "coingeckoId": "circle-internet-group-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-internet-group-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x3632dea96a953c11dac2f00b4a05a32cd1063fae"
@@ -542,9 +780,31 @@
           "0x13a81c5e8b4ab05fc721dff7ba95e250b29458f8",
           "0x992879cd8ce0c312d98648875b5a8d6d042cbf34"
         ],
-        "allVenueVolumeUsd": 369048,
-        "marketCapUsd": 99714974,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "CRCLON/USDT",
+            "baseSymbol": "CRCLON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 71.28,
+            "bestBid": 71.0,
+            "bestAsk": 71.28,
+            "midPrice": 71.14,
+            "spreadBps": 39.43661971830936,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 15039.1349,
+            "sellDepthUsd": 102966.8634,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 345565.86,
+            "observedAt": "2026-08-15T17:10:27.365000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=crclon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/crclon_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 345565.86,
         "volumeRank": 3,
         "preferred": false
       },
@@ -556,7 +816,6 @@
         "name": "Circle Internet Group • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": "circle-internet-group-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-internet-group-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5"
@@ -570,10 +829,9 @@
         "queryAddresses": [
           "0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5"
         ],
-        "allVenueVolumeUsd": 76856,
-        "marketCapUsd": 570029,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -584,7 +842,6 @@
         "name": "Circle Internet Group (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/circle-internet-group-backpack-securities",
         "coingeckoId": "circle-internet-group-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/circle-internet-group-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "CRCL4kkDNmBCRjfrKJGqSnx7UsboEnjFpTTEvs5KmNmi"
@@ -598,9 +855,8 @@
         "queryAddresses": [
           "CRCL4kkDNmBCRjfrKJGqSnx7UsboEnjFpTTEvs5KmNmi"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
         "volumeRank": null,
         "preferred": false
       }
@@ -608,45 +864,73 @@
     "cxmt": [],
     "googl": [
       {
-        "issuer": "Ondo",
-        "issuerUrl": "https://ondo.finance/ondo-stocks",
-        "legalStructure": "Equity-backed total-return token",
-        "tokenSymbol": "GOOGLon",
-        "name": "Alphabet Class A (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/googlon",
-        "coingeckoId": "alphabet-class-a-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-class-a-ondo-tokenized-stock",
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "GOOGLB",
+        "name": "Alphabet (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/alphabet-bstocks-tokenized-stock",
+        "coingeckoId": "alphabet-bstocks-tokenized-stock",
         "primaryDeployment": {
-          "network": "Ethereum",
-          "address": "0xba47214edd2bb43099611b208f75e4b42fdcfedc"
+          "network": "BNB Chain",
+          "address": "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
         },
         "deployments": [
           {
-            "network": "Ethereum",
-            "address": "0xba47214edd2bb43099611b208f75e4b42fdcfedc"
-          },
-          {
-            "network": "Solana",
-            "address": "bbahNA5vT9WJeYft8tALrH1LXWffjwqVoUbqYa1ondo"
-          },
-          {
-            "network": "HyperEVM",
-            "address": "0x4d34798f18eb747f7225663f0553ea2d880cf75d"
-          },
-          {
             "network": "BNB Chain",
-            "address": "0x091fc7778e6932d4009b087b191d1ee3bac5729a"
+            "address": "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
           }
         ],
         "queryAddresses": [
-          "0xba47214edd2bb43099611b208f75e4b42fdcfedc",
-          "bbahNA5vT9WJeYft8tALrH1LXWffjwqVoUbqYa1ondo",
-          "0x4d34798f18eb747f7225663f0553ea2d880cf75d",
-          "0x091fc7778e6932d4009b087b191d1ee3bac5729a"
+          "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
         ],
-        "allVenueVolumeUsd": 2959711,
-        "marketCapUsd": 21266816,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "GOOGLB/USDT",
+            "baseSymbol": "GOOGLB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 347.79,
+            "bestBid": 347.74,
+            "bestAsk": 347.79,
+            "midPrice": 347.765,
+            "spreadBps": 1.4378558693284305,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 269310.87308,
+            "sellDepthUsd": 234678.95968,
+            "buyDepthComplete": false,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 834995.23,
+            "observedAt": "2026-08-15T17:10:30.118000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=googlb_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/googlb_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "GOOGLB/USDT",
+            "baseSymbol": "GOOGLB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 347.74,
+            "bestBid": 347.74,
+            "bestAsk": 347.79,
+            "midPrice": 347.765,
+            "spreadBps": 1.4378558693284305,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 226256.51488,
+            "sellDepthUsd": 234980.64209,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 502514.0731,
+            "observedAt": "2026-08-15T17:10:23.643000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=GOOGLBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/GOOGLB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          }
+        ],
+        "directVenueVolumeUsd": 1337509.3031,
         "volumeRank": 1,
         "preferred": true
       },
@@ -658,7 +942,6 @@
         "name": "Alphabet xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "alphabet-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN"
@@ -715,37 +998,127 @@
           "EQALwJzXnxFjckNsurCi9O2kVg_0b1KdtjOSfvOedlY37iZc",
           "TX34MBKqsHzvon1JX4mokJ8CLeh5QmBqNd"
         ],
-        "allVenueVolumeUsd": 2471531,
-        "marketCapUsd": 35438321,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "GOOGLX/USDT",
+            "baseSymbol": "GOOGLX",
+            "quoteSymbol": "USDT",
+            "lastPrice": 348.48,
+            "bestBid": 348.39,
+            "bestAsk": 348.47,
+            "midPrice": 348.43,
+            "spreadBps": 2.296277160653837,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 51136.70791,
+            "sellDepthUsd": 54891.43087,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 368661.41,
+            "observedAt": "2026-08-15T17:10:29.454000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=googlx_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/googlx_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "GOOGLx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 334.00745794554507,
+            "poolTvlUsd": 60.14642729933927,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 0.25,
+            "observedAt": "2026-08-15T17:10:30.854127Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/5DJ4g2u6HqAt5HhiviuosKDfFvWt5AGGM89P6Q2CoQso",
+            "tradeUrl": "https://app.meteora.ag/dlmm/5DJ4g2u6HqAt5HhiviuosKDfFvWt5AGGM89P6Q2CoQso",
+            "poolAddress": "5DJ4g2u6HqAt5HhiviuosKDfFvWt5AGGM89P6Q2CoQso",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 368661.41,
         "volumeRank": 2,
         "preferred": false
       },
       {
-        "issuer": "BTech / Binance",
-        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
-        "legalStructure": "ADGM-listed certificate over shares",
-        "tokenSymbol": "GOOGLB",
-        "name": "Alphabet (bStocks Tokenized Stock)",
-        "sourceUrl": "https://www.coingecko.com/en/coins/alphabet-bstocks-tokenized-stock",
-        "coingeckoId": "alphabet-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-bstocks-tokenized-stock",
+        "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "GOOGLon",
+        "name": "Alphabet Class A (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/googlon",
+        "coingeckoId": "alphabet-class-a-ondo-tokenized-stock",
         "primaryDeployment": {
-          "network": "BNB Chain",
-          "address": "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
+          "network": "Ethereum",
+          "address": "0xba47214edd2bb43099611b208f75e4b42fdcfedc"
         },
         "deployments": [
           {
+            "network": "Ethereum",
+            "address": "0xba47214edd2bb43099611b208f75e4b42fdcfedc"
+          },
+          {
+            "network": "Solana",
+            "address": "bbahNA5vT9WJeYft8tALrH1LXWffjwqVoUbqYa1ondo"
+          },
+          {
+            "network": "HyperEVM",
+            "address": "0x4d34798f18eb747f7225663f0553ea2d880cf75d"
+          },
+          {
             "network": "BNB Chain",
-            "address": "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
+            "address": "0x091fc7778e6932d4009b087b191d1ee3bac5729a"
           }
         ],
         "queryAddresses": [
-          "0x3f53de71c126bdabae20f9cd64848d317f6c3238"
+          "0xba47214edd2bb43099611b208f75e4b42fdcfedc",
+          "bbahNA5vT9WJeYft8tALrH1LXWffjwqVoUbqYa1ondo",
+          "0x4d34798f18eb747f7225663f0553ea2d880cf75d",
+          "0x091fc7778e6932d4009b087b191d1ee3bac5729a"
         ],
-        "allVenueVolumeUsd": 1751201,
-        "marketCapUsd": 18335037,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "GOOGLON/USDT",
+            "baseSymbol": "GOOGLON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 349.25,
+            "bestBid": 349.25,
+            "bestAsk": 350.51,
+            "midPrice": 349.88,
+            "spreadBps": 36.07730851825419,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 1736.79994,
+            "sellDepthUsd": 5013.0975,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 340754.55,
+            "observedAt": "2026-08-15T17:10:28.706000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=googlon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/googlon_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "GOOGLon-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 365.59682642992544,
+            "poolTvlUsd": 9.99593503631e-07,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 10.0,
+            "observedAt": "2026-08-15T17:10:30.487452Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/4YzUDzZ6Rbt4KVqnSn71XWqwXcauDqzCn347Z4bNonrS",
+            "tradeUrl": "https://app.meteora.ag/dlmm/4YzUDzZ6Rbt4KVqnSn71XWqwXcauDqzCn347Z4bNonrS",
+            "poolAddress": "4YzUDzZ6Rbt4KVqnSn71XWqwXcauDqzCn347Z4bNonrS",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 340754.55,
         "volumeRank": 3,
         "preferred": false
       },
@@ -757,7 +1130,6 @@
         "name": "Alphabet Class A • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": "alphabet-class-a-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-class-a-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3"
@@ -771,10 +1143,9 @@
         "queryAddresses": [
           "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3"
         ],
-        "allVenueVolumeUsd": 45076,
-        "marketCapUsd": 1088948,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -785,7 +1156,6 @@
         "name": "Alphabet (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/alphabet-backpack-securities",
         "coingeckoId": "alphabet-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/alphabet-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "GooGLMvZtJZXHdNZy95RUrAMCCKxV6ghK3qE5ddBgVm5"
@@ -799,9 +1169,8 @@
         "queryAddresses": [
           "GooGLMvZtJZXHdNZy95RUrAMCCKxV6ghK3qE5ddBgVm5"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
         "volumeRank": null,
         "preferred": false
       }
@@ -815,7 +1184,6 @@
         "name": "Intel (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/intcon",
         "coingeckoId": "intel-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/intel-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xfda09936dbd717368de0835ba441d9e62069d36f"
@@ -844,11 +1212,59 @@
           "0x7bf529bb5db370d679f33f4fe5420f48ee234bb7",
           "0xa528caaa2f96090e379d43f90834c75df54d6e74"
         ],
-        "allVenueVolumeUsd": 815589,
-        "marketCapUsd": 17955742,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "INTCON/USDT",
+            "baseSymbol": "INTCON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 102.87,
+            "bestBid": 102.65,
+            "bestAsk": 103.02,
+            "midPrice": 102.83500000000001,
+            "spreadBps": 36.044812469555595,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 3456.3500999999997,
+            "sellDepthUsd": 3696.6666999999998,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 690694.86,
+            "observedAt": "2026-08-15T17:10:31.528000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=intcon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/intcon_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 690694.86,
         "volumeRank": 1,
         "preferred": true
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "INTC",
+        "name": "Intel • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "intel-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
+          }
+        ],
+        "queryAddresses": [
+          "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
+        ],
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
+        "preferred": false
       },
       {
         "issuer": "xStocks",
@@ -858,7 +1274,6 @@
         "name": "Intel xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "intel-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/intel-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XshPgPdXFRWB8tP1j82rebb2Q9rPgGX37RuqzohmArM"
@@ -915,38 +1330,26 @@
           "EQBBnSFyNZkNmq7I4E9yWhZDZQurcQhGkFeGBV_UXibFlv4-",
           "TMkWtCUBF9zatuda6onxoPeAUvkGiwaCHP"
         ],
-        "allVenueVolumeUsd": 64728,
-        "marketCapUsd": 7170865,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 2,
-        "preferred": false
-      },
-      {
-        "issuer": "Robinhood",
-        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
-        "legalStructure": "Tokenized debt security",
-        "tokenSymbol": "INTC",
-        "name": "Intel • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
-        "coingeckoId": "intel-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/intel-robinhood-tokenized-stock",
-        "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
-        },
-        "deployments": [
+        "directVenues": [
           {
-            "network": "Robinhood Chain",
-            "address": "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "INTCx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 97.54610577655846,
+            "poolTvlUsd": 66.4144302208675,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 10.0,
+            "observedAt": "2026-08-15T17:10:32.215086Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/G9MkkmAgHywWnWiJUJq2cq43zQjEVDZ4Wn97YLjDE9fQ",
+            "tradeUrl": "https://app.meteora.ag/dlmm/G9MkkmAgHywWnWiJUJq2cq43zQjEVDZ4Wn97YLjDE9fQ",
+            "poolAddress": "G9MkkmAgHywWnWiJUJq2cq43zQjEVDZ4Wn97YLjDE9fQ",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
           }
         ],
-        "queryAddresses": [
-          "0xc72b96e0E48ecd4DC75E1e45396e26300BC39681"
-        ],
-        "allVenueVolumeUsd": 42184,
-        "marketCapUsd": 668475,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 3,
+        "directVenueVolumeUsd": 0.0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -957,7 +1360,6 @@
         "name": "Intel (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/intel-backpack-securities",
         "coingeckoId": "intel-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/intel-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "iNTCy1qTsUEZQe3DSocLz1ZXXai34Gdw8THQh5rxFaF"
@@ -971,14 +1373,101 @@
         "queryAddresses": [
           "iNTCy1qTsUEZQe3DSocLz1ZXXai34Gdw8THQh5rxFaF"
         ],
-        "allVenueVolumeUsd": 36720,
-        "marketCapUsd": 517029,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
+        "directVenues": [
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "INTC-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 101.837475130129,
+            "poolTvlUsd": 8.996373709215e-05,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 0.2,
+            "observedAt": "2026-08-15T17:10:32.250419Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/4tWiyzXPXpxEPGU15os1fZxf1HFY5g5K6Up2FQt79wVz",
+            "tradeUrl": "https://app.meteora.ag/dlmm/4tWiyzXPXpxEPGU15os1fZxf1HFY5g5K6Up2FQt79wVz",
+            "poolAddress": "4tWiyzXPXpxEPGU15os1fZxf1HFY5g5K6Up2FQt79wVz",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 0.0,
+        "volumeRank": null,
         "preferred": false
       }
     ],
     "meta": [
+      {
+        "issuer": "BTech / Binance",
+        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
+        "legalStructure": "ADGM-listed certificate over shares",
+        "tokenSymbol": "METAB",
+        "name": "Meta Platforms (bStocks Tokenized Stock)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/meta-platforms-bstocks-tokenized-stock",
+        "coingeckoId": "meta-platforms-bstocks-tokenized-stock",
+        "primaryDeployment": {
+          "network": "BNB Chain",
+          "address": "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
+        },
+        "deployments": [
+          {
+            "network": "BNB Chain",
+            "address": "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
+          }
+        ],
+        "queryAddresses": [
+          "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
+        ],
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "METAB/USDT",
+            "baseSymbol": "METAB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 590.96,
+            "bestBid": 590.95,
+            "bestAsk": 591.0,
+            "midPrice": 590.975,
+            "spreadBps": 0.846095270325975,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 271458.6661,
+            "sellDepthUsd": 399370.17533,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 976840.0,
+            "observedAt": "2026-08-15T17:10:32.133000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=metab_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/metab_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "METAB/USDT",
+            "baseSymbol": "METAB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 590.93,
+            "bestBid": 590.95,
+            "bestAsk": 591.0,
+            "midPrice": 590.975,
+            "spreadBps": 0.846095270325975,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 225795.97288000002,
+            "sellDepthUsd": 332201.29311,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 57157.68746,
+            "observedAt": "2026-08-15T17:10:00.592000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=METABUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/METAB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          }
+        ],
+        "directVenueVolumeUsd": 1033997.68746,
+        "volumeRank": 1,
+        "preferred": true
+      },
       {
         "issuer": "xStocks",
         "issuerUrl": "https://xstocks.com/",
@@ -987,7 +1476,6 @@
         "name": "Meta xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "meta-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "Xsa62P5mvPszXL1krVUnU5ar38bBSVcWAB6fmPCo5Zu"
@@ -1044,37 +1532,31 @@
           "EQD3cgQg432BiCSRli-hMswoVuvNnO42FuMdc-AXqd83SfcV",
           "TGJaEbWPNmM6NErggxJwWQ5ChRH7KxXF3a"
         ],
-        "allVenueVolumeUsd": 1608537,
-        "marketCapUsd": 6905102,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 1,
-        "preferred": true
-      },
-      {
-        "issuer": "BTech / Binance",
-        "issuerUrl": "https://academy.binance.com/en/articles/what-are-bstocks-a-guide-to-tokenized-stocks-on-binance",
-        "legalStructure": "ADGM-listed certificate over shares",
-        "tokenSymbol": "METAB",
-        "name": "Meta Platforms (bStocks Tokenized Stock)",
-        "sourceUrl": "https://www.coingecko.com/en/coins/meta-platforms-bstocks-tokenized-stock",
-        "coingeckoId": "meta-platforms-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-platforms-bstocks-tokenized-stock",
-        "primaryDeployment": {
-          "network": "BNB Chain",
-          "address": "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
-        },
-        "deployments": [
+        "directVenues": [
           {
-            "network": "BNB Chain",
-            "address": "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "METAX/USDT",
+            "baseSymbol": "METAX",
+            "quoteSymbol": "USDT",
+            "lastPrice": 593.48,
+            "bestBid": 591.57,
+            "bestAsk": 593.48,
+            "midPrice": 592.5250000000001,
+            "spreadBps": 32.286965194312515,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 63232.49585,
+            "sellDepthUsd": 84226.14465,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 348566.46,
+            "observedAt": "2026-08-15T17:10:31.133000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=metax_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/metax_usdt",
+            "liveAdapter": null
           }
         ],
-        "queryAddresses": [
-          "0x7425889fe94f9d693e8daefe88bcced6acfef4c0"
-        ],
-        "allVenueVolumeUsd": 1056919,
-        "marketCapUsd": 922253,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenueVolumeUsd": 348566.46,
         "volumeRank": 2,
         "preferred": false
       },
@@ -1086,7 +1568,6 @@
         "name": "Meta Platforms (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/metaon",
         "coingeckoId": "meta-platforms-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-platforms-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x59644165402b611b350645555b50afb581c71eb2"
@@ -1115,38 +1596,32 @@
           "0x46fa18ffe2707bbecc46d457d40efbe6b932f711",
           "0xd7df5863a3e742f0c767768cdfcb63f09e0422f6"
         ],
-        "allVenueVolumeUsd": 782658,
-        "marketCapUsd": 10097542,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 3,
-        "preferred": false
-      },
-      {
-        "issuer": "Robinhood",
-        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
-        "legalStructure": "Tokenized debt security",
-        "tokenSymbol": "META",
-        "name": "Meta Platforms • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
-        "coingeckoId": "meta-platforms-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-platforms-robinhood-tokenized-stock",
-        "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
-        },
-        "deployments": [
+        "directVenues": [
           {
-            "network": "Robinhood Chain",
-            "address": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "METAON/USDT",
+            "baseSymbol": "METAON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 593.07,
+            "bestBid": 592.12,
+            "bestAsk": 594.25,
+            "midPrice": 593.185,
+            "spreadBps": 35.972438019320485,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 1877.18825,
+            "sellDepthUsd": 1791.4933700000001,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 341650.06,
+            "observedAt": "2026-08-15T17:10:31.164000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=metaon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/metaon_usdt",
+            "liveAdapter": null
           }
         ],
-        "queryAddresses": [
-          "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
-        ],
-        "allVenueVolumeUsd": 82700,
-        "marketCapUsd": 729312,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
+        "directVenueVolumeUsd": 341650.06,
+        "volumeRank": 3,
         "preferred": false
       },
       {
@@ -1157,7 +1632,6 @@
         "name": "Meta Platforms (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/meta-platforms-backpack-securities",
         "coingeckoId": "meta-platforms-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/meta-platforms-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "METAaH6MMZZgy2CTEJq3QdNi7AFVTV3NxHFBfFgLEDd"
@@ -1171,10 +1645,81 @@
         "queryAddresses": [
           "METAaH6MMZZgy2CTEJq3QdNi7AFVTV3NxHFBfFgLEDd"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
-        "volumeRank": null,
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "META/USDT",
+            "baseSymbol": "META",
+            "quoteSymbol": "USDT",
+            "lastPrice": 4.6431,
+            "bestBid": 4.6431,
+            "bestAsk": 4.6598,
+            "midPrice": 4.65145,
+            "spreadBps": 35.96734940018553,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 25.755959999999998,
+            "sellDepthUsd": 165.86631000000003,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 331139.3275,
+            "observedAt": "2026-08-15T17:10:33.668000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=meta_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/meta_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 331139.3275,
+        "volumeRank": 4,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "META",
+        "name": "Meta Platforms • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "meta-platforms-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
+          }
+        ],
+        "queryAddresses": [
+          "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35"
+        ],
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "META/USDT",
+            "baseSymbol": "META",
+            "quoteSymbol": "USDT",
+            "lastPrice": 4.6431,
+            "bestBid": 4.6431,
+            "bestAsk": 4.6598,
+            "midPrice": 4.65145,
+            "spreadBps": 35.96734940018553,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 196.37463599999998,
+            "sellDepthUsd": 201.457287,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 331133.1522,
+            "observedAt": "2026-08-15T17:10:31.199000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=meta_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/meta_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 331133.1522,
+        "volumeRank": 5,
         "preferred": false
       }
     ],
@@ -1187,7 +1732,6 @@
         "name": "Marvell Technology (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/mrvlon",
         "coingeckoId": "marvell-technology-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-technology-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xf404e5f887dbd5508e16a1198fcdd5de1a4296b8"
@@ -1211,9 +1755,31 @@
           "FovBwhoV5KQjZCdhoM6jgXYwXLX3F8vgAfvmLH7ondo",
           "0x1501ec83ffef405b4331cc4f73277a40fb0c627d"
         ],
-        "allVenueVolumeUsd": 1282700,
-        "marketCapUsd": 18168404,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "MRVLON/USDT",
+            "baseSymbol": "MRVLON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 221.33,
+            "bestBid": 220.79,
+            "bestAsk": 221.58,
+            "midPrice": 221.185,
+            "spreadBps": 35.78060600570865,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 1248.5313,
+            "sellDepthUsd": 2278.1942000000004,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 737218.75,
+            "observedAt": "2026-08-15T17:10:33.493000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=mrvlon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/mrvlon_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 737218.75,
         "volumeRank": 1,
         "preferred": true
       },
@@ -1225,7 +1791,6 @@
         "name": "Marvell Technology (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/marvell-technology-bstocks-tokenized-stock",
         "coingeckoId": "marvell-technology-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-technology-bstocks-tokenized-stock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0x16cd4fe7e8880ecc3ba222795229e20489fc2c76"
@@ -1239,9 +1804,31 @@
         "queryAddresses": [
           "0x16cd4fe7e8880ecc3ba222795229e20489fc2c76"
         ],
-        "allVenueVolumeUsd": 421765,
-        "marketCapUsd": 7346582,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "MRVLB/USDT",
+            "baseSymbol": "MRVLB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 221.94,
+            "bestBid": 221.75,
+            "bestAsk": 222.04,
+            "midPrice": 221.89499999999998,
+            "spreadBps": 13.077790304396597,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 208554.85152,
+            "sellDepthUsd": 175849.93089,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 263449.16521,
+            "observedAt": "2026-08-15T17:10:00.470000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=MRVLBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/MRVLB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          }
+        ],
+        "directVenueVolumeUsd": 263449.16521,
         "volumeRank": 2,
         "preferred": false
       },
@@ -1253,7 +1840,6 @@
         "name": "Marvell xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "marvell-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsuxRGDzbLjnJ72v74b7p9VY6N66uYgTCyfwwRjVCJA"
@@ -1310,9 +1896,25 @@
           "EQDr0UNbQ3fLjH9czsFp-Uq9AG_BLP87yc6abzKfQS727x51",
           "TB6SgnNZyqz2KnFRw6yQM7AqVSCphfvBXy"
         ],
-        "allVenueVolumeUsd": 38329,
-        "marketCapUsd": 5297706,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "MRVLx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 215.00067685588337,
+            "poolTvlUsd": 1506.794059453644,
+            "quoteVolume24hUsd": 84.43125707600653,
+            "feePct": 10.0,
+            "observedAt": "2026-08-15T17:10:34.906550Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/6qGLyrG4Dg8iDJCmiEV5JSToGWDQU1n8FDGLvmBrLWjn",
+            "tradeUrl": "https://app.meteora.ag/dlmm/6qGLyrG4Dg8iDJCmiEV5JSToGWDQU1n8FDGLvmBrLWjn",
+            "poolAddress": "6qGLyrG4Dg8iDJCmiEV5JSToGWDQU1n8FDGLvmBrLWjn",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 84.43125707600653,
         "volumeRank": 3,
         "preferred": false
       },
@@ -1324,7 +1926,6 @@
         "name": "Marvell Technology • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": "marvell-technology-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-technology-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0x62fd0668e10D8B72339BE2DCF7643001688ff13B"
@@ -1338,10 +1939,9 @@
         "queryAddresses": [
           "0x62fd0668e10D8B72339BE2DCF7643001688ff13B"
         ],
-        "allVenueVolumeUsd": 11.13,
-        "marketCapUsd": 5595.12,
-        "marketDataUpdatedAt": "2026-08-15T15:25:40.000Z",
-        "volumeRank": 4,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -1352,7 +1952,6 @@
         "name": "Marvell Technology (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/marvell-technology-backpack-securities",
         "coingeckoId": "marvell-technology-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/marvell-technology-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "MRVLSjkR2ceUBukujaD3xCyHP1H3B2SzpsNTZF546jo"
@@ -1366,9 +1965,8 @@
         "queryAddresses": [
           "MRVLSjkR2ceUBukujaD3xCyHP1H3B2SzpsNTZF546jo"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
         "volumeRank": null,
         "preferred": false
       }
@@ -1382,7 +1980,6 @@
         "name": "Microsoft (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/microsoft-bstocks-tokenized-stock",
         "coingeckoId": "microsoft-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/microsoft-bstocks-tokenized-stock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0x80106cb3ead06659a5ad19df39d9b4733863b9b0"
@@ -1396,9 +1993,53 @@
         "queryAddresses": [
           "0x80106cb3ead06659a5ad19df39d9b4733863b9b0"
         ],
-        "allVenueVolumeUsd": 954497,
-        "marketCapUsd": 0.0,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "MSFTB/USDT",
+            "baseSymbol": "MSFTB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 496.25,
+            "bestBid": 496.13,
+            "bestAsk": 496.33,
+            "midPrice": 496.23,
+            "spreadBps": 4.031201499605785,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 332445.00697,
+            "sellDepthUsd": 340780.72801,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 705710.84,
+            "observedAt": "2026-08-15T17:10:35.977000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=msftb_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/msftb_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "MSFTB/USDT",
+            "baseSymbol": "MSFTB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 496.33,
+            "bestBid": 496.13,
+            "bestAsk": 496.33,
+            "midPrice": 496.23,
+            "spreadBps": 4.031201499605785,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 277308.31128,
+            "sellDepthUsd": 267344.961,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 87685.40082,
+            "observedAt": "2026-08-15T17:10:34.474000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=MSFTBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/MSFTB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          }
+        ],
+        "directVenueVolumeUsd": 793396.24082,
         "volumeRank": 1,
         "preferred": true
       },
@@ -1410,7 +2051,6 @@
         "name": "Microsoft (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/msfton",
         "coingeckoId": "microsoft-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/microsoft-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xb812837b81a3a6b81d7cd74cfb19a7f2784555e5"
@@ -1439,9 +2079,31 @@
           "0xd53471f6d493f7ed766181d88ba9c2bfc371399a",
           "0x6bfe75d1ad432050ea973c3a3dcd88f02e2444c3"
         ],
-        "allVenueVolumeUsd": 817936,
-        "marketCapUsd": 8957905,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "MSFTON/USDT",
+            "baseSymbol": "MSFTON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 498.77,
+            "bestBid": 498.59,
+            "bestAsk": 499.39,
+            "midPrice": 498.99,
+            "spreadBps": 16.045247598226453,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 8156.65474,
+            "sellDepthUsd": 2860.1842,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 341742.22,
+            "observedAt": "2026-08-15T17:10:34.640000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=msfton_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/msfton_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 341742.22,
         "volumeRank": 2,
         "preferred": false
       },
@@ -1453,7 +2115,6 @@
         "name": "Microsoft • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": "microsoft-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/microsoft-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0xe93237C50D904957Cf27E7B1133b510C669c2e74"
@@ -1467,10 +2128,9 @@
         "queryAddresses": [
           "0xe93237C50D904957Cf27E7B1133b510C669c2e74"
         ],
-        "allVenueVolumeUsd": 48134,
-        "marketCapUsd": 824567,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 3,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -1481,7 +2141,6 @@
         "name": "Microsoft xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "microsoft-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/microsoft-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX"
@@ -1538,10 +2197,9 @@
           "EQDI9JwkYTEHM2TSFPSWFbwznBq07_I4Apy9TBhxsDlZaBvg",
           "TDVHfwqTFimf8bAYSkzvQe3vwArRDMdcFh"
         ],
-        "allVenueVolumeUsd": 26233,
-        "marketCapUsd": 7200305,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       }
     ],
@@ -1554,7 +2212,6 @@
         "name": "Micron Technology (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/micron-technology-bstock",
         "coingeckoId": "micron-technology-bstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-bstock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0xcdf2f3e0fa43c47a6662a91c9e4a7c5f69762699"
@@ -1568,9 +2225,53 @@
         "queryAddresses": [
           "0xcdf2f3e0fa43c47a6662a91c9e4a7c5f69762699"
         ],
-        "allVenueVolumeUsd": 3894024,
-        "marketCapUsd": 49611012,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "MUB/USDT",
+            "baseSymbol": "MUB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 976.31,
+            "bestBid": 976.18,
+            "bestAsk": 976.31,
+            "midPrice": 976.2449999999999,
+            "spreadBps": 1.3317216087194161,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 361849.78266,
+            "sellDepthUsd": 446081.27419,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1650844.98731,
+            "observedAt": "2026-08-15T17:10:37.488000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=MUBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/MUB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          },
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "MUB/USDT",
+            "baseSymbol": "MUB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 976.19,
+            "bestBid": 976.19,
+            "bestAsk": 976.31,
+            "midPrice": 976.25,
+            "spreadBps": 1.2292688923243311,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 276324.72008,
+            "sellDepthUsd": 263026.16619,
+            "buyDepthComplete": false,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1416698.88,
+            "observedAt": "2026-08-15T17:10:37.322000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=mub_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/mub_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 3067543.8673099997,
         "volumeRank": 1,
         "preferred": true
       },
@@ -1582,7 +2283,6 @@
         "name": "Micron Technology (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/muon",
         "coingeckoId": "micron-technology-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x050362ab1072cb2ce74d74770e22a3203ad04ee5"
@@ -1611,9 +2311,47 @@
           "0x0f8e33f5cdefae9c2e59de8fb61fed347046d046",
           "0x8b6acf6041a81567f012ff6a4c6d96d5818d74bf"
         ],
-        "allVenueVolumeUsd": 2686761,
-        "marketCapUsd": 45876934,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "MUON/USDT",
+            "baseSymbol": "MUON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 975.72,
+            "bestBid": 970.71,
+            "bestAsk": 978.69,
+            "midPrice": 974.7,
+            "spreadBps": 82.20786846740991,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 7820.65659,
+            "sellDepthUsd": 4808.74136,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1764661.59,
+            "observedAt": "2026-08-15T17:10:35.920000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=muon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/muon_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "MUon-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 1037.9707031249998,
+            "poolTvlUsd": 2313.5258342154716,
+            "quoteVolume24hUsd": 285.9601217450075,
+            "feePct": 10.0,
+            "observedAt": "2026-08-15T17:10:37.376826Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/6hmXEwMhSFKw8cpVjPudk15vR2WKL2ppzunT2nJzN9V6",
+            "tradeUrl": "https://app.meteora.ag/dlmm/6hmXEwMhSFKw8cpVjPudk15vR2WKL2ppzunT2nJzN9V6",
+            "poolAddress": "6hmXEwMhSFKw8cpVjPudk15vR2WKL2ppzunT2nJzN9V6",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 1764947.550121745,
         "volumeRank": 2,
         "preferred": false
       },
@@ -1625,7 +2363,6 @@
         "name": "Micron Technology (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/micron-technology-backpack-securities",
         "coingeckoId": "micron-technology-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1"
@@ -1639,9 +2376,25 @@
         "queryAddresses": [
           "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1"
         ],
-        "allVenueVolumeUsd": 729880,
-        "marketCapUsd": 7172216,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "MU-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 973.7174510621336,
+            "poolTvlUsd": 4115687.648824436,
+            "quoteVolume24hUsd": 111759.15809930964,
+            "feePct": 0.2,
+            "observedAt": "2026-08-15T17:10:38.419390Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/13MEx6gjRadJNUdmToaGSzgeWHLH7FzScUQS9Mc5nYF5",
+            "tradeUrl": "https://app.meteora.ag/dlmm/13MEx6gjRadJNUdmToaGSzgeWHLH7FzScUQS9Mc5nYF5",
+            "poolAddress": "13MEx6gjRadJNUdmToaGSzgeWHLH7FzScUQS9Mc5nYF5",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 111759.15809930964,
         "volumeRank": 3,
         "preferred": false
       },
@@ -1653,7 +2406,6 @@
         "name": "Micron Technology • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": "micron-technology-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD"
@@ -1667,10 +2419,9 @@
         "queryAddresses": [
           "0xfF080c8ce2E5feadaCa0Da81314Ae59D232d4afD"
         ],
-        "allVenueVolumeUsd": 219938,
-        "marketCapUsd": 695334,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -1681,7 +2432,6 @@
         "name": "Micron Technology xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "micron-technology-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/micron-technology-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsQLZycSZ7QnBBdBXQaTbQdiUcbRqjNJgyBGAMzhHav"
@@ -1733,10 +2483,9 @@
           "XsQLZycSZ7QnBBdBXQaTbQdiUcbRqjNJgyBGAMzhHav",
           "EQCnPM-kDm6ijBqBxR7R6lkoLzLJ8Oyi5CrEclZ0oVc16dFe"
         ],
-        "allVenueVolumeUsd": 52076,
-        "marketCapUsd": 0.0,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 5,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       }
     ],
@@ -1749,7 +2498,6 @@
         "name": "NVIDIA (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/nvidia-bstocks",
         "coingeckoId": "nvidia-bstocks",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-bstocks",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436"
@@ -1763,9 +2511,53 @@
         "queryAddresses": [
           "0x02fca66c1d1afb4e2a7884261eb00f63598a7436"
         ],
-        "allVenueVolumeUsd": 6042061,
-        "marketCapUsd": 9767808,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "NVDAB/USDT",
+            "baseSymbol": "NVDAB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 225.19,
+            "bestBid": 225.18,
+            "bestAsk": 225.19,
+            "midPrice": 225.185,
+            "spreadBps": 0.4440891731061214,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 336280.38018,
+            "sellDepthUsd": 302883.07802,
+            "buyDepthComplete": false,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1137107.08,
+            "observedAt": "2026-08-15T17:10:38.464000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=nvdab_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/nvdab_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "NVDAB/USDT",
+            "baseSymbol": "NVDAB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 225.19,
+            "bestBid": 225.18,
+            "bestAsk": 225.19,
+            "midPrice": 225.185,
+            "spreadBps": 0.4440891731061214,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 309763.16667,
+            "sellDepthUsd": 276268.3239,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 492542.55644,
+            "observedAt": "2026-08-15T17:09:59.470000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=NVDABUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/NVDAB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          }
+        ],
+        "directVenueVolumeUsd": 1629649.63644,
         "volumeRank": 1,
         "preferred": true
       },
@@ -1777,7 +2569,6 @@
         "name": "NVIDIA xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "nvidia-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh"
@@ -1834,38 +2625,48 @@
           "EQCva-Of7acQdU_piADdlcbzsFtA-xJwZoctz8ZOXBdBoaB8",
           "TNMR6r9Z4cL7eWNrNQ4e4sm2XPhhifexZU"
         ],
-        "allVenueVolumeUsd": 3105024,
-        "marketCapUsd": 36353206,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 2,
-        "preferred": false
-      },
-      {
-        "issuer": "Robinhood",
-        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
-        "legalStructure": "Tokenized debt security",
-        "tokenSymbol": "NVDA",
-        "name": "NVIDIA • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
-        "coingeckoId": "nvidia-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-robinhood-tokenized-stock",
-        "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
-        },
-        "deployments": [
+        "directVenues": [
           {
-            "network": "Robinhood Chain",
-            "address": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "NVDAX/USDT",
+            "baseSymbol": "NVDAX",
+            "quoteSymbol": "USDT",
+            "lastPrice": 225.64,
+            "bestBid": 224.95,
+            "bestAsk": 225.76,
+            "midPrice": 225.355,
+            "spreadBps": 36.00800177817387,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 22146.082990000003,
+            "sellDepthUsd": 16174.852630000001,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 439048.68,
+            "observedAt": "2026-08-15T17:10:38.454000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=nvdax_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/nvdax_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "NVDAx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 225.1251006382808,
+            "poolTvlUsd": 279.4483897782665,
+            "quoteVolume24hUsd": 5.628639740405563,
+            "feePct": 0.25,
+            "observedAt": "2026-08-15T17:10:39.220007Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/F4inHs4RQARpASmvLpj45QjGLdkukeGQrtQ22pimVy2a",
+            "tradeUrl": "https://app.meteora.ag/dlmm/F4inHs4RQARpASmvLpj45QjGLdkukeGQrtQ22pimVy2a",
+            "poolAddress": "F4inHs4RQARpASmvLpj45QjGLdkukeGQrtQ22pimVy2a",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
           }
         ],
-        "queryAddresses": [
-          "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
-        ],
-        "allVenueVolumeUsd": 2085223,
-        "marketCapUsd": 4006340,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 3,
+        "directVenueVolumeUsd": 439054.3086397404,
+        "volumeRank": 2,
         "preferred": false
       },
       {
@@ -1876,7 +2677,6 @@
         "name": "NVIDIA (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/nvdaon",
         "coingeckoId": "nvidia-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x2d1f7226bd1f780af6b9a49dcc0ae00e8df4bdee"
@@ -1905,10 +2705,58 @@
           "0xb989ad9b91886b1aaed8daadb26f028b29b40945",
           "0xa9ee28c80f960b889dfbd1902055218cba016f75"
         ],
-        "allVenueVolumeUsd": 742431,
-        "marketCapUsd": 42218877,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "NVDAON/USDT",
+            "baseSymbol": "NVDAON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 225.19,
+            "bestBid": 225.16,
+            "bestAsk": 225.21,
+            "midPrice": 225.185,
+            "spreadBps": 2.220643098240771,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 201838.12283,
+            "sellDepthUsd": 221484.68295,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 336190.25,
+            "observedAt": "2026-08-15T17:10:37.963000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=nvdaon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/nvdaon_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 336190.25,
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "NVDA",
+        "name": "NVIDIA • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "nvidia-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
+          }
+        ],
+        "queryAddresses": [
+          "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC"
+        ],
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -1919,7 +2767,6 @@
         "name": "Nvidia (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/nvidia-backpack-securities",
         "coingeckoId": "nvidia-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/nvidia-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "NVDAVuiB7hwd3m5Wa1JuHNovPaPG6BH1QNztbKFxNjv"
@@ -1933,9 +2780,8 @@
         "queryAddresses": [
           "NVDAVuiB7hwd3m5Wa1JuHNovPaPG6BH1QNztbKFxNjv"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
         "volumeRank": null,
         "preferred": false
       }
@@ -1949,7 +2795,6 @@
         "name": "SK Hynix (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/sk-hynix-bstocks-tokenized-stock",
         "coingeckoId": "sk-hynix-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/sk-hynix-bstocks-tokenized-stock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0xca750ef65f295bbecd685abf54e82caf297bdb61"
@@ -1963,9 +2808,53 @@
         "queryAddresses": [
           "0xca750ef65f295bbecd685abf54e82caf297bdb61"
         ],
-        "allVenueVolumeUsd": 2145145,
-        "marketCapUsd": 19920832,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "SKHYB/USDT",
+            "baseSymbol": "SKHYB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 166.95,
+            "bestBid": 166.95,
+            "bestAsk": 166.97,
+            "midPrice": 166.95999999999998,
+            "spreadBps": 1.1979634621139823,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 201298.82211,
+            "sellDepthUsd": 292537.16544,
+            "buyDepthComplete": false,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 916436.54,
+            "observedAt": "2026-08-15T17:10:41.167000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=skhyb_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/skhyb_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "SKHYB/USDT",
+            "baseSymbol": "SKHYB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 166.96,
+            "bestBid": 166.95,
+            "bestAsk": 166.97,
+            "midPrice": 166.95999999999998,
+            "spreadBps": 1.1979634621139823,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 176783.82656,
+            "sellDepthUsd": 273402.51012,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 847840.53167,
+            "observedAt": "2026-08-15T17:10:40.473000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=SKHYBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/SKHYB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          }
+        ],
+        "directVenueVolumeUsd": 1764277.07167,
         "volumeRank": 1,
         "preferred": true
       },
@@ -1977,7 +2866,6 @@
         "name": "SK Hynix (Ondo Tokenized)",
         "sourceUrl": "https://app.ondo.finance/assets/skhyon",
         "coingeckoId": "sk-hynix-ondo-tokenized",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/sk-hynix-ondo-tokenized",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xc0fe36f4ffbdf1b38e192215073590a68f9a2af7"
@@ -2001,9 +2889,31 @@
           "Huyb2fyDDjSuDKCRWsN9ci2rmcgPo6NFiLbx9ZDondo",
           "0x4268f2bfb23a7496504aa5ed1ee325248586299f"
         ],
-        "allVenueVolumeUsd": 1119855,
-        "marketCapUsd": 1605692,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "SKHYON/USDT",
+            "baseSymbol": "SKHYON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 167.26,
+            "bestBid": 166.69,
+            "bestAsk": 167.31,
+            "midPrice": 167.0,
+            "spreadBps": 37.194792729018374,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 67273.26904,
+            "sellDepthUsd": 96190.86938999999,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 674157.93,
+            "observedAt": "2026-08-15T17:10:38.855000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=skhyon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/skhyon_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 674157.93,
         "volumeRank": 2,
         "preferred": false
       },
@@ -2015,7 +2925,6 @@
         "name": "SK Hynix (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/sk-hynix-backpack-securities",
         "coingeckoId": "sk-hynix-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/sk-hynix-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "SKHYhSjuRWHgikq8eRKbtBbpABgJSkd7ytQV14i9EQ3"
@@ -2029,9 +2938,25 @@
         "queryAddresses": [
           "SKHYhSjuRWHgikq8eRKbtBbpABgJSkd7ytQV14i9EQ3"
         ],
-        "allVenueVolumeUsd": 921160,
-        "marketCapUsd": 2789972,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "SKHY-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 166.59486630656812,
+            "poolTvlUsd": 2500311.98345661,
+            "quoteVolume24hUsd": 366582.2174333592,
+            "feePct": 0.1,
+            "observedAt": "2026-08-15T17:10:41.692578Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/DPAU7wDyMXDgNAfzQYMfyNqmTjzcoRsSPA2LeGH71hgi",
+            "tradeUrl": "https://app.meteora.ag/dlmm/DPAU7wDyMXDgNAfzQYMfyNqmTjzcoRsSPA2LeGH71hgi",
+            "poolAddress": "DPAU7wDyMXDgNAfzQYMfyNqmTjzcoRsSPA2LeGH71hgi",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 366582.2174333592,
         "volumeRank": 3,
         "preferred": false
       },
@@ -2043,7 +2968,6 @@
         "name": "SK hynix Inc. American Depositary Shares • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": null,
-        "marketDataUrl": null,
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0x84CAb63bc87912E71ad199ff14A0bA45de68FeF8"
@@ -2057,9 +2981,8 @@
         "queryAddresses": [
           "0x84CAb63bc87912E71ad199ff14A0bA45de68FeF8"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
         "volumeRank": null,
         "preferred": false
       }
@@ -2074,7 +2997,6 @@
         "name": "SanDisk (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/sandisk-bstocks-tokenized-stock",
         "coingeckoId": "sandisk-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-bstocks-tokenized-stock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0x3ee4df61bd4f867e349beae8bfe07bc31b4850fb"
@@ -2088,9 +3010,53 @@
         "queryAddresses": [
           "0x3ee4df61bd4f867e349beae8bfe07bc31b4850fb"
         ],
-        "allVenueVolumeUsd": 23866792,
-        "marketCapUsd": 35440418,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "SNDKB/USDT",
+            "baseSymbol": "SNDKB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 1651.93,
+            "bestBid": 1651.8,
+            "bestAsk": 1651.89,
+            "midPrice": 1651.845,
+            "spreadBps": 0.5448601525626096,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 398202.172953,
+            "sellDepthUsd": 593065.221447,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 11470231.663779,
+            "observedAt": "2026-08-15T17:10:34.474000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=SNDKBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/SNDKB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          },
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "SNDKB/USDT",
+            "baseSymbol": "SNDKB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 1651.8,
+            "bestBid": 1651.8,
+            "bestAsk": 1651.89,
+            "midPrice": 1651.845,
+            "spreadBps": 0.5448601525626096,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 218677.29342099998,
+            "sellDepthUsd": 187923.209901,
+            "buyDepthComplete": false,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 5851214.4,
+            "observedAt": "2026-08-15T17:10:42.168000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=sndkb_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/sndkb_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 17321446.063779,
         "volumeRank": 1,
         "preferred": true
       },
@@ -2102,7 +3068,6 @@
         "name": "SanDisk (Ondo Tokenized)",
         "sourceUrl": "https://app.ondo.finance/assets/sndkon",
         "coingeckoId": "sandisk-ondo-tokenized",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-ondo-tokenized",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0x71e2400cf1cb83204f33794ed326636a71a9aafc"
@@ -2131,10 +3096,101 @@
           "0xb8927cff399e23328eec0e457e75c709dcfcf382",
           "0x4fd67cb8cfedc718bac984b5936abe3330d0a2a4"
         ],
-        "allVenueVolumeUsd": 2156345,
-        "marketCapUsd": 7020937,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "SNDKON/USDT",
+            "baseSymbol": "SNDKON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 1649.19,
+            "bestBid": 1647.19,
+            "bestAsk": 1653.14,
+            "midPrice": 1650.165,
+            "spreadBps": 36.12212313090835,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 6002.03094,
+            "sellDepthUsd": 2904.09981,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1112707.22,
+            "observedAt": "2026-08-15T17:10:41.125000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=sndkon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/sndkon_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 1112707.22,
         "volumeRank": 2,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "SNDK",
+        "name": "Sandisk (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/sandisk-backpack-securities",
+        "coingeckoId": "sandisk-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
+          }
+        ],
+        "queryAddresses": [
+          "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
+        ],
+        "directVenues": [
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "SNDK-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 1657.3852445571529,
+            "poolTvlUsd": 164.34626672713517,
+            "quoteVolume24hUsd": 6.028562781746665,
+            "feePct": 1.0,
+            "observedAt": "2026-08-15T17:10:43.357081Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/Aei34V56A9No5yUMzBEcjypSe8Y5dPPzUvxYUzFqQLoA",
+            "tradeUrl": "https://app.meteora.ag/dlmm/Aei34V56A9No5yUMzBEcjypSe8Y5dPPzUvxYUzFqQLoA",
+            "poolAddress": "Aei34V56A9No5yUMzBEcjypSe8Y5dPPzUvxYUzFqQLoA",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 6.028562781746665,
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "SNDK",
+        "name": "Sandisk Corporation • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "sandisk-corporation-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
+          }
+        ],
+        "queryAddresses": [
+          "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
+        ],
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -2145,7 +3201,6 @@
         "name": "Sandisk Corporation xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "sandisk-corporation-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-corporation-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "Xswbpc8UqU6e1j9QZEWCjBMjyvz4twqD7PCy6j2e7jj"
@@ -2193,66 +3248,9 @@
           "Xswbpc8UqU6e1j9QZEWCjBMjyvz4twqD7PCy6j2e7jj",
           "EQDueP2yEIESbcrwJrH6WI8JOym4Zjb6zw1hTclaQ-r0aP5n"
         ],
-        "allVenueVolumeUsd": 975219,
-        "marketCapUsd": 13281419,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 3,
-        "preferred": false
-      },
-      {
-        "issuer": "Backpack",
-        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
-        "legalStructure": "Brokerage-linked tokenized security",
-        "tokenSymbol": "SNDK",
-        "name": "Sandisk (Backpack Securities)",
-        "sourceUrl": "https://www.coingecko.com/en/coins/sandisk-backpack-securities",
-        "coingeckoId": "sandisk-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-backpack-securities",
-        "primaryDeployment": {
-          "network": "Solana",
-          "address": "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
-        },
-        "deployments": [
-          {
-            "network": "Solana",
-            "address": "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
-          }
-        ],
-        "queryAddresses": [
-          "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH"
-        ],
-        "allVenueVolumeUsd": 411774,
-        "marketCapUsd": 1675881,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
-        "preferred": false
-      },
-      {
-        "issuer": "Robinhood",
-        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
-        "legalStructure": "Tokenized debt security",
-        "tokenSymbol": "SNDK",
-        "name": "Sandisk Corporation • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
-        "coingeckoId": "sandisk-corporation-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/sandisk-corporation-robinhood-tokenized-stock",
-        "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
-        },
-        "deployments": [
-          {
-            "network": "Robinhood Chain",
-            "address": "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
-          }
-        ],
-        "queryAddresses": [
-          "0xB90A19fF0Af67f7779afF50A882A9CfF42446400"
-        ],
-        "allVenueVolumeUsd": 201684,
-        "marketCapUsd": 1138878,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 5,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       }
     ],
@@ -2265,7 +3263,6 @@
         "name": "SpaceX (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/spacex-bstocks-tokenized-stock",
         "coingeckoId": "spacex-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-bstocks-tokenized-stock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1"
@@ -2279,9 +3276,53 @@
         "queryAddresses": [
           "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1"
         ],
-        "allVenueVolumeUsd": 25359546,
-        "marketCapUsd": 66659244,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "SPCXB/USDT",
+            "baseSymbol": "SPCXB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 139.64,
+            "bestBid": 139.64,
+            "bestAsk": 139.65,
+            "midPrice": 139.64499999999998,
+            "spreadBps": 0.7161271841882311,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 695787.86663,
+            "sellDepthUsd": 465185.10295,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 6926547.25646,
+            "observedAt": "2026-08-15T17:10:39.487000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=SPCXBUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/SPCXB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          },
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "SPCXB/USDT",
+            "baseSymbol": "SPCXB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 139.65,
+            "bestBid": 139.63,
+            "bestAsk": 139.65,
+            "midPrice": 139.64,
+            "spreadBps": 1.4323569433516425,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 713875.0598,
+            "sellDepthUsd": 465954.9464,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 4060275.62,
+            "observedAt": "2026-08-15T17:10:43.422000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=spcxb_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/spcxb_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 10986822.87646,
         "volumeRank": 1,
         "preferred": true
       },
@@ -2293,7 +3334,6 @@
         "name": "SpaceX xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "spacex-xstocks",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-xstocks",
         "primaryDeployment": {
           "network": "Solana",
           "address": "Xs3oZwbHvqis4NYcf4YKWmEia2eC84wSiVrcYcTqpH8"
@@ -2345,66 +3385,48 @@
           "Xs3oZwbHvqis4NYcf4YKWmEia2eC84wSiVrcYcTqpH8",
           "EQAAsfl1a-BA8dSSUX2VpLCveFYzDOLrJX9ll89baSbmvl2V"
         ],
-        "allVenueVolumeUsd": 4155794,
-        "marketCapUsd": 36313135,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "SPCXX/USDT",
+            "baseSymbol": "SPCXX",
+            "quoteSymbol": "USDT",
+            "lastPrice": 139.56,
+            "bestBid": 139.55,
+            "bestAsk": 139.57,
+            "midPrice": 139.56,
+            "spreadBps": 1.4331780723741971,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 493152.3063,
+            "sellDepthUsd": 325985.1323,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1255575.23,
+            "observedAt": "2026-08-15T17:10:42.271000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=spcxx_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/spcxx_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "SPCXx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 139.74695337396884,
+            "poolTvlUsd": 8557.08201822424,
+            "quoteVolume24hUsd": 270.2157160313985,
+            "feePct": 1.0,
+            "observedAt": "2026-08-15T17:10:44.071425Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/Hv4hQHE29cozn1Vuk7ZicAfJAdQQLs7Bu38YeiTJhA4b",
+            "tradeUrl": "https://app.meteora.ag/dlmm/Hv4hQHE29cozn1Vuk7ZicAfJAdQQLs7Bu38YeiTJhA4b",
+            "poolAddress": "Hv4hQHE29cozn1Vuk7ZicAfJAdQQLs7Bu38YeiTJhA4b",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 1255845.4457160314,
         "volumeRank": 2,
-        "preferred": false
-      },
-      {
-        "issuer": "Backpack",
-        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
-        "legalStructure": "Brokerage-linked tokenized security",
-        "tokenSymbol": "SPCX",
-        "name": "SpaceX (Backpack Securities)",
-        "sourceUrl": "https://www.coingecko.com/en/coins/spacex-backpack-securities",
-        "coingeckoId": "spacex-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-backpack-securities",
-        "primaryDeployment": {
-          "network": "Solana",
-          "address": "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
-        },
-        "deployments": [
-          {
-            "network": "Solana",
-            "address": "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
-          }
-        ],
-        "queryAddresses": [
-          "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
-        ],
-        "allVenueVolumeUsd": 2358625,
-        "marketCapUsd": 6275472,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 3,
-        "preferred": false
-      },
-      {
-        "issuer": "Robinhood",
-        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
-        "legalStructure": "Tokenized debt security",
-        "tokenSymbol": "SPCX",
-        "name": "Space Exploration Technologies Corp. Class A Common Stock • Robinhood Token",
-        "sourceUrl": "https://api.robinhood.com/rhj/assets",
-        "coingeckoId": "spacex-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-robinhood-tokenized-stock",
-        "primaryDeployment": {
-          "network": "Robinhood Chain",
-          "address": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
-        },
-        "deployments": [
-          {
-            "network": "Robinhood Chain",
-            "address": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
-          }
-        ],
-        "queryAddresses": [
-          "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
-        ],
-        "allVenueVolumeUsd": 1622575,
-        "marketCapUsd": 2484252,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
         "preferred": false
       },
       {
@@ -2415,7 +3437,6 @@
         "name": "SpaceX (Ondo Tokenized Stock)",
         "sourceUrl": "https://app.ondo.finance/assets/spcxon",
         "coingeckoId": "spacex-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-ondo-tokenized-stock",
         "primaryDeployment": {
           "network": "Ethereum",
           "address": "0xc9eef266834730340a55b6cc24621b31baf55581"
@@ -2439,10 +3460,101 @@
           "wzAyQTorWyoVXuJKj2x8EqKEGJpS13z6EWE9z5Aondo",
           "0xd0a58bc9d88d3ff48c0294cb7e45937d0e41a928"
         ],
-        "allVenueVolumeUsd": 912657,
-        "marketCapUsd": 10073321,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 5,
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "SPCXON/USDT",
+            "baseSymbol": "SPCXON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 139.88,
+            "bestBid": 139.53,
+            "bestAsk": 140.04,
+            "midPrice": 139.785,
+            "spreadBps": 36.5512792947742,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 173755.46584,
+            "sellDepthUsd": 77969.89707,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 675463.01,
+            "observedAt": "2026-08-15T17:10:42.369000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=spcxon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/spcxon_usdt",
+            "liveAdapter": null
+          }
+        ],
+        "directVenueVolumeUsd": 675463.01,
+        "volumeRank": 3,
+        "preferred": false
+      },
+      {
+        "issuer": "Backpack",
+        "issuerUrl": "https://learn.backpack.exchange/blog/introducing-backpack-securities",
+        "legalStructure": "Brokerage-linked tokenized security",
+        "tokenSymbol": "SPCX",
+        "name": "SpaceX (Backpack Securities)",
+        "sourceUrl": "https://www.coingecko.com/en/coins/spacex-backpack-securities",
+        "coingeckoId": "spacex-backpack-securities",
+        "primaryDeployment": {
+          "network": "Solana",
+          "address": "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
+        },
+        "deployments": [
+          {
+            "network": "Solana",
+            "address": "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
+          }
+        ],
+        "queryAddresses": [
+          "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb"
+        ],
+        "directVenues": [
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "SPCX-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 139.63080167779663,
+            "poolTvlUsd": 629836.6541921645,
+            "quoteVolume24hUsd": 43248.65078427135,
+            "feePct": 0.75,
+            "observedAt": "2026-08-15T17:10:45.197402Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/7nVQtYQipN564E9oBi6yZFGox4WL6CR4zsLyYipqgTWu",
+            "tradeUrl": "https://app.meteora.ag/dlmm/7nVQtYQipN564E9oBi6yZFGox4WL6CR4zsLyYipqgTWu",
+            "poolAddress": "7nVQtYQipN564E9oBi6yZFGox4WL6CR4zsLyYipqgTWu",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 43248.65078427135,
+        "volumeRank": 4,
+        "preferred": false
+      },
+      {
+        "issuer": "Robinhood",
+        "issuerUrl": "https://robinhood.com/rhj/stocktokens/",
+        "legalStructure": "Tokenized debt security",
+        "tokenSymbol": "SPCX",
+        "name": "Space Exploration Technologies Corp. Class A Common Stock • Robinhood Token",
+        "sourceUrl": "https://api.robinhood.com/rhj/assets",
+        "coingeckoId": "spacex-robinhood-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Robinhood Chain",
+          "address": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
+        },
+        "deployments": [
+          {
+            "network": "Robinhood Chain",
+            "address": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
+          }
+        ],
+        "queryAddresses": [
+          "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa"
+        ],
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -2453,7 +3565,6 @@
         "name": "SpaceX (Reality Protocol)",
         "sourceUrl": "https://www.coingecko.com/en/coins/spacex-reality-protocol",
         "coingeckoId": "spacex-reality-protocol",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/spacex-reality-protocol",
         "primaryDeployment": {
           "network": "Arbitrum",
           "address": "0x5181b7dd097b42d7787ee78efab86f43d4e12f44"
@@ -2467,10 +3578,9 @@
         "queryAddresses": [
           "0x5181b7dd097b42d7787ee78efab86f43d4e12f44"
         ],
-        "allVenueVolumeUsd": 704719,
-        "marketCapUsd": 5714540,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 6,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       }
     ],
@@ -2483,7 +3593,6 @@
         "name": "Tesla (bStocks Tokenized Stock)",
         "sourceUrl": "https://www.coingecko.com/en/coins/tesla-bstocks-tokenized-stock",
         "coingeckoId": "tesla-bstocks-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-bstocks-tokenized-stock",
         "primaryDeployment": {
           "network": "BNB Chain",
           "address": "0x5b1910eaad6450e50f816082aa078c41f10c292f"
@@ -2497,11 +3606,135 @@
         "queryAddresses": [
           "0x5b1910eaad6450e50f816082aa078c41f10c292f"
         ],
-        "allVenueVolumeUsd": 3415472,
-        "marketCapUsd": 13081941,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "TSLAB/USDT",
+            "baseSymbol": "TSLAB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 342.92,
+            "bestBid": 342.88,
+            "bestAsk": 342.92,
+            "midPrice": 342.9,
+            "spreadBps": 1.1665888940748381,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 244985.23748,
+            "sellDepthUsd": 224368.17577,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1178452.81,
+            "observedAt": "2026-08-15T17:10:45.862000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=tslab_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/tslab_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "orderBook",
+            "venue": "Binance",
+            "pair": "TSLAB/USDT",
+            "baseSymbol": "TSLAB",
+            "quoteSymbol": "USDT",
+            "lastPrice": 342.92,
+            "bestBid": 342.88,
+            "bestAsk": 342.92,
+            "midPrice": 342.9,
+            "spreadBps": 1.1665888940748381,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 243567.72669,
+            "sellDepthUsd": 189786.65233,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 901174.85358,
+            "observedAt": "2026-08-15T17:10:17.497000Z",
+            "sourceUrl": "https://data-api.binance.vision/api/v3/depth?symbol=TSLABUSDT&limit=1000",
+            "tradeUrl": "https://www.binance.com/en/trade/TSLAB_USDT?type=spot",
+            "liveAdapter": "binanceSpot"
+          }
+        ],
+        "directVenueVolumeUsd": 2079627.66358,
         "volumeRank": 1,
         "preferred": true
+      },
+      {
+        "issuer": "Ondo",
+        "issuerUrl": "https://ondo.finance/ondo-stocks",
+        "legalStructure": "Equity-backed total-return token",
+        "tokenSymbol": "TSLAon",
+        "name": "Tesla (Ondo Tokenized Stock)",
+        "sourceUrl": "https://app.ondo.finance/assets/tslaon",
+        "coingeckoId": "tesla-ondo-tokenized-stock",
+        "primaryDeployment": {
+          "network": "Ethereum",
+          "address": "0xf6b1117ec07684d3958cad8beb1b302bfd21103f"
+        },
+        "deployments": [
+          {
+            "network": "Ethereum",
+            "address": "0xf6b1117ec07684d3958cad8beb1b302bfd21103f"
+          },
+          {
+            "network": "Solana",
+            "address": "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo"
+          },
+          {
+            "network": "HyperEVM",
+            "address": "0x417883b1709545f1211a25b00ad13455fc7f1bc5"
+          },
+          {
+            "network": "BNB Chain",
+            "address": "0x2494b603319d4d9f9715c9f4496d9e0364b59d93"
+          }
+        ],
+        "queryAddresses": [
+          "0xf6b1117ec07684d3958cad8beb1b302bfd21103f",
+          "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo",
+          "0x417883b1709545f1211a25b00ad13455fc7f1bc5",
+          "0x2494b603319d4d9f9715c9f4496d9e0364b59d93"
+        ],
+        "directVenues": [
+          {
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "TSLAON/USDT",
+            "baseSymbol": "TSLAON",
+            "quoteSymbol": "USDT",
+            "lastPrice": 343.45,
+            "bestBid": 342.71,
+            "bestAsk": 343.46,
+            "midPrice": 343.085,
+            "spreadBps": 21.884392051589874,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 41198.9916,
+            "sellDepthUsd": 175436.1779,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 1158171.4,
+            "observedAt": "2026-08-15T17:10:43.539000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=tslaon_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/tslaon_usdt",
+            "liveAdapter": null
+          },
+          {
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "TSLAon-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 393.8878716565265,
+            "poolTvlUsd": 2.998780510893e-06,
+            "quoteVolume24hUsd": 0.0,
+            "feePct": 10.0,
+            "observedAt": "2026-08-15T17:10:45.761966Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/7ffddRXsLfAzZ1UsLEm49yEmmvUu26FtbPBv6AWy9YZ2",
+            "tradeUrl": "https://app.meteora.ag/dlmm/7ffddRXsLfAzZ1UsLEm49yEmmvUu26FtbPBv6AWy9YZ2",
+            "poolAddress": "7ffddRXsLfAzZ1UsLEm49yEmmvUu26FtbPBv6AWy9YZ2",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
+          }
+        ],
+        "directVenueVolumeUsd": 1158171.4,
+        "volumeRank": 2,
+        "preferred": false
       },
       {
         "issuer": "xStocks",
@@ -2511,7 +3744,6 @@
         "name": "Tesla xStock",
         "sourceUrl": "https://api.backed.fi/rest/tokens",
         "coingeckoId": "tesla-xstock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-xstock",
         "primaryDeployment": {
           "network": "Solana",
           "address": "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB"
@@ -2568,52 +3800,47 @@
           "EQB4IwqWZPUczntdry8vSN2tsJKt-9F7iIb7gEFREYYOB563",
           "TTfj39Vm7ATpNJMsfDUWYVzxK8mPPA4yYE"
         ],
-        "allVenueVolumeUsd": 2644454,
-        "marketCapUsd": 65084037,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 2,
-        "preferred": false
-      },
-      {
-        "issuer": "Ondo",
-        "issuerUrl": "https://ondo.finance/ondo-stocks",
-        "legalStructure": "Equity-backed total-return token",
-        "tokenSymbol": "TSLAon",
-        "name": "Tesla (Ondo Tokenized Stock)",
-        "sourceUrl": "https://app.ondo.finance/assets/tslaon",
-        "coingeckoId": "tesla-ondo-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-ondo-tokenized-stock",
-        "primaryDeployment": {
-          "network": "Ethereum",
-          "address": "0xf6b1117ec07684d3958cad8beb1b302bfd21103f"
-        },
-        "deployments": [
+        "directVenues": [
           {
-            "network": "Ethereum",
-            "address": "0xf6b1117ec07684d3958cad8beb1b302bfd21103f"
+            "kind": "orderBook",
+            "venue": "LBank",
+            "pair": "TSLAX/USDT",
+            "baseSymbol": "TSLAX",
+            "quoteSymbol": "USDT",
+            "lastPrice": 342.95,
+            "bestBid": 342.93,
+            "bestAsk": 343.04,
+            "midPrice": 342.985,
+            "spreadBps": 3.2076517073464927,
+            "depthBandPct": 2.0,
+            "buyDepthUsd": 36826.2325,
+            "sellDepthUsd": 129836.99915,
+            "buyDepthComplete": true,
+            "sellDepthComplete": true,
+            "quoteVolume24hUsd": 352532.55,
+            "observedAt": "2026-08-15T17:10:44.711000Z",
+            "sourceUrl": "https://api.lbkex.com/v2/depth.do?symbol=tslax_usdt&size=200",
+            "tradeUrl": "https://www.lbank.com/trade/tslax_usdt",
+            "liveAdapter": null
           },
           {
-            "network": "Solana",
-            "address": "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo"
-          },
-          {
-            "network": "HyperEVM",
-            "address": "0x417883b1709545f1211a25b00ad13455fc7f1bc5"
-          },
-          {
-            "network": "BNB Chain",
-            "address": "0x2494b603319d4d9f9715c9f4496d9e0364b59d93"
+            "kind": "ammPool",
+            "venue": "Meteora",
+            "pair": "TSLAx-USDC",
+            "quoteSymbol": "USDC",
+            "lastPrice": 349.9733610725435,
+            "poolTvlUsd": 33266.66403360016,
+            "quoteVolume24hUsd": 6.920670295772751,
+            "feePct": 1.0,
+            "observedAt": "2026-08-15T17:10:46.331706Z",
+            "sourceUrl": "https://dlmm.datapi.meteora.ag/pools/AbzmJavzxHKsSpzbcW8DRY2Jrjw2qQUeZtm6nTjvR4Qp",
+            "tradeUrl": "https://app.meteora.ag/dlmm/AbzmJavzxHKsSpzbcW8DRY2Jrjw2qQUeZtm6nTjvR4Qp",
+            "poolAddress": "AbzmJavzxHKsSpzbcW8DRY2Jrjw2qQUeZtm6nTjvR4Qp",
+            "targetSide": "x",
+            "liveAdapter": "meteoraDlmm"
           }
         ],
-        "queryAddresses": [
-          "0xf6b1117ec07684d3958cad8beb1b302bfd21103f",
-          "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo",
-          "0x417883b1709545f1211a25b00ad13455fc7f1bc5",
-          "0x2494b603319d4d9f9715c9f4496d9e0364b59d93"
-        ],
-        "allVenueVolumeUsd": 1858931,
-        "marketCapUsd": 16101572,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
+        "directVenueVolumeUsd": 352539.47067029576,
         "volumeRank": 3,
         "preferred": false
       },
@@ -2625,7 +3852,6 @@
         "name": "Tesla • Robinhood Token",
         "sourceUrl": "https://api.robinhood.com/rhj/assets",
         "coingeckoId": "tesla-robinhood-tokenized-stock",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-robinhood-tokenized-stock",
         "primaryDeployment": {
           "network": "Robinhood Chain",
           "address": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
@@ -2639,10 +3865,9 @@
         "queryAddresses": [
           "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
         ],
-        "allVenueVolumeUsd": 306929,
-        "marketCapUsd": 1581491,
-        "marketDataUpdatedAt": "2026-08-15T15:47:30.000Z",
-        "volumeRank": 4,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
+        "volumeRank": null,
         "preferred": false
       },
       {
@@ -2653,7 +3878,6 @@
         "name": "Tesla (Backpack Securities)",
         "sourceUrl": "https://www.coingecko.com/en/coins/tesla-backpack-securities",
         "coingeckoId": "tesla-backpack-securities",
-        "marketDataUrl": "https://www.coingecko.com/en/coins/tesla-backpack-securities",
         "primaryDeployment": {
           "network": "Solana",
           "address": "TSLAqBbv4CNCnzWFeB7LmydAyEiNMJtve7DYKLpdK4S"
@@ -2667,9 +3891,8 @@
         "queryAddresses": [
           "TSLAqBbv4CNCnzWFeB7LmydAyEiNMJtve7DYKLpdK4S"
         ],
-        "allVenueVolumeUsd": null,
-        "marketCapUsd": null,
-        "marketDataUpdatedAt": null,
+        "directVenues": [],
+        "directVenueVolumeUsd": 0,
         "volumeRank": null,
         "preferred": false
       }

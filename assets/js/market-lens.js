@@ -501,8 +501,6 @@
     renderRatioChart();
   }
 
-  const MAJOR_QUOTES = new Set(["USDC", "USDT", "USDG", "USDON", "DAI", "USDS", "FDUSD", "USD1", "USDE", "USDT0", "PYUSD", "WETH", "ETH", "SOL", "WSOL", "HYPE", "WHYPE"]);
-
   function networkMarkup(deployments) {
     const networks = [...new Set(deployments.map((deployment) => deployment.network))];
     const badges = networks.map((network) => `<span class="network-badge">${escapeHtml(network)}</span>`).join("");
@@ -530,16 +528,68 @@
     ].join("");
   }
 
+  function priceMoney(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return "—";
+    const digits = parsed >= 100 ? 2 : parsed >= 1 ? 3 : 5;
+    return `$${parsed.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: digits })}`;
+  }
+
+  function depthMoney(value, complete) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return "—";
+    return `${complete === false ? "≥ " : ""}${compactMoney(parsed)}`;
+  }
+
+  function directVenueMarkup(venue, marketIndex, venueIndex, isLive) {
+    const orderBook = venue.kind === "orderBook";
+    const statusLabel = isLive ? "Live direct" : "Direct snapshot";
+    const statusClass = isLive ? "live" : "snapshot";
+    const time = timestampLabel(venue.observedAt);
+    const spread = orderBook
+      ? `${number(venue.spreadBps, 1)} bps`
+      : `${number(venue.feePct, 2)}% pool fee`;
+    const buyDepth = orderBook ? depthMoney(venue.buyDepthUsd, venue.buyDepthComplete) : "Quote required";
+    const sellDepth = orderBook ? depthMoney(venue.sellDepthUsd, venue.sellDepthComplete) : "Quote required";
+    const tvl = venue.poolTvlUsd == null ? "—" : compactMoney(venue.poolTvlUsd);
+    return `<div id="direct-venue-${marketIndex}-${venueIndex}" class="direct-venue-row" role="row">
+      <div class="direct-venue-cell venue" role="cell">
+        <div><i class="venue-state ${statusClass}" aria-hidden="true"></i><strong>${escapeHtml(venue.venue)}</strong><span class="venue-status">${statusLabel}</span></div>
+        <a href="${escapeHtml(venue.tradeUrl || venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(venue.pair)} ↗</a>
+      </div>
+      <div class="direct-venue-cell price" role="cell"><strong>${priceMoney(venue.midPrice || venue.lastPrice)}</strong><small>${orderBook ? "Mid" : "Pool price"}</small></div>
+      <div class="direct-venue-cell spread" role="cell"><strong>${spread}</strong><small>${orderBook ? "Bid / ask" : "AMM"}</small></div>
+      <div class="direct-venue-cell buy-depth" role="cell"><strong>${buyDepth}</strong><small>${orderBook ? "Asks ≤ +2%" : "Pool quote needed"}</small></div>
+      <div class="direct-venue-cell sell-depth" role="cell"><strong>${sellDepth}</strong><small>${orderBook ? "Bids ≥ −2%" : "Pool quote needed"}</small></div>
+      <div class="direct-venue-cell turnover" role="cell"><strong>${compactMoney(venue.quoteVolume24hUsd)}</strong><small>24h turnover</small></div>
+      <div class="direct-venue-cell pool-tvl" role="cell"><strong>${tvl}</strong><small>${orderBook ? "Order book" : "Pool TVL"}</small></div>
+      <a class="venue-source" href="${escapeHtml(venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">Source · ${escapeHtml(time)} UTC ↗</a>
+    </div>`;
+  }
+
+  function directVenueTableMarkup(market, marketIndex) {
+    const venues = Array.isArray(market.directVenues) ? market.directVenues : [];
+    if (!venues.length) {
+      return '<div class="direct-venue-empty">No public direct venue book or major-quote DEX pool is indexed for this wrapper.</div>';
+    }
+    return `<div class="direct-venue-table" role="table" aria-label="${escapeHtml(market.tokenSymbol)} direct venue price and liquidity">
+      <div class="direct-venue-head" role="row">
+        <span role="columnheader">Venue / pair</span><span role="columnheader">Price</span><span role="columnheader">Spread / fee</span><span role="columnheader">Buy +2%</span><span role="columnheader">Sell −2%</span><span role="columnheader">24h</span><span role="columnheader">Pool TVL</span>
+      </div>
+      <div class="direct-venue-rows" role="rowgroup">${venues.map((venue, venueIndex) => directVenueMarkup(venue, marketIndex, venueIndex, false)).join("")}</div>
+    </div>`;
+  }
+
   function onchainRowMarkup(market, index) {
     const issuerClass = String(market.issuer || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
-    const volume = Number(market.allVenueVolumeUsd);
-    const hasVolume = market.allVenueVolumeUsd != null && Number.isFinite(volume);
-    const volumeLabel = hasVolume ? compactMoney(volume) : "Not indexed";
-    const volumeTitle = hasVolume ? `$${volume.toLocaleString("en-US", { maximumFractionDigits: 2 })}` : "No aggregate venue volume available";
+    const volume = Number(market.directVenueVolumeUsd);
+    const venues = Array.isArray(market.directVenues) ? market.directVenues : [];
+    const books = venues.filter((venue) => venue.kind === "orderBook").length;
+    const pools = venues.filter((venue) => venue.kind === "ammPool").length;
+    const coverage = [books ? `${books} book${books === 1 ? "" : "s"}` : "", pools ? `${pools} pool${pools === 1 ? "" : "s"}` : ""].filter(Boolean).join(" · ");
+    const volumeLabel = Number.isFinite(volume) && volume > 0 ? compactMoney(volume) : "No direct feed";
+    const volumeTitle = Number.isFinite(volume) ? `$${volume.toLocaleString("en-US", { maximumFractionDigits: 2 })}` : "No directly observed venue volume";
     const issuerUrl = market.issuerUrl || market.sourceUrl;
-    const marketDataLink = market.marketDataUrl
-      ? `<a href="${escapeHtml(market.marketDataUrl)}" target="_blank" rel="noopener noreferrer">CoinGecko aggregate ↗</a>`
-      : "No aggregate feed";
     return `<div class="onchain-market-row issuer-${issuerClass}${market.preferred ? " preferred-market" : ""}" role="row">
       <div class="onchain-cell token" role="cell">
         <div class="onchain-token"><i class="issuer-mark" aria-hidden="true"></i><strong>${escapeHtml(market.tokenSymbol)}</strong><a href="${escapeHtml(issuerUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(market.issuer)} ↗</a>${market.preferred ? '<span class="preferred-badge">Preferred</span>' : ""}</div>
@@ -547,45 +597,60 @@
       </div>
       <div class="onchain-cell networks" role="cell">${networkMarkup(market.deployments || [])}</div>
       <div class="onchain-cell contracts" role="cell">${contractMarkup(market)}</div>
-      <div class="onchain-cell volume onchain-metric" role="cell"><strong title="${escapeHtml(volumeTitle)}">${volumeLabel}</strong><small>${marketDataLink}</small></div>
-      <div id="onchain-liquidity-${index}" class="onchain-cell liquidity onchain-metric" role="cell"><strong>Indexing…</strong><small>Major-quote pools</small></div>
+      <div class="onchain-cell volume onchain-metric" role="cell"><strong title="${escapeHtml(volumeTitle)}">${volumeLabel}</strong><small>Queried venues only</small></div>
+      <div class="onchain-cell liquidity onchain-metric" role="cell"><strong>${venues.length || "—"}</strong><small>${coverage || "No public feed"}</small></div>
+      ${directVenueTableMarkup(market, index)}
     </div>`;
   }
 
-  function pairKey(pair) {
-    return `${pair.chainId || ""}:${String(pair.pairAddress || "").toLowerCase()}`;
-  }
-
-  function isMajorQuotePair(pair, addresses) {
-    const baseAddress = String(pair.baseToken && pair.baseToken.address || "").toLowerCase();
-    const quoteAddress = String(pair.quoteToken && pair.quoteToken.address || "").toLowerCase();
-    const baseSymbol = String(pair.baseToken && pair.baseToken.symbol || "").toUpperCase();
-    const quoteSymbol = String(pair.quoteToken && pair.quoteToken.symbol || "").toUpperCase();
-    return (addresses.has(baseAddress) && MAJOR_QUOTES.has(quoteSymbol)) || (addresses.has(quoteAddress) && MAJOR_QUOTES.has(baseSymbol));
-  }
-
-  async function liquidityForMarket(market) {
-    const addresses = [...new Set((market.queryAddresses || []).map((address) => String(address)))];
-    const responses = await Promise.allSettled(addresses.map((address) => json(`https://api.dexscreener.com/latest/dex/tokens/${encodeURIComponent(address)}`)));
-    const fulfilled = responses.filter((response) => response.status === "fulfilled");
-    if (!fulfilled.length) throw new Error("liquidity index unavailable");
-    const targetAddresses = new Set(addresses.map((address) => address.toLowerCase()));
-    const pairs = [];
-    const seen = new Set();
-    fulfilled.forEach((response) => {
-      (response.value.pairs || []).forEach((pair) => {
-        const key = pairKey(pair);
-        if (!seen.has(key) && isMajorQuotePair(pair, targetAddresses)) {
-          seen.add(key);
-          pairs.push(pair);
-        }
-      });
-    });
+  function liveBookMetrics(snapshot, depth, ticker) {
+    const bids = (depth.bids || []).map(([price, quantity]) => [Number(price), Number(quantity)]).sort((a, b) => b[0] - a[0]);
+    const asks = (depth.asks || []).map(([price, quantity]) => [Number(price), Number(quantity)]).sort((a, b) => a[0] - b[0]);
+    if (!bids.length || !asks.length) throw new Error("empty direct order book");
+    const bestBid = bids[0][0];
+    const bestAsk = asks[0][0];
+    const mid = (bestBid + bestAsk) / 2;
+    const band = Number(snapshot.depthBandPct || 2) / 100;
+    const lower = mid * (1 - band);
+    const upper = mid * (1 + band);
     return {
-      liquidity: pairs.reduce((sum, pair) => sum + (Number(pair.liquidity && pair.liquidity.usd) || 0), 0),
-      volume: pairs.reduce((sum, pair) => sum + (Number(pair.volume && pair.volume.h24) || 0), 0),
-      pools: pairs.length,
+      ...snapshot,
+      lastPrice: Number(ticker.lastPrice),
+      bestBid,
+      bestAsk,
+      midPrice: mid,
+      spreadBps: (bestAsk / bestBid - 1) * 10000,
+      buyDepthUsd: asks.filter(([price]) => price <= upper).reduce((sum, [price, quantity]) => sum + price * quantity, 0),
+      sellDepthUsd: bids.filter(([price]) => price >= lower).reduce((sum, [price, quantity]) => sum + price * quantity, 0),
+      buyDepthComplete: asks[asks.length - 1][0] >= upper,
+      sellDepthComplete: bids[bids.length - 1][0] <= lower,
+      quoteVolume24hUsd: Number(ticker.quoteVolume),
+      observedAt: new Date(Number(ticker.closeTime)).toISOString(),
     };
+  }
+
+  async function refreshDirectVenue(venue) {
+    if (venue.liveAdapter === "binanceSpot") {
+      const symbol = `${venue.baseSymbol}USDT`;
+      const [depth, ticker] = await Promise.all([
+        json(`https://data-api.binance.vision/api/v3/depth?symbol=${encodeURIComponent(symbol)}&limit=1000`),
+        json(`https://data-api.binance.vision/api/v3/ticker/24hr?symbol=${encodeURIComponent(symbol)}`),
+      ]);
+      return liveBookMetrics(venue, depth, ticker);
+    }
+    if (venue.liveAdapter === "meteoraDlmm") {
+      const pool = await json(venue.sourceUrl);
+      const rawPrice = Number(pool.current_price);
+      return {
+        ...venue,
+        lastPrice: venue.targetSide === "y" ? 1 / rawPrice : rawPrice,
+        poolTvlUsd: Number(pool.tvl),
+        quoteVolume24hUsd: Number(pool.volume && pool.volume["24h"]),
+        feePct: Number(pool.dynamic_fee_pct || pool.pool_config && pool.pool_config.base_fee_pct || 0),
+        observedAt: new Date().toISOString(),
+      };
+    }
+    return null;
   }
 
   async function renderOnchainMarkets(data) {
@@ -603,33 +668,37 @@
     const preferred = markets.find((market) => market.preferred);
     if (preferredNode) {
       preferredNode.textContent = preferred
-        ? `Preferred by 24h volume · ${preferred.tokenSymbol} / ${preferred.issuer}`
-        : "No volume-ranked preference";
+        ? `Preferred by direct 24h turnover · ${preferred.tokenSymbol} / ${preferred.issuer}`
+        : "No direct volume-ranked preference";
     }
     rowsNode.innerHTML = markets.map(onchainRowMarkup).join("");
-    const results = await Promise.allSettled(markets.map(liquidityForMarket));
-    let liveCount = 0;
-    results.forEach((result, index) => {
-      const liquidityNode = $(`onchain-liquidity-${index}`);
-      if (!liquidityNode) return;
-      if (result.status === "rejected") {
-        liquidityNode.innerHTML = "<strong>Unavailable</strong><small>Contract remains verified</small>";
-        return;
-      }
-      liveCount += 1;
-      const value = result.value;
-      const dexVolume = value.pools ? compactMoney(value.volume) : "—";
-      liquidityNode.innerHTML = `<strong title="$${value.liquidity.toLocaleString("en-US", { maximumFractionDigits: 2 })}">${value.pools ? compactMoney(value.liquidity) : "No indexed pool"}</strong><small>${dexVolume} DEX volume · ${value.pools} pool${value.pools === 1 ? "" : "s"}</small>`;
+
+    const liveRequests = [];
+    markets.forEach((market, marketIndex) => {
+      (market.directVenues || []).forEach((venue, venueIndex) => {
+        if (!venue.liveAdapter) return;
+        liveRequests.push(
+          refreshDirectVenue(venue).then((refreshed) => {
+            const node = $(`direct-venue-${marketIndex}-${venueIndex}`);
+            if (node && refreshed) {
+              const replacement = document.createElement("div");
+              replacement.innerHTML = directVenueMarkup(refreshed, marketIndex, venueIndex, true);
+              node.replaceWith(replacement.firstElementChild);
+            }
+            return refreshed;
+          })
+        );
+      });
     });
+    const liveResults = await Promise.allSettled(liveRequests);
+    const liveCount = liveResults.filter((result) => result.status === "fulfilled" && result.value).length;
     if (stampNode) {
-      const formatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" });
-      const dexTime = formatter.format(new Date());
-      const venueTime = data.onchainSpot && data.onchainSpot.generatedAt
-        ? formatter.format(new Date(data.onchainSpot.generatedAt))
+      const snapshotTime = data.onchainSpot && data.onchainSpot.generatedAt
+        ? timestampLabel(data.onchainSpot.generatedAt)
         : "unknown";
       stampNode.textContent = liveCount
-        ? `Venue snapshot ${venueTime} UTC · DEX live ${dexTime} UTC`
-        : `Venue snapshot ${venueTime} UTC · DEX index unavailable`;
+        ? `Direct snapshot ${snapshotTime} UTC · ${liveCount} live venue feed${liveCount === 1 ? "" : "s"}`
+        : `Direct venue snapshot ${snapshotTime} UTC`;
     }
   }
 

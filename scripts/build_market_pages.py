@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -157,22 +158,22 @@ def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
           <header class="onchain-head">
             <div>
               <h2 id="onchain-title">On-chain Spot Markets</h2>
-              <span>Issuer wrappers ranked by aggregate spot turnover</span>
+              <span>Issuer wrappers ranked by directly observed venue turnover</span>
             </div>
             <div class="onchain-status">
               <strong id="onchain-preferred">Determining preferred wrapper…</strong>
-              <span id="onchain-live-stamp" class="onchain-live-stamp">Loading live DEX liquidity…</span>
+              <span id="onchain-live-stamp" class="onchain-live-stamp">Loading direct venue books…</span>
             </div>
           </header>
-          <div class="onchain-table" role="table" aria-label="On-chain spot wrappers, contracts, trading volume, and DEX liquidity">
+          <div class="onchain-table" role="table" aria-label="On-chain spot wrappers, contracts, and direct venue market data">
             <div class="onchain-table-head" role="row">
-              <span role="columnheader">Token and structure</span><span role="columnheader">Networks</span><span role="columnheader">Primary contract</span><span role="columnheader">All-venue 24h</span><span role="columnheader">DEX pool TVL</span>
+              <span role="columnheader">Token and structure</span><span role="columnheader">Networks</span><span role="columnheader">Primary contract</span><span role="columnheader">Direct 24h</span><span role="columnheader">Venue coverage</span>
             </div>
             <div id="onchain-market-rows" class="onchain-market-rows" role="rowgroup">
               <div class="onchain-loading">Loading verified contracts…</div>
             </div>
           </div>
-          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest indexed 24-hour spot volume across centralized and decentralized venues. Volume is turnover, while DEX pool TVL is capital in major-quote pools; neither is guaranteed executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
+          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed 24-hour turnover across the venues queried directly. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. AMM pool TVL is shown separately and is never labeled as executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
         </section>
       </div>
       <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions.</p>
@@ -195,10 +196,20 @@ def build(nav_root: Path) -> None:
     spot = pd.read_parquet(source / "spot_ohlc.parquet")
     perp = pd.read_parquet(source / "perp_ohlc.parquet")
     funding_forecasts = pd.read_parquet(source / "funding_forecasts.parquet")
-    metadata = json.loads((source / "metadata.json").read_text())
-    asset_version = pd.Timestamp(metadata["finished_at_utc"]).strftime("%Y%m%d%H%M%S")
+    metadata_path = source / "metadata.json"
+    metadata = json.loads(metadata_path.read_text())
     catalog_path = SITE_ROOT / "assets" / "market-data" / "onchain-spot-catalog.json"
     onchain_catalog = json.loads(catalog_path.read_text()) if catalog_path.exists() else {"generatedAt": None, "instruments": {}}
+    asset_fingerprint = hashlib.sha256()
+    for path in (
+        metadata_path,
+        catalog_path,
+        SITE_ROOT / "assets" / "js" / "market-lens.js",
+        SITE_ROOT / "assets" / "css" / "market-lens.css",
+    ):
+        if path.exists():
+            asset_fingerprint.update(path.read_bytes())
+    asset_version = asset_fingerprint.hexdigest()[:12]
     instruments: list[dict[str, Any]] = []
 
     for raw_symbol in sorted(set(spot["raw_symbol"]) & set(perp["raw_symbol"])):

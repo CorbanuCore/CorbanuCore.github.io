@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/msft/">
   <link rel="canonical" href="https://corbanu.com/msft/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=20260815164152">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=e4e51b0108c1">
   <title>MSFT Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="msft" data-market-version="20260815164152">
+<body data-market-slug="msft" data-market-version="e4e51b0108c1">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -99,22 +99,22 @@
           <header class="onchain-head">
             <div>
               <h2 id="onchain-title">On-chain Spot Markets</h2>
-              <span>Issuer wrappers ranked by aggregate spot turnover</span>
+              <span>Issuer wrappers ranked by directly observed venue turnover</span>
             </div>
             <div class="onchain-status">
               <strong id="onchain-preferred">Determining preferred wrapper…</strong>
-              <span id="onchain-live-stamp" class="onchain-live-stamp">Loading live DEX liquidity…</span>
+              <span id="onchain-live-stamp" class="onchain-live-stamp">Loading direct venue books…</span>
             </div>
           </header>
-          <div class="onchain-table" role="table" aria-label="On-chain spot wrappers, contracts, trading volume, and DEX liquidity">
+          <div class="onchain-table" role="table" aria-label="On-chain spot wrappers, contracts, and direct venue market data">
             <div class="onchain-table-head" role="row">
-              <span role="columnheader">Token and structure</span><span role="columnheader">Networks</span><span role="columnheader">Primary contract</span><span role="columnheader">All-venue 24h</span><span role="columnheader">DEX pool TVL</span>
+              <span role="columnheader">Token and structure</span><span role="columnheader">Networks</span><span role="columnheader">Primary contract</span><span role="columnheader">Direct 24h</span><span role="columnheader">Venue coverage</span>
             </div>
             <div id="onchain-market-rows" class="onchain-market-rows" role="rowgroup">
               <div class="onchain-loading">Loading verified contracts…</div>
             </div>
           </div>
-          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest indexed 24-hour spot volume across centralized and decentralized venues. Volume is turnover, while DEX pool TVL is capital in major-quote pools; neither is guaranteed executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
+          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed 24-hour turnover across the venues queried directly. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. AMM pool TVL is shown separately and is never labeled as executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
         </section>
       </div>
       <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions.</p>
@@ -126,6 +126,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=20260815164152"></script>
+  <script src="/assets/js/market-lens.js?v=e4e51b0108c1"></script>
 </body>
 </html>
