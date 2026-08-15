@@ -32,6 +32,43 @@
     ).format(date);
   }
 
+  function escapeHtml(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, (character) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    })[character]);
+  }
+
+  function compactMoney(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return "—";
+    if (parsed < 1000) return `$${parsed.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+    return `$${new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(parsed)}`;
+  }
+
+  function explorerUrl(network, address) {
+    const encoded = encodeURIComponent(address);
+    const routes = {
+      "Robinhood Chain": `https://robinhoodchain.blockscout.com/token/${encoded}`,
+      Ethereum: `https://etherscan.io/token/${encoded}`,
+      Solana: `https://solscan.io/token/${encoded}`,
+      HyperEVM: `https://hyperevmscan.io/token/${encoded}`,
+      Arbitrum: `https://arbiscan.io/token/${encoded}`,
+      "BNB Chain": `https://bscscan.com/token/${encoded}`,
+      Base: `https://basescan.org/token/${encoded}`,
+      Optimism: `https://optimistic.etherscan.io/token/${encoded}`,
+      Mantle: `https://mantlescan.xyz/token/${encoded}`,
+      Ink: `https://explorer.inkonchain.com/token/${encoded}`,
+      "X Layer": `https://www.oklink.com/xlayer/address/${encoded}`,
+      Polygon: `https://polygonscan.com/token/${encoded}`,
+      Avalanche: `https://snowtrace.io/token/${encoded}`,
+      Gnosis: `https://gnosisscan.io/token/${encoded}`,
+      Sonic: `https://sonicscan.org/token/${encoded}`,
+      TON: `https://tonviewer.com/${encoded}`,
+      Tron: `https://tronscan.org/#/token20/${encoded}`,
+    };
+    return routes[network] || "";
+  }
+
   async function json(url) {
     const response = await fetch(url, { headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -391,6 +428,115 @@
     renderRatioChart();
   }
 
+  const MAJOR_QUOTES = new Set(["USDC", "USDT", "USDG", "USDON", "DAI", "USDS", "FDUSD", "USD1", "USDE", "USDT0", "PYUSD", "WETH", "ETH", "SOL", "WSOL", "HYPE", "WHYPE"]);
+
+  function networkMarkup(deployments) {
+    const networks = [...new Set(deployments.map((deployment) => deployment.network))];
+    const badges = networks.map((network) => `<span class="network-badge">${escapeHtml(network)}</span>`).join("");
+    if (networks.length <= 5) return `<div class="network-list">${badges}</div>`;
+    return `<details class="network-details"><summary>${networks.length} networks</summary><div class="network-list">${badges}</div></details>`;
+  }
+
+  function contractLink(deployment, className) {
+    const href = explorerUrl(deployment.network, deployment.address);
+    const label = escapeHtml(deployment.address);
+    if (!href) return `<span class="${className || "contract-link"}">${label}</span>`;
+    return `<a class="${className || "contract-link"}" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+  }
+
+  function contractMarkup(market) {
+    const primary = market.primaryDeployment;
+    const deployments = market.deployments || [];
+    const uniqueAddresses = new Set(deployments.map((deployment) => deployment.address.toLowerCase())).size;
+    const details = deployments.map((deployment) => (
+      `<div class="contract-deployment"><span>${escapeHtml(deployment.network)}</span>${contractLink(deployment)}</div>`
+    )).join("");
+    return [
+      `<div class="contract-primary"><span class="contract-network">${escapeHtml(primary.network)}</span>${contractLink(primary)}</div>`,
+      deployments.length > 1 ? `<details class="contract-details"><summary>${deployments.length} deployments · ${uniqueAddresses} contract${uniqueAddresses === 1 ? "" : "s"}</summary><div class="contract-deployment-list">${details}</div></details>` : "",
+    ].join("");
+  }
+
+  function onchainRowMarkup(market, index) {
+    const issuerClass = String(market.issuer || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+    return `<div class="onchain-market-row issuer-${issuerClass}" role="row">
+      <div class="onchain-cell token" role="cell"><div class="onchain-token"><i class="issuer-mark" aria-hidden="true"></i><strong>${escapeHtml(market.tokenSymbol)}</strong><a href="${escapeHtml(market.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(market.issuer)} ↗</a></div></div>
+      <div class="onchain-cell networks" role="cell">${networkMarkup(market.deployments || [])}</div>
+      <div class="onchain-cell contracts" role="cell">${contractMarkup(market)}</div>
+      <div id="onchain-liquidity-${index}" class="onchain-cell liquidity onchain-metric" role="cell"><strong>Indexing…</strong><small>Major-quote pools</small></div>
+      <div id="onchain-volume-${index}" class="onchain-cell volume onchain-metric" role="cell"><strong>Indexing…</strong><small>Rolling 24 hours</small></div>
+    </div>`;
+  }
+
+  function pairKey(pair) {
+    return `${pair.chainId || ""}:${String(pair.pairAddress || "").toLowerCase()}`;
+  }
+
+  function isMajorQuotePair(pair, addresses) {
+    const baseAddress = String(pair.baseToken && pair.baseToken.address || "").toLowerCase();
+    const quoteAddress = String(pair.quoteToken && pair.quoteToken.address || "").toLowerCase();
+    const baseSymbol = String(pair.baseToken && pair.baseToken.symbol || "").toUpperCase();
+    const quoteSymbol = String(pair.quoteToken && pair.quoteToken.symbol || "").toUpperCase();
+    return (addresses.has(baseAddress) && MAJOR_QUOTES.has(quoteSymbol)) || (addresses.has(quoteAddress) && MAJOR_QUOTES.has(baseSymbol));
+  }
+
+  async function liquidityForMarket(market) {
+    const addresses = [...new Set((market.queryAddresses || []).map((address) => String(address)))];
+    const responses = await Promise.allSettled(addresses.map((address) => json(`https://api.dexscreener.com/latest/dex/tokens/${encodeURIComponent(address)}`)));
+    const fulfilled = responses.filter((response) => response.status === "fulfilled");
+    if (!fulfilled.length) throw new Error("liquidity index unavailable");
+    const targetAddresses = new Set(addresses.map((address) => address.toLowerCase()));
+    const pairs = [];
+    const seen = new Set();
+    fulfilled.forEach((response) => {
+      (response.value.pairs || []).forEach((pair) => {
+        const key = pairKey(pair);
+        if (!seen.has(key) && isMajorQuotePair(pair, targetAddresses)) {
+          seen.add(key);
+          pairs.push(pair);
+        }
+      });
+    });
+    return {
+      liquidity: pairs.reduce((sum, pair) => sum + (Number(pair.liquidity && pair.liquidity.usd) || 0), 0),
+      volume: pairs.reduce((sum, pair) => sum + (Number(pair.volume && pair.volume.h24) || 0), 0),
+      pools: pairs.length,
+    };
+  }
+
+  async function renderOnchainMarkets(data) {
+    const rowsNode = $("onchain-market-rows");
+    const stampNode = $("onchain-live-stamp");
+    if (!rowsNode) return;
+    const markets = data.onchainSpot && Array.isArray(data.onchainSpot.markets) ? data.onchainSpot.markets : [];
+    if (!markets.length) {
+      rowsNode.innerHTML = '<div class="onchain-empty">No verified spot token found in the Robinhood, Ondo, or xStocks registries.</div>';
+      if (stampNode) stampNode.textContent = "Registries checked";
+      return;
+    }
+    rowsNode.innerHTML = markets.map(onchainRowMarkup).join("");
+    const results = await Promise.allSettled(markets.map(liquidityForMarket));
+    let liveCount = 0;
+    results.forEach((result, index) => {
+      const liquidityNode = $(`onchain-liquidity-${index}`);
+      const volumeNode = $(`onchain-volume-${index}`);
+      if (!liquidityNode || !volumeNode) return;
+      if (result.status === "rejected") {
+        liquidityNode.innerHTML = "<strong>Unavailable</strong><small>Contracts remain verified</small>";
+        volumeNode.innerHTML = "<strong>—</strong><small>Index request failed</small>";
+        return;
+      }
+      liveCount += 1;
+      const value = result.value;
+      liquidityNode.innerHTML = `<strong title="$${value.liquidity.toLocaleString("en-US", { maximumFractionDigits: 2 })}">${value.pools ? compactMoney(value.liquidity) : "No indexed pool"}</strong><small>${value.pools} major-quote pool${value.pools === 1 ? "" : "s"}</small>`;
+      volumeNode.innerHTML = `<strong title="$${value.volume.toLocaleString("en-US", { maximumFractionDigits: 2 })}">${value.pools ? compactMoney(value.volume) : "—"}</strong><small>Rolling 24 hours</small>`;
+    });
+    if (stampNode) {
+      const time = new Intl.DateTimeFormat("en-US", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" }).format(new Date());
+      stampNode.textContent = liveCount ? `Live index · ${time} UTC` : "Liquidity index unavailable";
+    }
+  }
+
   function wireRanges() {
     document.querySelectorAll("[data-range]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -413,6 +559,7 @@
       populateUniverse(universe);
       updateCopy(data);
       renderAllCharts();
+      renderOnchainMarkets(data);
     } catch (error) {
       const stage = $("market-chart-stage");
       if (stage) stage.innerHTML = `<div class="chart-error">Market history unavailable.<br>${String(error.message || error)}</div>`;

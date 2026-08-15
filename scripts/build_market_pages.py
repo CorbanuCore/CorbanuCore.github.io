@@ -125,6 +125,24 @@ def _page_html(*, slug: str, symbol: str, name: str) -> str:
           </div>
           <p id="ratio-live" class="sr-only" aria-live="polite"></p>
         </section>
+        <section class="onchain-panel" aria-labelledby="onchain-title">
+          <header class="onchain-head">
+            <div>
+              <h2 id="onchain-title">On-chain Spot Markets</h2>
+              <span>Contracts and major-quote DEX pools</span>
+            </div>
+            <span id="onchain-live-stamp" class="onchain-live-stamp">Loading live liquidity…</span>
+          </header>
+          <div class="onchain-table" role="table" aria-label="On-chain spot token contracts and liquidity">
+            <div class="onchain-table-head" role="row">
+              <span role="columnheader">Token</span><span role="columnheader">Networks</span><span role="columnheader">Primary contract</span><span role="columnheader">DEX liquidity</span><span role="columnheader">24h volume</span>
+            </div>
+            <div id="onchain-market-rows" class="onchain-market-rows" role="rowgroup">
+              <div class="onchain-loading">Loading verified contracts…</div>
+            </div>
+          </div>
+          <p class="onchain-note">Liquidity is reported pool TVL, not executable depth. Major-quote pools only.</p>
+        </section>
       </div>
       <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; faded candles use the 09:00 hourly open and exact 16:00 close.</p>
     </section>
@@ -146,6 +164,8 @@ def build(nav_root: Path) -> None:
     spot = pd.read_parquet(source / "spot_ohlc.parquet")
     perp = pd.read_parquet(source / "perp_ohlc.parquet")
     metadata = json.loads((source / "metadata.json").read_text())
+    catalog_path = SITE_ROOT / "assets" / "market-data" / "onchain-spot-catalog.json"
+    onchain_catalog = json.loads(catalog_path.read_text()) if catalog_path.exists() else {"generatedAt": None, "instruments": {}}
     instruments: list[dict[str, Any]] = []
 
     for raw_symbol in sorted(set(spot["raw_symbol"]) & set(perp["raw_symbol"])):
@@ -201,6 +221,10 @@ def build(nav_root: Path) -> None:
                 "perpReturnSinceAnchorPct": _json_value(latest_perp - 100.0),
                 "totalReturnSpreadPct": _json_value((latest_perp / latest_spot - 1.0) * 100.0),
                 "latestFundingPct": _json_value(float(perp_rows[-1]["f"]) * 100.0, 6),
+            },
+            "onchainSpot": {
+                "generatedAt": onchain_catalog.get("generatedAt"),
+                "markets": onchain_catalog.get("instruments", {}).get(slug, []),
             },
         }
         _atomic_text(
