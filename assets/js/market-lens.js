@@ -543,27 +543,31 @@
 
   function directVenueMarkup(venue, marketIndex, venueIndex, isLive) {
     const orderBook = venue.kind === "orderBook";
-    const statusLabel = isLive ? "Live direct" : "Direct snapshot";
-    const statusClass = isLive ? "live" : "snapshot";
+    const reference = venue.kind === "referenceQuote";
+    const quotedPool = venue.kind === "ammQuoteDepth";
+    const statusLabel = reference ? "Reference quote" : isLive ? "Live direct" : "Direct snapshot";
+    const statusClass = reference ? "reference" : isLive ? "live" : "snapshot";
     const time = timestampLabel(venue.observedAt);
-    const spread = orderBook
+    const spread = orderBook || reference || quotedPool
       ? `${number(venue.spreadBps, 1)} bps`
       : `${number(venue.feePct, 2)}% pool fee`;
-    const buyDepth = orderBook ? depthMoney(venue.buyDepthUsd, venue.buyDepthComplete) : "Quote required";
-    const sellDepth = orderBook ? depthMoney(venue.sellDepthUsd, venue.sellDepthComplete) : "Quote required";
+    const buyDepth = reference ? priceMoney(venue.bestAsk) : orderBook || quotedPool ? depthMoney(venue.buyDepthUsd, venue.buyDepthComplete) : "Quote required";
+    const sellDepth = reference ? priceMoney(venue.bestBid) : orderBook || quotedPool ? depthMoney(venue.sellDepthUsd, venue.sellDepthComplete) : "Quote required";
+    const turnover = reference ? compactMoney(venue.mintBurnUsdVolume24h) : compactMoney(venue.quoteVolume24hUsd);
     const tvl = venue.poolTvlUsd == null ? "—" : compactMoney(venue.poolTvlUsd);
-    return `<div id="direct-venue-${marketIndex}-${venueIndex}" class="direct-venue-row" role="row">
+    const tradeLabel = reference ? "Trade on Uniswap ↗" : `${escapeHtml(venue.pair)} ↗`;
+    return `<div id="direct-venue-${marketIndex}-${venueIndex}" class="direct-venue-row${reference ? " reference-row" : ""}" role="row">
       <div class="direct-venue-cell venue" role="cell">
         <div><i class="venue-state ${statusClass}" aria-hidden="true"></i><strong>${escapeHtml(venue.venue)}</strong><span class="venue-status">${statusLabel}</span></div>
-        <a href="${escapeHtml(venue.tradeUrl || venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(venue.pair)} ↗</a>
+        <a href="${escapeHtml(venue.tradeUrl || venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">${tradeLabel}</a>
       </div>
-      <div class="direct-venue-cell price" role="cell"><strong>${priceMoney(venue.midPrice || venue.lastPrice)}</strong><small>${orderBook ? "Mid" : "Pool price"}</small></div>
-      <div class="direct-venue-cell spread" role="cell"><strong>${spread}</strong><small>${orderBook ? "Bid / ask" : "AMM"}</small></div>
-      <div class="direct-venue-cell buy-depth" role="cell"><strong>${buyDepth}</strong><small>${orderBook ? "Asks ≤ +2%" : "Pool quote needed"}</small></div>
-      <div class="direct-venue-cell sell-depth" role="cell"><strong>${sellDepth}</strong><small>${orderBook ? "Bids ≥ −2%" : "Pool quote needed"}</small></div>
-      <div class="direct-venue-cell turnover" role="cell"><strong>${compactMoney(venue.quoteVolume24hUsd)}</strong><small>24h turnover</small></div>
-      <div class="direct-venue-cell pool-tvl" role="cell"><strong>${tvl}</strong><small>${orderBook ? "Order book" : "Pool TVL"}</small></div>
-      <a class="venue-source" href="${escapeHtml(venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">Source · ${escapeHtml(time)} UTC ↗</a>
+      <div class="direct-venue-cell price" role="cell"><strong>${priceMoney(venue.midPrice || venue.lastPrice)}</strong><small>${reference ? "Token-equivalent mid" : quotedPool ? "Executable quote mid" : orderBook ? "Mid" : "Pool price"}</small></div>
+      <div class="direct-venue-cell spread" role="cell"><strong>${spread}</strong><small>${reference ? "Official bid / ask" : quotedPool ? `Quoted · ${number(venue.feePct, 2)}% fee` : orderBook ? "Bid / ask" : "AMM"}</small></div>
+      <div class="direct-venue-cell buy-depth" role="cell"><strong>${buyDepth}</strong><small>${reference ? "Reference ask" : quotedPool ? "Quoted to +2%" : orderBook ? "Asks ≤ +2%" : "Pool quote needed"}</small></div>
+      <div class="direct-venue-cell sell-depth" role="cell"><strong>${sellDepth}</strong><small>${reference ? "Reference bid" : quotedPool ? "Quoted to −2%" : orderBook ? "Bids ≥ −2%" : "Pool quote needed"}</small></div>
+      <div class="direct-venue-cell turnover" role="cell"><strong>${turnover}</strong><small>${reference ? "24h mint / burn" : "24h turnover"}</small></div>
+      <div class="direct-venue-cell pool-tvl" role="cell"><strong>${tvl}</strong><small>${reference ? "Reference only" : quotedPool ? "Direct V3 pool" : orderBook ? "Order book" : "Pool TVL"}</small></div>
+      <a class="venue-source" href="${escapeHtml(venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">${reference ? "Official Robinhood source" : "Source"} · ${escapeHtml(time)} UTC ↗</a>
     </div>`;
   }
 
@@ -574,7 +578,7 @@
     }
     return `<div class="direct-venue-table" role="table" aria-label="${escapeHtml(market.tokenSymbol)} direct venue price and liquidity">
       <div class="direct-venue-head" role="row">
-        <span role="columnheader">Venue / pair</span><span role="columnheader">Price</span><span role="columnheader">Spread / fee</span><span role="columnheader">Buy +2%</span><span role="columnheader">Sell −2%</span><span role="columnheader">24h</span><span role="columnheader">Pool TVL</span>
+        <span role="columnheader">Venue / pair</span><span role="columnheader">Price</span><span role="columnheader">Spread / fee</span><span role="columnheader">Buy liquidity</span><span role="columnheader">Sell liquidity</span><span role="columnheader">24h</span><span role="columnheader">Pool TVL</span>
       </div>
       <div class="direct-venue-rows" role="rowgroup">${venues.map((venue, venueIndex) => directVenueMarkup(venue, marketIndex, venueIndex, false)).join("")}</div>
     </div>`;
@@ -585,9 +589,10 @@
     const volume = Number(market.directVenueVolumeUsd);
     const venues = Array.isArray(market.directVenues) ? market.directVenues : [];
     const books = venues.filter((venue) => venue.kind === "orderBook").length;
-    const pools = venues.filter((venue) => venue.kind === "ammPool").length;
-    const coverage = [books ? `${books} book${books === 1 ? "" : "s"}` : "", pools ? `${pools} pool${pools === 1 ? "" : "s"}` : ""].filter(Boolean).join(" · ");
-    const volumeLabel = Number.isFinite(volume) && volume > 0 ? compactMoney(volume) : "No direct feed";
+    const pools = venues.filter((venue) => venue.kind === "ammPool" || venue.kind === "ammQuoteDepth").length;
+    const references = venues.filter((venue) => venue.kind === "referenceQuote").length;
+    const coverage = [books ? `${books} book${books === 1 ? "" : "s"}` : "", pools ? `${pools} pool${pools === 1 ? "" : "s"}` : "", references ? `${references} reference` : ""].filter(Boolean).join(" · ");
+    const volumeLabel = Number.isFinite(volume) && volume > 0 ? compactMoney(volume) : references ? "Reference only" : "No direct feed";
     const volumeTitle = Number.isFinite(volume) ? `$${volume.toLocaleString("en-US", { maximumFractionDigits: 2 })}` : "No directly observed venue volume";
     const issuerUrl = market.issuerUrl || market.sourceUrl;
     return `<div class="onchain-market-row issuer-${issuerClass}${market.preferred ? " preferred-market" : ""}" role="row">

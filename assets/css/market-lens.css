@@ -252,6 +252,8 @@ main { min-height: 80vh; }
 .venue-state { width: 6px; height: 6px; border-radius: 50%; }
 .venue-state.live { background: var(--lime); box-shadow: 0 0 9px rgba(204, 255, 0, .7); }
 .venue-state.snapshot { background: #848b80; }
+.venue-state.reference { background: #7eb6ff; box-shadow: 0 0 8px rgba(126, 182, 255, .45); }
+.direct-venue-row.reference-row { background: linear-gradient(90deg, rgba(76, 139, 220, .055), transparent 48%); }
 .venue-status { color: #6f766b; font: 700 .47rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .venue-source { grid-column: 1 / -1; margin-top: .5rem; padding-top: .45rem; color: #5d6459; border-top: 1px solid rgba(255, 255, 255, .055); font: .49rem/1.2 var(--mono); text-decoration: none; }
 .direct-venue-empty { grid-column: 1 / -1; margin-top: .15rem; padding: .8rem; color: #70776d; border: 1px dashed rgba(255, 255, 255, .1); border-radius: 7px; font: .57rem/1.45 var(--mono); }
@@ -304,8 +306,8 @@ footer {
   .direct-venue-cell::before { display: block; margin-bottom: .38rem; color: #60675d; font: 600 .48rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
   .direct-venue-cell.price::before { content: "Price"; }
   .direct-venue-cell.spread::before { content: "Spread / fee"; }
-  .direct-venue-cell.buy-depth::before { content: "Buy +2%"; }
-  .direct-venue-cell.sell-depth::before { content: "Sell −2%"; }
+  .direct-venue-cell.buy-depth::before { content: "Buy liquidity"; }
+  .direct-venue-cell.sell-depth::before { content: "Sell liquidity"; }
   .direct-venue-cell.turnover::before { content: "24h turnover"; }
   .direct-venue-cell.pool-tvl::before { content: "Pool TVL"; }
 }
