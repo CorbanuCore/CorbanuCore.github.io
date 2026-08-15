@@ -4,10 +4,13 @@
 from __future__ import annotations
 
 import json
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
+from threading import Lock
 from typing import Any
+from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -192,12 +195,14 @@ BINANCE_API = "https://data-api.binance.vision/api/v3"
 BITGET_API = "https://api.bitget.com/api/v2"
 BYBIT_API = "https://api.bybit.com/v5"
 OKX_API = "https://www.okx.com/api/v5"
-LBANK_API = "https://api.lbkex.com/v2"
 METEORA_API = "https://dlmm.datapi.meteora.ag"
 JUPITER_QUOTE_API = "https://lite-api.jup.ag/swap/v1/quote"
+JUPITER_TOKEN_API = "https://lite-api.jup.ag/tokens/v2/search"
 JUPITER_USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 JUPITER_SWAP = "https://jup.ag/swap"
-GOOGLX_SOLANA = "XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN"
+JUPITER_REQUEST_LOCK = Lock()
+JUPITER_MIN_INTERVAL_SECONDS = 1.05
+_jupiter_last_request_at = 0.0
 ROBINHOOD_PRICE_API = "https://api.robinhood.com/rhj/prices"
 ROBINHOOD_RPC = "https://rpc.mainnet.chain.robinhood.com"
 ROBINHOOD_USDG = "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"
@@ -229,6 +234,28 @@ def fetch_json(url: str) -> Any:
     request = Request(url, headers={"Accept": "application/json", "User-Agent": "Corbanu-Market-Lens/1.0"})
     with urlopen(request, timeout=30) as response:
         return json.load(response)
+
+
+def fetch_jupiter_json(url: str) -> Any:
+    """Serialize anonymous Jupiter requests and retry explicit throttling."""
+    global _jupiter_last_request_at
+    with JUPITER_REQUEST_LOCK:
+        wait_seconds = JUPITER_MIN_INTERVAL_SECONDS - (
+            time.monotonic() - _jupiter_last_request_at
+        )
+        if wait_seconds > 0.0:
+            time.sleep(wait_seconds)
+        for attempt in range(4):
+            try:
+                payload = fetch_json(url)
+                _jupiter_last_request_at = time.monotonic()
+                return payload
+            except HTTPError as error:
+                if error.code != 429 or attempt == 3:
+                    _jupiter_last_request_at = time.monotonic()
+                    raise
+                time.sleep(2.0 * (attempt + 1))
+        raise RuntimeError("Jupiter request retry loop exhausted")
 
 
 def utc_iso(timestamp_ms: int | float | None = None) -> str:
@@ -385,27 +412,6 @@ def okx_book(base_symbol: str, pair: str) -> dict[str, Any]:
     return snapshot
 
 
-def lbank_book(base_symbol: str, pair: str) -> dict[str, Any]:
-    depth_url = f"{LBANK_API}/depth.do?symbol={pair}&size=200"
-    ticker_url = f"{LBANK_API}/ticker/24hr.do?symbol={pair}"
-    depth = fetch_json(depth_url)["data"]
-    ticker_payload = fetch_json(ticker_url)
-    ticker_row = ticker_payload["data"][0]
-    ticker = ticker_row["ticker"]
-    return order_book_snapshot(
-        venue="LBank",
-        pair=f"{base_symbol}/USDT",
-        base_symbol=base_symbol,
-        bids=depth["bids"],
-        asks=depth["asks"],
-        last_price=ticker["latest"],
-        quote_volume=ticker["turnover"],
-        observed_at=utc_iso(ticker_row.get("timestamp") or ticker_payload.get("ts")),
-        source_url=depth_url,
-        trade_url=f"https://www.lbank.com/trade/{pair}",
-    )
-
-
 def meteora_pool(token_address: str) -> dict[str, Any] | None:
     query_url = f"{METEORA_API}/pools?{urlencode({'query': token_address, 'page_size': 100, 'sort_by': 'tvl:desc'})}"
     payload = fetch_json(query_url)
@@ -450,23 +456,47 @@ def meteora_pool(token_address: str) -> dict[str, Any] | None:
     }
 
 
-def jupiter_googlx_route() -> dict[str, Any] | None:
-    """Measure executable GOOGLx/USDC routes directly through Jupiter."""
-    notionals = (100, 1_000, 10_000, 50_000, 100_000)
+def jupiter_route(token_address: str, token_symbol: str) -> dict[str, Any] | None:
+    """Measure executable token/USDC routes directly through Jupiter."""
+    token_url = f"{JUPITER_TOKEN_API}?{urlencode({'query': token_address})}"
+    token_rows = fetch_jupiter_json(token_url)
+    token = next(
+        (row for row in token_rows if str(row.get("id")) == token_address), None
+    )
+    if not token:
+        return None
+    token_decimals = int(token["decimals"])
+    notionals = (
+        (100, 1_000, 10_000, 50_000, 100_000)
+        if token_symbol.upper() == "GOOGLX"
+        else (100, 1_000, 10_000)
+    )
     ladder: list[dict[str, Any]] = []
     route_contracts: dict[str, dict[str, str]] = {}
     representative_source = ""
     for notional in notionals:
-        buy_url = f"{JUPITER_QUOTE_API}?{urlencode({'inputMint': JUPITER_USDC, 'outputMint': GOOGLX_SOLANA, 'amount': int(notional * 10**6), 'slippageBps': 50})}"
-        buy = fetch_json(buy_url)
+        buy_url = f"{JUPITER_QUOTE_API}?{urlencode({'inputMint': JUPITER_USDC, 'outputMint': token_address, 'amount': int(notional * 10**6), 'slippageBps': 50})}"
+        try:
+            buy = fetch_jupiter_json(buy_url)
+        except HTTPError as error:
+            if 400 <= error.code < 500:
+                continue
+            raise
         bought_raw = int(buy.get("outAmount") or 0)
         if bought_raw <= 0:
             continue
-        sell_url = f"{JUPITER_QUOTE_API}?{urlencode({'inputMint': GOOGLX_SOLANA, 'outputMint': JUPITER_USDC, 'amount': bought_raw, 'slippageBps': 50})}"
-        sell = fetch_json(sell_url)
+        sell_url = f"{JUPITER_QUOTE_API}?{urlencode({'inputMint': token_address, 'outputMint': JUPITER_USDC, 'amount': bought_raw, 'slippageBps': 50})}"
+        try:
+            sell = fetch_jupiter_json(sell_url)
+        except HTTPError as error:
+            if 400 <= error.code < 500:
+                continue
+            raise
         returned_usdc = int(sell.get("outAmount") or 0) / 10**6
         round_trip_bps = max(0.0, (1.0 - returned_usdc / notional) * 10_000.0)
-        bought_tokens = bought_raw / 10**8
+        bought_tokens = bought_raw / 10**token_decimals
+        if bought_tokens <= 0.0:
+            continue
         for quote in (buy, sell):
             for leg in quote.get("routePlan", []):
                 info = leg.get("swapInfo", {})
@@ -488,27 +518,28 @@ def jupiter_googlx_route() -> dict[str, Any] | None:
         )
         if not representative_source or notional == 10_000:
             representative_source = buy_url
-    if not ladder:
+    if not ladder or not route_contracts:
         return None
     representative = next((row for row in ladder if row["notionalUsd"] == 1_000), ladder[0])
     return {
         "kind": "aggregatorQuote",
         "venue": "Jupiter",
-        "pair": "GOOGLx/USDC",
-        "baseSymbol": "GOOGLx",
+        "pair": f"{token_symbol}/USDC",
+        "baseSymbol": token_symbol,
         "quoteSymbol": "USDC",
         "lastPrice": representative["buyPriceUsd"],
         "midPrice": representative["buyPriceUsd"],
         "spreadBps": representative["roundTripCostBps"],
         "network": "Solana",
-        "assetContract": GOOGLX_SOLANA,
+        "assetContract": token_address,
         "quoteContract": JUPITER_USDC,
         "routeContracts": list(route_contracts.values()),
         "quoteLadder": ladder,
         "quoteVolume24hUsd": 0.0,
         "observedAt": utc_iso(),
         "sourceUrl": representative_source,
-        "tradeUrl": f"{JUPITER_SWAP}/USDC-{GOOGLX_SOLANA}",
+        "tokenInfoUrl": token_url,
+        "tradeUrl": f"{JUPITER_SWAP}/USDC-{token_address}",
         "measurement": "direct Jupiter round-trip executable quotes",
     }
 
@@ -1250,7 +1281,23 @@ def main() -> None:
         for row in fetch_json(f"{BINANCE_API}/exchangeInfo")["symbols"]
         if row.get("status") == "TRADING" and row.get("quoteAsset") == "USDT"
     }
-    lbank_pairs = set(fetch_json(f"{LBANK_API}/currencyPairs.do")["data"])
+    bitget_pairs = {
+        str(row["symbol"])
+        for row in fetch_json(f"{BITGET_API}/spot/public/symbols")["data"]
+        if row.get("status") == "online" and row.get("quoteCoin") == "USDT"
+    }
+    bybit_pairs = {
+        str(row["symbol"])
+        for row in fetch_json(
+            f"{BYBIT_API}/market/instruments-info?category=spot&limit=1000"
+        )["result"]["list"]
+        if row.get("status") == "Trading" and row.get("quoteCoin") == "USDT"
+    }
+    okx_pairs = {
+        str(row["instId"])
+        for row in fetch_json(f"{OKX_API}/public/instruments?instType=SPOT")["data"]
+        if row.get("state") == "live" and row.get("quoteCcy") == "USDT"
+    }
 
     instruments: dict[str, list[dict[str, Any]]] = {}
     for symbol in SYMBOLS:
@@ -1388,24 +1435,6 @@ def main() -> None:
                         direct_venues.append(pool)
                 except Exception as error:
                     print(f"warning: Robinhood / Uniswap {token_symbol}: {error}")
-        # Robinhood tokens settle on Robinhood Chain. A CEX pair sharing an
-        # equity ticker can be an unrelated crypto asset (for example META),
-        # so never attach symbol-only CEX matches to Robinhood deployments.
-        if row.get("issuer") != "Robinhood":
-            binance_pair = f"{token_symbol.upper()}USDT"
-            if binance_pair in binance_pairs:
-                try:
-                    direct_venues.append(binance_book(token_symbol.upper(), binance_pair))
-                except Exception as error:
-                    print(f"warning: Binance {binance_pair}: {error}")
-
-            lbank_pair = f"{token_symbol.lower()}_usdt"
-            if lbank_pair in lbank_pairs:
-                try:
-                    direct_venues.append(lbank_book(token_symbol.upper(), lbank_pair))
-                except Exception as error:
-                    print(f"warning: LBank {lbank_pair}: {error}")
-
         if row.get("issuer") in {"Paxos", "Tether Gold"}:
             ethereum_deployment = next(
                 (
@@ -1468,11 +1497,12 @@ def main() -> None:
                 direct_venues.append(pool)
                 break
 
-        if symbol == "googl" and row.get("issuer") == "xStocks":
+        if row.get("issuer") == "xStocks" and solana_deployments:
+            token_address = str(solana_deployments[0]["address"])
             try:
-                route = jupiter_googlx_route()
+                route = jupiter_route(token_address, token_symbol)
             except Exception as error:
-                print(f"warning: Jupiter GOOGLx: {error}")
+                print(f"warning: Jupiter {symbol} {token_symbol}: {error}")
                 route = None
             if route:
                 direct_venues.append(route)
@@ -1508,57 +1538,187 @@ def main() -> None:
             row["preferred"] = bool(not preferred_assigned and has_volume)
             preferred_assigned = preferred_assigned or row["preferred"]
 
-    googl_cex: list[dict[str, Any]] = []
-    googl_cex_specs = (
-        ("Binance", "GOOGLB", "GOOGLBUSDT", binance_book, "BTech / Binance", "ADGM-listed certificate"),
-        ("Bitget", "RGOOGL", "RGOOGLUSDT", bitget_book, "Reality", "rToken"),
-        ("Bybit", "GOOGLX", "GOOGLXUSDT", bybit_book, "xStocks", "Backed Finance"),
-        ("OKX", "XGOOGL", "XGOOGL-USDT", okx_book, "Unified Tokenized Stocks", "Currently xStocks-backed"),
-    )
-    for venue_name, base_symbol, pair, adapter, product, product_detail in googl_cex_specs:
-        try:
-            snapshot = adapter(base_symbol, pair)
-            snapshot.update(
-                {
-                    "apiSymbol": pair,
-                    "product": product,
-                    "productDetail": product_detail,
-                    "venueClass": "cex",
-                    "listed": True,
-                }
-            )
-            googl_cex.append(snapshot)
-        except Exception as error:
-            print(f"warning: {venue_name} GOOGL market {pair}: {error}")
-            googl_cex.append(
-                {
-                    "kind": "unavailable",
-                    "venue": venue_name,
-                    "pair": f"{base_symbol}/USDT",
-                    "baseSymbol": base_symbol,
-                    "apiSymbol": pair,
-                    "product": product,
-                    "productDetail": product_detail,
-                    "venueClass": "cex",
-                    "listed": False,
-                    "status": "Direct market snapshot unavailable",
-                    "observedAt": utc_iso(),
-                }
-            )
-    googl_cex.sort(
-        key=lambda row: float(row.get("quoteVolume24hUsd") or 0.0), reverse=True
-    )
-    for rank, row in enumerate(googl_cex, start=1):
-        row["reportedVolumeRank"] = rank if row.get("listed") else None
-        row["marketLeader"] = rank == 1 and bool(row.get("listed"))
+    def unique_candidates(
+        candidates: list[tuple[str, str, str]],
+    ) -> list[tuple[str, str, str]]:
+        return list({base.upper(): (base.upper(), product, detail) for base, product, detail in candidates}.values())
+
+    cex_markets: dict[str, list[dict[str, Any]]] = {}
+    for symbol, rows in instruments.items():
+        registry_symbol = SPOT_REGISTRY_SYMBOLS.get(symbol.upper(), symbol.upper())
+        gold_rows = [
+            row for row in rows if row.get("issuer") in {"Paxos", "Tether Gold"}
+        ]
+        venue_specs = (
+            (
+                "Binance",
+                binance_book,
+                binance_pairs,
+                "",
+                unique_candidates(
+                    [
+                        (
+                            str(row["tokenSymbol"]),
+                            str(row["issuer"]),
+                            str(row["legalStructure"]),
+                        )
+                        for row in rows
+                        if row.get("issuer") == "BTech / Binance"
+                    ]
+                    + [
+                        (
+                            str(row["tokenSymbol"]),
+                            str(row["issuer"]),
+                            str(row["legalStructure"]),
+                        )
+                        for row in gold_rows
+                    ]
+                ),
+            ),
+            (
+                "Bitget",
+                bitget_book,
+                bitget_pairs,
+                "",
+                unique_candidates(
+                    [
+                        (
+                            str(row["tokenSymbol"]),
+                            "Reality",
+                            "rToken",
+                        )
+                        for row in rows
+                        if row.get("issuer") == "Reality"
+                    ]
+                    + [(f"R{registry_symbol}", "Reality", "rToken")]
+                ),
+            ),
+            (
+                "Bybit",
+                bybit_book,
+                bybit_pairs,
+                "",
+                unique_candidates(
+                    [
+                        (
+                            str(row["tokenSymbol"]),
+                            "xStocks",
+                            "Backed Finance",
+                        )
+                        for row in rows
+                        if row.get("issuer") == "xStocks"
+                    ]
+                    + [
+                        (
+                            str(row["tokenSymbol"]),
+                            str(row["issuer"]),
+                            str(row["legalStructure"]),
+                        )
+                        for row in gold_rows
+                    ]
+                ),
+            ),
+            (
+                "OKX",
+                okx_book,
+                okx_pairs,
+                "-",
+                unique_candidates(
+                    [
+                        (
+                            f"X{registry_symbol}",
+                            "Unified Tokenized Stocks",
+                            "Currently xStocks-backed",
+                        )
+                    ]
+                    + [
+                        (
+                            str(row["tokenSymbol"]),
+                            str(row["issuer"]),
+                            str(row["legalStructure"]),
+                        )
+                        for row in gold_rows
+                    ]
+                ),
+            ),
+        )
+        snapshots: list[dict[str, Any]] = []
+        for venue_name, adapter, pair_set, separator, candidates in venue_specs:
+            matched = False
+            for base_symbol, product, product_detail in candidates:
+                pair = f"{base_symbol}{separator}USDT"
+                if pair not in pair_set:
+                    continue
+                matched = True
+                try:
+                    snapshot = adapter(base_symbol, pair)
+                    snapshot.update(
+                        {
+                            "apiSymbol": pair,
+                            "product": product,
+                            "productDetail": product_detail,
+                            "venueClass": "cex",
+                            "listed": True,
+                        }
+                    )
+                    snapshots.append(snapshot)
+                except Exception as error:
+                    print(f"warning: {venue_name} {symbol} market {pair}: {error}")
+                    snapshots.append(
+                        {
+                            "kind": "unavailable",
+                            "venue": venue_name,
+                            "pair": f"{base_symbol}/USDT",
+                            "baseSymbol": base_symbol,
+                            "apiSymbol": pair,
+                            "product": product,
+                            "productDetail": product_detail,
+                            "venueClass": "cex",
+                            "listed": False,
+                            "status": "Listed; direct snapshot unavailable",
+                            "observedAt": utc_iso(),
+                        }
+                    )
+            if not matched:
+                snapshots.append(
+                    {
+                        "kind": "unavailable",
+                        "venue": venue_name,
+                        "pair": f"No listed {registry_symbol} tokenized spot pair",
+                        "baseSymbol": registry_symbol,
+                        "product": "Not listed",
+                        "productDetail": "Checked direct spot instruments",
+                        "venueClass": "cex",
+                        "listed": False,
+                        "status": "No tokenized market found",
+                        "observedAt": utc_iso(),
+                    }
+                )
+        snapshots.sort(
+            key=lambda row: (
+                bool(row.get("listed")),
+                float(row.get("quoteVolume24hUsd") or 0.0),
+            ),
+            reverse=True,
+        )
+        rank = 0
+        for row in snapshots:
+            if row.get("listed") and row.get("kind") == "orderBook":
+                rank += 1
+                row["reportedVolumeRank"] = rank
+                row["marketLeader"] = rank == 1
+            else:
+                row["reportedVolumeRank"] = None
+                row["marketLeader"] = False
+        cex_markets[symbol] = snapshots
 
     payload = {
-        "version": 6,
+        "version": 7,
         "generatedAt": utc_iso(),
-        "volumeSource": "direct Binance, Bitget, Bybit, OKX, LBank, and Meteora venue APIs plus factory-verified PancakeSwap V3 pool-event volume indexed by DexScreener; DEX quote routes without indexed pool-event volume are excluded",
+        "volumeSource": "direct Binance, Bitget, Bybit, OKX, and Meteora venue APIs plus factory-verified PancakeSwap V3 pool-event volume indexed by DexScreener; DEX quote routes without indexed pool-event volume are excluded",
         "liquiditySource": "direct CEX order books; direct Ethereum, Robinhood-chain, and PancakeSwap V3 quoter depth; direct Meteora pool state; and direct Jupiter executable round-trip quotes",
-        "preferenceBasis": "legacy wrapper ranking only; GOOGL displays separate CEX reported-volume and contract-backed DEX execution sections",
-        "cexMarkets": {"googl": googl_cex},
+        "preferenceBasis": "all pages display separate CEX reported-volume and contract-backed DEX execution sections",
+        "cexMarkets": cex_markets,
         "instruments": instruments,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)

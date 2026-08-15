@@ -341,7 +341,7 @@ def build(nav_root: Path) -> None:
                 "liquiditySource": onchain_catalog.get("liquiditySource"),
                 "cexMarkets": onchain_catalog.get("cexMarkets", {}).get(slug, []),
                 "markets": onchain_catalog.get("instruments", {}).get(slug, []),
-                "venueSplit": slug == "googl",
+                "venueSplit": True,
             },
         }
         _atomic_text(

@@ -699,11 +699,16 @@
     </div>`;
   }
 
-  function venueSplitMarkup(cexMarkets, markets) {
-    const cexRows = [...cexMarkets].sort((left, right) => Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0));
-    cexRows.forEach((venue, index) => {
-      venue.reportedVolumeRank = venue.listed === false ? null : index + 1;
-      venue.marketLeader = venue.listed !== false && index === 0;
+  function venueSplitMarkup(cexMarkets, markets, symbol) {
+    const cexRows = [...cexMarkets].sort((left, right) => {
+      const listedDifference = Number(right.listed !== false) - Number(left.listed !== false);
+      return listedDifference || Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0);
+    });
+    let listedRank = 0;
+    cexRows.forEach((venue) => {
+      if (venue.listed !== false && venue.kind === "orderBook") listedRank += 1;
+      venue.reportedVolumeRank = venue.listed !== false && venue.kind === "orderBook" ? listedRank : null;
+      venue.marketLeader = venue.reportedVolumeRank === 1;
     });
     const dexRows = [];
     markets.forEach((market) => {
@@ -719,14 +724,14 @@
     return `<div class="venue-split-shell">
       <section class="venue-class-section cex-section" aria-labelledby="cex-market-title">
         <header><div><span class="venue-class-kicker">Centralized exchanges</span><h3 id="cex-market-title">CEX markets</h3></div><p>Binance · Bitget · Bybit · OKX<br>ranked only by each venue’s reported 24h turnover</p></header>
-        <div class="venue-split-table cex-split-table" role="table" aria-label="GOOGL centralized exchange markets">
+        <div class="venue-split-table cex-split-table" role="table" aria-label="${escapeHtml(symbol)} centralized exchange markets">
           <div class="venue-split-head" role="row"><span>Venue / pair</span><span>Token product</span><span>Rank</span><span>Price / spread</span><span>Buy depth</span><span>Sell depth</span><span>24h volume</span></div>
           <div role="rowgroup">${cexRows.map(cexMarketRowMarkup).join("")}</div>
         </div>
       </section>
       <section class="venue-class-section dex-section" aria-labelledby="dex-market-title">
         <header><div><span class="venue-class-kicker">On-chain execution</span><h3 id="dex-market-title">DEX markets</h3></div><p>Every route is tied to an exact token contract<br>and pool or routed AMM contract</p></header>
-        <div class="venue-split-table dex-split-table" role="table" aria-label="GOOGL decentralized exchange markets and contracts">
+        <div class="venue-split-table dex-split-table" role="table" aria-label="${escapeHtml(symbol)} decentralized exchange markets and contracts">
           <div class="venue-split-head" role="row"><span>Venue / pair</span><span>Token + route contracts</span><span>Price</span><span>Execution</span><span>DEX 24h</span><span>Pool TVL</span></div>
           <div role="rowgroup">${dexRows.length ? dexRows.map(dexMarketRowMarkup).join("") : '<div class="direct-venue-empty">No contract-backed DEX route is currently measured.</div>'}</div>
         </div>
@@ -838,7 +843,7 @@
     if (title) title.textContent = `${data.symbol} Tokenized Spot Markets`;
     if (subtitle) subtitle.textContent = "CEX order books and contract-backed DEX routes shown separately";
     if (note) note.innerHTML = "<strong>CEX volume and DEX liquidity are never combined.</strong> CEX ranks use venue-reported 24-hour quote turnover from Binance, Bitget, Bybit, and OKX. DEX rows identify both the asset token contract and the exact pool or AMM route contracts. Order-book depth is resting dollar notional within 2% of mid. DEX quote costs, pool TVL, and indexed pool-event volume are separate measures and are never treated as CEX turnover.";
-    rowsNode.innerHTML = venueSplitMarkup(cexMarkets, markets);
+    rowsNode.innerHTML = venueSplitMarkup(cexMarkets, markets, data.symbol);
     const leader = [...cexMarkets].filter((venue) => venue.listed !== false).sort((left, right) => Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0))[0];
     if (preferredNode) preferredNode.textContent = leader ? `CEX volume leader · ${leader.venue} ${leader.pair} · ${compactMoney(leader.quoteVolume24hUsd)}` : "No live CEX leader";
 
@@ -851,10 +856,11 @@
     });
     const results = await Promise.allSettled(refreshes);
     const liveCount = results.filter((result) => result.status === "fulfilled" && result.value).length;
-    rowsNode.innerHTML = venueSplitMarkup(cexMarkets, markets);
+    rowsNode.innerHTML = venueSplitMarkup(cexMarkets, markets, data.symbol);
     const refreshedLeader = [...cexMarkets].filter((venue) => venue.listed !== false).sort((left, right) => Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0))[0];
     if (preferredNode) preferredNode.textContent = refreshedLeader ? `CEX volume leader · ${refreshedLeader.venue} ${refreshedLeader.pair} · ${compactMoney(refreshedLeader.quoteVolume24hUsd)}` : "No live CEX leader";
-    if (stampNode) stampNode.textContent = `${cexMarkets.length} direct CEX API snapshots · ${liveCount} refreshed in browser · DEX contracts verified ${timestampLabel(data.onchainSpot.generatedAt)} UTC`;
+    const listedCount = cexMarkets.filter((venue) => venue.listed !== false && venue.kind === "orderBook").length;
+    if (stampNode) stampNode.textContent = `${listedCount} listed CEX market${listedCount === 1 ? "" : "s"} · ${liveCount} refreshed in browser · DEX contracts verified ${timestampLabel(data.onchainSpot.generatedAt)} UTC`;
   }
 
   async function renderOnchainMarkets(data) {
@@ -863,14 +869,14 @@
     const preferredNode = $("onchain-preferred");
     if (!rowsNode) return;
     const markets = data.onchainSpot && Array.isArray(data.onchainSpot.markets) ? data.onchainSpot.markets : [];
+    if (data.onchainSpot && data.onchainSpot.venueSplit) {
+      await renderVenueSplit(data, markets, rowsNode, stampNode, preferredNode);
+      return;
+    }
     if (!markets.length) {
       rowsNode.innerHTML = '<div class="onchain-empty">No verified on-chain spot wrapper found in the indexed issuer registries.</div>';
       if (preferredNode) preferredNode.textContent = "No indexed wrapper";
       if (stampNode) stampNode.textContent = "Registries checked";
-      return;
-    }
-    if (data.onchainSpot && data.onchainSpot.venueSplit) {
-      await renderVenueSplit(data, markets, rowsNode, stampNode, preferredNode);
       return;
     }
     const preferred = markets.find((market) => market.preferred);

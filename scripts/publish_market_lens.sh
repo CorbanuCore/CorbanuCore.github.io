@@ -27,7 +27,7 @@ cd "$site_root"
 python3 scripts/refresh_onchain_spot_catalog.py
 "$nav_root/.venv/bin/python" scripts/build_market_pages.py
 
-"$nav_root/.venv/bin/python" -c 'import json, pathlib; root=pathlib.Path("assets/market-data"); u=json.loads((root/"universe.json").read_text()); assert len(u["instruments"]) == 35; [json.loads((root/("{}.json".format(row["slug"]))).read_text()) for row in u["instruments"]]; print("validated 35 Market Lens payloads")'
+python3 scripts/validate_market_lens.py
 
 mapfile -t market_pages < <(python3 -c 'import json; u=json.load(open("assets/market-data/universe.json")); print("\n".join("{}/index.html".format(row["slug"]) for row in u["instruments"]))')
 git add assets/market-data/*.json "${market_pages[@]}"
