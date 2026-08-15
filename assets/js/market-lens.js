@@ -4,7 +4,7 @@
   const page = document.body;
   const slug = page.dataset.marketSlug;
   const marketVersion = page.dataset.marketVersion || "";
-  const state = { data: null, range: "MAX", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1 };
+  const state = { data: null, range: "6M", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1 };
   const NS = "http://www.w3.org/2000/svg";
   const $ = (id) => document.getElementById(id);
 
@@ -206,16 +206,6 @@
       "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks from ${dates[0]} through ${dates[dates.length - 1]}`,
     });
 
-    const exactTime = data.exactStart ? new Date(`${data.exactStart}T00:00:00Z`).getTime() : null;
-    if (exactTime && exactTime > startMs && exactTime < endMs) {
-      const exactX = x(data.exactStart);
-      svg.appendChild(svgNode("rect", { x: margin.left, y: margin.top, width: exactX - margin.left, height: plotHeight, class: "market-proxy-zone" }));
-      svg.appendChild(svgNode("line", { x1: exactX, y1: margin.top, x2: exactX, y2: height - margin.bottom, class: "market-exact-line" }));
-      const label = svgNode("text", { x: exactX + 8, y: margin.top + 14, class: "market-exact-label" });
-      label.textContent = "EXACT 30M OPEN / RANGE →";
-      svg.appendChild(label);
-    }
-
     for (let index = 0; index < 6; index += 1) {
       const value = high - (high - low) * index / 5;
       const py = y(value);
@@ -225,7 +215,10 @@
       svg.appendChild(label);
     }
 
-    const candleWidth = Math.max(2.2, Math.min(8, plotWidth / Math.max(perpRows.length, 1) * .58));
+    const line = spotRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.c).toFixed(2)}`).join(" ");
+    if (line) svg.appendChild(svgNode("path", { d: line, class: "market-spot" }));
+
+    const candleWidth = Math.max(3.2, Math.min(10, plotWidth / Math.max(perpRows.length, 1) * .72));
     perpRows.forEach((row) => {
       const px = x(row.d);
       const groupClass = row.p === "partial" ? "market-partial" : row.p === "hourly" ? "market-proxy" : "market-exact";
@@ -242,9 +235,6 @@
       }));
       svg.appendChild(group);
     });
-
-    const line = spotRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.c).toFixed(2)}`).join(" ");
-    if (line) svg.appendChild(svgNode("path", { d: line, class: "market-spot" }));
 
     const labelCount = 5;
     for (let index = 0; index < labelCount; index += 1) {
