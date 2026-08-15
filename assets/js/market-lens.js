@@ -659,7 +659,7 @@
     const tokenMarkup = token ? contractLink(token, "dex-contract-link") : "—";
     const routeContracts = Array.isArray(venue.routeContracts) ? venue.routeContracts : [];
     const routeMarkup = routeContracts.length
-      ? routeContracts.map((route) => `<div class="dex-route-contract"><span>${escapeHtml(route.venue)}</span><a href="${escapeHtml(route.explorerUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(route.address)}</a></div>`).join("")
+      ? `<details class="dex-route-details"><summary>${routeContracts.length} routed pool contract${routeContracts.length === 1 ? "" : "s"}</summary><div>${routeContracts.map((route) => `<div class="dex-route-contract"><span>${escapeHtml(route.venue)}</span><a href="${escapeHtml(route.explorerUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(route.address)}</a></div>`).join("")}</div></details>`
       : venue.poolAddress
         ? `<div class="dex-route-contract"><span>Pool</span><a href="${escapeHtml(accountExplorerUrl(venue.network || (token && token.network), venue.poolAddress) || venue.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(venue.poolAddress)}</a></div>`
         : '<span class="contract-missing">No pool contract reported</span>';
