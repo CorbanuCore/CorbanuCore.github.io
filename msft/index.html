@@ -77,19 +77,22 @@
           <header class="onchain-head">
             <div>
               <h2 id="onchain-title">On-chain Spot Markets</h2>
-              <span>Contracts and major-quote DEX pools</span>
+              <span>Issuer wrappers ranked by aggregate spot turnover</span>
             </div>
-            <span id="onchain-live-stamp" class="onchain-live-stamp">Loading live liquidity…</span>
+            <div class="onchain-status">
+              <strong id="onchain-preferred">Determining preferred wrapper…</strong>
+              <span id="onchain-live-stamp" class="onchain-live-stamp">Loading live DEX liquidity…</span>
+            </div>
           </header>
-          <div class="onchain-table" role="table" aria-label="On-chain spot token contracts and liquidity">
+          <div class="onchain-table" role="table" aria-label="On-chain spot wrappers, contracts, trading volume, and DEX liquidity">
             <div class="onchain-table-head" role="row">
-              <span role="columnheader">Token</span><span role="columnheader">Networks</span><span role="columnheader">Primary contract</span><span role="columnheader">DEX liquidity</span><span role="columnheader">24h volume</span>
+              <span role="columnheader">Token and structure</span><span role="columnheader">Networks</span><span role="columnheader">Primary contract</span><span role="columnheader">All-venue 24h</span><span role="columnheader">DEX pool TVL</span>
             </div>
             <div id="onchain-market-rows" class="onchain-market-rows" role="rowgroup">
               <div class="onchain-loading">Loading verified contracts…</div>
             </div>
           </div>
-          <p class="onchain-note">Liquidity is reported pool TVL, not executable depth. Major-quote pools only.</p>
+          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest indexed 24-hour spot volume across centralized and decentralized venues. Volume is turnover, while DEX pool TVL is capital in major-quote pools; neither is guaranteed executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
         </section>
       </div>
       <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; faded candles use the 09:00 hourly open and exact 16:00 close.</p>
