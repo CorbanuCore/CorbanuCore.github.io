@@ -173,7 +173,7 @@ def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
               <div class="onchain-loading">Loading verified contracts…</div>
             </div>
           </div>
-          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed 24-hour turnover across the venues queried directly. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. AMM pool TVL is shown separately and is never labeled as executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
+          <p class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed 24-hour turnover across the venues queried directly. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. Robinhood reference bid and ask apply the current token multiplier; underlying share volume is excluded from venue turnover. Uniswap V3 depth is obtained directly from the deployed USDG pool quoter. AMM pool TVL is shown separately and is never labeled as executable depth. Issuer, custody, redemption, eligibility, fees, and venue risk differ.</p>
         </section>
       </div>
       <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions.</p>

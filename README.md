@@ -7,8 +7,11 @@ The site is intentionally dependency-free: edit `index.html`, commit, and push t
 Market Lens pages are generated from the local navstrategies spot/perp index
 artifacts. Refresh the verified on-chain wrapper catalog and direct venue market
 data first, then rebuild the pages. The refresh reads Binance and LBank order
-books and Meteora pool state; order-book depth is dollar notional within 2% of
-mid, while pool TVL remains a separate metric:
+books, Meteora pool state, official multiplier-adjusted Robinhood reference
+quotes, and direct Uniswap V3/USDG quoter depth on Robinhood Chain. Robinhood
+underlying share volume is excluded from direct venue turnover; order-book and
+quoted V3 depth use a 2% execution band, while pool TVL remains a separate
+metric:
 
 ```bash
 python3 scripts/refresh_onchain_spot_catalog.py

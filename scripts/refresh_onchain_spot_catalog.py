@@ -164,6 +164,13 @@ NETWORK_ORDER = {
 BINANCE_API = "https://data-api.binance.vision/api/v3"
 LBANK_API = "https://api.lbkex.com/v2"
 METEORA_API = "https://dlmm.datapi.meteora.ag"
+ROBINHOOD_PRICE_API = "https://api.robinhood.com/rhj/prices"
+ROBINHOOD_RPC = "https://rpc.mainnet.chain.robinhood.com"
+ROBINHOOD_USDG = "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"
+ROBINHOOD_UNISWAP_V3_FACTORY = "0x1f7d7550b1b028f7571e69a784071f0205fd2efa"
+ROBINHOOD_UNISWAP_QUOTER = "0x33e885ed0ec9bf04ecfb19341582aadcb4c8a9e7"
+ROBINHOOD_UNISWAP_TRADE = "https://app.uniswap.org/swap?chain=robinhood"
+UNISWAP_V3_FEES = (100, 500, 3000, 10000)
 DEPTH_BAND_PCT = 2.0
 MAJOR_SOLANA_QUOTES = {
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": "USDC",
@@ -319,6 +326,320 @@ def meteora_pool(token_address: str) -> dict[str, Any] | None:
         "poolAddress": address,
         "targetSide": "x" if target_is_x else "y",
         "liveAdapter": "meteoraDlmm",
+    }
+
+
+def robinhood_reference(asset: dict[str, Any]) -> dict[str, Any]:
+    """Return Robinhood's official token-equivalent reference bid and ask.
+
+    The API quote is for one unit of the underlying. Robinhood documents that
+    callers must apply currentMultiplier to express the value of one token.
+    Its dailyTradingVolume is underlying-share volume, so it is deliberately
+    excluded from direct venue turnover.
+    """
+    token_symbol = str(asset["tokenSymbol"])
+    price_url = f"{ROBINHOOD_PRICE_API}/{token_symbol}"
+    payload = fetch_json(price_url)
+    quote = next(
+        row
+        for row in payload.get("quotes", [])
+        if str(row.get("tokenSymbol")) == token_symbol
+    )
+    multiplier = float(asset.get("currentMultiplier") or 1.0)
+    bid = float(quote["bid"]) * multiplier
+    ask = float(quote["ask"]) * multiplier
+    if bid <= 0.0 or ask <= 0.0 or ask < bid:
+        raise RuntimeError(f"Robinhood returned an invalid quote for {token_symbol}")
+    deployment = asset["deployments"][0]
+    contract = str(deployment["contractAddress"])
+    return {
+        "kind": "referenceQuote",
+        "venue": "Robinhood",
+        "pair": f"{token_symbol}/USD reference",
+        "baseSymbol": token_symbol,
+        "quoteSymbol": "USD",
+        "lastPrice": (bid + ask) / 2.0,
+        "midPrice": (bid + ask) / 2.0,
+        "bestBid": bid,
+        "bestAsk": ask,
+        "spreadBps": (ask / bid - 1.0) * 10_000.0,
+        "currentMultiplier": multiplier,
+        "mintBurnTokenVolume24h": float(quote.get("mintBurnTokenVolume") or 0.0),
+        "mintBurnUsdVolume24h": float(quote.get("mintBurnUsdVolume") or 0.0),
+        "underlyingVolume24hShares": float(quote.get("dailyTradingVolume") or 0.0),
+        "isTradingHalt": bool(quote.get("isTradingHalt")),
+        "observedAt": str(quote["generatedAt"]),
+        "sourceUrl": price_url,
+        "tradeUrl": (
+            f"{ROBINHOOD_UNISWAP_TRADE}"
+            f"&outputCurrency={contract}"
+        ),
+        "referenceOnly": True,
+    }
+
+
+def rpc_eth_calls(calls: list[tuple[str, str]]) -> list[str | None]:
+    payload = [
+        {
+            "jsonrpc": "2.0",
+            "id": index,
+            "method": "eth_call",
+            "params": [{"to": address, "data": data}, "latest"],
+        }
+        for index, (address, data) in enumerate(calls)
+    ]
+    request = Request(
+        ROBINHOOD_RPC,
+        data=json.dumps(payload).encode(),
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "User-Agent": "Corbanu-Market-Lens/1.0",
+        },
+        method="POST",
+    )
+    with urlopen(request, timeout=30) as response:
+        result = json.load(response)
+    by_id = {int(row["id"]): row.get("result") for row in result}
+    return [by_id.get(index) for index in range(len(calls))]
+
+
+def contract_call_data(signature: str, types: list[str], values: list[Any]) -> str:
+    from eth_abi import encode
+    from eth_utils import keccak
+
+    return "0x" + (keccak(text=signature)[:4] + encode(types, values)).hex()
+
+
+def quoter_call(
+    token_in: str,
+    token_out: str,
+    amount_in: int,
+    fee: int,
+) -> tuple[str, str]:
+    data = contract_call_data(
+        "quoteExactInputSingle((address,address,uint256,uint24,uint160))",
+        ["(address,address,uint256,uint24,uint160)"],
+        [(token_in, token_out, amount_in, fee, 0)],
+    )
+    return ROBINHOOD_UNISWAP_QUOTER, data
+
+
+def decode_quote(result: str | None) -> int | None:
+    if not result:
+        return None
+    try:
+        from eth_abi import decode
+
+        amount_out, _, _, _ = decode(
+            ["uint256", "uint160", "uint32", "uint256"],
+            bytes.fromhex(result.removeprefix("0x")),
+        )
+        return int(amount_out)
+    except Exception:
+        return None
+
+
+def quoted_depth(
+    *,
+    token_in: str,
+    token_out: str,
+    fee: int,
+    input_decimals: int,
+    output_decimals: int,
+    baseline_input: float,
+    adverse_side: str,
+) -> tuple[float, float, bool]:
+    """Return output at the largest sampled input within 2% of baseline execution."""
+    sizes = [baseline_input * (2**index) for index in range(20)]
+    raw_inputs = [max(1, int(size * 10**input_decimals)) for size in sizes]
+    outputs = [
+        decode_quote(result)
+        for result in rpc_eth_calls(
+            [quoter_call(token_in, token_out, amount, fee) for amount in raw_inputs]
+        )
+    ]
+
+    baseline_out = outputs[0]
+    if not baseline_out:
+        raise RuntimeError("baseline quote failed")
+    baseline_output = baseline_out / 10**output_decimals
+    baseline_rate = baseline_output / sizes[0]
+    if baseline_rate <= 0.0:
+        raise RuntimeError("baseline quote was zero")
+
+    def acceptable(index: int) -> bool:
+        output = outputs[index]
+        if not output:
+            return False
+        rate = (output / 10**output_decimals) / sizes[index]
+        if adverse_side == "lower":
+            return rate >= baseline_rate * (1.0 - DEPTH_BAND_PCT / 100.0)
+        return rate <= baseline_rate * (1.0 + DEPTH_BAND_PCT / 100.0)
+
+    passing = [index for index in range(len(sizes)) if acceptable(index)]
+    accepted_index = max(passing) if passing else 0
+    reached_cap = accepted_index == len(sizes) - 1
+    accepted_input = sizes[accepted_index]
+    accepted_output = float(outputs[accepted_index] or 0) / 10**output_decimals
+
+    if not reached_cap and accepted_index + 1 < len(sizes):
+        lower = accepted_input
+        upper = sizes[accepted_index + 1]
+        refinements = [
+            lower + (upper - lower) * step / 12.0
+            for step in range(1, 12)
+        ]
+        refinement_inputs = [
+            max(1, int(size * 10**input_decimals)) for size in refinements
+        ]
+        refinement_outputs = [
+            decode_quote(result)
+            for result in rpc_eth_calls(
+                [
+                    quoter_call(token_in, token_out, amount, fee)
+                    for amount in refinement_inputs
+                ]
+            )
+        ]
+        for size, output in zip(refinements, refinement_outputs):
+            if not output:
+                continue
+            rate = (output / 10**output_decimals) / size
+            passes = (
+                rate >= baseline_rate * (1.0 - DEPTH_BAND_PCT / 100.0)
+                if adverse_side == "lower"
+                else rate <= baseline_rate * (1.0 + DEPTH_BAND_PCT / 100.0)
+            )
+            if passes:
+                accepted_input = size
+                accepted_output = output / 10**output_decimals
+
+    return accepted_input, accepted_output, reached_cap
+
+
+def uniswap_v3_pool(
+    asset: dict[str, Any],
+    reference: dict[str, Any],
+) -> dict[str, Any] | None:
+    deployment = next(
+        (
+            row
+            for row in asset.get("deployments", [])
+            if int(row.get("chainId") or 0) == 4663
+        ),
+        None,
+    )
+    if not deployment:
+        return None
+    token = str(deployment["contractAddress"])
+    token_symbol = str(asset["tokenSymbol"])
+    token_decimals = int(asset.get("tokenDecimals") or 18)
+
+    factory_calls = [
+        (
+            ROBINHOOD_UNISWAP_V3_FACTORY,
+            contract_call_data(
+                "getPool(address,address,uint24)",
+                ["address", "address", "uint24"],
+                [ROBINHOOD_USDG, token, fee],
+            ),
+        )
+        for fee in UNISWAP_V3_FEES
+    ]
+    pool_results = rpc_eth_calls(factory_calls)
+    pools = [
+        (fee, "0x" + result[-40:])
+        for fee, result in zip(UNISWAP_V3_FEES, pool_results)
+        if result and int(result, 16) != 0
+    ]
+    if not pools:
+        return None
+
+    reference_mid = float(reference["midPrice"])
+    baseline_usd = 10.0
+    baseline_token = baseline_usd / reference_mid
+    baseline_calls: list[tuple[str, str]] = []
+    for fee, _ in pools:
+        baseline_calls.extend(
+            [
+                quoter_call(
+                    ROBINHOOD_USDG,
+                    token,
+                    int(baseline_usd * 10**6),
+                    fee,
+                ),
+                quoter_call(
+                    token,
+                    ROBINHOOD_USDG,
+                    int(baseline_token * 10**token_decimals),
+                    fee,
+                ),
+            ]
+        )
+    baseline_results = rpc_eth_calls(baseline_calls)
+    candidates: list[tuple[float, int, str, float, float]] = []
+    for index, (fee, pool) in enumerate(pools):
+        bought_raw = decode_quote(baseline_results[index * 2])
+        sold_raw = decode_quote(baseline_results[index * 2 + 1])
+        if not bought_raw or not sold_raw:
+            continue
+        bought = bought_raw / 10**token_decimals
+        sold_usd = sold_raw / 10**6
+        buy_price = baseline_usd / bought
+        sell_price = sold_usd / baseline_token
+        if buy_price <= 0.0 or sell_price <= 0.0 or buy_price < sell_price:
+            continue
+        spread_bps = (buy_price / sell_price - 1.0) * 10_000.0
+        candidates.append((spread_bps, fee, pool, buy_price, sell_price))
+    if not candidates:
+        return None
+    _, fee, pool, buy_price, sell_price = min(candidates)
+
+    buy_input_usd, _, buy_reached_cap = quoted_depth(
+        token_in=ROBINHOOD_USDG,
+        token_out=token,
+        fee=fee,
+        input_decimals=6,
+        output_decimals=token_decimals,
+        baseline_input=baseline_usd,
+        adverse_side="lower",
+    )
+    _, sell_output_usd, sell_reached_cap = quoted_depth(
+        token_in=token,
+        token_out=ROBINHOOD_USDG,
+        fee=fee,
+        input_decimals=token_decimals,
+        output_decimals=6,
+        baseline_input=baseline_token,
+        adverse_side="lower",
+    )
+    return {
+        "kind": "ammQuoteDepth",
+        "venue": "Uniswap V3",
+        "pair": f"{token_symbol}/USDG",
+        "baseSymbol": token_symbol,
+        "quoteSymbol": "USDG",
+        "lastPrice": (buy_price + sell_price) / 2.0,
+        "midPrice": (buy_price + sell_price) / 2.0,
+        "bestBid": sell_price,
+        "bestAsk": buy_price,
+        "spreadBps": (buy_price / sell_price - 1.0) * 10_000.0,
+        "feePct": fee / 10_000.0,
+        "depthBandPct": DEPTH_BAND_PCT,
+        "buyDepthUsd": buy_input_usd,
+        "sellDepthUsd": sell_output_usd,
+        "buyDepthComplete": not buy_reached_cap,
+        "sellDepthComplete": not sell_reached_cap,
+        "observedAt": utc_iso(),
+        "sourceUrl": f"https://robinhoodchain.blockscout.com/address/{pool}",
+        "tradeUrl": (
+            f"{ROBINHOOD_UNISWAP_TRADE}"
+            f"&inputCurrency={ROBINHOOD_USDG}"
+            f"&outputCurrency={token}"
+        ),
+        "poolAddress": pool,
+        "feeTier": fee,
     }
 
 
@@ -492,19 +813,34 @@ def main() -> None:
         for row in rows:
             direct_venues: list[dict[str, Any]] = []
             token_symbol = str(row["tokenSymbol"])
-            binance_pair = f"{token_symbol.upper()}USDT"
-            if binance_pair in binance_pairs:
-                try:
-                    direct_venues.append(binance_book(token_symbol.upper(), binance_pair))
-                except Exception as error:
-                    print(f"warning: Binance {binance_pair}: {error}")
+            if row.get("issuer") == "Robinhood":
+                robinhood_asset = robinhood_by_symbol.get(token_symbol)
+                if robinhood_asset:
+                    try:
+                        reference = robinhood_reference(robinhood_asset)
+                        direct_venues.append(reference)
+                        pool = uniswap_v3_pool(robinhood_asset, reference)
+                        if pool:
+                            direct_venues.append(pool)
+                    except Exception as error:
+                        print(f"warning: Robinhood / Uniswap {token_symbol}: {error}")
+            # Robinhood tokens settle on Robinhood Chain. A CEX pair sharing an
+            # equity ticker can be an unrelated crypto asset (for example META),
+            # so never attach symbol-only CEX matches to Robinhood deployments.
+            if row.get("issuer") != "Robinhood":
+                binance_pair = f"{token_symbol.upper()}USDT"
+                if binance_pair in binance_pairs:
+                    try:
+                        direct_venues.append(binance_book(token_symbol.upper(), binance_pair))
+                    except Exception as error:
+                        print(f"warning: Binance {binance_pair}: {error}")
 
-            lbank_pair = f"{token_symbol.lower()}_usdt"
-            if lbank_pair in lbank_pairs:
-                try:
-                    direct_venues.append(lbank_book(token_symbol.upper(), lbank_pair))
-                except Exception as error:
-                    print(f"warning: LBank {lbank_pair}: {error}")
+                lbank_pair = f"{token_symbol.lower()}_usdt"
+                if lbank_pair in lbank_pairs:
+                    try:
+                        direct_venues.append(lbank_book(token_symbol.upper(), lbank_pair))
+                    except Exception as error:
+                        print(f"warning: LBank {lbank_pair}: {error}")
 
             solana_deployments = [
                 deployment
@@ -544,10 +880,10 @@ def main() -> None:
             preferred_assigned = preferred_assigned or row["preferred"]
 
     payload = {
-        "version": 3,
+        "version": 4,
         "generatedAt": utc_iso(),
-        "volumeSource": "direct Binance, LBank, and Meteora venue APIs",
-        "liquiditySource": "direct order books within 2% of mid and direct Meteora pool state",
+        "volumeSource": "direct Binance, LBank, and Meteora venue APIs; Robinhood reference volume is excluded",
+        "liquiditySource": "direct order books and Uniswap V3 quotes within 2% of baseline, direct Meteora pool state, and official multiplier-adjusted Robinhood reference quotes",
         "preferenceBasis": "highest summed 24-hour turnover across directly queried venues",
         "instruments": instruments,
     }
