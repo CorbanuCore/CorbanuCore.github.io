@@ -99,9 +99,9 @@ def _page_html(*, slug: str, symbol: str, name: str, asset_version: str) -> str:
           </div>
           <div class="range-controls" role="group" aria-label="Chart window">
             <button type="button" data-range="3M" aria-pressed="false">3M</button>
-            <button type="button" data-range="6M" aria-pressed="false">6M</button>
+            <button type="button" data-range="6M" aria-pressed="true">6M</button>
             <button type="button" data-range="YTD" aria-pressed="false">YTD</button>
-            <button type="button" data-range="MAX" aria-pressed="true">MAX</button>
+            <button type="button" data-range="MAX" aria-pressed="false">MAX</button>
           </div>
         </header>
         <p class="mobile-scroll-note">Swipe chart horizontally · use arrow keys to inspect dates</p>
