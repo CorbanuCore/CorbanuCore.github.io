@@ -131,7 +131,12 @@ ISSUER_DETAILS = {
         "primaryNetwork": "Arbitrum",
     },
     "Paxos": {
-        "issuerUrl": "https://www.paxos.com/paxgold",
+        "issuerUrl": "https://www.paxos.com/pax-gold",
+        "legalStructure": "Allocated physical gold token",
+        "primaryNetwork": "Ethereum",
+    },
+    "Tether Gold": {
+        "issuerUrl": "https://gold.tether.to/",
         "legalStructure": "Allocated physical gold token",
         "primaryNetwork": "Ethereum",
     },
@@ -192,6 +197,12 @@ ROBINHOOD_USDG = "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"
 ROBINHOOD_UNISWAP_V3_FACTORY = "0x1f7d7550b1b028f7571e69a784071f0205fd2efa"
 ROBINHOOD_UNISWAP_QUOTER = "0x33e885ed0ec9bf04ecfb19341582aadcb4c8a9e7"
 ROBINHOOD_UNISWAP_TRADE = "https://app.uniswap.org/swap?chain=robinhood"
+ETHEREUM_RPC = "https://ethereum-rpc.publicnode.com"
+ETHEREUM_USDC = "0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+ETHEREUM_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+ETHEREUM_UNISWAP_V3_FACTORY = "0x1F98431c8aD98523631AE4a59f267346ea31F984"
+ETHEREUM_UNISWAP_QUOTER = "0x61fFE014bA17989E743c5F6cB21bF9697530B21e"
+ETHEREUM_UNISWAP_TRADE = "https://app.uniswap.org/swap?chain=ethereum"
 BSC_RPC = "https://bsc-dataseed.binance.org"
 BSC_USDT = "0x55d398326f99059fF775485246999027B3197955"
 PANCAKE_V3_FACTORY = "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865"
@@ -684,6 +695,181 @@ def uniswap_v3_pool(
     }
 
 
+def ethereum_uniswap_v3_pool(
+    token: str,
+    token_symbol: str,
+    reference_price: float | None = None,
+) -> dict[str, Any] | None:
+    """Return the best factory-verified Ethereum stablecoin pool and quote depth."""
+
+    decimals_result = rpc_eth_calls(
+        [(token, contract_call_data("decimals()", [], []))], ETHEREUM_RPC
+    )[0]
+    if not decimals_result:
+        raise RuntimeError("token decimals call failed")
+    token_decimals = int(decimals_result, 16)
+    quotes = (
+        ("USDC", ETHEREUM_USDC, 6),
+        ("USDT", ETHEREUM_USDT, 6),
+    )
+
+    pool_calls: list[tuple[str, str]] = []
+    pool_meta: list[tuple[str, str, int, int]] = []
+    for quote_symbol, quote_address, quote_decimals in quotes:
+        for fee in UNISWAP_V3_FEES:
+            pool_calls.append(
+                (
+                    ETHEREUM_UNISWAP_V3_FACTORY,
+                    contract_call_data(
+                        "getPool(address,address,uint24)",
+                        ["address", "address", "uint24"],
+                        [quote_address, token, fee],
+                    ),
+                )
+            )
+            pool_meta.append((quote_symbol, quote_address, quote_decimals, fee))
+    pool_results = rpc_eth_calls(pool_calls, ETHEREUM_RPC)
+    pools = [
+        (*meta, "0x" + result[-40:])
+        for meta, result in zip(pool_meta, pool_results)
+        if result and int(result, 16) != 0
+    ]
+    if not pools:
+        return None
+
+    baseline_usd = 100.0
+    buy_results = rpc_eth_calls(
+        [
+            quoter_call(
+                quote_address,
+                token,
+                int(baseline_usd * 10**quote_decimals),
+                fee,
+                ETHEREUM_UNISWAP_QUOTER,
+            )
+            for _, quote_address, quote_decimals, fee, _ in pools
+        ],
+        ETHEREUM_RPC,
+    )
+    sell_calls: list[tuple[str, str]] = []
+    sell_inputs: list[int | None] = []
+    for (_, quote_address, _, fee, _), buy_result in zip(pools, buy_results):
+        bought_raw = decode_quote(buy_result)
+        sell_inputs.append(bought_raw)
+        sell_calls.append(
+            quoter_call(
+                token,
+                quote_address,
+                int(bought_raw or 1),
+                fee,
+                ETHEREUM_UNISWAP_QUOTER,
+            )
+        )
+    sell_results = rpc_eth_calls(sell_calls, ETHEREUM_RPC)
+
+    candidates: list[
+        tuple[float, str, str, int, int, str, float, float, float]
+    ] = []
+    for (
+        quote_symbol,
+        quote_address,
+        quote_decimals,
+        fee,
+        pool,
+    ), bought_raw, sell_result in zip(pools, sell_inputs, sell_results):
+        sold_raw = decode_quote(sell_result)
+        if not bought_raw or not sold_raw:
+            continue
+        bought = bought_raw / 10**token_decimals
+        sold_usd = sold_raw / 10**quote_decimals
+        buy_price = baseline_usd / bought
+        sell_price = sold_usd / bought
+        if buy_price <= 0.0 or sell_price <= 0.0 or buy_price < sell_price:
+            continue
+        mid_price = (buy_price + sell_price) / 2.0
+        if reference_price and abs(mid_price / reference_price - 1.0) > 0.10:
+            continue
+        spread_bps = (buy_price / sell_price - 1.0) * 10_000.0
+        candidates.append(
+            (
+                spread_bps,
+                quote_symbol,
+                quote_address,
+                quote_decimals,
+                fee,
+                pool,
+                buy_price,
+                sell_price,
+                bought,
+            )
+        )
+    if not candidates:
+        return None
+
+    (
+        _,
+        quote_symbol,
+        quote_address,
+        quote_decimals,
+        fee,
+        pool,
+        buy_price,
+        sell_price,
+        baseline_token,
+    ) = min(candidates)
+
+    buy_input_usd, _, buy_reached_cap = quoted_depth(
+        token_in=quote_address,
+        token_out=token,
+        fee=fee,
+        input_decimals=quote_decimals,
+        output_decimals=token_decimals,
+        baseline_input=baseline_usd,
+        adverse_side="lower",
+        rpc_url=ETHEREUM_RPC,
+        quoter_address=ETHEREUM_UNISWAP_QUOTER,
+    )
+    _, sell_output_usd, sell_reached_cap = quoted_depth(
+        token_in=token,
+        token_out=quote_address,
+        fee=fee,
+        input_decimals=token_decimals,
+        output_decimals=quote_decimals,
+        baseline_input=baseline_token,
+        adverse_side="lower",
+        rpc_url=ETHEREUM_RPC,
+        quoter_address=ETHEREUM_UNISWAP_QUOTER,
+    )
+    return {
+        "kind": "ammQuoteDepth",
+        "venue": "Uniswap V3",
+        "pair": f"{token_symbol}/{quote_symbol}",
+        "baseSymbol": token_symbol,
+        "quoteSymbol": quote_symbol,
+        "lastPrice": (buy_price + sell_price) / 2.0,
+        "midPrice": (buy_price + sell_price) / 2.0,
+        "bestBid": sell_price,
+        "bestAsk": buy_price,
+        "spreadBps": (buy_price / sell_price - 1.0) * 10_000.0,
+        "feePct": fee / 10_000.0,
+        "depthBandPct": DEPTH_BAND_PCT,
+        "buyDepthUsd": buy_input_usd,
+        "sellDepthUsd": sell_output_usd,
+        "buyDepthComplete": not buy_reached_cap,
+        "sellDepthComplete": not sell_reached_cap,
+        "observedAt": utc_iso(),
+        "sourceUrl": f"https://etherscan.io/address/{pool}",
+        "tradeUrl": (
+            f"{ETHEREUM_UNISWAP_TRADE}"
+            f"&inputCurrency={quote_address}"
+            f"&outputCurrency={token}"
+        ),
+        "poolAddress": pool,
+        "feeTier": fee,
+        "measurement": "direct Ethereum RPC factory and Quoter V2",
+    }
+
+
 def pancakeswap_v3_pool(
     token: str,
     token_symbol: str,
@@ -986,20 +1172,35 @@ def main() -> None:
             )
 
         if symbol == "GOLD":
-            rows.append(
-                market(
-                    issuer="Paxos",
-                    token_symbol="PAXG",
-                    name="Pax Gold",
-                    deployments=[
-                        {
-                            "network": "Ethereum",
-                            "address": "0x45804880De22913dAFE09f4980848ECE6EcbAf78",
-                        }
-                    ],
-                    source_url="https://www.paxos.com/paxgold",
-                    primary_network="Ethereum",
-                )
+            rows.extend(
+                [
+                    market(
+                        issuer="Paxos",
+                        token_symbol="PAXG",
+                        name="Pax Gold",
+                        deployments=[
+                            {
+                                "network": "Ethereum",
+                                "address": "0x45804880De22913dAFE09f4980848ECE6EcbAf78",
+                            }
+                        ],
+                        source_url="https://www.paxos.com/pax-gold",
+                        primary_network="Ethereum",
+                    ),
+                    market(
+                        issuer="Tether Gold",
+                        token_symbol="XAUT",
+                        name="Tether Gold",
+                        deployments=[
+                            {
+                                "network": "Ethereum",
+                                "address": "0x68749665FF8D2d112Fa859AA293F07A622782F38",
+                            }
+                        ],
+                        source_url="https://gold.tether.to/",
+                        primary_network="Ethereum",
+                    ),
+                ]
             )
 
         for issuer, ids_by_symbol in ADDITIONAL_COINGECKO_IDS.items():
@@ -1058,6 +1259,38 @@ def main() -> None:
                     direct_venues.append(lbank_book(token_symbol.upper(), lbank_pair))
                 except Exception as error:
                     print(f"warning: LBank {lbank_pair}: {error}")
+
+        if row.get("issuer") in {"Paxos", "Tether Gold"}:
+            ethereum_deployment = next(
+                (
+                    deployment
+                    for deployment in row.get("deployments", [])
+                    if deployment.get("network") == "Ethereum"
+                ),
+                None,
+            )
+            if ethereum_deployment:
+                reference_prices = sorted(
+                    float(venue["midPrice"])
+                    for venue in direct_venues
+                    if venue.get("midPrice")
+                )
+                reference_price = (
+                    reference_prices[len(reference_prices) // 2]
+                    if reference_prices
+                    else None
+                )
+                try:
+                    pool = ethereum_uniswap_v3_pool(
+                        str(ethereum_deployment["address"]),
+                        token_symbol,
+                        reference_price,
+                    )
+                except Exception as error:
+                    print(f"warning: Ethereum Uniswap {symbol} {token_symbol}: {error}")
+                    pool = None
+                if pool:
+                    direct_venues.append(pool)
 
         bsc_deployments = [
             deployment
@@ -1123,8 +1356,8 @@ def main() -> None:
     payload = {
         "version": 5,
         "generatedAt": utc_iso(),
-        "volumeSource": "direct Binance, LBank, and Meteora venue APIs plus factory-verified PancakeSwap V3 pool-event volume indexed by DexScreener; Robinhood reference volume is excluded",
-        "liquiditySource": "direct order books, PancakeSwap and Uniswap V3 quoter depth within 2% of baseline, direct Meteora pool state, and official multiplier-adjusted Robinhood reference quotes",
+        "volumeSource": "direct Binance, LBank, and Meteora venue APIs plus factory-verified PancakeSwap V3 pool-event volume indexed by DexScreener; Ethereum Uniswap V3 and Robinhood reference volume are excluded",
+        "liquiditySource": "direct order books, Ethereum and Robinhood-chain Uniswap V3 plus PancakeSwap V3 quoter depth within 2% of baseline, direct Meteora pool state, and official multiplier-adjusted Robinhood reference quotes",
         "preferenceBasis": "highest summed 24-hour turnover across queried CEX books and verified DEX pools",
         "instruments": instruments,
     }
