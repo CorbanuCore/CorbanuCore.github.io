@@ -136,6 +136,41 @@ main { min-height: 80vh; }
 .chart-foot > div:last-child { border-right: 0; }
 .chart-foot small { display: block; color: var(--dim); font: .62rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
 .chart-foot strong { display: block; margin-top: .55rem; font: 600 clamp(.85rem, 1.4vw, 1.05rem)/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.funding-forecast { border-top: 1px solid var(--line); background: rgba(5, 7, 5, .92); }
+.funding-forecast-head {
+  display: flex; align-items: end; justify-content: space-between; gap: 1.5rem;
+  padding: 1.2rem 2rem .85rem;
+}
+.funding-forecast-head h2 { margin: 0; font: 500 clamp(1rem, 1.6vw, 1.3rem)/1.2 var(--sans); }
+.funding-forecast-head div > span {
+  display: block; margin-top: .38rem; color: var(--dim);
+  font: .62rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em;
+}
+.funding-forecast-asof {
+  color: var(--dim); font: 600 .62rem/1.4 var(--mono); letter-spacing: .04em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.funding-forecast-grid {
+  display: grid; grid-template-columns: minmax(155px, 230px) minmax(155px, 230px) minmax(240px, 1fr);
+  border-top: 1px solid var(--line);
+}
+.funding-horizon { padding: 1.1rem 2rem 1.25rem; border-right: 1px solid var(--line); }
+.funding-horizon small {
+  display: block; color: var(--dim); font: .62rem/1 var(--mono);
+  letter-spacing: .09em; text-transform: uppercase;
+}
+.funding-horizon strong {
+  display: block; margin-top: .55rem; color: var(--ink);
+  font: 600 clamp(1.45rem, 2.5vw, 2.05rem)/1 var(--mono); font-variant-numeric: tabular-nums;
+}
+.funding-horizon span {
+  display: block; margin-top: .55rem; color: var(--muted);
+  font: 700 .58rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase;
+}
+.funding-forecast-grid > p {
+  align-self: center; max-width: 54ch; margin: 0; padding: 1.1rem 2rem;
+  color: var(--dim); font: .61rem/1.55 var(--mono);
+}
 .ratio-panel { border-top: 1px solid var(--line); background: rgba(3, 4, 3, .76); }
 .ratio-head {
   display: flex; align-items: end; justify-content: space-between; gap: 1.5rem;
@@ -230,6 +265,8 @@ footer {
   .chart-foot { grid-template-columns: repeat(2, 1fr); }
   .chart-foot > div:nth-child(2) { border-right: 0; }
   .chart-foot > div:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+  .funding-forecast-grid { grid-template-columns: 1fr 1fr; }
+  .funding-forecast-grid > p { grid-column: 1 / -1; border-top: 1px solid var(--line); }
   .onchain-table-head, .onchain-market-row { grid-template-columns: minmax(120px, .7fr) minmax(135px, .8fr) minmax(220px, 1.4fr) 105px 105px; gap: .75rem; }
 }
 
@@ -260,6 +297,10 @@ footer {
   .mobile-scroll-note { display: block; }
   .chart-stage { height: 460px; }
   .ratio-head { align-items: start; padding: 1.1rem 1.15rem .75rem; }
+  .funding-forecast-head { align-items: start; padding: 1.1rem 1.15rem .75rem; }
+  .funding-forecast-asof { max-width: 42%; text-align: right; white-space: normal; }
+  .funding-horizon { padding: 1rem 1.15rem 1.1rem; }
+  .funding-forecast-grid > p { padding: .9rem 1.15rem 1rem; }
   .ratio-head span { max-width: 28ch; }
   .ratio-stage { height: 210px; }
   .onchain-head { align-items: start; padding: 1.15rem; }

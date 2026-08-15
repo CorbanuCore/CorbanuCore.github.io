@@ -116,6 +116,28 @@ def _page_html(*, slug: str, symbol: str, name: str) -> str:
           <div><small>Shared 100 anchor</small><strong id="anchor-date">—</strong></div>
           <div><small>Exact 30-minute sessions</small><strong id="exact-start">—</strong></div>
         </div>
+        <section class="funding-forecast" aria-labelledby="funding-forecast-title">
+          <header class="funding-forecast-head">
+            <div>
+              <h2 id="funding-forecast-title">Predicted Perp Long Funding APY</h2>
+              <span>Forward mean hourly funding · positive means the long earns</span>
+            </div>
+            <span id="funding-forecast-asof" class="funding-forecast-asof">—</span>
+          </header>
+          <div class="funding-forecast-grid">
+            <div class="funding-horizon">
+              <small>Next 1 day</small>
+              <strong id="funding-forecast-1d">—</strong>
+              <span id="funding-forecast-1d-direction">—</span>
+            </div>
+            <div class="funding-horizon">
+              <small>Next 7 days</small>
+              <strong id="funding-forecast-7d">—</strong>
+              <span id="funding-forecast-7d-direction">—</span>
+            </div>
+            <p>Existing walk-forward funding model · simple annualized cash yield before fees and slippage</p>
+          </div>
+        </section>
         <section class="ratio-panel" aria-labelledby="ratio-title">
           <header class="ratio-head">
             <div>
@@ -172,6 +194,7 @@ def build(nav_root: Path) -> None:
     source = nav_root / "var/production/coverage_total_return_indices/latest"
     spot = pd.read_parquet(source / "spot_ohlc.parquet")
     perp = pd.read_parquet(source / "perp_ohlc.parquet")
+    funding_forecasts = pd.read_parquet(source / "funding_forecasts.parquet")
     metadata = json.loads((source / "metadata.json").read_text())
     catalog_path = SITE_ROOT / "assets" / "market-data" / "onchain-spot-catalog.json"
     onchain_catalog = json.loads(catalog_path.read_text()) if catalog_path.exists() else {"generatedAt": None, "instruments": {}}
@@ -221,6 +244,16 @@ def build(nav_root: Path) -> None:
         ]
         latest_spot = float(spot_rows[-1]["c"])
         latest_perp = float(perp_rows[-1]["c"])
+        symbol_forecasts = funding_forecasts.loc[
+            funding_forecasts["raw_symbol"].eq(raw_symbol)
+        ].set_index("horizon_hours")
+        missing_horizons = {24, 168} - set(symbol_forecasts.index)
+        if missing_horizons:
+            raise RuntimeError(
+                f"missing funding forecast horizons for {raw_symbol}: {sorted(missing_horizons)}"
+            )
+        one_day_forecast = symbol_forecasts.loc[24]
+        seven_day_forecast = symbol_forecasts.loc[168]
         payload = {
             "version": 1,
             "generatedAt": metadata["finished_at_utc"],
@@ -240,6 +273,20 @@ def build(nav_root: Path) -> None:
                 "perpReturnSinceAnchorPct": _json_value(latest_perp - 100.0),
                 "totalReturnSpreadPct": _json_value((latest_perp / latest_spot - 1.0) * 100.0),
                 "latestFundingPct": _json_value(float(perp_rows[-1]["f"]) * 100.0, 6),
+            },
+            "fundingForecast": {
+                "asOf": _timestamp(one_day_forecast["as_of_funding_timestamp"]),
+                "model": str(one_day_forecast["model"]),
+                "sevenDayModel": str(seven_day_forecast["model"]),
+                "displaySign": "positive is earned by a perp long; negative is paid by a perp long",
+                "oneDayLongApyPct": _json_value(
+                    one_day_forecast["predicted_long_funding_apy"] * 100.0, 4
+                ),
+                "sevenDayLongApyPct": _json_value(
+                    seven_day_forecast["predicted_long_funding_apy"] * 100.0, 4
+                ),
+                "oneDayTrainingDays": int(one_day_forecast["training_observations"]),
+                "sevenDayTrainingDays": int(seven_day_forecast["training_observations"]),
             },
             "onchainSpot": {
                 "generatedAt": onchain_catalog.get("generatedAt"),
