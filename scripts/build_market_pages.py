@@ -95,6 +95,16 @@ def _page_html(
         if options_enabled
         else ""
     )
+    distribution_center_controls = (
+        '''
+        <div class="distribution-center-controls" role="group" aria-label="Options distribution center">
+          <span>Distribution center</span>
+          <button type="button" data-distribution-center="spot" aria-pressed="true">Center distribution for Spot</button>
+          <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
+        </div>'''
+        if options_enabled
+        else ""
+    )
     if not options_enabled:
         options_panel = ""
     elif options_mode == "term_straddles":
@@ -163,11 +173,11 @@ def _page_html(
         else "1.00 = equal return since shared anchor · spot held at its last close between cash sessions"
     )
     if symbol == "GOLD":
-        chart_disclosure = "Perp candlesticks and XAUT spot run seven days a week. XAUT closes use Bitfinex 30-minute spot candles aligned to 09:30–16:00 New York; the on-chain section reports executable Ethereum Uniswap V3 PAXG and XAUT quotes and depth. The perp includes realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
+        chart_disclosure = "Perp candlesticks and XAUT spot run seven days a week. XAUT closes use Bitfinex 30-minute spot candles aligned to 09:30–16:00 New York; the on-chain section reports executable Ethereum Uniswap V3 PAXG and XAUT quotes and depth. Each history is scaled to its own latest raw USD close: prior XAUT levels include spot total return and prior perp levels include realized hourly funding. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
     elif continuous_spot:
-        chart_disclosure = f"Perp candlesticks and {spot_symbol} spot run seven days a week. Spot closes use Bitfinex 30-minute candles aligned to 09:30–16:00 New York. The perp includes realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
+        chart_disclosure = f"Perp candlesticks and {spot_symbol} spot run seven days a week. Spot closes use Bitfinex 30-minute candles aligned to 09:30–16:00 New York. Each history is scaled to its own latest raw USD close: prior spot levels include spot total return and prior perp levels include realized hourly funding. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
     else:
-        chart_disclosure = "Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions."
+        chart_disclosure = "Perp candlesticks run seven days a week. Each history is scaled to its own latest raw USD close: prior spot levels include gross dividends and prior perp levels include realized hourly funding. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions."
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -176,7 +186,7 @@ def _page_html(
   <meta name="description" content="Compare {symbol} spot total return with Hyperliquid perpetual-swap total return, including realized funding.">
   <meta name="theme-color" content="#030403">
   <meta property="og:title" content="{symbol} Spot and Swap Total Return — Corbanu">
-  <meta property="og:description" content="{name} spot and funding-inclusive perpetual-swap return history on one anchored scale.">
+  <meta property="og:description" content="{name} terminal-anchored spot and funding-inclusive perpetual-swap price history.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://corbanu.com/{slug}/">
   <link rel="canonical" href="https://corbanu.com/{slug}/">
@@ -232,10 +242,10 @@ def _page_html(
         </header>
         <p class="mobile-scroll-note">Swipe chart horizontally · use arrow keys to inspect dates</p>
         <div class="chart-scroll">
-          <div id="market-chart-stage" class="chart-stage" tabindex="0" role="region" aria-label="Interactive total-return chart" aria-describedby="chart-disclosure">
+          <div id="market-chart-stage" class="chart-stage" tabindex="0" role="region" aria-label="Interactive total-return price chart" aria-describedby="chart-disclosure">
             <div class="chart-loading">Loading spot and swap history…</div>
           </div>
-        </div>
+        </div>{distribution_center_controls}
         <p id="chart-live" class="sr-only" aria-live="polite"></p>{options_panel}
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
@@ -350,13 +360,34 @@ def build(nav_root: Path) -> None:
         if not shared_dates:
             raise RuntimeError(f"missing shared spot/perp anchor for {raw_symbol}")
         anchor_date = shared_dates[0]
-        spot_anchor = spot_group.loc[spot_group["date"].eq(anchor_date), "close_index"]
-        perp_anchor = perp_group.loc[perp_group["date"].eq(anchor_date), "long_close_index"]
-        spot_scale = 100.0 / float(spot_anchor.iloc[0])
-        perp_scale = 100.0 / float(perp_anchor.iloc[0])
+        spot_anchor = float(
+            spot_group.loc[spot_group["date"].eq(anchor_date), "close_index"].iloc[0]
+        )
+        perp_anchor = float(
+            perp_group.loc[perp_group["date"].eq(anchor_date), "long_close_index"].iloc[0]
+        )
+        spot_terminal_index = float(spot_group.iloc[-1]["close_index"])
+        perp_terminal_index = float(perp_group.iloc[-1]["long_close_index"])
+        spot_terminal_price = float(spot_group.iloc[-1]["price_close_usd"])
+        perp_terminal_price = float(perp_group.iloc[-1]["price_close"])
+        if min(
+            spot_anchor,
+            perp_anchor,
+            spot_terminal_index,
+            perp_terminal_index,
+            spot_terminal_price,
+            perp_terminal_price,
+        ) <= 0:
+            raise RuntimeError(f"invalid terminal total-return anchor for {raw_symbol}")
+        spot_scale = spot_terminal_price / spot_terminal_index
+        perp_scale = perp_terminal_price / perp_terminal_index
 
         spot_rows = [
-            {"d": _date(row.date), "c": _json_value(row.close_index * spot_scale)}
+            {
+                "d": _date(row.date),
+                "c": _json_value(row.close_index * spot_scale),
+                "r": _json_value(row.close_index / spot_anchor, 9),
+            }
             for row in spot_group.itertuples(index=False)
         ]
         perp_rows = [
@@ -366,6 +397,7 @@ def build(nav_root: Path) -> None:
                 "h": _json_value(row.long_high_index * perp_scale),
                 "l": _json_value(row.long_low_index * perp_scale),
                 "c": _json_value(row.long_close_index * perp_scale),
+                "r": _json_value(row.long_close_index / perp_anchor, 9),
                 "f": _json_value(row.funding_rate_paid_by_long_to_close, 9),
                 "p": (
                     "partial"
@@ -384,6 +416,8 @@ def build(nav_root: Path) -> None:
         ]
         latest_spot = float(spot_rows[-1]["c"])
         latest_perp = float(perp_rows[-1]["c"])
+        spot_return_since_anchor = spot_terminal_index / spot_anchor - 1.0
+        perp_return_since_anchor = perp_terminal_index / perp_anchor - 1.0
         symbol_forecasts = funding_forecasts.loc[
             funding_forecasts["raw_symbol"].eq(raw_symbol)
         ].set_index("horizon_hours")
@@ -395,7 +429,7 @@ def build(nav_root: Path) -> None:
         one_day_forecast = symbol_forecasts.loc[24]
         seven_day_forecast = symbol_forecasts.loc[168]
         payload = {
-            "version": 1,
+            "version": 2,
             "generatedAt": metadata["finished_at_utc"],
             "symbol": symbol,
             "rawSymbol": raw_symbol,
@@ -407,13 +441,29 @@ def build(nav_root: Path) -> None:
             "anchorDate": _date(anchor_date),
             "exactStart": _date(exact["date"].min()) if not exact.empty else None,
             "endDate": max(spot_rows[-1]["d"], perp_rows[-1]["d"]),
-            "basis": "both series close at 100 on the first shared session",
+            "basis": "each funding- or dividend-inclusive history is scaled to its own latest raw USD close",
+            "terminalAnchors": {
+                "spot": {
+                    "price": _json_value(spot_terminal_price),
+                    "date": spot_rows[-1]["d"],
+                    "symbol": spot_symbol,
+                },
+                "perp": {
+                    "price": _json_value(perp_terminal_price),
+                    "date": perp_rows[-1]["d"],
+                    "observedThrough": perp_rows[-1]["t"],
+                    "symbol": raw_symbol,
+                },
+            },
             "spot": spot_rows,
             "perp": perp_rows,
             "summary": {
-                "spotReturnSinceAnchorPct": _json_value(latest_spot - 100.0),
-                "perpReturnSinceAnchorPct": _json_value(latest_perp - 100.0),
-                "totalReturnSpreadPct": _json_value((latest_perp / latest_spot - 1.0) * 100.0),
+                "spotReturnSinceAnchorPct": _json_value(spot_return_since_anchor * 100.0),
+                "perpReturnSinceAnchorPct": _json_value(perp_return_since_anchor * 100.0),
+                "totalReturnSpreadPct": _json_value(
+                    ((1.0 + perp_return_since_anchor) / (1.0 + spot_return_since_anchor) - 1.0)
+                    * 100.0
+                ),
                 "latestFundingPct": _json_value(float(perp_rows[-1]["f"]) * 100.0, 6),
             },
             "fundingForecast": {

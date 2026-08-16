@@ -5,8 +5,11 @@ Static organization site for [CorbanuCore](https://github.com/CorbanuCore), publ
 The site is intentionally dependency-free: edit `index.html`, commit, and push to `main`.
 
 The 37 Market Lens pages are generated from the locked local navstrategies
-spot/perp index artifacts. Every page contains the cash-reference total-return
-line, the funding-inclusive Hyperliquid perp candlesticks, the perp/spot ratio,
+spot/perp index artifacts. Each history is terminal-anchored to its own latest
+raw USD close, so the chart remains in recognizable price levels while prior
+spot points retain gross dividends and prior perp candles retain realized
+funding. Every page contains the cash-reference total-return line, the
+funding-inclusive Hyperliquid perp candlesticks, the perp/spot ratio,
 1-day and 7-day long-funding forecasts, and discovered on-chain spot wrappers.
 The persistent header opens one public browser-to-Hyperliquid WebSocket using
 the payload's `rawSymbol` and displays the live perp mid, previous-day change,
@@ -16,6 +19,8 @@ Supported US equities also display the next-earnings probability distribution,
 an ATM straddle, and the two liquid calls and puts with the highest average
 historical payout. Supported index, commodity, BTC, and ETH pages display
 selectable ATM straddles for the listed expiries closest to 30 and 90 days.
+Every options chart can center the same option-implied percentage distribution
+on either the terminal spot price or terminal perp price.
 BTC uses IBIT options; ETH selects the live liquidity leader from ETHA, ETHE,
 FETH, and ETHW on every refresh. Listed-options coverage spans 34 of 37 pages.
 The three explicit exclusions are copper, whose CPER chain currently lacks two

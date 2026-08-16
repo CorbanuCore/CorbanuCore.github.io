@@ -4,7 +4,7 @@
   const page = document.body;
   const slug = page.dataset.marketSlug;
   const marketVersion = page.dataset.marketVersion || "";
-  const state = { data: null, range: "6M", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1, selectedStructureIndex: 0 };
+  const state = { data: null, range: "6M", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1, selectedStructureIndex: 0, distributionCenter: "spot" };
   const liveFeed = {
     rawSymbol: "", socket: null, status: "", retry: 0, lastMessageAt: 0,
     reconnectTimer: null, heartbeatTimer: null, staleTimer: null,
@@ -517,19 +517,21 @@
     const x = (date) => margin.left + (new Date(`${date}T00:00:00Z`).getTime() - startMs) / span * plotWidth;
     const values = spotRows.map((row) => row.c);
     perpRows.forEach((row) => values.push(row.l, row.h));
-    const lastSpotIndex = Number(spotRows[spotRows.length - 1].c);
+    const lastSpotLevel = Number(spotRows[spotRows.length - 1].c);
+    const lastPerpLevel = Number(perpRows[perpRows.length - 1].c);
+    const distributionCenterLevel = state.distributionCenter === "perp" ? lastPerpLevel : lastSpotLevel;
     const optionUnderlying = options ? Number(options.chain.underlyingPrice) : NaN;
-    const optionIndex = (price) => lastSpotIndex * Number(price) / optionUnderlying;
+    const optionLevel = (price) => distributionCenterLevel * Number(price) / optionUnderlying;
     if (options && Number.isFinite(optionUnderlying) && optionUnderlying > 0) {
       activeFan.forEach((row) => {
-        if (row.earningsPrice != null) values.push(optionIndex(row.earningsPrice));
-        values.push(optionIndex(row.expirationPrice));
+        if (row.earningsPrice != null) values.push(optionLevel(row.earningsPrice));
+        values.push(optionLevel(row.expirationPrice));
       });
       if (selectedStructure) {
-        if (selectedStructure.call) values.push(optionIndex(selectedStructure.call.strike));
-        if (selectedStructure.put) values.push(optionIndex(selectedStructure.put.strike));
-        if (selectedStructure.upperBreakeven != null) values.push(optionIndex(selectedStructure.upperBreakeven));
-        if (selectedStructure.lowerBreakeven != null) values.push(optionIndex(selectedStructure.lowerBreakeven));
+        if (selectedStructure.call) values.push(optionLevel(selectedStructure.call.strike));
+        if (selectedStructure.put) values.push(optionLevel(selectedStructure.put.strike));
+        if (selectedStructure.upperBreakeven != null) values.push(optionLevel(selectedStructure.upperBreakeven));
+        if (selectedStructure.lowerBreakeven != null) values.push(optionLevel(selectedStructure.lowerBreakeven));
       }
     }
     let low = Math.min(...values);
@@ -543,7 +545,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks${expirationDate ? ", plus a listed-options implied probability fan through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} terminal-anchored spot total-return price line and funding-inclusive perpetual total-return price candlesticks${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -551,7 +553,7 @@
       const py = y(value);
       svg.appendChild(svgNode("line", { x1: margin.left, y1: py, x2: width - margin.right, y2: py, class: "market-grid" }));
       const label = svgNode("text", { x: margin.left - 10, y: py + 4, class: "market-axis", "text-anchor": "end" });
-      label.textContent = number(value, 1);
+      label.textContent = priceMoney(value);
       svg.appendChild(label);
     }
 
@@ -568,8 +570,8 @@
         const futureWidth = Math.max(expiryX - eventX, 0);
         const hasUpper = selectedStructure.upperBreakeven != null;
         const hasLower = selectedStructure.lowerBreakeven != null;
-        const upperBreakevenY = hasUpper ? y(optionIndex(selectedStructure.upperBreakeven)) : null;
-        const lowerBreakevenY = hasLower ? y(optionIndex(selectedStructure.lowerBreakeven)) : null;
+        const upperBreakevenY = hasUpper ? y(optionLevel(selectedStructure.upperBreakeven)) : null;
+        const lowerBreakevenY = hasLower ? y(optionLevel(selectedStructure.lowerBreakeven)) : null;
         if (hasUpper) {
           svg.appendChild(svgNode("rect", { x: eventX, y: margin.top, width: futureWidth, height: Math.max(upperBreakevenY - margin.top, 0), class: "options-profit-zone" }));
         }
@@ -587,17 +589,17 @@
       if (lower && upper) {
         const band = termMode
           ? [
-              `M${fanStartX},${y(lastSpotIndex)}`,
-              `L${expiryX},${y(optionIndex(upper.expirationPrice))}`,
-              `L${expiryX},${y(optionIndex(lower.expirationPrice))}`,
+              `M${fanStartX},${y(distributionCenterLevel)}`,
+              `L${expiryX},${y(optionLevel(upper.expirationPrice))}`,
+              `L${expiryX},${y(optionLevel(lower.expirationPrice))}`,
               "Z",
             ]
           : [
-              `M${fanStartX},${y(lastSpotIndex)}`,
-              `L${eventX},${y(optionIndex(upper.earningsPrice))}`,
-              `L${expiryX},${y(optionIndex(upper.expirationPrice))}`,
-              `L${expiryX},${y(optionIndex(lower.expirationPrice))}`,
-              `L${eventX},${y(optionIndex(lower.earningsPrice))}`,
+              `M${fanStartX},${y(distributionCenterLevel)}`,
+              `L${eventX},${y(optionLevel(upper.earningsPrice))}`,
+              `L${expiryX},${y(optionLevel(upper.expirationPrice))}`,
+              `L${expiryX},${y(optionLevel(lower.expirationPrice))}`,
+              `L${eventX},${y(optionLevel(lower.earningsPrice))}`,
               "Z",
             ];
         svg.appendChild(svgNode("path", { d: band.join(" "), class: "options-fan-band" }));
@@ -607,23 +609,23 @@
         if (!row) return;
         const path = termMode
           ? [
-              `M${fanStartX},${y(lastSpotIndex)}`,
-              `L${expiryX},${y(optionIndex(row.expirationPrice))}`,
+              `M${fanStartX},${y(distributionCenterLevel)}`,
+              `L${expiryX},${y(optionLevel(row.expirationPrice))}`,
             ]
           : [
-              `M${fanStartX},${y(lastSpotIndex)}`,
-              `L${eventX},${y(optionIndex(row.earningsPrice))}`,
-              `L${expiryX},${y(optionIndex(row.expirationPrice))}`,
+              `M${fanStartX},${y(distributionCenterLevel)}`,
+              `L${eventX},${y(optionLevel(row.earningsPrice))}`,
+              `L${expiryX},${y(optionLevel(row.expirationPrice))}`,
             ];
         svg.appendChild(svgNode("path", { d: path.join(" "), class: probability === .5 ? "options-fan-line median" : "options-fan-line" }));
       });
 
       if (selectedStructure) {
         [
-          selectedStructure.lowerBreakeven == null ? null : [selectedStructure.lowerBreakeven, `LOWER BE · ${priceMoney(selectedStructure.lowerBreakeven)}`, "options-breakeven-line"],
-          selectedStructure.upperBreakeven == null ? null : [selectedStructure.upperBreakeven, `UPPER BE · ${priceMoney(selectedStructure.upperBreakeven)}`, "options-breakeven-line"],
+          selectedStructure.lowerBreakeven == null ? null : [selectedStructure.lowerBreakeven, `LOWER BE · ${priceMoney(optionLevel(selectedStructure.lowerBreakeven))} ${state.distributionCenter.toUpperCase()}`, "options-breakeven-line"],
+          selectedStructure.upperBreakeven == null ? null : [selectedStructure.upperBreakeven, `UPPER BE · ${priceMoney(optionLevel(selectedStructure.upperBreakeven))} ${state.distributionCenter.toUpperCase()}`, "options-breakeven-line"],
         ].filter(Boolean).forEach(([price, labelText, className]) => {
-          const py = y(optionIndex(price));
+          const py = y(optionLevel(price));
           svg.appendChild(svgNode("line", { x1: eventX, y1: py, x2: expiryX, y2: py, class: className }));
           const label = svgNode("text", { x: eventX - 7, y: py - 5, class: "options-level-label", "text-anchor": "end" });
           label.textContent = labelText;
@@ -631,7 +633,7 @@
         });
         const strikeLevels = [...new Set([selectedStructure.put ? Number(selectedStructure.put.strike) : null, selectedStructure.call ? Number(selectedStructure.call.strike) : null].filter(Number.isFinite))];
         strikeLevels.forEach((price) => {
-          const py = y(optionIndex(price));
+          const py = y(optionLevel(price));
           svg.appendChild(svgNode("line", { x1: eventX, y1: py, x2: expiryX, y2: py, class: "options-strike-line" }));
         });
       }
@@ -652,10 +654,11 @@
           : 0;
         const grossMultiple = selectedStructure ? payoff / Number(selectedStructure.debitAsk) : NaN;
         const profitable = Number.isFinite(grossMultiple) && grossMultiple > 1;
-        const label = svgNode("text", { x: expiryX + 7, y: y(optionIndex(price)) + 4, class: `options-price-label${probability === .5 ? " median" : ""}${profitable ? " profitable" : ""}` });
+        const label = svgNode("text", { x: expiryX + 7, y: y(optionLevel(price)) + 4, class: `options-price-label${probability === .5 ? " median" : ""}${profitable ? " profitable" : ""}` });
+        const centeredPrice = optionLevel(price);
         label.textContent = selectedStructure
-          ? `${labelText} · ${priceMoney(price)} · ${number(grossMultiple, 2)}×`
-          : `${priceMoney(price)} · ${labelText}`;
+          ? `${labelText} · ${priceMoney(centeredPrice)} ${state.distributionCenter.toUpperCase()} · ${number(grossMultiple, 2)}×`
+          : `${priceMoney(centeredPrice)} ${state.distributionCenter.toUpperCase()} · ${labelText}`;
         svg.appendChild(label);
       });
     }
@@ -732,9 +735,9 @@
         : "Hourly proxy: 09:00 open; exact 16:00 close";
       tooltip.innerHTML = [
         `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
-        spot ? `<div class="tooltip-row spot"><span>Spot close</span><strong>${number(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
-        perp ? `<div class="tooltip-row"><span>Swap O / C</span><strong>${number(perp.o)} / ${number(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Swap</span><strong>Not listed</strong></div>',
-        perp ? `<div class="tooltip-row"><span>Swap H / L</span><strong>${number(perp.h)} / ${number(perp.l)}</strong></div>` : "",
+        spot ? `<div class="tooltip-row spot"><span>Spot total-return close</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
+        perp ? `<div class="tooltip-row"><span>Perp total-return O / C</span><strong>${priceMoney(perp.o)} / ${priceMoney(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Perp</span><strong>Not listed</strong></div>',
+        perp ? `<div class="tooltip-row"><span>Perp total-return H / L</span><strong>${priceMoney(perp.h)} / ${priceMoney(perp.l)}</strong></div>` : "",
         perp ? `<div class="tooltip-row"><span>${perp.p === "partial" ? "Funding observed" : "Funding to close"}</span><strong>${percent(perp.f * 100, 3)}</strong></div>` : "",
         precision ? `<p class="tooltip-precision">${precision}</p>` : "",
       ].join("");
@@ -744,7 +747,7 @@
       const cssY = pointerY == null ? y(focusValue) / height * stageRect.height : pointerY;
       tooltip.style.left = `${Math.min(Math.max(cssX + 14, 8), stageRect.width - 243)}px`;
       tooltip.style.top = `${Math.min(Math.max(cssY - 78, 8), stageRect.height - tooltip.offsetHeight - 8)}px`;
-      text("chart-live", `${row.d}. ${spot ? `Spot ${number(spot.c)}.` : "Cash spot closed."}${perp ? ` Swap open ${number(perp.o)}, high ${number(perp.h)}, low ${number(perp.l)}, close ${number(perp.c)}.` : " Swap not yet available."}`);
+      text("chart-live", `${row.d}. ${spot ? `Spot total-return close ${priceMoney(spot.c)}.` : "Cash spot closed."}${perp ? ` Perp total-return open ${priceMoney(perp.o)}, high ${priceMoney(perp.h)}, low ${priceMoney(perp.l)}, close ${priceMoney(perp.c)}.` : " Perp not yet available."}`);
     }
 
     svg.addEventListener("pointermove", (event) => {
@@ -789,7 +792,7 @@
         spotCursor += 1;
       }
       if (!latestSpot) return;
-      const ratio = Number(perp.c) / Number(latestSpot.c);
+      const ratio = Number(perp.r) / Number(latestSpot.r);
       if (Number.isFinite(ratio)) {
         ratioRows.push({ d: perp.d, ratio, spotDate: latestSpot.d, spotHeld: latestSpot.d !== perp.d });
       }
@@ -1393,9 +1396,24 @@
     });
   }
 
+  function wireDistributionCenter() {
+    document.querySelectorAll("[data-distribution-center]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const center = button.dataset.distributionCenter;
+        if (center !== "spot" && center !== "perp") return;
+        state.distributionCenter = center;
+        document.querySelectorAll("[data-distribution-center]").forEach((item) => {
+          item.setAttribute("aria-pressed", String(item === button));
+        });
+        renderChart();
+      });
+    });
+  }
+
   async function initialize() {
     if (!slug) return;
     wireRanges();
+    wireDistributionCenter();
     try {
       const [universe, data] = await Promise.all([
         json(marketAssetUrl("/assets/market-data/universe.json")),

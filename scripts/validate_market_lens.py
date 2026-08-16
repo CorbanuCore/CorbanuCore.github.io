@@ -45,6 +45,22 @@ def main() -> int:
             raise AssertionError(f"{slug}: obsolete data-availability box remains")
         if not str(payload.get("rawSymbol") or "").strip():
             raise AssertionError(f"{slug}: Hyperliquid raw symbol is missing")
+        if int(payload.get("version") or 0) != 2:
+            raise AssertionError(f"{slug}: terminal-anchored payload version is missing")
+        anchors = payload.get("terminalAnchors") or {}
+        spot_rows = payload.get("spot") or []
+        perp_rows = payload.get("perp") or []
+        if not spot_rows or not perp_rows:
+            raise AssertionError(f"{slug}: total-return price history is empty")
+        for side, rows in (("spot", spot_rows), ("perp", perp_rows)):
+            anchor = anchors.get(side) or {}
+            terminal_price = float(anchor.get("price") or 0)
+            if terminal_price <= 0 or abs(float(rows[-1]["c"]) - terminal_price) > 1e-5:
+                raise AssertionError(f"{slug}: {side} history does not end at its raw terminal price")
+            if any(float(row.get("r") or 0) <= 0 for row in rows):
+                raise AssertionError(f"{slug}: {side} shared-anchor return factor is invalid")
+        if "close at 100" in str(payload.get("basis") or "").lower():
+            raise AssertionError(f"{slug}: obsolete arbitrary index basis remains")
         for required_markup in (
             'id="live-perp-module"',
             'id="live-perp-price"',
@@ -108,6 +124,12 @@ def main() -> int:
             continue
         if not options:
             raise AssertionError(f"{slug}: listed-options payload is missing")
+        for required_control in (
+            'data-distribution-center="spot"',
+            'data-distribution-center="perp"',
+        ):
+            if required_control not in page_markup:
+                raise AssertionError(f"{slug}: distribution-center control is missing: {required_control}")
         profile = options_profile(symbol)
         if str(options.get("mode")) != profile["kind"]:
             raise AssertionError(f"{slug}: options mode does not match its profile")
