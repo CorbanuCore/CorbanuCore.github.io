@@ -109,6 +109,7 @@
     text("anchor-date", dateLabel(data.anchorDate, true));
     text("exact-start", dateLabel(data.exactStart, true));
     renderFundingForecast(data.fundingForecast);
+    renderEarningsOptions(data.earningsOptions);
   }
 
   function renderFundingForecast(forecast) {
@@ -140,6 +141,41 @@
     });
   }
 
+  function renderEarningsOptions(options) {
+    const panel = document.querySelector(".earnings-options-panel");
+    if (!panel) return;
+    if (!options) {
+      panel.hidden = true;
+      return;
+    }
+    const timing = String(options.earnings.timing || "").toUpperCase();
+    text("earnings-options-asof", `Chain quote · ${timestampLabel(options.chain.quoteAt)} UTC`);
+    text("options-earnings-date", dateLabel(options.earnings.date, true));
+    text("options-earnings-timing", `${timing || "Timing unknown"} · current calendar estimate`);
+    text("options-implied-move", `±${number(options.summary.impliedEarningsMovePct, 2)}%`);
+    text("options-event-range", `${priceMoney(options.summary.event68Low)} to ${priceMoney(options.summary.event68High)}`);
+    text("options-chain-expiry", dateLabel(options.chain.expiration, true));
+    text("options-contract-count", `${options.chain.liquidContractsUsed} / ${options.chain.totalContractsReturned}`);
+    text("options-filter-short", `≤${number(options.liquidityFilter.maxBidAskSpreadPct, 1)}% spread · OI or volume gate`);
+    const rows = $("options-contract-rows");
+    if (rows) {
+      rows.innerHTML = options.contracts.map((contract) => `<tr>
+        <td><strong class="option-side ${contract.putCall.toLowerCase()}">${escapeHtml(contract.putCall)}</strong><small>${escapeHtml(contract.symbol)}</small></td>
+        <td>${priceMoney(contract.strike)}</td>
+        <td>${priceMoney(contract.bid)}</td>
+        <td>${priceMoney(contract.ask)}</td>
+        <td>${priceMoney(contract.mid)}</td>
+        <td>${number(contract.spreadPct, 2)}%</td>
+        <td>${Number(contract.volume).toLocaleString("en-US")}</td>
+        <td>${Number(contract.openInterest).toLocaleString("en-US")}</td>
+        <td>${number(contract.impliedVolPct, 2)}%</td>
+        <td>${number(contract.delta, 3)}</td>
+      </tr>`).join("");
+    }
+    const note = $("options-method-note");
+    if (note) note.textContent = `${options.model.description} Filter: standard 100-share contracts, two-sided quotes, spread no wider than ${number(options.liquidityFilter.maxBidAskSpreadPct, 1)}%, ${options.liquidityFilter.minimumOpenInterestOrVolume}, and quotes no older than ${options.liquidityFilter.maximumQuoteAgeDays} days. The fan is mapped to the chart’s spot total-return scale at the chain underlying price; dollar labels remain actual option-implied prices. ${options.model.measure}.`;
+  }
+
   function cutoffForRange(data) {
     if (state.range === "MAX") {
       const first = [data.spotStart, data.perpStart].filter(Boolean).sort()[0];
@@ -167,6 +203,7 @@
     const data = state.data;
     const stage = $("market-chart-stage");
     if (!data || !stage) return;
+    const options = data.earningsOptions || null;
     const spotRows = visibleSeries(data, "spot");
     const perpRows = visibleSeries(data, "perp");
     const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
@@ -183,15 +220,23 @@
 
     const width = 1280;
     const height = 590;
-    const margin = { top: 40, right: 76, bottom: 50, left: 72 };
+    const margin = { top: 40, right: options ? 140 : 76, bottom: 50, left: 72 };
     const plotWidth = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;
     const startMs = new Date(`${dates[0]}T00:00:00Z`).getTime();
-    const endMs = new Date(`${dates[dates.length - 1]}T00:00:00Z`).getTime();
+    const historicalEndMs = new Date(`${dates[dates.length - 1]}T00:00:00Z`).getTime();
+    const optionsEndMs = options ? new Date(`${options.chain.expiration}T00:00:00Z`).getTime() : historicalEndMs;
+    const endMs = Math.max(historicalEndMs, optionsEndMs);
     const span = Math.max(endMs - startMs, 86400000);
     const x = (date) => margin.left + (new Date(`${date}T00:00:00Z`).getTime() - startMs) / span * plotWidth;
     const values = spotRows.map((row) => row.c);
     perpRows.forEach((row) => values.push(row.l, row.h));
+    const lastSpotIndex = Number(spotRows[spotRows.length - 1].c);
+    const optionUnderlying = options ? Number(options.chain.underlyingPrice) : NaN;
+    const optionIndex = (price) => lastSpotIndex * Number(price) / optionUnderlying;
+    if (options && Number.isFinite(optionUnderlying) && optionUnderlying > 0) {
+      options.fan.forEach((row) => values.push(optionIndex(row.earningsPrice), optionIndex(row.expirationPrice)));
+    }
     let low = Math.min(...values);
     let high = Math.max(...values);
     const pad = Math.max((high - low) * .09, 1);
@@ -203,16 +248,60 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks from ${dates[0]} through ${dates[dates.length - 1]}`,
+      "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks${options ? ", plus a liquid-options risk-neutral probability fan through " + options.chain.expiration : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
       const value = high - (high - low) * index / 5;
       const py = y(value);
       svg.appendChild(svgNode("line", { x1: margin.left, y1: py, x2: width - margin.right, y2: py, class: "market-grid" }));
-      const label = svgNode("text", { x: width - margin.right + 10, y: py + 4, class: "market-axis" });
+      const label = svgNode("text", { x: margin.left - 10, y: py + 4, class: "market-axis", "text-anchor": "end" });
       label.textContent = number(value, 1);
       svg.appendChild(label);
+    }
+
+    if (options && Number.isFinite(optionUnderlying) && optionUnderlying > 0) {
+      const fanByProbability = new Map(options.fan.map((row) => [Number(row.probability), row]));
+      const lower = fanByProbability.get(.16);
+      const upper = fanByProbability.get(.84);
+      const fanStartDate = dates[dates.length - 1];
+      const earningsDate = options.earnings.date;
+      const expirationDate = options.chain.expiration;
+      if (lower && upper) {
+        const band = [
+          `M${x(fanStartDate)},${y(lastSpotIndex)}`,
+          `L${x(earningsDate)},${y(optionIndex(upper.earningsPrice))}`,
+          `L${x(expirationDate)},${y(optionIndex(upper.expirationPrice))}`,
+          `L${x(expirationDate)},${y(optionIndex(lower.expirationPrice))}`,
+          `L${x(earningsDate)},${y(optionIndex(lower.earningsPrice))}`,
+          "Z",
+        ].join(" ");
+        svg.appendChild(svgNode("path", { d: band, class: "options-fan-band" }));
+      }
+      [.10, .25, .50, .75, .90].forEach((probability) => {
+        const row = fanByProbability.get(probability);
+        if (!row) return;
+        const path = [
+          `M${x(fanStartDate)},${y(lastSpotIndex)}`,
+          `L${x(earningsDate)},${y(optionIndex(row.earningsPrice))}`,
+          `L${x(expirationDate)},${y(optionIndex(row.expirationPrice))}`,
+        ].join(" ");
+        svg.appendChild(svgNode("path", { d: path, class: probability === .5 ? "options-fan-line median" : "options-fan-line" }));
+      });
+      const earningsX = x(earningsDate);
+      svg.appendChild(svgNode("line", { x1: earningsX, y1: margin.top, x2: earningsX, y2: height - margin.bottom, class: "options-event-line" }));
+      const earningsLabel = svgNode("text", { x: earningsX, y: margin.top - 12, class: "options-event-label", "text-anchor": "middle" });
+      earningsLabel.textContent = `EARNINGS · ${dateLabel(earningsDate, false).toUpperCase()} · ${String(options.earnings.timing || "").toUpperCase()}`;
+      svg.appendChild(earningsLabel);
+      const expiryX = x(expirationDate);
+      svg.appendChild(svgNode("line", { x1: expiryX, y1: margin.top, x2: expiryX, y2: height - margin.bottom, class: "options-expiry-line" }));
+      [[.90, "90th"], [.50, "median"], [.10, "10th"]].forEach(([probability, labelText]) => {
+        const row = fanByProbability.get(probability);
+        if (!row) return;
+        const label = svgNode("text", { x: expiryX + 7, y: y(optionIndex(row.expirationPrice)) + 4, class: probability === .5 ? "options-price-label median" : "options-price-label" });
+        label.textContent = `${priceMoney(row.expirationPrice)} · ${labelText}`;
+        svg.appendChild(label);
+      });
     }
 
     const line = spotRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.c).toFixed(2)}`).join(" ");
@@ -238,15 +327,15 @@
 
     const labelCount = 5;
     for (let index = 0; index < labelCount; index += 1) {
-      const rowIndex = Math.round((timelineRows.length - 1) * index / (labelCount - 1));
-      const row = timelineRows[rowIndex];
+      const labelMs = startMs + span * index / (labelCount - 1);
+      const labelDate = new Date(labelMs).toISOString().slice(0, 10);
       const label = svgNode("text", {
-        x: x(row.d),
+        x: margin.left + plotWidth * index / (labelCount - 1),
         y: height - 18,
         class: "market-axis",
         "text-anchor": index === 0 ? "start" : index === labelCount - 1 ? "end" : "middle",
       });
-      label.textContent = dateLabel(row.d, false);
+      label.textContent = dateLabel(labelDate, false);
       svg.appendChild(label);
     }
 
