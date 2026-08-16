@@ -5,11 +5,16 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
+
+from navstrategies.coverage_universe.tradexyz_peers import (
+    build_weighted_peer_total_return_history,
+)
 
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
@@ -85,6 +90,7 @@ def _page_html(
     name: str,
     asset_version: str,
     options_payload: dict[str, Any] | None,
+    peer_mapping: dict[str, Any] | None,
 ) -> str:
     continuous_spot = symbol in {"BTC", "ETH", "GOLD"}
     options_enabled = options_payload is not None
@@ -95,6 +101,47 @@ def _page_html(
         if options_enabled
         else ""
     )
+    peer_legend = (
+        '\n              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>'
+        if peer_mapping
+        else ""
+    )
+    if peer_mapping:
+        hedge = dict(peer_mapping["primary_index_hedge"])
+        peer_rows = "".join(
+            "<tr>"
+            f"<td><strong>{html.escape(str(peer['ticker']))}</strong><span>{html.escape(str(peer['name']))}</span></td>"
+            f"<td>{float(peer['weight']) * 100:.1f}%</td>"
+            f"<td>${float(peer['liquidity_24h_usd_millions']):,.3f}M</td>"
+            f"<td>{int(peer['replicate_support'])}/3</td>"
+            f"<td>{html.escape(str(peer['reason']))}</td>"
+            "</tr>"
+            for peer in peer_mapping["peers"]
+        )
+        peer_panel = f'''
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">{symbol} Weighted Peer Basket</h2>
+            </div>
+            <small>{html.escape(str(peer_mapping["model"]))} · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>{html.escape(str(hedge["ticker"]))} · {html.escape(str(hedge["name"]))} · ${float(hedge["liquidity_24h_usd_millions"]):,.3f}M 24h</strong>
+            <p>{html.escape(str(hedge["reason"]))}</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody>{peer_rows}</tbody>
+            </table>
+          </div>
+          <p class="peer-justification">{html.escape(str(peer_mapping["justification"]))}</p>
+        </section>'''
+    else:
+        peer_panel = ""
     distribution_center_controls = (
         '''
         <div class="distribution-center-controls" role="group" aria-label="Options distribution center">
@@ -230,7 +277,7 @@ def _page_html(
             <div class="chart-title-row"><h1 id="chart-title">{symbol} Spot and Perp Total Returns</h1></div>
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>{symbol} perp total return · long · seven-day</span>
-              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>{spot_symbol} spot total return</span>{options_legend}
+              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>{spot_symbol} spot total return</span>{peer_legend}{options_legend}
             </div>
           </div>
           <div class="range-controls" role="group" aria-label="Chart window">
@@ -246,7 +293,7 @@ def _page_html(
             <div class="chart-loading">Loading spot and swap history…</div>
           </div>
         </div>{distribution_center_controls}
-        <p id="chart-live" class="sr-only" aria-live="polite"></p>{options_panel}
+        <p id="chart-live" class="sr-only" aria-live="polite"></p>{peer_panel}{options_panel}
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
             <div>
@@ -328,6 +375,16 @@ def build(nav_root: Path) -> None:
     funding_forecasts = pd.read_parquet(source / "funding_forecasts.parquet")
     metadata_path = source / "metadata.json"
     metadata = json.loads(metadata_path.read_text())
+    peer_manifest_path = (
+        nav_root
+        / "navstrategies/strategy_definitions/tradexyz_kimi_k3_peers_v1.json"
+    )
+    peer_manifest = (
+        json.loads(peer_manifest_path.read_text())
+        if peer_manifest_path.exists()
+        else {"targets": {}}
+    )
+    peer_targets = dict(peer_manifest.get("targets") or {})
     catalog_path = SITE_ROOT / "assets" / "market-data" / "onchain-spot-catalog.json"
     onchain_catalog = json.loads(catalog_path.read_text()) if catalog_path.exists() else {"generatedAt": None, "instruments": {}}
     options_paths = sorted((SITE_ROOT / "assets" / "market-data").glob("*-options.json"))
@@ -338,6 +395,7 @@ def build(nav_root: Path) -> None:
     asset_fingerprint = hashlib.sha256()
     for path in (
         metadata_path,
+        peer_manifest_path,
         catalog_path,
         *options_paths,
         SITE_ROOT / "assets" / "js" / "market-lens.js",
@@ -381,6 +439,32 @@ def build(nav_root: Path) -> None:
             raise RuntimeError(f"invalid terminal total-return anchor for {raw_symbol}")
         spot_scale = spot_terminal_price / spot_terminal_index
         perp_scale = perp_terminal_price / perp_terminal_index
+        peer_block = peer_targets.get(symbol)
+        peer_rows: list[dict[str, Any]] = []
+        peer_mapping: dict[str, Any] | None = None
+        if peer_block:
+            peer_history = build_weighted_peer_total_return_history(spot, peer_block)
+            peer_start = pd.Timestamp(peer_history.iloc[0]["date"])
+            target_start_rows = spot_group.loc[spot_group["date"].eq(peer_start)]
+            if target_start_rows.empty:
+                raise RuntimeError(f"peer-history start is absent from target spot history for {raw_symbol}")
+            target_start_level = float(target_start_rows.iloc[0]["close_index"]) * spot_scale
+            peer_rows = [
+                {
+                    "d": _date(row.date),
+                    "c": _json_value(target_start_level * row.basket_factor),
+                }
+                for row in peer_history.itertuples(index=False)
+            ]
+            peer_mapping = {
+                **peer_block,
+                "model": peer_manifest["model"],
+                "temperature": peer_manifest["temperature"],
+                "promptVersion": peer_manifest["prompt_version"],
+                "replicatesPerTarget": peer_manifest["replicates_per_target"],
+                "historyStart": peer_rows[0]["d"],
+                "historyMethod": "static initial Kimi weights applied to peer gross-total-return factors; peer closes forward-filled only across asynchronous exchange holidays; basket rebased to the target spot total-return level at the first fully covered date",
+            }
 
         spot_rows = [
             {
@@ -490,6 +574,9 @@ def build(nav_root: Path) -> None:
                 "venueSplit": True,
             },
         }
+        if peer_mapping:
+            payload["peerMapping"] = peer_mapping
+            payload["peer"] = peer_rows
         if symbol in earnings_options:
             payload["earningsOptions"] = earnings_options[symbol]
         _atomic_text(
@@ -505,6 +592,7 @@ def build(nav_root: Path) -> None:
                 name=name,
                 asset_version=asset_version,
                 options_payload=earnings_options.get(symbol),
+                peer_mapping=peer_mapping,
             ),
         )
         instruments.append(
@@ -516,10 +604,16 @@ def build(nav_root: Path) -> None:
                 "spotStart": spot_rows[0]["d"],
                 "perpStart": perp_rows[0]["d"],
                 "endDate": max(spot_rows[-1]["d"], perp_rows[-1]["d"]),
+                "peerMapped": bool(peer_mapping),
             }
         )
 
-    universe = {"generatedAt": metadata["finished_at_utc"], "instruments": instruments}
+    universe = {
+        "generatedAt": metadata["finished_at_utc"],
+        "peerModel": peer_manifest.get("model"),
+        "peerTargetCount": int(peer_manifest.get("stock_target_count") or 0),
+        "instruments": instruments,
+    }
     _atomic_text(
         SITE_ROOT / "assets/market-data/universe.json",
         json.dumps(universe, separators=(",", ":"), allow_nan=False) + "\n",

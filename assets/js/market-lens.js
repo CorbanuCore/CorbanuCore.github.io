@@ -504,10 +504,12 @@
     const earningsDate = options && !termMode ? options.earnings.date : null;
     const spotRows = visibleSeries(data, "spot");
     const perpRows = visibleSeries(data, "perp");
+    const peerRows = Array.isArray(data.peer) ? visibleSeries(data, "peer") : [];
     const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
     const perpByDate = new Map(perpRows.map((row) => [row.d, row]));
-    const dates = [...new Set([...spotByDate.keys(), ...perpByDate.keys()])].sort();
-    const timelineRows = dates.map((date) => ({ d: date, spot: spotByDate.get(date), perp: perpByDate.get(date) }));
+    const peerByDate = new Map(peerRows.map((row) => [row.d, row]));
+    const dates = [...new Set([...spotByDate.keys(), ...perpByDate.keys(), ...peerByDate.keys()])].sort();
+    const timelineRows = dates.map((date) => ({ d: date, spot: spotByDate.get(date), perp: perpByDate.get(date), peer: peerByDate.get(date) }));
     state.rows = timelineRows;
     state.focusIndex = timelineRows.length - 1;
 
@@ -529,6 +531,7 @@
     const x = (date) => margin.left + (new Date(`${date}T00:00:00Z`).getTime() - startMs) / span * plotWidth;
     const values = spotRows.map((row) => row.c);
     perpRows.forEach((row) => values.push(row.l, row.h));
+    peerRows.forEach((row) => values.push(row.c));
     const lastSpotLevel = Number(spotRows[spotRows.length - 1].c);
     const lastPerpLevel = Number(perpRows[perpRows.length - 1].c);
     const distributionCenterLevel = state.distributionCenter === "perp" ? lastPerpLevel : lastSpotLevel;
@@ -557,7 +560,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} terminal-anchored spot total-return price line and funding-inclusive perpetual total-return price candlesticks${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} terminal-anchored spot total-return price line and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the Kimi K3 weighted TradeXYZ peer total-return line" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -677,6 +680,8 @@
 
     const line = spotRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.c).toFixed(2)}`).join(" ");
     if (line) svg.appendChild(svgNode("path", { d: line, class: "market-spot" }));
+    const peerLine = peerRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.c).toFixed(2)}`).join(" ");
+    if (peerLine) svg.appendChild(svgNode("path", { d: peerLine, class: "market-peer" }));
 
     const candleWidth = candleWidthForRows(perpRows, x, plotWidth);
     perpRows.forEach((row) => {
@@ -729,7 +734,8 @@
       const row = timelineRows[bounded];
       const spot = row.spot;
       const perp = row.perp;
-      const focusValue = spot ? spot.c : perp.c;
+      const peer = row.peer;
+      const focusValue = spot ? spot.c : perp ? perp.c : peer.c;
       const px = x(row.d);
       crosshair.setAttribute("x1", px);
       crosshair.setAttribute("x2", px);
@@ -748,6 +754,7 @@
       tooltip.innerHTML = [
         `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
         spot ? `<div class="tooltip-row spot"><span>Spot total-return close</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
+        peer ? `<div class="tooltip-row peer"><span>Kimi K3 peer basket</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
         perp ? `<div class="tooltip-row"><span>Perp total-return O / C</span><strong>${priceMoney(perp.o)} / ${priceMoney(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Perp</span><strong>Not listed</strong></div>',
         perp ? `<div class="tooltip-row"><span>Perp total-return H / L</span><strong>${priceMoney(perp.h)} / ${priceMoney(perp.l)}</strong></div>` : "",
         perp ? `<div class="tooltip-row"><span>${perp.p === "partial" ? "Funding observed" : "Funding to close"}</span><strong>${percent(perp.f * 100, 3)}</strong></div>` : "",
@@ -759,7 +766,7 @@
       const cssY = pointerY == null ? y(focusValue) / height * stageRect.height : pointerY;
       tooltip.style.left = `${Math.min(Math.max(cssX + 14, 8), stageRect.width - 243)}px`;
       tooltip.style.top = `${Math.min(Math.max(cssY - 78, 8), stageRect.height - tooltip.offsetHeight - 8)}px`;
-      text("chart-live", `${row.d}. ${spot ? `Spot total-return close ${priceMoney(spot.c)}.` : "Cash spot closed."}${perp ? ` Perp total-return open ${priceMoney(perp.o)}, high ${priceMoney(perp.h)}, low ${priceMoney(perp.l)}, close ${priceMoney(perp.c)}.` : " Perp not yet available."}`);
+      text("chart-live", `${row.d}. ${spot ? `Spot total-return close ${priceMoney(spot.c)}.` : "Cash spot closed."}${peer ? ` Kimi K3 peer-basket total-return level ${priceMoney(peer.c)}.` : ""}${perp ? ` Perp total-return open ${priceMoney(perp.o)}, high ${priceMoney(perp.h)}, low ${priceMoney(perp.l)}, close ${priceMoney(perp.c)}.` : " Perp not yet available."}`);
     }
 
     svg.addEventListener("pointermove", (event) => {

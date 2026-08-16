@@ -34,6 +34,8 @@ def main() -> int:
     validated_option_contracts = 0
     validated_earnings_profiles = 0
     validated_term_profiles = 0
+    expected_peer_targets = int(universe.get("peerTargetCount") or 0)
+    validated_peer_targets = 0
     for instrument in instruments:
         slug = str(instrument["slug"])
         payload = load_json(DATA_ROOT / f"{slug}.json")
@@ -70,6 +72,55 @@ def main() -> int:
         ):
             if required_markup not in page_markup:
                 raise AssertionError(f"{slug}: live perp module is incomplete: {required_markup}")
+        peer_mapping = payload.get("peerMapping")
+        if bool(instrument.get("peerMapped")) != bool(peer_mapping):
+            raise AssertionError(f"{slug}: universe peer flag and payload disagree")
+        if peer_mapping:
+            peer_rows = payload.get("peer") or []
+            peers = peer_mapping.get("peers") or []
+            if str(peer_mapping.get("model")) != "moonshotai/kimi-k3":
+                raise AssertionError(f"{slug}: peer model is not locked Kimi K3")
+            if float(peer_mapping.get("temperature")) != 0.0:
+                raise AssertionError(f"{slug}: peer temperature is not zero")
+            if int(peer_mapping.get("replicatesPerTarget") or 0) != 3:
+                raise AssertionError(f"{slug}: peer mapping does not contain three validated blocks")
+            if str(peer_mapping.get("target")) != str(instrument["symbol"]).upper():
+                raise AssertionError(f"{slug}: peer mapping target differs from the page symbol")
+            if not 3 <= len(peers) <= 9:
+                raise AssertionError(f"{slug}: peer mapping must contain 3 to 9 stocks")
+            peer_symbols = [str(peer.get("ticker") or "") for peer in peers]
+            if len(peer_symbols) != len(set(peer_symbols)) or str(instrument["symbol"]).upper() in peer_symbols:
+                raise AssertionError(f"{slug}: peer mapping contains a duplicate or the target")
+            if abs(sum(float(peer.get("weight") or 0) for peer in peers) - 1.0) > 1e-5:
+                raise AssertionError(f"{slug}: peer weights do not sum to one")
+            if any(not str(peer.get("reason") or "").strip() for peer in peers):
+                raise AssertionError(f"{slug}: peer rationale is missing")
+            if any(float(peer.get("day_notional_volume_usd") or 0) <= 0 for peer in peers):
+                raise AssertionError(f"{slug}: peer liquidity snapshot is missing")
+            if any(float(peer.get("liquidity_24h_usd_millions") or 0) <= 0 for peer in peers):
+                raise AssertionError(f"{slug}: peer liquidity display value is missing")
+            if any(not 1 <= int(peer.get("replicate_support") or 0) <= 3 for peer in peers):
+                raise AssertionError(f"{slug}: peer replicate support is invalid")
+            hedge = peer_mapping.get("primary_index_hedge") or {}
+            if not str(hedge.get("ticker") or "").strip() or not str(hedge.get("reason") or "").strip():
+                raise AssertionError(f"{slug}: primary index hedge is incomplete")
+            if float(hedge.get("day_notional_volume_usd") or 0) <= 0 or float(hedge.get("liquidity_24h_usd_millions") or 0) <= 0:
+                raise AssertionError(f"{slug}: primary index hedge liquidity snapshot is missing")
+            if not peer_rows or str(peer_mapping.get("historyStart")) != str(peer_rows[0].get("d")):
+                raise AssertionError(f"{slug}: weighted peer history is missing its audited start")
+            spot_by_date = {str(row["d"]): float(row["c"]) for row in spot_rows}
+            first_peer_date = str(peer_rows[0]["d"])
+            if first_peer_date not in spot_by_date or abs(float(peer_rows[0]["c"]) - spot_by_date[first_peer_date]) > 1e-5:
+                raise AssertionError(f"{slug}: peer history is not rebased to the target spot level")
+            if any(float(row.get("c") or 0) <= 0 for row in peer_rows):
+                raise AssertionError(f"{slug}: weighted peer history contains an invalid level")
+            for required_markup in ('class="legend-peer"', 'class="peer-panel"', 'class="peer-table"'):
+                if required_markup not in page_markup:
+                    raise AssertionError(f"{slug}: peer chart or justification block is missing: {required_markup}")
+            validated_peer_targets += 1
+        elif 'class="peer-panel"' in page_markup or 'class="legend-peer"' in page_markup:
+            raise AssertionError(f"{slug}: peer UI is rendered without a validated mapping")
+
         onchain = payload["onchainSpot"]
         if onchain.get("venueSplit") is not True:
             raise AssertionError(f"{slug}: CEX/DEX split is disabled")
@@ -205,8 +256,13 @@ def main() -> int:
             raise AssertionError(f"{slug}: obsolete historical payout cards remain")
         validated_option_contracts += len(contracts)
 
+    if validated_peer_targets != expected_peer_targets:
+        raise AssertionError(
+            f"validated {validated_peer_targets} peer targets, expected {expected_peer_targets}"
+        )
     print(
         f"validated {len(instruments)} Market Lens pages: "
+        f"{validated_peer_targets} Kimi K3 peer charts, "
         f"{listed_cex_markets} listed CEX markets, "
         f"{contract_backed_dex_routes} contract-backed DEX routes, "
         f"{validated_option_contracts} liquid listed-option inputs across "

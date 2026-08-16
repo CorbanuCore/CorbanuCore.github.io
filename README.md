@@ -21,6 +21,13 @@ historical payout. Supported index, commodity, BTC, and ETH pages display
 selectable ATM straddles for the listed expiries closest to 30 and 90 days.
 Every options chart can center the same option-implied percentage distribution
 on either the terminal spot price or terminal perp price.
+Single-stock pages also display a dashed weighted peer total-return line and a
+plain table of hedge, peer weights, three-run consensus support, and rationale.
+The mapping is frozen by `moonshotai/kimi-k3` at temperature zero from three
+validated blocks per stock; every prompt receives the complete 35-contract
+TradeXYZ core with names, asset classes, and live 24-hour perp liquidity. The
+daily publisher refreshes peer performance from current gross-total-return
+history without rerunning the model.
 BTC uses IBIT options; ETH selects the live liquidity leader from ETHA, ETHE,
 FETH, and ETHW on every refresh. Listed-options coverage spans 34 of 37 pages.
 The three explicit exclusions are copper, whose CPER chain currently lacks two
