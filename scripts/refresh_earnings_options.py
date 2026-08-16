@@ -30,6 +30,9 @@ SYMBOL_PATTERN = re.compile(r"^[A-Z][A-Z0-9.]{0,9}$")
 MAX_SPREAD_PCT = 12.5
 MIN_OPEN_INTEREST = 500
 MIN_VOLUME = 25
+TERM_MAX_SPREAD_PCT = 20.0
+TERM_MIN_OPEN_INTEREST = 50
+TERM_MIN_VOLUME = 5
 MAX_QUOTE_AGE_DAYS = 4
 
 
@@ -569,6 +572,9 @@ def _normalize_liquid_contracts(
     chain: dict[str, Any],
     *,
     now: datetime,
+    max_spread_pct: float = TERM_MAX_SPREAD_PCT,
+    min_open_interest: int = TERM_MIN_OPEN_INTEREST,
+    min_volume: int = TERM_MIN_VOLUME,
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for raw_row in chain.get("contracts", []):
@@ -594,8 +600,8 @@ def _normalize_liquid_contracts(
         )
         if not (
             standard
-            and spread_pct <= MAX_SPREAD_PCT
-            and (open_interest >= MIN_OPEN_INTEREST or volume >= MIN_VOLUME)
+            and spread_pct <= max_spread_pct
+            and (open_interest >= min_open_interest or volume >= min_volume)
             and quote_age <= MAX_QUOTE_AGE_DAYS
         ):
             continue
@@ -771,8 +777,8 @@ def build_term_payload(
             "candidates": sorted(selection_audit, key=lambda row: row["symbol"]),
         },
         "liquidityFilter": {
-            "maxBidAskSpreadPct": MAX_SPREAD_PCT,
-            "minimumOpenInterestOrVolume": f"open interest >= {MIN_OPEN_INTEREST} or daily volume >= {MIN_VOLUME}",
+            "maxBidAskSpreadPct": TERM_MAX_SPREAD_PCT,
+            "minimumOpenInterestOrVolume": f"open interest >= {TERM_MIN_OPEN_INTEREST} or daily volume >= {TERM_MIN_VOLUME}",
             "standardMultiplier": 100,
             "maximumQuoteAgeDays": MAX_QUOTE_AGE_DAYS,
         },

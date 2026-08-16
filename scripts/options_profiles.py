@@ -29,8 +29,13 @@ EARNINGS_PROFILES: dict[str, dict[str, Any]] = {
 }
 
 TERM_STRADDLE_PROFILES: dict[str, dict[str, Any]] = {
+    "BRENTOIL": {"kind": "term_straddles", "underlierCandidates": ("BNO",)},
     "BTC": {"kind": "term_straddles", "underlierCandidates": ("IBIT",)},
+    # These recent listings have live options but insufficient public earnings
+    # history for the historical-payout methodology.
+    "CBRS": {"kind": "term_straddles", "underlierCandidates": ("CBRS",)},
     "CL": {"kind": "term_straddles", "underlierCandidates": ("USO",)},
+    "CRCL": {"kind": "term_straddles", "underlierCandidates": ("CRCL",)},
     "DRAM": {"kind": "term_straddles", "underlierCandidates": ("DRAM",)},
     "ETH": {
         "kind": "term_straddles",
@@ -38,11 +43,24 @@ TERM_STRADDLE_PROFILES: dict[str, dict[str, Any]] = {
         # dominates these alternatives by both volume and open interest.
         "underlierCandidates": ("ETHA", "ETHE", "FETH", "ETHW"),
     },
+    "EWY": {"kind": "term_straddles", "underlierCandidates": ("EWY",)},
     "GOLD": {"kind": "term_straddles", "underlierCandidates": ("GLD",)},
+    "NATGAS": {"kind": "term_straddles", "underlierCandidates": ("UNG",)},
     "SILVER": {"kind": "term_straddles", "underlierCandidates": ("SLV",)},
+    # SKHY is the listed ADR options underlier for both SK hynix views.
+    "SKHX": {"kind": "term_straddles", "underlierCandidates": ("SKHY",)},
+    "SKHY": {"kind": "term_straddles", "underlierCandidates": ("SKHY",)},
     "SOXL": {"kind": "term_straddles", "underlierCandidates": ("SOXL",)},
     "SP500": {"kind": "term_straddles", "underlierCandidates": ("SPY",)},
+    "SPCX": {"kind": "term_straddles", "underlierCandidates": ("SPCX",)},
     "XYZ100": {"kind": "term_straddles", "underlierCandidates": ("QQQ",)},
+}
+
+# Every unsupported page is explicit so a new listing cannot silently disappear.
+UNSUPPORTED_OPTIONS_PAGES: dict[str, str] = {
+    "COPPER": "CPER currently lacks two distinct liquid paired ATM expiries",
+    "CXMT": "the Shanghai-listed common has no Schwab-listed options chain",
+    "SMSN": "Samsung common and its US OTC line have no Schwab-listed options chain",
 }
 
 OPTIONS_PROFILES: dict[str, dict[str, Any]] = {

@@ -8,9 +8,9 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.options_profiles import OPTIONS_PROFILES, options_profile
+    from scripts.options_profiles import OPTIONS_PROFILES, UNSUPPORTED_OPTIONS_PAGES, options_profile
 except ModuleNotFoundError:
-    from options_profiles import OPTIONS_PROFILES, options_profile
+    from options_profiles import OPTIONS_PROFILES, UNSUPPORTED_OPTIONS_PAGES, options_profile
 
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
@@ -88,6 +88,8 @@ def main() -> int:
         symbol = str(instrument["symbol"]).upper()
         options = payload.get("earningsOptions")
         if symbol not in OPTIONS_PROFILES:
+            if symbol not in UNSUPPORTED_OPTIONS_PAGES:
+                raise AssertionError(f"{slug}: options coverage is neither configured nor explicitly unsupported")
             if options:
                 raise AssertionError(f"{slug}: unsupported options payload is attached")
             if 'class="earnings-options-panel"' in page_markup:

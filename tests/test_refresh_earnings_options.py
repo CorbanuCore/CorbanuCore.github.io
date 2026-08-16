@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import unittest
-from datetime import date
+from datetime import date, datetime, timezone
 
 from scripts.refresh_earnings_options import (
     _historical_scenarios,
+    _normalize_liquid_contracts,
     _pava,
     _payout_statistics,
     _quantile,
@@ -141,6 +142,36 @@ class EarningsOptionsHistoryTests(unittest.TestCase):
         self.assertEqual(values, sorted(values))
         self.assertAlmostEqual(values[0], 0.15)
         self.assertAlmostEqual(values[1], 0.15)
+
+    def test_term_liquidity_accepts_executable_modest_volume_legs(self) -> None:
+        now = datetime(2026, 8, 16, 12, tzinfo=timezone.utc)
+
+        def contract(symbol: str, *, open_interest: int, volume: int) -> dict[str, object]:
+            return {
+                "symbol": symbol,
+                "putCall": "CALL",
+                "expiration": "2026-09-18",
+                "strikePrice": 100.0,
+                "bid": 1.0,
+                "ask": 1.2,
+                "openInterest": open_interest,
+                "totalVolume": volume,
+                "quoteTimeInLong": int(now.timestamp() * 1000),
+                "multiplier": 100,
+                "nonStandard": False,
+                "mini": False,
+            }
+
+        rows = _normalize_liquid_contracts(
+            {
+                "contracts": [
+                    contract("KEPT", open_interest=50, volume=0),
+                    contract("REJECTED", open_interest=49, volume=4),
+                ]
+            },
+            now=now,
+        )
+        self.assertEqual([row["symbol"] for row in rows], ["KEPT"])
 
     def test_historical_windows_match_current_calendar_day_horizon(self) -> None:
         history = {

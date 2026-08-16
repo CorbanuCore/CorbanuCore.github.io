@@ -13,7 +13,10 @@ an ATM straddle, and the two liquid calls and puts with the highest average
 historical payout. Supported index, commodity, BTC, and ETH pages display
 selectable ATM straddles for the listed expiries closest to 30 and 90 days.
 BTC uses IBIT options; ETH selects the live liquidity leader from ETHA, ETHE,
-FETH, and ETHW on every refresh.
+FETH, and ETHW on every refresh. Listed-options coverage spans 34 of 37 pages.
+The three explicit exclusions are copper, whose CPER chain currently lacks two
+distinct liquid paired ATM expiries, CXMT, and Samsung common. The latter two
+have no usable exact listed-options chain through the production broker bridge.
 Refresh the verified wrapper catalog and direct venue market data first, then
 rebuild the pages. The refresh reads Binance and LBank order
 books, Meteora pool state, direct PancakeSwap V3/USDT pool quotes on BNB Chain,
