@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/soxl/">
   <link rel="canonical" href="https://corbanu.com/soxl/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=5fedb2b48599">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=a82a752ca07f">
   <title>SOXL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="soxl" data-market-version="5fedb2b48599">
+<body data-market-slug="soxl" data-market-version="a82a752ca07f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -36,6 +36,8 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>SOXL perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>SOXL spot total return</span>
+              <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
+              <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
           </div>
           <div class="range-controls" role="group" aria-label="Chart window">
@@ -52,6 +54,34 @@
           </div>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
+          <header class="earnings-options-head">
+            <div>
+              <span class="earnings-options-kicker">Listed options · term structure</span>
+              <h2 id="earnings-options-title">SOXL 1- and 3-Month ATM Straddle Targets</h2>
+              <p>SOXL listed-options proxy · select a term to display its implied distribution and payout.</p>
+            </div>
+            <span id="earnings-options-asof" class="earnings-options-asof">Loading chain…</span>
+          </header>
+          <section class="historical-plays" aria-labelledby="historical-plays-title">
+            <header>
+              <div><span>Liquid ATM structures</span><h3 id="historical-plays-title">Select a term to display its payout on the chart</h3></div>
+            </header>
+            <div class="historical-table-scroll" tabindex="0" role="region" aria-label="Selectable one-month and three-month ATM option straddles">
+              <table class="historical-structure-table">
+                <thead><tr><th>Term</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Open interest</th><th>Implied move</th><th>Lower BE</th><th>Upper BE</th><th>Listed days</th></tr></thead>
+                <tbody id="historical-structure-rows"><tr><td colspan="9">Loading ATM straddles…</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+          <div class="earnings-options-summary">
+            <div><small>Options underlier</small><strong id="options-underlier">—</strong><span>Listed proxy used for the distribution</span></div>
+            <div><small>1-month target</small><strong id="options-term-one">—</strong><span id="options-term-one-days">—</span></div>
+            <div><small>3-month target</small><strong id="options-term-three">—</strong><span id="options-term-three-days">—</span></div>
+            <div><small>Chain quote</small><strong id="options-chain-quote-date">—</strong><span>Current Schwab listed-options snapshot</span></div>
+          </div>
+          <p id="options-method-note" class="options-method-note">Term structure loading…</p>
+        </section>
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
             <div>
@@ -120,6 +150,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=5fedb2b48599"></script>
+  <script src="/assets/js/market-lens.js?v=a82a752ca07f"></script>
 </body>
 </html>

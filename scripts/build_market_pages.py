@@ -19,6 +19,7 @@ NAMES = {
     "AMD": "Advanced Micro Devices",
     "AMZN": "Amazon",
     "BE": "Bloom Energy",
+    "BTC": "Bitcoin",
     "BRENTOIL": "Brent crude oil",
     "CBRS": "Cerebras Systems",
     "CL": "WTI crude oil",
@@ -28,6 +29,7 @@ NAMES = {
     "CXMT": "CXMT Corp. Class A",
     "DRAM": "Roundhill Memory ETF",
     "EWY": "iShares MSCI South Korea ETF",
+    "ETH": "Ethereum",
     "GOLD": "Gold",
     "GOOGL": "Alphabet",
     "INTC": "Intel",
@@ -75,15 +77,58 @@ def _timestamp(value: Any) -> str | None:
     return pd.Timestamp(value).isoformat().replace("+00:00", "Z")
 
 
-def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_version: str) -> str:
-    continuous_spot = symbol == "GOLD"
-    options_enabled = symbol == "AAPL"
+def _page_html(
+    *,
+    slug: str,
+    symbol: str,
+    spot_symbol: str,
+    name: str,
+    asset_version: str,
+    options_payload: dict[str, Any] | None,
+) -> str:
+    continuous_spot = symbol in {"BTC", "ETH", "GOLD"}
+    options_enabled = options_payload is not None
+    options_mode = str((options_payload or {}).get("mode") or "")
+    options_underlier = str((options_payload or {}).get("underlierSymbol") or symbol)
     options_legend = (
-        '\n              <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>liquid options risk-neutral probability fan</span>\n              <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>'
+        '\n              <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>\n              <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>'
         if options_enabled
         else ""
     )
-    options_panel = "" if not options_enabled else f"""
+    if not options_enabled:
+        options_panel = ""
+    elif options_mode == "term_straddles":
+        options_panel = f"""
+        <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
+          <header class="earnings-options-head">
+            <div>
+              <span class="earnings-options-kicker">Listed options · term structure</span>
+              <h2 id="earnings-options-title">{symbol} 1- and 3-Month ATM Straddle Targets</h2>
+              <p>{options_underlier} listed-options proxy · select a term to display its implied distribution and payout.</p>
+            </div>
+            <span id="earnings-options-asof" class="earnings-options-asof">Loading chain…</span>
+          </header>
+          <section class="historical-plays" aria-labelledby="historical-plays-title">
+            <header>
+              <div><span>Liquid ATM structures</span><h3 id="historical-plays-title">Select a term to display its payout on the chart</h3></div>
+            </header>
+            <div class="historical-table-scroll" tabindex="0" role="region" aria-label="Selectable one-month and three-month ATM option straddles">
+              <table class="historical-structure-table">
+                <thead><tr><th>Term</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Open interest</th><th>Implied move</th><th>Lower BE</th><th>Upper BE</th><th>Listed days</th></tr></thead>
+                <tbody id="historical-structure-rows"><tr><td colspan="9">Loading ATM straddles…</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+          <div class="earnings-options-summary">
+            <div><small>Options underlier</small><strong id="options-underlier">—</strong><span>Listed proxy used for the distribution</span></div>
+            <div><small>1-month target</small><strong id="options-term-one">—</strong><span id="options-term-one-days">—</span></div>
+            <div><small>3-month target</small><strong id="options-term-three">—</strong><span id="options-term-three-days">—</span></div>
+            <div><small>Chain quote</small><strong id="options-chain-quote-date">—</strong><span>Current Schwab listed-options snapshot</span></div>
+          </div>
+          <p id="options-method-note" class="options-method-note">Term structure loading…</p>
+        </section>"""
+    else:
+        options_panel = f"""
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -95,11 +140,11 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
           </header>
           <section class="historical-plays" aria-labelledby="historical-plays-title">
             <header>
-              <div><span>Volume-screened structures</span><h3 id="historical-plays-title">Select a trade to display its payout on the chart</h3></div>
+              <div><span>Highest historical payouts</span><h3 id="historical-plays-title">Select a trade to display its payout on the chart</h3></div>
             </header>
             <div class="historical-table-scroll" tabindex="0" role="region" aria-label="Selectable earnings option structures and historical payouts">
               <table class="historical-structure-table">
-                <thead><tr><th>Trade</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Profitable / 12</th><th>Avg payout</th><th>Avg winner</th><th>Max payout</th><th>Full history</th></tr></thead>
+                <thead><tr><th>Trade</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Profitable / recent</th><th>Avg payout</th><th>Avg winner</th><th>Max payout</th><th>Full history</th></tr></thead>
                 <tbody id="historical-structure-rows"><tr><td colspan="9">Replaying prior earnings…</td></tr></tbody>
               </table>
             </div>
@@ -113,15 +158,16 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
           <p id="options-method-note" class="options-method-note">Historical replay loading…</p>
         </section>"""
     ratio_subtitle = (
-        "1.00 = equal return since shared anchor · XAUT sampled on the same seven-day New York session"
+        f"1.00 = equal return since shared anchor · {spot_symbol} sampled on the same seven-day New York session"
         if continuous_spot
         else "1.00 = equal return since shared anchor · spot held at its last close between cash sessions"
     )
-    chart_disclosure = (
-        "Perp candlesticks and XAUT spot run seven days a week. XAUT closes use Bitfinex 30-minute spot candles aligned to 09:30–16:00 New York; the on-chain section reports executable Ethereum Uniswap V3 PAXG and XAUT quotes and depth. The perp includes realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
-        if continuous_spot
-        else "Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions."
-    )
+    if symbol == "GOLD":
+        chart_disclosure = "Perp candlesticks and XAUT spot run seven days a week. XAUT closes use Bitfinex 30-minute spot candles aligned to 09:30–16:00 New York; the on-chain section reports executable Ethereum Uniswap V3 PAXG and XAUT quotes and depth. The perp includes realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
+    elif continuous_spot:
+        chart_disclosure = f"Perp candlesticks and {spot_symbol} spot run seven days a week. Spot closes use Bitfinex 30-minute candles aligned to 09:30–16:00 New York. The perp includes realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
+    else:
+        chart_disclosure = "Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions."
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -393,6 +439,7 @@ def build(nav_root: Path) -> None:
                 spot_symbol=spot_symbol,
                 name=name,
                 asset_version=asset_version,
+                options_payload=earnings_options.get(symbol),
             ),
         )
         instruments.append(

@@ -4,10 +4,16 @@ Static organization site for [CorbanuCore](https://github.com/CorbanuCore), publ
 
 The site is intentionally dependency-free: edit `index.html`, commit, and push to `main`.
 
-The 35 Market Lens pages are generated from the locked local navstrategies
+The 37 Market Lens pages are generated from the locked local navstrategies
 spot/perp index artifacts. Every page contains the cash-reference total-return
 line, the funding-inclusive Hyperliquid perp candlesticks, the perp/spot ratio,
 1-day and 7-day long-funding forecasts, and discovered on-chain spot wrappers.
+Supported US equities also display the next-earnings probability distribution,
+an ATM straddle, and the two liquid calls and puts with the highest average
+historical payout. Supported index, commodity, BTC, and ETH pages display
+selectable ATM straddles for the listed expiries closest to 30 and 90 days.
+BTC uses IBIT options; ETH selects the live liquidity leader from ETHA, ETHE,
+FETH, and ETHW on every refresh.
 Refresh the verified wrapper catalog and direct venue market data first, then
 rebuild the pages. The refresh reads Binance and LBank order
 books, Meteora pool state, direct PancakeSwap V3/USDT pool quotes on BNB Chain,

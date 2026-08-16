@@ -7,6 +7,7 @@ from scripts.refresh_earnings_options import (
     _historical_scenarios,
     _pava,
     _payout_statistics,
+    _quantile,
     _rank_historical_structures,
 )
 
@@ -119,6 +120,16 @@ class EarningsOptionsHistoryTests(unittest.TestCase):
             [row["name"] for row in ranked],
             ["ATM straddle", "$105 call", "$107 call", "$95 put", "$93 put"],
         )
+
+    def test_quantile_clips_to_liquid_cdf_support(self) -> None:
+        points = [
+            {"strike": 90.0, "cdf": 0.20},
+            {"strike": 100.0, "cdf": 0.50},
+            {"strike": 110.0, "cdf": 0.80},
+        ]
+
+        self.assertEqual(_quantile(points, 0.10), 90.0)
+        self.assertEqual(_quantile(points, 0.90), 110.0)
 
     def test_isotonic_fit_produces_increasing_cdf(self) -> None:
         fitted = _pava([
