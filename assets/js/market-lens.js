@@ -148,45 +148,67 @@
       panel.hidden = true;
       return;
     }
-    const timing = String(options.earnings.timing || "").toUpperCase();
+    const termMode = options.mode === "term_straddles";
+    const underlier = options.underlierSymbol || options.symbol;
+    const history = termMode ? null : options.historicalAnalysis;
+    const structures = termMode ? options.structures || [] : history ? history.structures || [] : [];
     text("earnings-options-asof", `Chain quote · ${timestampLabel(options.chain.quoteAt)} UTC`);
-    text("options-earnings-date", dateLabel(options.earnings.date, true));
-    text("options-earnings-timing", `${timing || "Timing unknown"} · current calendar estimate`);
-    text("options-implied-move", `±${number(options.summary.impliedEarningsMovePct, 2)}%`);
-    text("options-event-range", `${priceMoney(options.summary.event68Low)} to ${priceMoney(options.summary.event68High)}`);
-    text("options-chain-expiry", dateLabel(options.chain.expiration, true));
-    const history = options.historicalAnalysis;
-    text("options-history-count", history ? `12 of ${history.availableEvents} events` : "—");
-    text("options-history-window", history ? `${history.entryLeadCalendarDays}d before · ${history.postEarningsCalendarDays}d after` : "—");
+
+    if (termMode) {
+      const oneMonth = structures.find((play) => Number(play.targetDays) === 30);
+      const threeMonth = structures.find((play) => Number(play.targetDays) === 90);
+      text("options-underlier", underlier);
+      text("options-term-one", oneMonth ? dateLabel(oneMonth.expiration, true) : "—");
+      text("options-term-one-days", oneMonth ? `${oneMonth.daysToExpiration} listed days` : "No qualifying expiry");
+      text("options-term-three", threeMonth ? dateLabel(threeMonth.expiration, true) : "—");
+      text("options-term-three-days", threeMonth ? `${threeMonth.daysToExpiration} listed days` : "No qualifying expiry");
+      text("options-chain-quote-date", options.chain.quoteAt ? dateLabel(options.chain.quoteAt.slice(0, 10), true) : "—");
+    } else {
+      const timing = String(options.earnings.timing || "").toUpperCase();
+      text("options-earnings-date", dateLabel(options.earnings.date, true));
+      text("options-earnings-timing", `${timing || "Timing unknown"} · current calendar estimate`);
+      text("options-implied-move", `±${number(options.summary.impliedEarningsMovePct, 2)}%`);
+      text("options-event-range", `${priceMoney(options.summary.event68Low)} to ${priceMoney(options.summary.event68High)}`);
+      text("options-chain-expiry", dateLabel(options.chain.expiration, true));
+      text("options-history-count", history ? `${history.primaryWindowEvents} of ${history.availableEvents} events` : "—");
+      text("options-history-window", history ? `${history.entryLeadCalendarDays}d before · ${history.postEarningsCalendarDays}d after` : "—");
+    }
+
     const rows = $("historical-structure-rows");
-    if (rows && history && history.structures.length) {
-      const defaultIndex = history.structures.findIndex((play) => play.structure === "long straddle");
+    if (rows && structures.length) {
+      const defaultIndex = structures.findIndex((play) => play.structure === "long straddle");
       state.selectedStructureIndex = defaultIndex >= 0 ? defaultIndex : 0;
-      const expirationLabel = dateLabel(options.chain.expiration, true);
-      rows.innerHTML = history.structures.map((play, index) => {
-        const recent = play.trailing12;
-        const lifetime = play.fullHistory;
+      rows.innerHTML = structures.map((play, index) => {
+        const expiration = play.expiration || options.chain.expiration;
+        const expirationLabel = dateLabel(expiration, true);
         const contractLines = play.structure === "long straddle"
-          ? [`Buy AAPL ${expirationLabel} ${priceMoney(play.call.strike)} call`, `Buy AAPL ${expirationLabel} ${priceMoney(play.put.strike)} put`]
+          ? [`Buy ${underlier} ${expirationLabel} ${priceMoney(play.call.strike)} call`, `Buy ${underlier} ${expirationLabel} ${priceMoney(play.put.strike)} put`]
           : play.structure === "long put"
-          ? [`Buy AAPL ${expirationLabel} ${priceMoney(play.put.strike)} put`]
-          : [`Buy AAPL ${expirationLabel} ${priceMoney(play.call.strike)} call`];
+          ? [`Buy ${underlier} ${expirationLabel} ${priceMoney(play.put.strike)} put`]
+          : [`Buy ${underlier} ${expirationLabel} ${priceMoney(play.call.strike)} call`];
+        const metricCells = termMode
+          ? `<td><strong>${Number(play.combinedOpenInterest).toLocaleString("en-US")}</strong></td>
+             <td><strong>±${number(play.impliedMovePct, 2)}%</strong></td>
+             <td><strong>${priceMoney(play.lowerBreakeven)}</strong></td>
+             <td><strong>${priceMoney(play.upperBreakeven)}</strong></td>
+             <td><strong>${play.daysToExpiration}</strong></td>`
+          : `<td><strong>${play.trailing12.profitableEvents}/${play.trailing12.events}</strong></td>
+             <td><strong>${number(play.trailing12.averageGrossPayoutMultiple, 2)}×</strong></td>
+             <td><strong>${number(play.trailing12.averageWinnerPayoutMultiple, 2)}×</strong></td>
+             <td><strong>${number(play.trailing12.maximumGrossPayoutMultiple, 2)}×</strong></td>
+             <td><strong>${play.fullHistory.profitableEvents}/${play.fullHistory.events} · ${number(play.fullHistory.averageGrossPayoutMultiple, 2)}×</strong></td>`;
         return `<tr data-structure-index="${index}" tabindex="0" aria-selected="${index === state.selectedStructureIndex}">
           <td><input type="radio" name="earnings-structure" tabindex="-1" aria-label="Display ${escapeHtml(play.name)} payout"${index === state.selectedStructureIndex ? " checked" : ""}><strong>${escapeHtml(play.name)}</strong></td>
           <td>${contractLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</td>
           <td><strong>${priceMoney(play.debitAsk)}</strong></td>
           <td><strong>${Number(play.combinedVolume).toLocaleString("en-US")}</strong></td>
-          <td><strong>${recent.profitableEvents}/${recent.events}</strong></td>
-          <td><strong>${number(recent.averageGrossPayoutMultiple, 2)}×</strong></td>
-          <td><strong>${number(recent.averageWinnerPayoutMultiple, 2)}×</strong></td>
-          <td><strong>${number(recent.maximumGrossPayoutMultiple, 2)}×</strong></td>
-          <td><strong>${lifetime.profitableEvents}/${lifetime.events} · ${number(lifetime.averageGrossPayoutMultiple, 2)}×</strong></td>
+          ${metricCells}
         </tr>`;
       }).join("");
 
       const selectStructure = (index) => {
-        state.selectedStructureIndex = Math.max(0, Math.min(index, history.structures.length - 1));
-        const selected = history.structures[state.selectedStructureIndex];
+        state.selectedStructureIndex = Math.max(0, Math.min(index, structures.length - 1));
+        const selected = structures[state.selectedStructureIndex];
         rows.querySelectorAll("tr").forEach((row, rowIndex) => {
           const active = rowIndex === state.selectedStructureIndex;
           row.setAttribute("aria-selected", String(active));
@@ -208,7 +230,11 @@
       selectStructure(state.selectedStructureIndex);
     }
     const note = $("options-method-note");
-    if (note && history) note.textContent = "Payout equals expiration value divided by the total ask. Historical replay uses the same strikes, debit, and event horizon against split-adjusted price history. Historical option prices are not reconstructed.";
+    if (note && termMode) {
+      note.textContent = "The nearest paired liquid ATM call and put define each straddle. The combined ask determines its breakevens and option-implied expiration distribution.";
+    } else if (note && history) {
+      note.textContent = "Payout equals expiration value divided by the total ask. Calls and puts are ranked by average gross payout across the recent replay; hit rate and volume break ties. Historical option prices are not reconstructed.";
+    }
   }
 
   function cutoffForRange(data) {
@@ -239,8 +265,26 @@
     const stage = $("market-chart-stage");
     if (!data || !stage) return;
     const options = data.earningsOptions || null;
-    const structures = options && options.historicalAnalysis ? options.historicalAnalysis.structures || [] : [];
+    const termMode = Boolean(options && options.mode === "term_straddles");
+    const structures = options
+      ? termMode
+        ? options.structures || []
+        : options.historicalAnalysis
+          ? options.historicalAnalysis.structures || []
+          : []
+      : [];
     const selectedStructure = structures[state.selectedStructureIndex] || structures[0] || null;
+    const activeFan = options
+      ? termMode
+        ? selectedStructure ? selectedStructure.fan || [] : []
+        : options.fan || []
+      : [];
+    const expirationDate = options
+      ? termMode
+        ? selectedStructure && selectedStructure.expiration
+        : options.chain.expiration
+      : null;
+    const earningsDate = options && !termMode ? options.earnings.date : null;
     const spotRows = visibleSeries(data, "spot");
     const perpRows = visibleSeries(data, "perp");
     const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
@@ -262,7 +306,7 @@
     const plotHeight = height - margin.top - margin.bottom;
     const startMs = new Date(`${dates[0]}T00:00:00Z`).getTime();
     const historicalEndMs = new Date(`${dates[dates.length - 1]}T00:00:00Z`).getTime();
-    const optionsEndMs = options ? new Date(`${options.chain.expiration}T00:00:00Z`).getTime() : historicalEndMs;
+    const optionsEndMs = expirationDate ? new Date(`${expirationDate}T00:00:00Z`).getTime() : historicalEndMs;
     const endMs = Math.max(historicalEndMs, optionsEndMs);
     const span = Math.max(endMs - startMs, 86400000);
     const x = (date) => margin.left + (new Date(`${date}T00:00:00Z`).getTime() - startMs) / span * plotWidth;
@@ -272,7 +316,10 @@
     const optionUnderlying = options ? Number(options.chain.underlyingPrice) : NaN;
     const optionIndex = (price) => lastSpotIndex * Number(price) / optionUnderlying;
     if (options && Number.isFinite(optionUnderlying) && optionUnderlying > 0) {
-      options.fan.forEach((row) => values.push(optionIndex(row.earningsPrice), optionIndex(row.expirationPrice)));
+      activeFan.forEach((row) => {
+        if (row.earningsPrice != null) values.push(optionIndex(row.earningsPrice));
+        values.push(optionIndex(row.expirationPrice));
+      });
       if (selectedStructure) {
         if (selectedStructure.call) values.push(optionIndex(selectedStructure.call.strike));
         if (selectedStructure.put) values.push(optionIndex(selectedStructure.put.strike));
@@ -291,7 +338,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks${options ? ", plus a liquid-options risk-neutral probability fan through " + options.chain.expiration : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks${expirationDate ? ", plus a listed-options implied probability fan through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -304,55 +351,66 @@
     }
 
     if (options && Number.isFinite(optionUnderlying) && optionUnderlying > 0) {
-      const fanByProbability = new Map(options.fan.map((row) => [Number(row.probability), row]));
+      const fanByProbability = new Map(activeFan.map((row) => [Number(row.probability), row]));
       const lower = fanByProbability.get(.16);
       const upper = fanByProbability.get(.84);
       const fanStartDate = dates[dates.length - 1];
-      const earningsDate = options.earnings.date;
-      const expirationDate = options.chain.expiration;
-      const earningsX = x(earningsDate);
+      const fanStartX = x(fanStartDate);
+      const eventX = earningsDate ? x(earningsDate) : fanStartX;
       const expiryX = x(expirationDate);
 
       if (selectedStructure) {
-        const futureWidth = Math.max(expiryX - earningsX, 0);
+        const futureWidth = Math.max(expiryX - eventX, 0);
         const hasUpper = selectedStructure.upperBreakeven != null;
         const hasLower = selectedStructure.lowerBreakeven != null;
         const upperBreakevenY = hasUpper ? y(optionIndex(selectedStructure.upperBreakeven)) : null;
         const lowerBreakevenY = hasLower ? y(optionIndex(selectedStructure.lowerBreakeven)) : null;
         if (hasUpper) {
-          svg.appendChild(svgNode("rect", { x: earningsX, y: margin.top, width: futureWidth, height: Math.max(upperBreakevenY - margin.top, 0), class: "options-profit-zone" }));
+          svg.appendChild(svgNode("rect", { x: eventX, y: margin.top, width: futureWidth, height: Math.max(upperBreakevenY - margin.top, 0), class: "options-profit-zone" }));
         }
         if (hasUpper && hasLower) {
-          svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(lowerBreakevenY - upperBreakevenY, 0), class: "options-loss-zone" }));
-          svg.appendChild(svgNode("rect", { x: earningsX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
+          svg.appendChild(svgNode("rect", { x: eventX, y: upperBreakevenY, width: futureWidth, height: Math.max(lowerBreakevenY - upperBreakevenY, 0), class: "options-loss-zone" }));
+          svg.appendChild(svgNode("rect", { x: eventX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
         } else if (hasUpper) {
-          svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - upperBreakevenY, 0), class: "options-loss-zone" }));
+          svg.appendChild(svgNode("rect", { x: eventX, y: upperBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - upperBreakevenY, 0), class: "options-loss-zone" }));
         } else if (hasLower) {
-          svg.appendChild(svgNode("rect", { x: earningsX, y: margin.top, width: futureWidth, height: Math.max(lowerBreakevenY - margin.top, 0), class: "options-loss-zone" }));
-          svg.appendChild(svgNode("rect", { x: earningsX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
+          svg.appendChild(svgNode("rect", { x: eventX, y: margin.top, width: futureWidth, height: Math.max(lowerBreakevenY - margin.top, 0), class: "options-loss-zone" }));
+          svg.appendChild(svgNode("rect", { x: eventX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
         }
       }
 
       if (lower && upper) {
-        const band = [
-          `M${x(fanStartDate)},${y(lastSpotIndex)}`,
-          `L${earningsX},${y(optionIndex(upper.earningsPrice))}`,
-          `L${expiryX},${y(optionIndex(upper.expirationPrice))}`,
-          `L${expiryX},${y(optionIndex(lower.expirationPrice))}`,
-          `L${earningsX},${y(optionIndex(lower.earningsPrice))}`,
-          "Z",
-        ].join(" ");
-        svg.appendChild(svgNode("path", { d: band, class: "options-fan-band" }));
+        const band = termMode
+          ? [
+              `M${fanStartX},${y(lastSpotIndex)}`,
+              `L${expiryX},${y(optionIndex(upper.expirationPrice))}`,
+              `L${expiryX},${y(optionIndex(lower.expirationPrice))}`,
+              "Z",
+            ]
+          : [
+              `M${fanStartX},${y(lastSpotIndex)}`,
+              `L${eventX},${y(optionIndex(upper.earningsPrice))}`,
+              `L${expiryX},${y(optionIndex(upper.expirationPrice))}`,
+              `L${expiryX},${y(optionIndex(lower.expirationPrice))}`,
+              `L${eventX},${y(optionIndex(lower.earningsPrice))}`,
+              "Z",
+            ];
+        svg.appendChild(svgNode("path", { d: band.join(" "), class: "options-fan-band" }));
       }
       [.10, .25, .50, .75, .90].forEach((probability) => {
         const row = fanByProbability.get(probability);
         if (!row) return;
-        const path = [
-          `M${x(fanStartDate)},${y(lastSpotIndex)}`,
-          `L${earningsX},${y(optionIndex(row.earningsPrice))}`,
-          `L${expiryX},${y(optionIndex(row.expirationPrice))}`,
-        ].join(" ");
-        svg.appendChild(svgNode("path", { d: path, class: probability === .5 ? "options-fan-line median" : "options-fan-line" }));
+        const path = termMode
+          ? [
+              `M${fanStartX},${y(lastSpotIndex)}`,
+              `L${expiryX},${y(optionIndex(row.expirationPrice))}`,
+            ]
+          : [
+              `M${fanStartX},${y(lastSpotIndex)}`,
+              `L${eventX},${y(optionIndex(row.earningsPrice))}`,
+              `L${expiryX},${y(optionIndex(row.expirationPrice))}`,
+            ];
+        svg.appendChild(svgNode("path", { d: path.join(" "), class: probability === .5 ? "options-fan-line median" : "options-fan-line" }));
       });
 
       if (selectedStructure) {
@@ -361,22 +419,24 @@
           selectedStructure.upperBreakeven == null ? null : [selectedStructure.upperBreakeven, `UPPER BE · ${priceMoney(selectedStructure.upperBreakeven)}`, "options-breakeven-line"],
         ].filter(Boolean).forEach(([price, labelText, className]) => {
           const py = y(optionIndex(price));
-          svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: className }));
-          const label = svgNode("text", { x: earningsX - 7, y: py - 5, class: "options-level-label", "text-anchor": "end" });
+          svg.appendChild(svgNode("line", { x1: eventX, y1: py, x2: expiryX, y2: py, class: className }));
+          const label = svgNode("text", { x: eventX - 7, y: py - 5, class: "options-level-label", "text-anchor": "end" });
           label.textContent = labelText;
           svg.appendChild(label);
         });
         const strikeLevels = [...new Set([selectedStructure.put ? Number(selectedStructure.put.strike) : null, selectedStructure.call ? Number(selectedStructure.call.strike) : null].filter(Number.isFinite))];
         strikeLevels.forEach((price) => {
           const py = y(optionIndex(price));
-          svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: "options-strike-line" }));
+          svg.appendChild(svgNode("line", { x1: eventX, y1: py, x2: expiryX, y2: py, class: "options-strike-line" }));
         });
       }
 
-      svg.appendChild(svgNode("line", { x1: earningsX, y1: margin.top, x2: earningsX, y2: height - margin.bottom, class: "options-event-line" }));
-      const earningsLabel = svgNode("text", { x: earningsX, y: margin.top - 12, class: "options-event-label", "text-anchor": "middle" });
-      earningsLabel.textContent = `EARNINGS · ${dateLabel(earningsDate, false).toUpperCase()} · ${String(options.earnings.timing || "").toUpperCase()}`;
-      svg.appendChild(earningsLabel);
+      if (earningsDate) {
+        svg.appendChild(svgNode("line", { x1: eventX, y1: margin.top, x2: eventX, y2: height - margin.bottom, class: "options-event-line" }));
+        const earningsLabel = svgNode("text", { x: eventX, y: margin.top - 12, class: "options-event-label", "text-anchor": "middle" });
+        earningsLabel.textContent = `EARNINGS · ${dateLabel(earningsDate, false).toUpperCase()} · ${String(options.earnings.timing || "").toUpperCase()}`;
+        svg.appendChild(earningsLabel);
+      }
       svg.appendChild(svgNode("line", { x1: expiryX, y1: margin.top, x2: expiryX, y2: height - margin.bottom, class: "options-expiry-line" }));
       [[.90, "90th"], [.50, "median"], [.10, "10th"]].forEach(([probability, labelText]) => {
         const row = fanByProbability.get(probability);
