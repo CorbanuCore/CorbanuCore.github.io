@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+export PYTHONDONTWRITEBYTECODE=1
+
 nav_root=${NAVSTRATEGIES_ROOT:-/home/postfiat/repos/navstrategies}
 publisher_root=${CORBANU_MARKET_LENS_PUBLISH_ROOT:-/home/postfiat/var/corbanu-market-lens-publisher}
 remote_url=https://github.com/CorbanuCore/CorbanuCore.github.io.git
