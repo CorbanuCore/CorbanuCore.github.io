@@ -6,15 +6,15 @@
   <meta name="description" content="Compare MRVL spot total return with Hyperliquid perpetual-swap total return, including realized funding.">
   <meta name="theme-color" content="#030403">
   <meta property="og:title" content="MRVL Spot and Swap Total Return — Corbanu">
-  <meta property="og:description" content="Marvell Technology spot and funding-inclusive perpetual-swap return history on one anchored scale.">
+  <meta property="og:description" content="Marvell Technology terminal-anchored spot and funding-inclusive perpetual-swap price history.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://corbanu.com/mrvl/">
   <link rel="canonical" href="https://corbanu.com/mrvl/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=ada32d6ba028">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=3d9ce443a3ae">
   <title>MRVL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="mrvl" data-market-version="ada32d6ba028">
+<body data-market-slug="mrvl" data-market-version="3d9ce443a3ae">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -64,9 +64,14 @@
         </header>
         <p class="mobile-scroll-note">Swipe chart horizontally · use arrow keys to inspect dates</p>
         <div class="chart-scroll">
-          <div id="market-chart-stage" class="chart-stage" tabindex="0" role="region" aria-label="Interactive total-return chart" aria-describedby="chart-disclosure">
+          <div id="market-chart-stage" class="chart-stage" tabindex="0" role="region" aria-label="Interactive total-return price chart" aria-describedby="chart-disclosure">
             <div class="chart-loading">Loading spot and swap history…</div>
           </div>
+        </div>
+        <div class="distribution-center-controls" role="group" aria-label="Options distribution center">
+          <span>Distribution center</span>
+          <button type="button" data-distribution-center="spot" aria-pressed="true">Center distribution for Spot</button>
+          <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
@@ -156,7 +161,7 @@
           <p id="onchain-note" class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed measured 24-hour turnover. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. Ethereum Uniswap V3 and PancakeSwap V3 price and depth come directly from factory-verified pools and quoter calls; PancakeSwap 24-hour volume and TVL are indexed pool-event statistics. Robinhood bid and ask are official multiplier-adjusted reference prices. A Robinhood route marked unmeasured means the custom Uniswap/Pleiades route exists but its executable depth and turnover are unavailable to this adapter; it does not mean zero liquidity. Underlying share volume is excluded. AMM TVL is shown separately from executable depth. Issuer, custody, redemption, eligibility, fees, slippage, and venue risk differ.</p>
         </section>
       </div>
-      <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks run seven days a week and include realized hourly funding. Both series close at 100 on their first shared session. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions.</p>
+      <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks run seven days a week. Each history is scaled to its own latest raw USD close: prior spot levels include gross dividends and prior perp levels include realized hourly funding. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions.</p>
     </section>
   </main>
 
@@ -165,6 +170,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=ada32d6ba028"></script>
+  <script src="/assets/js/market-lens.js?v=3d9ce443a3ae"></script>
 </body>
 </html>

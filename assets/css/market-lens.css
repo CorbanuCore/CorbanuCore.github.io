@@ -119,6 +119,18 @@ main { min-height: 80vh; }
 .range-controls button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .mobile-scroll-note { display: none; margin: 0; padding: .75rem 1.2rem 0; color: var(--dim); font: .65rem/1.4 var(--mono); text-transform: uppercase; }
 .chart-scroll { max-width: 100%; overflow-x: auto; overflow-y: hidden; scrollbar-color: rgba(204, 255, 0, .55) rgba(255, 255, 255, .06); }
+.distribution-center-controls {
+  display: flex; align-items: center; justify-content: flex-end; gap: .45rem;
+  padding: .65rem 2rem; border-top: 1px solid rgba(255, 255, 255, .08); background: rgba(3, 4, 3, .66);
+}
+.distribution-center-controls > span { margin-right: .35rem; color: #858d80; font: 700 .52rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.distribution-center-controls button {
+  min-height: 36px; padding: .45rem .7rem; color: #aeb5aa; border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 4px; background: transparent; cursor: pointer; font: 700 .57rem/1 var(--mono); letter-spacing: .035em;
+}
+.distribution-center-controls button:hover { color: var(--ink); border-color: rgba(255, 255, 255, .3); }
+.distribution-center-controls button[aria-pressed="true"] { color: var(--lime); border-color: rgba(204, 255, 0, .45); background: rgba(204, 255, 0, .045); }
+.distribution-center-controls button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
 .chart-stage { position: relative; min-width: 820px; height: clamp(430px, 49vw, 650px); min-height: 430px; }
 .chart-stage:focus-visible { outline: 2px solid var(--lime); outline-offset: -4px; }
 .chart-stage svg { display: block; width: 100%; height: 100%; touch-action: pan-x; }
@@ -463,6 +475,9 @@ footer {
   .range-controls { width: 100%; }
   .range-controls button { flex: 1; min-width: 44px; }
   .mobile-scroll-note { display: block; }
+  .distribution-center-controls { flex-wrap: wrap; justify-content: flex-start; padding: .7rem 1.15rem; }
+  .distribution-center-controls > span { flex: 0 0 100%; margin: 0 0 .15rem; }
+  .distribution-center-controls button { flex: 1 1 150px; min-height: 44px; }
   .chart-stage { height: 460px; }
   .ratio-head { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: .75rem; padding: 1.1rem 1.15rem .75rem; }
   .ratio-head strong { justify-self: start; white-space: normal; }
