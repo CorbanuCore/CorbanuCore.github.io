@@ -7,6 +7,7 @@ from scripts.refresh_earnings_options import (
     _historical_scenarios,
     _pava,
     _payout_statistics,
+    _rank_historical_structures,
 )
 
 
@@ -79,6 +80,45 @@ class EarningsOptionsHistoryTests(unittest.TestCase):
         )
         self.assertEqual(result["profitableEvents"], 1)
         self.assertEqual(result["averageGrossPayoutMultiple"], 4.0)
+
+    def test_structure_ranking_returns_top_two_without_strike_spacing(self) -> None:
+        def contract(put_call: str, strike: float, ask: float) -> dict[str, object]:
+            return {
+                "putCall": put_call,
+                "strike": strike,
+                "ask": ask,
+                "volume": 100,
+                "openInterest": 1_000,
+            }
+
+        tradable = [
+            contract("CALL", 100, 5),
+            contract("PUT", 100, 5),
+            contract("CALL", 105, 4),
+            contract("CALL", 107, 3.5),
+            contract("CALL", 112, 3),
+            contract("PUT", 95, 4),
+            contract("PUT", 93, 3.5),
+            contract("PUT", 88, 3),
+        ]
+        scenarios = []
+        for index in range(12):
+            exit_price = 120.0 if index % 2 == 0 else 80.0
+            scenarios.append({
+                "earningsDate": f"2025-{index + 1:02d}-01",
+                "entryDate": f"2024-{index + 1:02d}-01",
+                "exitDate": f"2025-{index + 1:02d}-02",
+                "entryPrice": 100.0,
+                "exitPrice": exit_price,
+                "underlyingReturnPct": exit_price - 100.0,
+            })
+
+        ranked = _rank_historical_structures(tradable, spot=100.0, scenarios=scenarios)
+
+        self.assertEqual(
+            [row["name"] for row in ranked],
+            ["ATM straddle", "$105 call", "$107 call", "$95 put", "$93 put"],
+        )
 
     def test_isotonic_fit_produces_increasing_cdf(self) -> None:
         fitted = _pava([

@@ -322,7 +322,7 @@ def _rank_historical_structures(
         lifetime = _payout_statistics(
             scenarios, put_ratio=None, call_ratio=float(call["strike"]) / spot, premium_ratio=premium_ratio
         )
-        score = trailing["averageGrossPayoutMultiple"] * math.sqrt(trailing["profitableRatePct"] / 100.0)
+        score = trailing["averageGrossPayoutMultiple"]
         call_candidates.append({
             "name": f"${float(call['strike']):g} call",
             "structure": "long call",
@@ -339,23 +339,17 @@ def _rank_historical_structures(
             "fullHistory": lifetime,
             "rankingScore": round(score, 4),
         })
-    call_candidates.sort(key=lambda row: (row["rankingScore"], row["combinedVolume"]), reverse=True)
-    if len(call_candidates) < 2:
-        return []
-    balanced_call = call_candidates[0]
-    farther_calls = [
-        row for row in call_candidates
-        if float(row["call"]["strike"]) >= float(balanced_call["call"]["strike"]) + spot * 0.03
-    ]
-    convex_call = max(
-        farther_calls or call_candidates[1:],
+    call_candidates.sort(
         key=lambda row: (
-            row["trailing12"]["averageWinnerPayoutMultiple"]
-            * math.sqrt(row["trailing12"]["profitableRatePct"] / 100.0),
-            row["trailing12"]["averageGrossPayoutMultiple"],
+            row["rankingScore"],
+            row["trailing12"]["profitableRatePct"],
             row["combinedVolume"],
         ),
+        reverse=True,
     )
+    if len(call_candidates) < 2:
+        return []
+    top_calls = call_candidates[:2]
 
     put_candidates: list[dict[str, Any]] = []
     for put in (row for row in puts if float(row["strike"]) <= spot * 0.95):
@@ -369,7 +363,7 @@ def _rank_historical_structures(
         lifetime = _payout_statistics(
             scenarios, put_ratio=float(put["strike"]) / spot, call_ratio=None, premium_ratio=premium_ratio
         )
-        score = trailing["averageGrossPayoutMultiple"] * math.sqrt(trailing["profitableRatePct"] / 100.0)
+        score = trailing["averageGrossPayoutMultiple"]
         put_candidates.append({
             "name": f"${float(put['strike']):g} put",
             "structure": "long put",
@@ -386,24 +380,18 @@ def _rank_historical_structures(
             "fullHistory": lifetime,
             "rankingScore": round(score, 4),
         })
-    put_candidates.sort(key=lambda row: (row["rankingScore"], row["combinedVolume"]), reverse=True)
-    if len(put_candidates) < 2:
-        return []
-    balanced_put = put_candidates[0]
-    farther_puts = [
-        row for row in put_candidates
-        if float(row["put"]["strike"]) <= float(balanced_put["put"]["strike"]) - spot * 0.03
-    ]
-    convex_put = max(
-        farther_puts or put_candidates[1:],
+    put_candidates.sort(
         key=lambda row: (
-            row["trailing12"]["averageWinnerPayoutMultiple"]
-            * math.sqrt(row["trailing12"]["profitableRatePct"] / 100.0),
-            row["trailing12"]["averageGrossPayoutMultiple"],
+            row["rankingScore"],
+            row["trailing12"]["profitableRatePct"],
             row["combinedVolume"],
         ),
+        reverse=True,
     )
-    return [straddle, balanced_call, convex_call, balanced_put, convex_put]
+    if len(put_candidates) < 2:
+        return []
+    top_puts = put_candidates[:2]
+    return [straddle, *top_calls, *top_puts]
 
 
 def build_payload(raw: dict[str, Any], *, now: datetime) -> dict[str, Any]:
