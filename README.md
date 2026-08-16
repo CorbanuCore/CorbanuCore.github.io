@@ -45,7 +45,45 @@ python3 scripts/refresh_onchain_spot_catalog.py
   scripts/build_market_pages.py
 ```
 
-`corbanu-market-lens-refresh.timer` runs the complete source refresh, validation,
-commit, and GitHub Pages push daily after the 16:00 New York close. It fails
-closed when the site worktree is dirty or local `main` differs from
-`origin/main`.
+## Automated publication protocol
+
+`corbanu-market-lens-refresh.timer` runs the complete source refresh,
+validation, commit, and GitHub Pages push daily after the 16:00 New York close.
+The publisher uses `/home/postfiat/var/corbanu-market-lens-publisher`, an
+isolated automation clone, so development work in this repository cannot block
+the daily update.
+
+Each run follows one ordered protocol:
+
+1. Acquire a host lock and require the checked-out navstrategies code to match
+   `origin/master`. Untracked research artifacts are outside the publication
+   boundary.
+2. Fast-forward the isolated publisher clone to `origin/main`. If the preceding
+   run committed locally but lost its push connection, retry that exact commit.
+   Residual pre-commit output is moved to a timestamped quarantine clone before
+   recovery; a true branch divergence stops the run for operator review.
+3. Refresh Bloomberg/Tiingo/Bitfinex spot history, Hyperliquid candles and
+   realized funding, forward-funding forecasts, direct on-chain venues, and
+   listed-options inputs.
+4. Rebuild all 37 static Market Lens payloads and pages, then run JavaScript
+   syntax, live-price-client, terminal-anchor, options, and venue validation.
+5. Stage only generated Market Lens JSON and page HTML. Publish one timestamped
+   commit to `main`, then verify the local and remote commit IDs match.
+
+Install or refresh the checked-in user units with:
+
+```bash
+install -Dm644 ops/systemd/corbanu-market-lens-refresh.service \
+  /home/postfiat/.config/systemd/user/corbanu-market-lens-refresh.service
+install -Dm644 ops/systemd/corbanu-market-lens-refresh.timer \
+  /home/postfiat/.config/systemd/user/corbanu-market-lens-refresh.timer
+systemctl --user daemon-reload
+systemctl --user enable --now corbanu-market-lens-refresh.timer
+```
+
+A manual production refresh uses the same path:
+
+```bash
+systemctl --user start corbanu-market-lens-refresh.service
+journalctl --user -u corbanu-market-lens-refresh.service -n 100 --no-pager
+```

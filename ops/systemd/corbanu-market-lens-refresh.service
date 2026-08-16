@@ -1,0 +1,14 @@
+[Unit]
+Description=Refresh and publish Corbanu Market Lens
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/postfiat/repos/corbanucore.github.io
+ExecStart=/home/postfiat/repos/corbanucore.github.io/scripts/publish_market_lens.sh
+Environment=PYTHONUNBUFFERED=1
+Environment=GIT_TERMINAL_PROMPT=0
+Environment=CORBANU_MARKET_LENS_PUBLISH_ROOT=/home/postfiat/var/corbanu-market-lens-publisher
+Nice=5
+TimeoutStartSec=45min

@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily Corbanu Market Lens close refresh
+
+[Timer]
+OnCalendar=*-*-* 21:20:00 UTC
+RandomizedDelaySec=5m
+Persistent=true
+Unit=corbanu-market-lens-refresh.service
+
+[Install]
+WantedBy=timers.target
