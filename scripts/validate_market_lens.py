@@ -27,6 +27,7 @@ def main() -> int:
     listed_cex_markets = 0
     contract_backed_dex_routes = 0
     validated_option_contracts = 0
+    validated_historical_structures = 0
     for instrument in instruments:
         slug = str(instrument["slug"])
         payload = load_json(DATA_ROOT / f"{slug}.json")
@@ -90,7 +91,22 @@ def main() -> int:
                     raise AssertionError("aapl: option row lacks a two-sided executable quote")
                 if float(contract["spreadPct"]) > maximum_spread:
                     raise AssertionError("aapl: option row violates the published spread gate")
+            historical = options.get("historicalAnalysis") or {}
+            if int(historical.get("availableEvents") or 0) < 12:
+                raise AssertionError("aapl: fewer than 12 comparable earnings events")
+            structures = historical.get("structures") or []
+            if not 1 <= len(structures) <= 3:
+                raise AssertionError("aapl: expected one to three concise historical structures")
+            for structure in structures:
+                if int(structure.get("minimumLegVolume") or 0) < 25:
+                    raise AssertionError("aapl: historical structure violates the per-leg volume gate")
+                recent = structure.get("trailing12") or {}
+                if int(recent.get("events") or 0) != 12:
+                    raise AssertionError("aapl: historical structure does not use exactly 12 recent events")
+                if len(recent.get("outcomes") or []) != 12:
+                    raise AssertionError("aapl: historical payout tape is incomplete")
             validated_option_contracts = len(contracts)
+            validated_historical_structures = len(structures)
 
         if not (SITE_ROOT / slug / "index.html").exists():
             raise AssertionError(f"{slug}: generated page is missing")
@@ -99,7 +115,8 @@ def main() -> int:
         f"validated {len(instruments)} Market Lens pages: "
         f"{listed_cex_markets} listed CEX markets, "
         f"{contract_backed_dex_routes} contract-backed DEX routes, "
-        f"{validated_option_contracts} liquid AAPL option inputs"
+        f"{validated_option_contracts} liquid AAPL option inputs and "
+        f"{validated_historical_structures} historical structures"
     )
     return 0
 

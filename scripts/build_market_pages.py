@@ -88,8 +88,8 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
           <header class="earnings-options-head">
             <div>
               <span class="earnings-options-kicker">Listed options · event distribution</span>
-              <h2 id="earnings-options-title">{symbol} Earnings Probability Cone</h2>
-              <p>Risk-neutral probabilities inferred only from liquid two-sided option quotes.</p>
+              <h2 id="earnings-options-title">{symbol} Earnings Probability and Historical Payouts</h2>
+              <p>Current risk-neutral distribution plus volume-screened structures replayed around prior earnings.</p>
             </div>
             <span id="earnings-options-asof" class="earnings-options-asof">Loading chain…</span>
           </header>
@@ -97,15 +97,16 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
             <div><small>Next earnings</small><strong id="options-earnings-date">—</strong><span id="options-earnings-timing">—</span></div>
             <div><small>Implied 68% move</small><strong id="options-implied-move">—</strong><span id="options-event-range">—</span></div>
             <div><small>Chain used</small><strong id="options-chain-expiry">—</strong><span>First liquid expiry after the event</span></div>
-            <div><small>Liquid inputs</small><strong id="options-contract-count">—</strong><span id="options-filter-short">—</span></div>
+            <div><small>Historical replay</small><strong id="options-history-count">—</strong><span id="options-history-window">—</span></div>
           </div>
-          <div class="options-table-scroll" tabindex="0" role="region" aria-label="Liquid option contracts used in the earnings probability cone">
-            <table class="options-table">
-              <thead><tr><th>Contract</th><th>Strike</th><th>Bid</th><th>Ask</th><th>Mid</th><th>Spread</th><th>Volume</th><th>Open interest</th><th>IV</th><th>Delta</th></tr></thead>
-              <tbody id="options-contract-rows"><tr><td colspan="10">Loading liquid chain…</td></tr></tbody>
-            </table>
-          </div>
-          <p id="options-method-note" class="options-method-note">Adjacent liquid vertical spreads infer the risk-neutral distribution. These are market-implied prices under the pricing measure, not historical outcome frequencies.</p>
+          <section class="historical-plays" aria-labelledby="historical-plays-title">
+            <header>
+              <div><span>Volume-screened structures</span><h3 id="historical-plays-title">Current earnings setups with historical payout context</h3></div>
+              <p>Ask-price debit · same normalized strikes · same event horizon</p>
+            </header>
+            <div id="historical-play-cards" class="historical-play-cards"><div class="historical-play-loading">Replaying prior earnings…</div></div>
+          </section>
+          <p id="options-method-note" class="options-method-note">Historical replay loading…</p>
         </section>"""
     ratio_subtitle = (
         "1.00 = equal return since shared anchor · XAUT sampled on the same seven-day New York session"

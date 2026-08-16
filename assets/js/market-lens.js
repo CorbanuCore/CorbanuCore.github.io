@@ -155,25 +155,31 @@
     text("options-implied-move", `±${number(options.summary.impliedEarningsMovePct, 2)}%`);
     text("options-event-range", `${priceMoney(options.summary.event68Low)} to ${priceMoney(options.summary.event68High)}`);
     text("options-chain-expiry", dateLabel(options.chain.expiration, true));
-    text("options-contract-count", `${options.chain.liquidContractsUsed} / ${options.chain.totalContractsReturned}`);
-    text("options-filter-short", `≤${number(options.liquidityFilter.maxBidAskSpreadPct, 1)}% spread · OI or volume gate`);
-    const rows = $("options-contract-rows");
-    if (rows) {
-      rows.innerHTML = options.contracts.map((contract) => `<tr>
-        <td><strong class="option-side ${contract.putCall.toLowerCase()}">${escapeHtml(contract.putCall)}</strong><small>${escapeHtml(contract.symbol)}</small></td>
-        <td>${priceMoney(contract.strike)}</td>
-        <td>${priceMoney(contract.bid)}</td>
-        <td>${priceMoney(contract.ask)}</td>
-        <td>${priceMoney(contract.mid)}</td>
-        <td>${number(contract.spreadPct, 2)}%</td>
-        <td>${Number(contract.volume).toLocaleString("en-US")}</td>
-        <td>${Number(contract.openInterest).toLocaleString("en-US")}</td>
-        <td>${number(contract.impliedVolPct, 2)}%</td>
-        <td>${number(contract.delta, 3)}</td>
-      </tr>`).join("");
+    const history = options.historicalAnalysis;
+    text("options-history-count", history ? `12 of ${history.availableEvents} events` : "—");
+    text("options-history-window", history ? `${history.entryLeadCalendarDays}d before · ${history.postEarningsCalendarDays}d after` : "—");
+    const cards = $("historical-play-cards");
+    if (cards && history) {
+      cards.innerHTML = history.structures.map((play) => {
+        const recent = play.trailing12;
+        const lifetime = play.fullHistory;
+        const tape = recent.outcomes.map((outcome) => `<span class="payout-tape-cell${outcome.profitable ? " profitable" : ""}" title="${escapeHtml(dateLabel(outcome.earningsDate, true))}: ${number(outcome.grossPayoutMultiple, 2)}× gross payout; underlying ${percent(outcome.underlyingReturnPct, 1)}"><b>${number(outcome.grossPayoutMultiple, 1)}×</b><small>${escapeHtml(outcome.earningsDate.slice(2, 7))}</small></span>`).join("");
+        return `<article class="historical-play-card">
+          <header><div><span>${escapeHtml(play.selectionLabel)}</span><h4>${escapeHtml(play.name)}</h4></div><strong>${number(recent.averageWinnerPayoutMultiple, 2)}× <small>avg winner</small></strong></header>
+          <p class="play-legs">Long ${priceMoney(play.put.strike)} put <b>@ ${priceMoney(play.put.ask)}</b> + ${priceMoney(play.call.strike)} call <b>@ ${priceMoney(play.call.ask)}</b></p>
+          <div class="play-metrics">
+            <div><small>Profitable · last 12</small><strong>${recent.profitableEvents} / ${recent.events}</strong><span>${number(recent.profitableRatePct, 1)}% of events</span></div>
+            <div><small>Average gross payout</small><strong>${number(recent.averageGrossPayoutMultiple, 2)}×</strong><span>includes zero-payoff losses</span></div>
+            <div><small>Maximum gross payout</small><strong>${number(recent.maximumGrossPayoutMultiple, 2)}×</strong><span>last 12 events</span></div>
+          </div>
+          <div class="play-cost"><span>Ask debit <b>${priceMoney(play.debitAsk)}</b> · ${number(play.debitPctSpot, 2)}% of spot</span><span>Breakevens <b>${priceMoney(play.lowerBreakeven)} / ${priceMoney(play.upperBreakeven)}</b></span></div>
+          <div class="payout-tape" aria-label="Gross payout multiple across the latest 12 earnings events">${tape}</div>
+          <footer><span><b>${Number(play.combinedVolume).toLocaleString("en-US")}</b> combined volume · minimum leg ${Number(play.minimumLegVolume).toLocaleString("en-US")}</span><span>Full history: <b>${lifetime.profitableEvents}/${lifetime.events}</b> profitable · <b>${number(lifetime.averageGrossPayoutMultiple, 2)}×</b> average gross</span></footer>
+        </article>`;
+      }).join("");
     }
     const note = $("options-method-note");
-    if (note) note.textContent = `${options.model.description} Filter: standard 100-share contracts, two-sided quotes, spread no wider than ${number(options.liquidityFilter.maxBidAskSpreadPct, 1)}%, ${options.liquidityFilter.minimumOpenInterestOrVolume}, and quotes no older than ${options.liquidityFilter.maximumQuoteAgeDays} days. The fan is mapped to the chart’s spot total-return scale at the chain underlying price; dollar labels remain actual option-implied prices. ${options.model.measure}.`;
+    if (note && history) note.textContent = `${options.model.description} Current structure screen requires volume of at least 25 contracts in each leg in addition to the published spread and open-interest gates. Historical replay: ${history.method} Limitation: ${history.limitation} The fan is mapped to the chart’s spot total-return scale; dollar labels remain actual option-implied prices.`;
   }
 
   function cutoffForRange(data) {

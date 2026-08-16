@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/aapl/">
   <link rel="canonical" href="https://corbanu.com/aapl/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=ae3e9008cc6d">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=51dd0c2d3573">
   <title>AAPL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="aapl" data-market-version="ae3e9008cc6d">
+<body data-market-slug="aapl" data-market-version="51dd0c2d3573">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -63,8 +63,8 @@
           <header class="earnings-options-head">
             <div>
               <span class="earnings-options-kicker">Listed options · event distribution</span>
-              <h2 id="earnings-options-title">AAPL Earnings Probability Cone</h2>
-              <p>Risk-neutral probabilities inferred only from liquid two-sided option quotes.</p>
+              <h2 id="earnings-options-title">AAPL Earnings Probability and Historical Payouts</h2>
+              <p>Current risk-neutral distribution plus volume-screened structures replayed around prior earnings.</p>
             </div>
             <span id="earnings-options-asof" class="earnings-options-asof">Loading chain…</span>
           </header>
@@ -72,15 +72,16 @@
             <div><small>Next earnings</small><strong id="options-earnings-date">—</strong><span id="options-earnings-timing">—</span></div>
             <div><small>Implied 68% move</small><strong id="options-implied-move">—</strong><span id="options-event-range">—</span></div>
             <div><small>Chain used</small><strong id="options-chain-expiry">—</strong><span>First liquid expiry after the event</span></div>
-            <div><small>Liquid inputs</small><strong id="options-contract-count">—</strong><span id="options-filter-short">—</span></div>
+            <div><small>Historical replay</small><strong id="options-history-count">—</strong><span id="options-history-window">—</span></div>
           </div>
-          <div class="options-table-scroll" tabindex="0" role="region" aria-label="Liquid option contracts used in the earnings probability cone">
-            <table class="options-table">
-              <thead><tr><th>Contract</th><th>Strike</th><th>Bid</th><th>Ask</th><th>Mid</th><th>Spread</th><th>Volume</th><th>Open interest</th><th>IV</th><th>Delta</th></tr></thead>
-              <tbody id="options-contract-rows"><tr><td colspan="10">Loading liquid chain…</td></tr></tbody>
-            </table>
-          </div>
-          <p id="options-method-note" class="options-method-note">Adjacent liquid vertical spreads infer the risk-neutral distribution. These are market-implied prices under the pricing measure, not historical outcome frequencies.</p>
+          <section class="historical-plays" aria-labelledby="historical-plays-title">
+            <header>
+              <div><span>Volume-screened structures</span><h3 id="historical-plays-title">Current earnings setups with historical payout context</h3></div>
+              <p>Ask-price debit · same normalized strikes · same event horizon</p>
+            </header>
+            <div id="historical-play-cards" class="historical-play-cards"><div class="historical-play-loading">Replaying prior earnings…</div></div>
+          </section>
+          <p id="options-method-note" class="options-method-note">Historical replay loading…</p>
         </section>
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
@@ -150,6 +151,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=ae3e9008cc6d"></script>
+  <script src="/assets/js/market-lens.js?v=51dd0c2d3573"></script>
 </body>
 </html>
