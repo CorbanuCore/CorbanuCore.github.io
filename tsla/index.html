@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/tsla/">
   <link rel="canonical" href="https://corbanu.com/tsla/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>TSLA Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="tsla" data-market-version="cf6e41984093">
+<body data-market-slug="tsla" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>TSLA perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>TSLA spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">TSLA Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>TSLA trades mainly as a high-beta mega-cap growth stock with EV, AI, autonomy, and rate-duration exposure. XYZ100 is the cleanest equity_index or equity_etf proxy for that Nasdaq-style growth factor in CORE_UNIVERSE, and its displayed 24-hour perp liquidity is 21.944 USD millions, which is deep enough for the hedge while staying more growth-specific than SP500.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>25.9%</td><td>$3.384M</td><td>3/3</td><td>Closest single-name expression of the AI compute and autonomy optionality that supports TSLA&#x27;s valuation, with similar high-beta growth sensitivity. Its displayed 24-hour perp liquidity is 3.384 USD millions, near TSLA at 4.551 USD millions, so it can carry the largest peer weight.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>18.7%</td><td>$2.262M</td><td>3/3</td><td>Alphabet combines AI infrastructure, consumer software scale, and direct autonomy exposure through Waymo, making it economically close to Tesla&#x27;s robotaxi and software ambitions; 24-hour perp liquidity is 2.262 USD millions.</td></tr><tr><td><strong>AAPL</strong><span>Apple</span></td><td>16.9%</td><td>$1.422M</td><td>3/3</td><td>Mega-cap consumer technology with ecosystem pricing power, hardware scale, and strong retail and institutional recognition, making it a useful comparator for TSLA&#x27;s brand-driven growth premium. Displayed 24-hour perp liquidity is 1.422 USD millions, below TSLA but still adequate for a large weight.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>14.0%</td><td>$1.386M</td><td>3/3</td><td>Provides lower-volatility mega-cap AI and cloud exposure, useful as a stabilizing peer against TSLA while still sharing the same growth-factor and rate-sensitive ownership base. Displayed 24-hour perp liquidity is 1.386 USD millions, so the weight is meaningful but not dominant.</td></tr><tr><td><strong>META</strong><span>Meta Platforms</span></td><td>11.2%</td><td>$1.343M</td><td>3/3</td><td>Meta adds high-beta AI platform exposure and consumer digital demand sensitivity, with 1.343 USD millions of displayed liquidity, slightly below AAPL and MSFT.</td></tr><tr><td><strong>AMD</strong><span>Advanced Micro Devices</span></td><td>9.0%</td><td>$1.180M</td><td>3/3</td><td>AMD is a higher-beta AI-compute and semiconductor comparable for Tesla&#x27;s autonomy hardware cycle; its 1.18 USD millions of displayed liquidity support a moderate but not leading weight.</td></tr><tr><td><strong>AMZN</strong><span>Amazon</span></td><td>4.3%</td><td>$0.462M</td><td>2/3</td><td>Consumer discretionary, cloud, logistics, and AI investment overlap with parts of TSLA&#x27;s demand and capital-spending story, but the business mix is broader and less pure. Displayed 24-hour perp liquidity is only 0.462 USD millions, far under TSLA&#x27;s 4.551 USD millions, so the weight is cut.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block is a long-only relative-value peer set for TSLA with eight single-name equities, built to emphasize economic comparability first and then respect the displayed 24-hour perp liquidity stated in USD millions. TSLA shows displayed 24-hour perp liquidity of 4.551 USD millions. NVDA receives the largest weight because AI compute and autonomy are the closest shared valuation drivers and its liquidity is 3.384 USD millions, nearest to TSLA among the higher-comparability names. AAPL, GOOGL, MSFT, and META form the mega-cap growth and AI ownership core, with displayed liquidity of 1.422 USD millions, 2.262 USD millions, 1.386 USD millions, and 1.343 USD millions. AMD adds a more cyclical semiconductor leg at 1.180 USD millions. AMZN and BE are reduced because their displayed liquidity is much thinner at 0.462 USD millions and 0.582 USD millions, even though AMZN has consumer and cloud overlap and BE has energy-transition overlap. The weights are positive and sum to exactly 1. The primary hedge is XYZ100 rather than SP500 because TSLA&#x27;s dominant risk is Nasdaq-style mega-cap growth, AI, and duration-sensitive beta; XYZ100 has displayed 24-hour perp liquidity of 21.944 USD millions, while SP500 is deeper at 30.814 USD millions but broader and less specific to TSLA&#x27;s factor mix.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

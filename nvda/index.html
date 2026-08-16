@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/nvda/">
   <link rel="canonical" href="https://corbanu.com/nvda/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>NVDA Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="nvda" data-market-version="cf6e41984093">
+<body data-market-slug="nvda" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>NVDA perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>NVDA spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">NVDA Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>Nasdaq-100 is the cleaner primary hedge for NVIDIA because it matches megacap technology, growth, and AI beta more closely than the broader S&amp;P 500; XYZ100 shows 21.944 USD millions of displayed 24-hour perp liquidity versus 30.814 USD millions for SP500, so liquidity is sufficient while factor fit is better.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>AMD</strong><span>Advanced Micro Devices</span></td><td>23.2%</td><td>$1.180M</td><td>3/3</td><td>Most direct single-name comparator in GPUs and AI accelerators, but its displayed 24-hour perp liquidity of 1.18 USD millions is below NVDA&#x27;s 3.384 USD millions, so the weight is large but not dominant.</td></tr><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>19.3%</td><td>$11.877M</td><td>3/3</td><td>High-bandwidth memory and AI server memory exposure give strong NVDA supply-chain comparability, and its displayed 24-hour perp liquidity of 11.877 USD millions supports a large sleeve.</td></tr><tr><td><strong>MRVL</strong><span>Marvell Technology</span></td><td>13.2%</td><td>$1.269M</td><td>3/3</td><td>Data-center interconnect, networking, and custom silicon exposure make it economically relevant to NVDA&#x27;s AI systems cycle, with displayed 24-hour perp liquidity of 1.269 USD millions keeping the weight moderate.</td></tr><tr><td><strong>INTC</strong><span>Intel</span></td><td>8.9%</td><td>$6.434M</td><td>3/3</td><td>Semiconductor manufacturing, CPUs, and AI adjacency provide partial comparability; its displayed 24-hour perp liquidity of 6.434 USD millions is ample, but the business mix is less similar than AMD or MRVL.</td></tr><tr><td><strong>SKHX</strong><span>SK hynix common</span></td><td>10.4%</td><td>$18.246M</td><td>2/3</td><td>SK hynix common adds HBM and advanced memory comparability with very deep 24-hour perp liquidity of 18.246 USD millions, so it is weighted close to MU.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>8.2%</td><td>$2.262M</td><td>2/3</td><td>AI compute demand, TPU development, and data-center monetization create a customer-and-platform link to NVDA, with displayed 24-hour perp liquidity of 2.262 USD millions consistent with a medium weight.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>7.9%</td><td>$1.386M</td><td>2/3</td><td>Microsoft represents hyperscale AI capital spending and accelerator demand; its displayed 24-hour perp liquidity is 1.386 USD millions, supporting a meaningful but not dominant weight.</td></tr><tr><td><strong>AMZN</strong><span>Amazon</span></td><td>4.6%</td><td>$0.462M</td><td>2/3</td><td>Amazon is included for cloud AI capital spending and demand, but its displayed 24-hour perp liquidity is only 0.462 USD millions, so the weight is kept smaller.</td></tr><tr><td><strong>NBIS</strong><span>Nebius Group</span></td><td>4.3%</td><td>$2.350M</td><td>2/3</td><td>Nebius is an AI infrastructure and cloud capacity proxy rather than a chip supplier, so it receives the smallest weight despite 24-hour perp liquidity of 2.35 USD millions being reasonably close to NVDA&#x27;s 3.384 USD millions.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block uses XYZ100 as the sole primary index hedge and nine positive-weight single-name peers that sum to exactly 1. The construction overweights direct AI accelerator competition, HBM and DRAM supply, and hyperscale AI demand, then adds adjacent data-center silicon. Liquidity is respected but not allowed to override comparability: INTC has 6.434 USD millions of displayed 24-hour perp liquidity yet stays small because its AI-GPU overlap is weaker, while AMZN has only 0.462 USD millions and is sized accordingly. All references preserve the displayed liquidity unit, USD millions.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

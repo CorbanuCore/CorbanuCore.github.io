@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/mu/">
   <link rel="canonical" href="https://corbanu.com/mu/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>MU Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="mu" data-market-version="cf6e41984093">
+<body data-market-slug="mu" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>MU perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>MU spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">MU Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>Nasdaq-100 is the cleaner single index hedge for MU&#x27;s large-cap growth and semiconductor beta, and its displayed 24-hour perp liquidity is 21.944 USD millions; the peer basket is left to express memory-specific relative value.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>SNDK</strong><span>Sandisk</span></td><td>25.6%</td><td>$31.164M</td><td>3/3</td><td>Sandisk is the closest pure-play business comparator, a dedicated NAND flash memory and storage vendor exposed to the same commodity memory pricing cycle as Micron&#x27;s storage segment. Its displayed 24-hour perp liquidity of 31.164 USD millions is the deepest single-name line in CORE_UNIVERSE, which supports assigning it the largest peer weight.</td></tr><tr><td><strong>SKHX</strong><span>SK hynix common</span></td><td>25.3%</td><td>$18.246M</td><td>3/3</td><td>SK hynix common is Micron&#x27;s most direct DRAM oligopoly competitor, with high-bandwidth memory exposure that mirrors Micron&#x27;s AI-driven product mix, making its revenue and margin drivers nearly one-for-one comparable. Displayed 24-hour perp liquidity of 18.246 USD millions is the second-deepest single-name line available, justifying a near-equal top weight.</td></tr><tr><td><strong>SMSN</strong><span>Samsung Electronics common</span></td><td>14.8%</td><td>$2.550M</td><td>3/3</td><td>Large-scale DRAM and NAND exposure with similar memory-cycle economics; displayed 24-hour perp liquidity is 2.55 USD millions, so the weight is meaningful but liquidity-capped below SKHX and SNDK.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>11.4%</td><td>$3.384M</td><td>3/3</td><td>NVIDIA is not a memory maker, but its AI accelerator roadmap is the single largest driver of high-bandwidth memory demand that currently sets Micron&#x27;s cycle, making it the key demand-side proxy in the block. Displayed 24-hour perp liquidity of 3.384 USD millions supports a mid-tier weight, capped because the business-model overlap is indirect.</td></tr><tr><td><strong>INTC</strong><span>Intel</span></td><td>10.4%</td><td>$6.434M</td><td>3/3</td><td>Intel is a large-cap US semiconductor comparator sharing Micron&#x27;s capital-intensive manufacturing cycle and US listing and index dynamics, though its CPU and foundry mix has limited memory overlap today. Displayed 24-hour perp liquidity of 6.434 USD millions is solid, but the weaker business comparability keeps the weight modest.</td></tr><tr><td><strong>CXMT</strong><span>CXMT Corp. Class A</span></td><td>8.8%</td><td>$2.380M</td><td>3/3</td><td>Direct DRAM competitor and a high-comparability memory exposure; displayed 24-hour perp liquidity is 2.38 USD millions, so the weight is positive but limited.</td></tr><tr><td><strong>AMD</strong><span>Advanced Micro Devices</span></td><td>3.7%</td><td>$1.180M</td><td>2/3</td><td>AMD provides compute and AI semiconductor read-across for memory demand, but with less direct memory exposure and displayed 24-hour perp liquidity of 1.18 USD millions it receives the smallest positive weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The construction keeps the single-name basket positive and normalized to exactly 1.000, then uses XYZ100 as the sole index hedge because MU has large-cap Nasdaq semiconductor beta and the displayed 24-hour perp liquidity for XYZ100 is 21.944 USD millions. Relative to MU&#x27;s displayed 24-hour perp liquidity of 11.877 USD millions, the basket is led by direct memory comparability and deeper displayed liquidity: SNDK at 31.164 USD millions and SKHX at 18.246 USD millions. SMSN is economically close as a memory and logic peer, but its displayed liquidity is only 2.55 USD millions, so its weight is held below SKHX. INTC is weighted above NVDA and AMD because its semiconductor cycle overlap is supported by 6.434 USD millions of displayed liquidity, while NVDA and AMD are AI compute demand read-across rather than direct memory producers. CXMT is included for DRAM comparability, but its 2.38 USD millions displayed liquidity keeps the weight moderate. No commodity, non-English phrase, or symbol outside CORE_UNIVERSE is used.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

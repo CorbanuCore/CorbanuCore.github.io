@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/aapl/">
   <link rel="canonical" href="https://corbanu.com/aapl/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>AAPL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="aapl" data-market-version="cf6e41984093">
+<body data-market-slug="aapl" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>AAPL perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>AAPL spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">AAPL Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>Apple is one of the largest weights in the Nasdaq-100, so this index hedge tracks the stock&#x27;s dominant mega-cap technology beta better than a broader or more specialized index or ETF. Its displayed 24-hour perp liquidity is 21.944 USD millions, which is deep enough for practical hedging while preserving the technology concentration that matches Apple.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>23.7%</td><td>$1.386M</td><td>3/3</td><td>Closest large-cap software and services match with premium margins and ecosystem lock-in; displayed 24-hour perp liquidity is 1.386 USD millions, close to AAPL at 1.422 USD millions.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>19.3%</td><td>$2.262M</td><td>3/3</td><td>Alphabet provides comparable global platform economics across mobile services, advertising, cloud, and AI, making it a strong economic match; displayed 24-hour liquidity is 2.262 USD millions.</td></tr><tr><td><strong>META</strong><span>Meta Platforms</span></td><td>14.3%</td><td>$1.343M</td><td>3/3</td><td>Meta adds consumer platform scale and high-margin digital services exposure, helping represent the services side of Apple’s ecosystem; displayed 24-hour liquidity is 1.343 USD millions.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>14.3%</td><td>$3.384M</td><td>3/3</td><td>Captures accelerated-computing and AI hardware factor sensitivity that now drives megacap technology returns; displayed 24-hour perp liquidity is 3.384 USD millions.</td></tr><tr><td><strong>AMZN</strong><span>Amazon</span></td><td>12.7%</td><td>$0.462M</td><td>3/3</td><td>Mega-cap hardware and platform company exposed to the same consumer device and cloud ecosystem cycle as Apple; displayed liquidity of 0.462 USD millions is thinner, so it gets a smaller but still material weight.</td></tr><tr><td><strong>SMSN</strong><span>Samsung Electronics common</span></td><td>8.3%</td><td>$2.550M</td><td>2/3</td><td>Direct smartphone and consumer-electronics comparator with memory and handset-cycle exposure; displayed 24-hour perp liquidity is 2.55 USD millions.</td></tr><tr><td><strong>TSLA</strong><span>Tesla</span></td><td>7.3%</td><td>$4.551M</td><td>2/3</td><td>Tesla is included only as a smaller innovation-weighted consumer hardware peer with brand strength and ecosystem optionality, while its higher displayed liquidity of 4.551 USD millions is capped by weaker comparability to Apple’s core margins.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block pairs Apple with the Nasdaq-100 as the single index hedge because Apple&#x27;s earnings sensitivity is dominated by mega-cap technology and consumer digital ecosystems, which the Nasdaq-100 captures more directly than the broader S&amp;P 500 or the narrower semiconductor and country ETFs. The seven single-name peers are the most economically comparable mega-cap platform and device businesses in the provided universe. Weights are positive and sum to exactly 1, and the assignment leans on both business similarity and the displayed 24-hour perp liquidity figures, which are stated in USD millions. Microsoft&#x27;s displayed liquidity of 1.386 24-hour perp liquidity in USD millions and Nvidia&#x27;s at 3.384 USD millions are in line with Apple&#x27;s own 1.422 USD millions, while Alphabet at 2.262 USD millions and Samsung common shares at 2.55 USD millions provide the deepest displayed availability among the chosen names, supporting their meaningful weights.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

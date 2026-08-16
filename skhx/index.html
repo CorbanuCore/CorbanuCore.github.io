@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/skhx/">
   <link rel="canonical" href="https://corbanu.com/skhx/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>SKHX Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="skhx" data-market-version="cf6e41984093">
+<body data-market-slug="skhx" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>SKHX perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>000660 KS spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">SKHX Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>DRAM · Roundhill Memory ETF · $9.122M 24h</strong>
+            <p>DRAM is the closest listed hedge to SK hynix common because it is memory-focused rather than broad market, is classified as equity_etf, and has displayed 24-hour perp liquidity of 9.122 USD millions; it avoids the leverage of SOXL and the broader South Korea or mega-cap index mix in EWY, SP500, and XYZ100.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>31.3%</td><td>$11.877M</td><td>3/3</td><td>Micron is the closest listed DRAM and NAND comparator, with product mix and memory cycle sensitivity most like SK hynix; its displayed 24-hour perp liquidity is 11.877 USD millions.</td></tr><tr><td><strong>SNDK</strong><span>Sandisk</span></td><td>28.0%</td><td>$31.164M</td><td>3/3</td><td>SNDK is the closest independent storage-memory comparator, with NAND exposure and the strongest peer liquidity at 31.164 USD millions, even above SKHX at 18.246 USD millions, so it carries the largest peer weight.</td></tr><tr><td><strong>SMSN</strong><span>Samsung Electronics common</span></td><td>15.3%</td><td>$2.550M</td><td>3/3</td><td>Samsung Electronics common has large DRAM and NAND exposure, but the weight is diluted by foundry, phones, and consumer electronics; its displayed 24-hour perp liquidity is 2.55 USD millions.</td></tr><tr><td><strong>CXMT</strong><span>CXMT Corp. Class A</span></td><td>10.0%</td><td>$2.380M</td><td>3/3</td><td>CXMT Corp. Class A is a focused DRAM manufacturer, giving strong economic comparability, but its thinner displayed 24-hour perp liquidity of 2.38 USD millions and Class A market access argue for a capped weight.</td></tr><tr><td><strong>INTC</strong><span>Intel</span></td><td>9.7%</td><td>$6.434M</td><td>3/3</td><td>Intel is a large semiconductor comparable with manufacturing and AI compute exposure, but it is less memory-pure, so displayed 24-hour perp liquidity of 6.434 USD millions supports only a mid-sized weight.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>5.7%</td><td>$3.384M</td><td>2/3</td><td>NVDA is not a memory maker, but it is the key AI-accelerator demand driver for high-bandwidth memory; its 24-hour perp liquidity of 3.384 USD millions supports a moderate weight tied to demand rather than supply overlap.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The construction uses DRAM as the single primary hedge because the displayed 24-hour perp liquidity is 9.122 USD millions and the theme tracks memory more closely than SP500 at 30.814 USD millions or XYZ100 at 21.944 USD millions, while EWY at 3.37 USD millions adds South Korea index mix and SOXL at 0.408 USD millions is leveraged. Peer weights are positive, sum to 1, and put direct memory economics first: MU and SNDK dominate, SMSN and CXMT remain direct but liquidity-capped, and INTC plus NVDA are smaller semiconductor-cycle diversifiers. All liquidity figures are preserved as USD millions.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

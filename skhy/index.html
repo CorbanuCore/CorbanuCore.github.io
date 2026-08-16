@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/skhy/">
   <link rel="canonical" href="https://corbanu.com/skhy/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>SKHY Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="skhy" data-market-version="cf6e41984093">
+<body data-market-slug="skhy" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>SKHY perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>SKHY spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">SKHY Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>DRAM · Roundhill Memory ETF · $9.122M 24h</strong>
+            <p>DRAM is the Roundhill Memory ETF, classified as equity_etf, with displayed 24-hour perp liquidity of 9.122 USD millions. Because SK hynix is a pure-play memory manufacturer, a basket concentrated in memory and storage semiconductors shares the same dominant drivers as the target: DRAM and NAND pricing, high-bandwidth-memory demand from AI servers, and the memory capital-expenditure cycle. That makes it a tighter factor hedge than the broad equity_index choices SP500 (30.814 USD millions) or XYZ100 (21.944 USD millions), a better thematic fit than the Korea country fund EWY (3.37 USD millions), and far more tradable than the leveraged semiconductor product SOXL (0.408 USD millions).</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>26.6%</td><td>$11.877M</td><td>3/3</td><td>Micron is the closest pure DRAM and NAND comparator, and its displayed 24-hour liquidity of 11.877 USD millions supports the largest peer weight.</td></tr><tr><td><strong>SMSN</strong><span>Samsung Electronics common</span></td><td>18.0%</td><td>$2.550M</td><td>3/3</td><td>Samsung Electronics common is the closest integrated memory competitor and South Korean equity comparison; displayed liquidity of 2.55 USD millions is thinner than Micron and Sandisk, so the weight stays below Micron.</td></tr><tr><td><strong>SNDK</strong><span>Sandisk</span></td><td>17.3%</td><td>$31.164M</td><td>3/3</td><td>Sandisk is a pure-play NAND flash memory maker, so it shares the memory pricing cycle and storage-demand drivers, though it has less exposure to the DRAM and high-bandwidth-memory segments where SK hynix is strongest. Its displayed 24-hour perp liquidity of 31.164 USD millions is the deepest in the entire peer set, which earns it a substantial weight despite slightly lower product overlap.</td></tr><tr><td><strong>INTC</strong><span>Intel</span></td><td>7.3%</td><td>$6.434M</td><td>3/3</td><td>Intel adds large-cap semiconductor and manufacturing overlap with lower memory purity; displayed liquidity of 6.434 USD millions supports a mid-sized weight.</td></tr><tr><td><strong>CXMT</strong><span>CXMT Corp. Class A</span></td><td>5.5%</td><td>$2.380M</td><td>3/3</td><td>CXMT has direct DRAM product comparability, but displayed liquidity of 2.38 USD millions and scale differences keep the position modest.</td></tr><tr><td><strong>SKHX</strong><span>SK hynix common</span></td><td>20.8%</td><td>$18.246M</td><td>2/3</td><td>This is the underlying common listing of the identical company, so it is the highest-fidelity peer for the ADR, capturing the same earnings, HBM memory cycle, and foundry-customer exposure. It receives the largest weight because the pair spread is essentially a cross-listing basis trade. Displayed 24-hour perp liquidity of 18.246 USD millions is the deepest single-name pool in the block after the index rows, supporting the top weight.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>4.5%</td><td>$3.384M</td><td>2/3</td><td>NVIDIA is a demand-side reference because AI accelerators drive high-bandwidth memory demand; it is not a memory manufacturer, and displayed liquidity of 3.384 USD millions keeps the weight small.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">This block hedges SK hynix ADR with the Roundhill Memory ETF as the single primary index hedge and seven single-name equity peers whose positive weights sum to exactly 1. Weights are set by economic comparability first and then checked against displayed 24-hour perp liquidity, quoted in USD millions exactly as shown in the universe. The top of the book is the tightest economic match: SKHX, the same company&#x27;s common shares, followed by the two memory pure-plays Micron and Sandisk, whose deep liquidity of 11.877 USD millions and 31.164 USD millions respectively supports large allocations. Samsung Electronics common adds a direct Korean memory rival at a moderated size given its thinner 2.55 USD millions of liquidity, while CXMT, NVIDIA, and Intel take small satellite weights because they are respectively a direct DRAM competitor, the key high-bandwidth-memory demand driver, and a diversified chip-cycle proxy, each with liquidity of 2.38, 3.384, and 6.434 USD millions. Every symbol is drawn from CORE_UNIVERSE, the target SKHY is excluded from the peer list, and the construction concentrates risk in names whose revenues move with the same DRAM, NAND, and AI-memory cycle that drives SK hynix.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>
