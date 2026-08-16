@@ -43,6 +43,17 @@ def main() -> int:
         page_markup = page_path.read_text()
         if 'class="chart-foot"' in page_markup:
             raise AssertionError(f"{slug}: obsolete data-availability box remains")
+        if not str(payload.get("rawSymbol") or "").strip():
+            raise AssertionError(f"{slug}: Hyperliquid raw symbol is missing")
+        for required_markup in (
+            'id="live-perp-module"',
+            'id="live-perp-price"',
+            'id="live-perp-change"',
+            'id="live-perp-state"',
+            'id="live-perp-announcer"',
+        ):
+            if required_markup not in page_markup:
+                raise AssertionError(f"{slug}: live perp module is incomplete: {required_markup}")
         onchain = payload["onchainSpot"]
         if onchain.get("venueSplit") is not True:
             raise AssertionError(f"{slug}: CEX/DEX split is disabled")

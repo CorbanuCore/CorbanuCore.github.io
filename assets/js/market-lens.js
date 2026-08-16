@@ -5,6 +5,11 @@
   const slug = page.dataset.marketSlug;
   const marketVersion = page.dataset.marketVersion || "";
   const state = { data: null, range: "6M", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1, selectedStructureIndex: 0 };
+  const liveFeed = {
+    rawSymbol: "", socket: null, status: "", retry: 0, lastMessageAt: 0,
+    reconnectTimer: null, heartbeatTimer: null, staleTimer: null,
+    connectTimer: null, snapshotTimer: null, destroyed: false,
+  };
   const NS = "http://www.w3.org/2000/svg";
   const $ = (id) => document.getElementById(id);
 
@@ -22,6 +27,206 @@
     const parsed = Number(value);
     if (!Number.isFinite(parsed)) return "—";
     return `${parsed >= 0 ? "+" : ""}${parsed.toFixed(digits == null ? 2 : digits)}%`;
+  }
+
+  function livePriceLabel(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed <= 0) return "—";
+    const digits = parsed < 1 ? 4 : 2;
+    return `$${parsed.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits })}`;
+  }
+
+  function liveClockLabel(value) {
+    return new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hour12: false, timeZone: "UTC",
+    }).format(value);
+  }
+
+  function setLiveFeedState(status) {
+    const labels = {
+      connecting: "Connecting", live: "Live", reconnecting: "Reconnecting",
+      snapshot: "Snapshot", stale: "Stale", offline: "Offline",
+    };
+    const module = $("live-perp-module");
+    const stateNode = $("live-perp-state");
+    const label = labels[status] || labels.offline;
+    if (module) module.className = `live-perp is-${status}`;
+    if (stateNode) stateNode.textContent = label;
+    if (liveFeed.status !== status) {
+      const announcer = $("live-perp-announcer");
+      if (announcer) announcer.textContent = `Hyperliquid perpetual price feed ${label.toLowerCase()}.`;
+    }
+    liveFeed.status = status;
+  }
+
+  function clearLiveFeedTimer(name) {
+    if (!liveFeed[name]) return;
+    clearTimeout(liveFeed[name]);
+    clearInterval(liveFeed[name]);
+    liveFeed[name] = null;
+  }
+
+  function clearLiveConnectionTimers() {
+    ["heartbeatTimer", "staleTimer", "connectTimer", "snapshotTimer"].forEach(clearLiveFeedTimer);
+  }
+
+  function closeLiveSocket() {
+    const socket = liveFeed.socket;
+    liveFeed.socket = null;
+    if (!socket) return;
+    socket.onopen = null;
+    socket.onmessage = null;
+    socket.onerror = null;
+    socket.onclose = null;
+    try { socket.close(); } catch (_) { /* Connection is already closed. */ }
+  }
+
+  function armLiveFeedStaleTimer() {
+    clearLiveFeedTimer("staleTimer");
+    liveFeed.staleTimer = setTimeout(() => {
+      if (Date.now() - liveFeed.lastMessageAt >= 15000) setLiveFeedState("stale");
+    }, 15500);
+  }
+
+  function renderLivePerpContext(context, status) {
+    const price = Number(context && (context.midPx || context.markPx));
+    if (!Number.isFinite(price) || price <= 0) return false;
+    const previous = Number(context && context.prevDayPx);
+    const change = Number.isFinite(previous) && previous > 0 ? (price / previous - 1) * 100 : NaN;
+    const now = new Date();
+    const priceNode = $("live-perp-price");
+    const changeNode = $("live-perp-change");
+    const timeNode = $("live-perp-time");
+    if (priceNode) {
+      priceNode.value = String(price);
+      priceNode.textContent = livePriceLabel(price);
+    }
+    if (changeNode) {
+      changeNode.textContent = Number.isFinite(change) ? percent(change, 2) : "—";
+      changeNode.className = `live-perp-change${Number.isFinite(change) ? (change >= 0 ? " positive" : " negative") : ""}`;
+    }
+    if (timeNode) {
+      timeNode.dateTime = now.toISOString();
+      timeNode.textContent = `${liveClockLabel(now)} UTC`;
+    }
+    liveFeed.lastMessageAt = now.getTime();
+    setLiveFeedState(status);
+    if (status === "live") armLiveFeedStaleTimer();
+    return true;
+  }
+
+  async function refreshLivePerpSnapshot() {
+    if (!liveFeed.rawSymbol || !navigator.onLine) return false;
+    const dex = liveFeed.rawSymbol.includes(":") ? liveFeed.rawSymbol.split(":", 1)[0] : "";
+    try {
+      const response = await fetch("https://api.hyperliquid.xyz/info", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "allMids", ...(dex ? { dex } : {}) }),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const mids = await response.json();
+      if (liveFeed.status === "live") return true;
+      return renderLivePerpContext({ midPx: mids[liveFeed.rawSymbol] }, "snapshot");
+    } catch (_) {
+      if (liveFeed.status !== "live" && liveFeed.status !== "reconnecting") setLiveFeedState("offline");
+      return false;
+    }
+  }
+
+  function scheduleLivePerpReconnect() {
+    if (liveFeed.destroyed || liveFeed.reconnectTimer) return;
+    if (!navigator.onLine) {
+      setLiveFeedState("offline");
+      return;
+    }
+    const base = Math.min(30000, 1000 * (2 ** Math.min(liveFeed.retry, 5)));
+    const delay = Math.round(base * (0.85 + Math.random() * 0.3));
+    liveFeed.retry += 1;
+    setLiveFeedState("reconnecting");
+    liveFeed.reconnectTimer = setTimeout(() => {
+      liveFeed.reconnectTimer = null;
+      connectLivePerpFeed();
+    }, delay);
+  }
+
+  function connectLivePerpFeed() {
+    if (liveFeed.destroyed || !liveFeed.rawSymbol) return;
+    clearLiveFeedTimer("reconnectTimer");
+    clearLiveConnectionTimers();
+    closeLiveSocket();
+    if (!navigator.onLine || !("WebSocket" in window)) {
+      setLiveFeedState("offline");
+      void refreshLivePerpSnapshot();
+      return;
+    }
+    setLiveFeedState("connecting");
+    const socket = new WebSocket("wss://api.hyperliquid.xyz/ws");
+    liveFeed.socket = socket;
+    liveFeed.connectTimer = setTimeout(() => {
+      if (liveFeed.socket === socket) socket.close();
+    }, 10000);
+    liveFeed.snapshotTimer = setTimeout(() => {
+      if (liveFeed.status !== "live") void refreshLivePerpSnapshot();
+    }, 3000);
+    socket.onopen = () => {
+      socket.send(JSON.stringify({
+        method: "subscribe",
+        subscription: { type: "activeAssetCtx", coin: liveFeed.rawSymbol },
+      }));
+      liveFeed.heartbeatTimer = setInterval(() => {
+        if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ method: "ping" }));
+      }, 30000);
+    };
+    socket.onmessage = (event) => {
+      let message;
+      try { message = JSON.parse(event.data); } catch (_) { return; }
+      if (
+        message.channel !== "activeAssetCtx"
+        || !message.data
+        || message.data.coin !== liveFeed.rawSymbol
+      ) return;
+      clearLiveFeedTimer("connectTimer");
+      clearLiveFeedTimer("snapshotTimer");
+      if (renderLivePerpContext(message.data.ctx, "live")) liveFeed.retry = 0;
+    };
+    socket.onerror = () => {
+      if (liveFeed.socket === socket) socket.close();
+    };
+    socket.onclose = () => {
+      if (liveFeed.socket !== socket) return;
+      liveFeed.socket = null;
+      clearLiveConnectionTimers();
+      void refreshLivePerpSnapshot();
+      scheduleLivePerpReconnect();
+    };
+  }
+
+  function startLivePerpPrice(data) {
+    const rawSymbol = String(data && data.rawSymbol || "").trim();
+    if (!/^[A-Za-z0-9._:-]+$/.test(rawSymbol)) {
+      setLiveFeedState("offline");
+      return;
+    }
+    liveFeed.rawSymbol = rawSymbol;
+    liveFeed.destroyed = false;
+    connectLivePerpFeed();
+    window.addEventListener("online", () => {
+      if (!liveFeed.socket) connectLivePerpFeed();
+    });
+    window.addEventListener("offline", () => {
+      clearLiveFeedTimer("reconnectTimer");
+      clearLiveConnectionTimers();
+      closeLiveSocket();
+      setLiveFeedState("offline");
+    });
+    window.addEventListener("pagehide", () => {
+      liveFeed.destroyed = true;
+      clearLiveFeedTimer("reconnectTimer");
+      clearLiveConnectionTimers();
+      closeLiveSocket();
+    }, { once: true });
   }
 
   function dateLabel(value, long) {
@@ -1198,6 +1403,7 @@
       ]);
       state.data = data;
       populateUniverse(universe);
+      startLivePerpPrice(data);
       updateCopy(data);
       renderAllCharts();
       renderOnchainMarkets(data);

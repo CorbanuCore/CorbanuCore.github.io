@@ -191,10 +191,25 @@ def _page_html(
     <nav class="site-nav" aria-label="Primary navigation">
       <a href="/">Home</a><a href="/terminal/">Terminal</a><a href="/#newsletter">Weekly research</a>
     </nav>
-    <div class="instrument-picker">
-      <label for="instrument-select">Instrument</label>
-      <select id="instrument-select" aria-label="Choose an equity perpetual"></select>
+    <div class="header-market-tools">
+      <div id="live-perp-module" class="live-perp is-connecting" role="group" aria-label="{symbol} Hyperliquid perpetual mid price">
+        <div class="live-perp-status">
+          <span class="live-perp-dot" aria-hidden="true"></span>
+          <span class="live-perp-feed">
+            <span class="live-perp-label">Perp mid</span>
+            <span id="live-perp-state" class="live-perp-state">Connecting</span>
+          </span>
+        </div>
+        <data id="live-perp-price" class="live-perp-price" value="">—</data>
+        <span id="live-perp-change" class="live-perp-change">—</span>
+        <time id="live-perp-time" class="live-perp-time">—</time>
+      </div>
+      <div class="instrument-picker">
+        <label for="instrument-select">Instrument</label>
+        <select id="instrument-select" aria-label="Choose a perpetual market"></select>
+      </div>
     </div>
+    <p id="live-perp-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></p>
   </header>
 
   <main id="main">

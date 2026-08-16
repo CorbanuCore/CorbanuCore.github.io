@@ -8,6 +8,10 @@ The 37 Market Lens pages are generated from the locked local navstrategies
 spot/perp index artifacts. Every page contains the cash-reference total-return
 line, the funding-inclusive Hyperliquid perp candlesticks, the perp/spot ratio,
 1-day and 7-day long-funding forecasts, and discovered on-chain spot wrappers.
+The persistent header opens one public browser-to-Hyperliquid WebSocket using
+the payload's `rawSymbol` and displays the live perp mid, previous-day change,
+and connection state. A public `allMids` REST snapshot is the degraded-mode
+fallback; no Corbanu server or credential sits in the live-price path.
 Supported US equities also display the next-earnings probability distribution,
 an ATM straddle, and the two liquid calls and puts with the highest average
 historical payout. Supported index, commodity, BTC, and ETH pages display
