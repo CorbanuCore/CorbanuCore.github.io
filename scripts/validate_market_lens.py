@@ -31,6 +31,12 @@ def main() -> int:
     for instrument in instruments:
         slug = str(instrument["slug"])
         payload = load_json(DATA_ROOT / f"{slug}.json")
+        page_path = SITE_ROOT / slug / "index.html"
+        if not page_path.exists():
+            raise AssertionError(f"{slug}: generated page is missing")
+        page_markup = page_path.read_text()
+        if 'class="chart-foot"' in page_markup:
+            raise AssertionError(f"{slug}: obsolete data-availability box remains")
         onchain = payload["onchainSpot"]
         if onchain.get("venueSplit") is not True:
             raise AssertionError(f"{slug}: CEX/DEX split is disabled")
@@ -112,16 +118,14 @@ def main() -> int:
                     raise AssertionError("aapl: historical structure does not use exactly 12 recent events")
                 if len(recent.get("outcomes") or []) != 12:
                     raise AssertionError("aapl: historical payout tape is incomplete")
-            page_markup = (SITE_ROOT / slug / "index.html").read_text()
             if 'id="historical-structure-rows"' not in page_markup:
                 raise AssertionError("aapl: selectable historical structure table is missing")
+            if page_markup.index('class="earnings-options-summary"') < page_markup.index('class="historical-table-scroll"'):
+                raise AssertionError("aapl: earnings summary must follow the options table")
             if "historical-play-card" in page_markup:
                 raise AssertionError("aapl: obsolete historical payout cards remain")
             validated_option_contracts = len(contracts)
             validated_historical_structures = len(structures)
-
-        if not (SITE_ROOT / slug / "index.html").exists():
-            raise AssertionError(f"{slug}: generated page is missing")
 
     print(
         f"validated {len(instruments)} Market Lens pages: "

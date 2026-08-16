@@ -93,12 +93,6 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
             </div>
             <span id="earnings-options-asof" class="earnings-options-asof">Loading chain…</span>
           </header>
-          <div class="earnings-options-summary">
-            <div><small>Next earnings</small><strong id="options-earnings-date">—</strong><span id="options-earnings-timing">—</span></div>
-            <div><small>Implied 68% move</small><strong id="options-implied-move">—</strong><span id="options-event-range">—</span></div>
-            <div><small>Chain used</small><strong id="options-chain-expiry">—</strong><span>First liquid expiry after the event</span></div>
-            <div><small>Historical replay</small><strong id="options-history-count">—</strong><span id="options-history-window">—</span></div>
-          </div>
           <section class="historical-plays" aria-labelledby="historical-plays-title">
             <header>
               <div><span>Volume-screened structures</span><h3 id="historical-plays-title">Select a trade to display its payout on the chart</h3></div>
@@ -110,6 +104,12 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
               </table>
             </div>
           </section>
+          <div class="earnings-options-summary">
+            <div><small>Next earnings</small><strong id="options-earnings-date">—</strong><span id="options-earnings-timing">—</span></div>
+            <div><small>Implied 68% move</small><strong id="options-implied-move">—</strong><span id="options-event-range">—</span></div>
+            <div><small>Chain used</small><strong id="options-chain-expiry">—</strong><span>First liquid expiry after the event</span></div>
+            <div><small>Historical replay</small><strong id="options-history-count">—</strong><span id="options-history-window">—</span></div>
+          </div>
           <p id="options-method-note" class="options-method-note">Historical replay loading…</p>
         </section>"""
     ratio_subtitle = (
@@ -175,13 +175,7 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
             <div class="chart-loading">Loading spot and swap history…</div>
           </div>
         </div>
-        <p id="chart-live" class="sr-only" aria-live="polite"></p>
-        <div class="chart-foot" aria-label="Data availability">
-          <div><small>{spot_symbol} spot begins</small><strong id="spot-start">—</strong></div>
-          <div><small>Swap begins</small><strong id="perp-start">—</strong></div>
-          <div><small>Shared 100 anchor</small><strong id="anchor-date">—</strong></div>
-          <div><small>Exact 30-minute sessions</small><strong id="exact-start">—</strong></div>
-        </div>{options_panel}
+        <p id="chart-live" class="sr-only" aria-live="polite"></p>{options_panel}
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
             <div>
