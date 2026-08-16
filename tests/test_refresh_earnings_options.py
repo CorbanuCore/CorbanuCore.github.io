@@ -44,6 +44,24 @@ class EarningsOptionsHistoryTests(unittest.TestCase):
         self.assertTrue(result["outcomes"][0]["profitable"])
         self.assertFalse(result["outcomes"][1]["profitable"])
 
+    def test_single_call_payout_uses_call_intrinsic_value_only(self) -> None:
+        scenarios = [{
+            "earningsDate": "2025-01-30",
+            "entryDate": "2024-11-15",
+            "exitDate": "2025-02-21",
+            "entryPrice": 100.0,
+            "exitPrice": 120.0,
+            "underlyingReturnPct": 20.0,
+        }]
+        result = _payout_statistics(
+            scenarios,
+            put_ratio=None,
+            call_ratio=1.10,
+            premium_ratio=0.025,
+        )
+        self.assertEqual(result["profitableEvents"], 1)
+        self.assertEqual(result["averageGrossPayoutMultiple"], 4.0)
+
     def test_isotonic_fit_produces_increasing_cdf(self) -> None:
         fitted = _pava([
             {"strike": 90.0, "cdf": 0.20, "weight": 1.0},

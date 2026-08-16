@@ -101,16 +101,14 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
           </div>
           <section class="historical-plays" aria-labelledby="historical-plays-title">
             <header>
-              <div><span>Volume-screened structures</span><h3 id="historical-plays-title">Select a structure to display its payout on the chart</h3></div>
-              <p>Ask-price debit · same normalized strikes · same event horizon</p>
+              <div><span>Volume-screened structures</span><h3 id="historical-plays-title">Select a trade to display its payout on the chart</h3></div>
             </header>
             <div class="historical-table-scroll" tabindex="0" role="region" aria-label="Selectable earnings option structures and historical payouts">
               <table class="historical-structure-table">
-                <thead><tr><th>Structure</th><th>Legs</th><th>Ask debit</th><th>Volume</th><th>Profitable · 12</th><th>Avg gross</th><th>Avg winner</th><th>Maximum</th><th>Full history</th></tr></thead>
+                <thead><tr><th>Trade</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Profitable / 12</th><th>Avg payout</th><th>Avg winner</th><th>Max payout</th><th>Full history</th></tr></thead>
                 <tbody id="historical-structure-rows"><tr><td colspan="9">Replaying prior earnings…</td></tr></tbody>
               </table>
             </div>
-            <p id="selected-payout-summary" class="selected-payout-summary" aria-live="polite">Select a structure to inspect its payout.</p>
           </section>
           <p id="options-method-note" class="options-method-note">Historical replay loading…</p>
         </section>"""

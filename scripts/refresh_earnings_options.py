@@ -225,14 +225,17 @@ def _historical_scenarios(
 def _payout_statistics(
     scenarios: list[dict[str, Any]],
     *,
-    put_ratio: float,
-    call_ratio: float,
+    put_ratio: float | None,
+    call_ratio: float | None,
     premium_ratio: float,
 ) -> dict[str, Any]:
     outcomes: list[dict[str, Any]] = []
     for scenario in scenarios:
         terminal_ratio = float(scenario["exitPrice"]) / float(scenario["entryPrice"])
-        payoff_ratio = max(put_ratio - terminal_ratio, 0.0) + max(terminal_ratio - call_ratio, 0.0)
+        payoff_ratio = (
+            (max(put_ratio - terminal_ratio, 0.0) if put_ratio is not None else 0.0)
+            + (max(terminal_ratio - call_ratio, 0.0) if call_ratio is not None else 0.0)
+        )
         gross_multiple = payoff_ratio / premium_ratio if premium_ratio > 0 else 0.0
         outcomes.append({
             "earningsDate": scenario["earningsDate"],
@@ -272,72 +275,80 @@ def _rank_historical_structures(
     )
     call_by_strike = {row["strike"]: row for row in calls}
     put_by_strike = {row["strike"]: row for row in puts}
-    pairs: dict[tuple[float, float], tuple[dict[str, Any], dict[str, Any]]] = {}
-
     common_strikes = sorted(set(call_by_strike) & set(put_by_strike), key=lambda strike: abs(strike / spot - 1.0))
-    if common_strikes:
-        strike = common_strikes[0]
-        pairs[(strike, strike)] = (put_by_strike[strike], call_by_strike[strike])
+    if not common_strikes:
+        return []
 
-    otm_calls = [row for row in calls if row["strike"] > spot]
-    for put in (row for row in puts if row["strike"] < spot):
-        if not otm_calls:
-            break
-        target_log_distance = abs(math.log(float(put["strike"]) / spot))
-        call = min(otm_calls, key=lambda row: abs(math.log(float(row["strike"]) / spot) - target_log_distance))
-        symmetry_gap = abs(math.log(float(call["strike"]) / spot) - target_log_distance)
-        if symmetry_gap <= 0.025:
-            pairs[(put["strike"], call["strike"])] = (put, call)
+    atm_strike = common_strikes[0]
+    atm_put = put_by_strike[atm_strike]
+    atm_call = call_by_strike[atm_strike]
+    straddle_debit = float(atm_put["ask"]) + float(atm_call["ask"])
+    straddle_premium_ratio = straddle_debit / spot
+    straddle = {
+        "name": "ATM straddle",
+        "structure": "long straddle",
+        "put": atm_put,
+        "call": atm_call,
+        "debitAsk": round(straddle_debit, 2),
+        "debitPctSpot": round(straddle_premium_ratio * 100.0, 2),
+        "lowerBreakeven": round(atm_strike - straddle_debit, 2),
+        "upperBreakeven": round(atm_strike + straddle_debit, 2),
+        "combinedVolume": int(atm_put["volume"]) + int(atm_call["volume"]),
+        "minimumLegVolume": min(int(atm_put["volume"]), int(atm_call["volume"])),
+        "combinedOpenInterest": int(atm_put["openInterest"]) + int(atm_call["openInterest"]),
+        "trailing12": _payout_statistics(
+            scenarios[:12],
+            put_ratio=atm_strike / spot,
+            call_ratio=atm_strike / spot,
+            premium_ratio=straddle_premium_ratio,
+        ),
+        "fullHistory": _payout_statistics(
+            scenarios,
+            put_ratio=atm_strike / spot,
+            call_ratio=atm_strike / spot,
+            premium_ratio=straddle_premium_ratio,
+        ),
+    }
 
-    candidates: list[dict[str, Any]] = []
-    for (put_strike, call_strike), (put, call) in pairs.items():
-        debit = float(put["ask"]) + float(call["ask"])
+    call_candidates: list[dict[str, Any]] = []
+    for call in (row for row in calls if float(row["strike"]) >= spot * 1.05):
+        debit = float(call["ask"])
         premium_ratio = debit / spot
-        if premium_ratio <= 0:
-            continue
-        put_ratio = put_strike / spot
-        call_ratio = call_strike / spot
         trailing = _payout_statistics(
-            scenarios[:12], put_ratio=put_ratio, call_ratio=call_ratio, premium_ratio=premium_ratio
-        )
-        lifetime = _payout_statistics(
-            scenarios, put_ratio=put_ratio, call_ratio=call_ratio, premium_ratio=premium_ratio
+            scenarios[:12], put_ratio=None, call_ratio=float(call["strike"]) / spot, premium_ratio=premium_ratio
         )
         if trailing["profitableEvents"] < 2:
             continue
-        is_straddle = put_strike == call_strike
-        wing_pct = 0.0 if is_straddle else ((1.0 - put_ratio) + (call_ratio - 1.0)) / 2.0 * 100.0
+        lifetime = _payout_statistics(
+            scenarios, put_ratio=None, call_ratio=float(call["strike"]) / spot, premium_ratio=premium_ratio
+        )
         score = trailing["averageGrossPayoutMultiple"] * math.sqrt(trailing["profitableRatePct"] / 100.0)
-        candidates.append({
-            "name": f"${put_strike:g} straddle" if is_straddle else f"{wing_pct:.1f}% OTM strangle",
-            "structure": "long straddle" if is_straddle else "long strangle",
-            "put": put,
+        call_candidates.append({
+            "name": f"${float(call['strike']):g} call",
+            "structure": "long call",
+            "put": None,
             "call": call,
             "debitAsk": round(debit, 2),
             "debitPctSpot": round(premium_ratio * 100.0, 2),
-            "lowerBreakeven": round(put_strike - debit, 2),
-            "upperBreakeven": round(call_strike + debit, 2),
-            "wingPct": round(wing_pct, 2),
-            "combinedVolume": int(put["volume"]) + int(call["volume"]),
-            "minimumLegVolume": min(int(put["volume"]), int(call["volume"])),
-            "combinedOpenInterest": int(put["openInterest"]) + int(call["openInterest"]),
+            "lowerBreakeven": None,
+            "upperBreakeven": round(float(call["strike"]) + debit, 2),
+            "combinedVolume": int(call["volume"]),
+            "minimumLegVolume": int(call["volume"]),
+            "combinedOpenInterest": int(call["openInterest"]),
             "trailing12": trailing,
             "fullHistory": lifetime,
             "rankingScore": round(score, 4),
         })
-    candidates.sort(key=lambda row: (row["rankingScore"], row["combinedVolume"]), reverse=True)
-    if not candidates:
+    call_candidates.sort(key=lambda row: (row["rankingScore"], row["combinedVolume"]), reverse=True)
+    if len(call_candidates) < 2:
         return []
-    balance = candidates[0]
-    balance["selectionLabel"] = "Best historical balance"
-    alternatives = [
-        row for row in candidates
-        if abs(float(row["wingPct"]) - float(balance["wingPct"])) >= 2.5
+    balanced_call = call_candidates[0]
+    farther_calls = [
+        row for row in call_candidates
+        if float(row["call"]["strike"]) >= float(balanced_call["call"]["strike"]) + spot * 0.03
     ]
-    if not alternatives:
-        return [balance]
-    convexity = max(
-        alternatives,
+    convex_call = max(
+        farther_calls or call_candidates[1:],
         key=lambda row: (
             row["trailing12"]["averageWinnerPayoutMultiple"]
             * math.sqrt(row["trailing12"]["profitableRatePct"] / 100.0),
@@ -345,8 +356,7 @@ def _rank_historical_structures(
             row["combinedVolume"],
         ),
     )
-    convexity["selectionLabel"] = "Higher historical convexity"
-    return [balance, convexity]
+    return [straddle, balanced_call, convex_call]
 
 
 def build_payload(raw: dict[str, Any], *, now: datetime) -> dict[str, Any]:
