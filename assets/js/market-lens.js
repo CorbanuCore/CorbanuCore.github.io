@@ -162,19 +162,23 @@
     if (rows && history && history.structures.length) {
       const defaultIndex = history.structures.findIndex((play) => play.structure === "long straddle");
       state.selectedStructureIndex = defaultIndex >= 0 ? defaultIndex : 0;
+      const expirationLabel = dateLabel(options.chain.expiration, true);
       rows.innerHTML = history.structures.map((play, index) => {
         const recent = play.trailing12;
         const lifetime = play.fullHistory;
+        const contractLines = play.structure === "long straddle"
+          ? [`Buy AAPL ${expirationLabel} ${priceMoney(play.call.strike)} call`, `Buy AAPL ${expirationLabel} ${priceMoney(play.put.strike)} put`]
+          : [`Buy AAPL ${expirationLabel} ${priceMoney(play.call.strike)} call`];
         return `<tr data-structure-index="${index}" tabindex="0" aria-selected="${index === state.selectedStructureIndex}">
-          <td><input type="radio" name="earnings-structure" tabindex="-1" aria-label="Display ${escapeHtml(play.name)} payout"${index === state.selectedStructureIndex ? " checked" : ""}><strong>${escapeHtml(play.name)}</strong><small>${escapeHtml(play.selectionLabel)}</small></td>
-          <td><span>${priceMoney(play.put.strike)} put</span><span>${priceMoney(play.call.strike)} call</span></td>
-          <td><strong>${priceMoney(play.debitAsk)}</strong><small>${number(play.debitPctSpot, 2)}% spot</small></td>
-          <td><strong>${Number(play.combinedVolume).toLocaleString("en-US")}</strong><small>min leg ${Number(play.minimumLegVolume).toLocaleString("en-US")}</small></td>
-          <td><strong>${recent.profitableEvents}/${recent.events}</strong><small>${number(recent.profitableRatePct, 1)}%</small></td>
-          <td><strong>${number(recent.averageGrossPayoutMultiple, 2)}×</strong><small>includes losses</small></td>
+          <td><input type="radio" name="earnings-structure" tabindex="-1" aria-label="Display ${escapeHtml(play.name)} payout"${index === state.selectedStructureIndex ? " checked" : ""}><strong>${escapeHtml(play.name)}</strong></td>
+          <td>${contractLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</td>
+          <td><strong>${priceMoney(play.debitAsk)}</strong></td>
+          <td><strong>${Number(play.combinedVolume).toLocaleString("en-US")}</strong></td>
+          <td><strong>${recent.profitableEvents}/${recent.events}</strong></td>
+          <td><strong>${number(recent.averageGrossPayoutMultiple, 2)}×</strong></td>
           <td><strong>${number(recent.averageWinnerPayoutMultiple, 2)}×</strong></td>
           <td><strong>${number(recent.maximumGrossPayoutMultiple, 2)}×</strong></td>
-          <td><strong>${lifetime.profitableEvents}/${lifetime.events}</strong><small>${number(lifetime.averageGrossPayoutMultiple, 2)}× avg</small></td>
+          <td><strong>${lifetime.profitableEvents}/${lifetime.events} · ${number(lifetime.averageGrossPayoutMultiple, 2)}×</strong></td>
         </tr>`;
       }).join("");
 
@@ -188,7 +192,6 @@
           if (radio) radio.checked = active;
         });
         text("selected-structure-label", `${selected.name} · payout and breakevens`);
-        text("selected-payout-summary", `${selected.name}: ${priceMoney(selected.debitAsk)} ask debit; profitable in ${selected.trailing12.profitableEvents}/${selected.trailing12.events} comparable events; ${number(selected.trailing12.averageWinnerPayoutMultiple, 2)}× average winner. Chart labels show gross expiration payout divided by the debit.`);
         renderChart();
       };
       rows.querySelectorAll("tr").forEach((row) => {
@@ -203,7 +206,7 @@
       selectStructure(state.selectedStructureIndex);
     }
     const note = $("options-method-note");
-    if (note && history) note.textContent = `${options.model.description} Current structure screen requires volume of at least 25 contracts in each leg in addition to the published spread and open-interest gates. Historical replay: ${history.method} Limitation: ${history.limitation} The fan is mapped to the chart’s spot total-return scale; dollar labels remain actual option-implied prices.`;
+    if (note && history) note.textContent = "Payout equals expiration value divided by the total ask. Historical replay uses the same strikes, debit, and event horizon against split-adjusted price history. Historical option prices are not reconstructed.";
   }
 
   function cutoffForRange(data) {
@@ -269,12 +272,9 @@
     if (options && Number.isFinite(optionUnderlying) && optionUnderlying > 0) {
       options.fan.forEach((row) => values.push(optionIndex(row.earningsPrice), optionIndex(row.expirationPrice)));
       if (selectedStructure) {
-        values.push(
-          optionIndex(selectedStructure.put.strike),
-          optionIndex(selectedStructure.call.strike),
-          optionIndex(selectedStructure.lowerBreakeven),
-          optionIndex(selectedStructure.upperBreakeven)
-        );
+        values.push(optionIndex(selectedStructure.call.strike), optionIndex(selectedStructure.upperBreakeven));
+        if (selectedStructure.put) values.push(optionIndex(selectedStructure.put.strike));
+        if (selectedStructure.lowerBreakeven != null) values.push(optionIndex(selectedStructure.lowerBreakeven));
       }
     }
     let low = Math.min(...values);
@@ -312,11 +312,15 @@
 
       if (selectedStructure) {
         const upperBreakevenY = y(optionIndex(selectedStructure.upperBreakeven));
-        const lowerBreakevenY = y(optionIndex(selectedStructure.lowerBreakeven));
         const futureWidth = Math.max(expiryX - earningsX, 0);
         svg.appendChild(svgNode("rect", { x: earningsX, y: margin.top, width: futureWidth, height: Math.max(upperBreakevenY - margin.top, 0), class: "options-profit-zone" }));
-        svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(lowerBreakevenY - upperBreakevenY, 0), class: "options-loss-zone" }));
-        svg.appendChild(svgNode("rect", { x: earningsX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
+        if (selectedStructure.lowerBreakeven == null) {
+          svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - upperBreakevenY, 0), class: "options-loss-zone" }));
+        } else {
+          const lowerBreakevenY = y(optionIndex(selectedStructure.lowerBreakeven));
+          svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(lowerBreakevenY - upperBreakevenY, 0), class: "options-loss-zone" }));
+          svg.appendChild(svgNode("rect", { x: earningsX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
+        }
       }
 
       if (lower && upper) {
@@ -343,16 +347,16 @@
 
       if (selectedStructure) {
         [
-          [selectedStructure.lowerBreakeven, `LOWER BE · ${priceMoney(selectedStructure.lowerBreakeven)}`, "options-breakeven-line"],
+          selectedStructure.lowerBreakeven == null ? null : [selectedStructure.lowerBreakeven, `LOWER BE · ${priceMoney(selectedStructure.lowerBreakeven)}`, "options-breakeven-line"],
           [selectedStructure.upperBreakeven, `UPPER BE · ${priceMoney(selectedStructure.upperBreakeven)}`, "options-breakeven-line"],
-        ].forEach(([price, labelText, className]) => {
+        ].filter(Boolean).forEach(([price, labelText, className]) => {
           const py = y(optionIndex(price));
           svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: className }));
           const label = svgNode("text", { x: earningsX + 6, y: py - 5, class: "options-level-label" });
           label.textContent = labelText;
           svg.appendChild(label);
         });
-        const strikeLevels = [...new Set([Number(selectedStructure.put.strike), Number(selectedStructure.call.strike)])];
+        const strikeLevels = [...new Set([selectedStructure.put ? Number(selectedStructure.put.strike) : null, Number(selectedStructure.call.strike)].filter(Number.isFinite))];
         strikeLevels.forEach((price) => {
           const py = y(optionIndex(price));
           svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: "options-strike-line" }));
@@ -369,7 +373,7 @@
         if (!row) return;
         const price = Number(row.expirationPrice);
         const payoff = selectedStructure
-          ? Math.max(Number(selectedStructure.put.strike) - price, 0) + Math.max(price - Number(selectedStructure.call.strike), 0)
+          ? (selectedStructure.put ? Math.max(Number(selectedStructure.put.strike) - price, 0) : 0) + Math.max(price - Number(selectedStructure.call.strike), 0)
           : 0;
         const grossMultiple = selectedStructure ? payoff / Number(selectedStructure.debitAsk) : NaN;
         const profitable = Number.isFinite(grossMultiple) && grossMultiple > 1;
