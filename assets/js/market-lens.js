@@ -362,7 +362,7 @@
         ].filter(Boolean).forEach(([price, labelText, className]) => {
           const py = y(optionIndex(price));
           svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: className }));
-          const label = svgNode("text", { x: earningsX + 6, y: py - 5, class: "options-level-label" });
+          const label = svgNode("text", { x: earningsX - 7, y: py - 5, class: "options-level-label", "text-anchor": "end" });
           label.textContent = labelText;
           svg.appendChild(label);
         });
