@@ -95,11 +95,15 @@ def main() -> int:
             if int(historical.get("availableEvents") or 0) < 12:
                 raise AssertionError("aapl: fewer than 12 comparable earnings events")
             structures = historical.get("structures") or []
-            if len(structures) != 3:
-                raise AssertionError("aapl: expected exactly three concise historical structures")
+            if len(structures) != 5:
+                raise AssertionError("aapl: expected exactly five concise historical structures")
             structure_kinds = [str(row.get("structure")) for row in structures]
-            if structure_kinds.count("long straddle") != 1 or structure_kinds.count("long call") != 2:
-                raise AssertionError("aapl: expected one ATM straddle and two long calls")
+            if (
+                structure_kinds.count("long straddle") != 1
+                or structure_kinds.count("long call") != 2
+                or structure_kinds.count("long put") != 2
+            ):
+                raise AssertionError("aapl: expected one ATM straddle, two long calls, and two long puts")
             for structure in structures:
                 if int(structure.get("minimumLegVolume") or 0) < 25:
                     raise AssertionError("aapl: historical structure violates the per-leg volume gate")

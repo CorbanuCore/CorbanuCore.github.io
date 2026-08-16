@@ -168,6 +168,8 @@
         const lifetime = play.fullHistory;
         const contractLines = play.structure === "long straddle"
           ? [`Buy AAPL ${expirationLabel} ${priceMoney(play.call.strike)} call`, `Buy AAPL ${expirationLabel} ${priceMoney(play.put.strike)} put`]
+          : play.structure === "long put"
+          ? [`Buy AAPL ${expirationLabel} ${priceMoney(play.put.strike)} put`]
           : [`Buy AAPL ${expirationLabel} ${priceMoney(play.call.strike)} call`];
         return `<tr data-structure-index="${index}" tabindex="0" aria-selected="${index === state.selectedStructureIndex}">
           <td><input type="radio" name="earnings-structure" tabindex="-1" aria-label="Display ${escapeHtml(play.name)} payout"${index === state.selectedStructureIndex ? " checked" : ""}><strong>${escapeHtml(play.name)}</strong></td>
@@ -272,8 +274,9 @@
     if (options && Number.isFinite(optionUnderlying) && optionUnderlying > 0) {
       options.fan.forEach((row) => values.push(optionIndex(row.earningsPrice), optionIndex(row.expirationPrice)));
       if (selectedStructure) {
-        values.push(optionIndex(selectedStructure.call.strike), optionIndex(selectedStructure.upperBreakeven));
+        if (selectedStructure.call) values.push(optionIndex(selectedStructure.call.strike));
         if (selectedStructure.put) values.push(optionIndex(selectedStructure.put.strike));
+        if (selectedStructure.upperBreakeven != null) values.push(optionIndex(selectedStructure.upperBreakeven));
         if (selectedStructure.lowerBreakeven != null) values.push(optionIndex(selectedStructure.lowerBreakeven));
       }
     }
@@ -311,14 +314,21 @@
       const expiryX = x(expirationDate);
 
       if (selectedStructure) {
-        const upperBreakevenY = y(optionIndex(selectedStructure.upperBreakeven));
         const futureWidth = Math.max(expiryX - earningsX, 0);
-        svg.appendChild(svgNode("rect", { x: earningsX, y: margin.top, width: futureWidth, height: Math.max(upperBreakevenY - margin.top, 0), class: "options-profit-zone" }));
-        if (selectedStructure.lowerBreakeven == null) {
-          svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - upperBreakevenY, 0), class: "options-loss-zone" }));
-        } else {
-          const lowerBreakevenY = y(optionIndex(selectedStructure.lowerBreakeven));
+        const hasUpper = selectedStructure.upperBreakeven != null;
+        const hasLower = selectedStructure.lowerBreakeven != null;
+        const upperBreakevenY = hasUpper ? y(optionIndex(selectedStructure.upperBreakeven)) : null;
+        const lowerBreakevenY = hasLower ? y(optionIndex(selectedStructure.lowerBreakeven)) : null;
+        if (hasUpper) {
+          svg.appendChild(svgNode("rect", { x: earningsX, y: margin.top, width: futureWidth, height: Math.max(upperBreakevenY - margin.top, 0), class: "options-profit-zone" }));
+        }
+        if (hasUpper && hasLower) {
           svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(lowerBreakevenY - upperBreakevenY, 0), class: "options-loss-zone" }));
+          svg.appendChild(svgNode("rect", { x: earningsX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
+        } else if (hasUpper) {
+          svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - upperBreakevenY, 0), class: "options-loss-zone" }));
+        } else if (hasLower) {
+          svg.appendChild(svgNode("rect", { x: earningsX, y: margin.top, width: futureWidth, height: Math.max(lowerBreakevenY - margin.top, 0), class: "options-loss-zone" }));
           svg.appendChild(svgNode("rect", { x: earningsX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
         }
       }
@@ -348,7 +358,7 @@
       if (selectedStructure) {
         [
           selectedStructure.lowerBreakeven == null ? null : [selectedStructure.lowerBreakeven, `LOWER BE · ${priceMoney(selectedStructure.lowerBreakeven)}`, "options-breakeven-line"],
-          [selectedStructure.upperBreakeven, `UPPER BE · ${priceMoney(selectedStructure.upperBreakeven)}`, "options-breakeven-line"],
+          selectedStructure.upperBreakeven == null ? null : [selectedStructure.upperBreakeven, `UPPER BE · ${priceMoney(selectedStructure.upperBreakeven)}`, "options-breakeven-line"],
         ].filter(Boolean).forEach(([price, labelText, className]) => {
           const py = y(optionIndex(price));
           svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: className }));
@@ -356,7 +366,7 @@
           label.textContent = labelText;
           svg.appendChild(label);
         });
-        const strikeLevels = [...new Set([selectedStructure.put ? Number(selectedStructure.put.strike) : null, Number(selectedStructure.call.strike)].filter(Number.isFinite))];
+        const strikeLevels = [...new Set([selectedStructure.put ? Number(selectedStructure.put.strike) : null, selectedStructure.call ? Number(selectedStructure.call.strike) : null].filter(Number.isFinite))];
         strikeLevels.forEach((price) => {
           const py = y(optionIndex(price));
           svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: "options-strike-line" }));
@@ -373,7 +383,7 @@
         if (!row) return;
         const price = Number(row.expirationPrice);
         const payoff = selectedStructure
-          ? (selectedStructure.put ? Math.max(Number(selectedStructure.put.strike) - price, 0) : 0) + Math.max(price - Number(selectedStructure.call.strike), 0)
+          ? (selectedStructure.put ? Math.max(Number(selectedStructure.put.strike) - price, 0) : 0) + (selectedStructure.call ? Math.max(price - Number(selectedStructure.call.strike), 0) : 0)
           : 0;
         const grossMultiple = selectedStructure ? payoff / Number(selectedStructure.debitAsk) : NaN;
         const profitable = Number.isFinite(grossMultiple) && grossMultiple > 1;

@@ -356,7 +356,54 @@ def _rank_historical_structures(
             row["combinedVolume"],
         ),
     )
-    return [straddle, balanced_call, convex_call]
+
+    put_candidates: list[dict[str, Any]] = []
+    for put in (row for row in puts if float(row["strike"]) <= spot * 0.95):
+        debit = float(put["ask"])
+        premium_ratio = debit / spot
+        trailing = _payout_statistics(
+            scenarios[:12], put_ratio=float(put["strike"]) / spot, call_ratio=None, premium_ratio=premium_ratio
+        )
+        if trailing["profitableEvents"] < 1:
+            continue
+        lifetime = _payout_statistics(
+            scenarios, put_ratio=float(put["strike"]) / spot, call_ratio=None, premium_ratio=premium_ratio
+        )
+        score = trailing["averageGrossPayoutMultiple"] * math.sqrt(trailing["profitableRatePct"] / 100.0)
+        put_candidates.append({
+            "name": f"${float(put['strike']):g} put",
+            "structure": "long put",
+            "put": put,
+            "call": None,
+            "debitAsk": round(debit, 2),
+            "debitPctSpot": round(premium_ratio * 100.0, 2),
+            "lowerBreakeven": round(float(put["strike"]) - debit, 2),
+            "upperBreakeven": None,
+            "combinedVolume": int(put["volume"]),
+            "minimumLegVolume": int(put["volume"]),
+            "combinedOpenInterest": int(put["openInterest"]),
+            "trailing12": trailing,
+            "fullHistory": lifetime,
+            "rankingScore": round(score, 4),
+        })
+    put_candidates.sort(key=lambda row: (row["rankingScore"], row["combinedVolume"]), reverse=True)
+    if len(put_candidates) < 2:
+        return []
+    balanced_put = put_candidates[0]
+    farther_puts = [
+        row for row in put_candidates
+        if float(row["put"]["strike"]) <= float(balanced_put["put"]["strike"]) - spot * 0.03
+    ]
+    convex_put = max(
+        farther_puts or put_candidates[1:],
+        key=lambda row: (
+            row["trailing12"]["averageWinnerPayoutMultiple"]
+            * math.sqrt(row["trailing12"]["profitableRatePct"] / 100.0),
+            row["trailing12"]["averageGrossPayoutMultiple"],
+            row["combinedVolume"],
+        ),
+    )
+    return [straddle, balanced_call, convex_call, balanced_put, convex_put]
 
 
 def build_payload(raw: dict[str, Any], *, now: datetime) -> dict[str, Any]:
