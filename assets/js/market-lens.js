@@ -4,7 +4,7 @@
   const page = document.body;
   const slug = page.dataset.marketSlug;
   const marketVersion = page.dataset.marketVersion || "";
-  const state = { data: null, range: "6M", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1 };
+  const state = { data: null, range: "6M", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1, selectedStructureIndex: 0 };
   const NS = "http://www.w3.org/2000/svg";
   const $ = (id) => document.getElementById(id);
 
@@ -158,25 +158,49 @@
     const history = options.historicalAnalysis;
     text("options-history-count", history ? `12 of ${history.availableEvents} events` : "—");
     text("options-history-window", history ? `${history.entryLeadCalendarDays}d before · ${history.postEarningsCalendarDays}d after` : "—");
-    const cards = $("historical-play-cards");
-    if (cards && history) {
-      cards.innerHTML = history.structures.map((play) => {
+    const rows = $("historical-structure-rows");
+    if (rows && history && history.structures.length) {
+      const defaultIndex = history.structures.findIndex((play) => play.structure === "long straddle");
+      state.selectedStructureIndex = defaultIndex >= 0 ? defaultIndex : 0;
+      rows.innerHTML = history.structures.map((play, index) => {
         const recent = play.trailing12;
         const lifetime = play.fullHistory;
-        const tape = recent.outcomes.map((outcome) => `<span class="payout-tape-cell${outcome.profitable ? " profitable" : ""}" title="${escapeHtml(dateLabel(outcome.earningsDate, true))}: ${number(outcome.grossPayoutMultiple, 2)}× gross payout; underlying ${percent(outcome.underlyingReturnPct, 1)}"><b>${number(outcome.grossPayoutMultiple, 1)}×</b><small>${escapeHtml(outcome.earningsDate.slice(2, 7))}</small></span>`).join("");
-        return `<article class="historical-play-card">
-          <header><div><span>${escapeHtml(play.selectionLabel)}</span><h4>${escapeHtml(play.name)}</h4></div><strong>${number(recent.averageWinnerPayoutMultiple, 2)}× <small>avg winner</small></strong></header>
-          <p class="play-legs">Long ${priceMoney(play.put.strike)} put <b>@ ${priceMoney(play.put.ask)}</b> + ${priceMoney(play.call.strike)} call <b>@ ${priceMoney(play.call.ask)}</b></p>
-          <div class="play-metrics">
-            <div><small>Profitable · last 12</small><strong>${recent.profitableEvents} / ${recent.events}</strong><span>${number(recent.profitableRatePct, 1)}% of events</span></div>
-            <div><small>Average gross payout</small><strong>${number(recent.averageGrossPayoutMultiple, 2)}×</strong><span>includes zero-payoff losses</span></div>
-            <div><small>Maximum gross payout</small><strong>${number(recent.maximumGrossPayoutMultiple, 2)}×</strong><span>last 12 events</span></div>
-          </div>
-          <div class="play-cost"><span>Ask debit <b>${priceMoney(play.debitAsk)}</b> · ${number(play.debitPctSpot, 2)}% of spot</span><span>Breakevens <b>${priceMoney(play.lowerBreakeven)} / ${priceMoney(play.upperBreakeven)}</b></span></div>
-          <div class="payout-tape" aria-label="Gross payout multiple across the latest 12 earnings events">${tape}</div>
-          <footer><span><b>${Number(play.combinedVolume).toLocaleString("en-US")}</b> combined volume · minimum leg ${Number(play.minimumLegVolume).toLocaleString("en-US")}</span><span>Full history: <b>${lifetime.profitableEvents}/${lifetime.events}</b> profitable · <b>${number(lifetime.averageGrossPayoutMultiple, 2)}×</b> average gross</span></footer>
-        </article>`;
+        return `<tr data-structure-index="${index}" tabindex="0" aria-selected="${index === state.selectedStructureIndex}">
+          <td><input type="radio" name="earnings-structure" tabindex="-1" aria-label="Display ${escapeHtml(play.name)} payout"${index === state.selectedStructureIndex ? " checked" : ""}><strong>${escapeHtml(play.name)}</strong><small>${escapeHtml(play.selectionLabel)}</small></td>
+          <td><span>${priceMoney(play.put.strike)} put</span><span>${priceMoney(play.call.strike)} call</span></td>
+          <td><strong>${priceMoney(play.debitAsk)}</strong><small>${number(play.debitPctSpot, 2)}% spot</small></td>
+          <td><strong>${Number(play.combinedVolume).toLocaleString("en-US")}</strong><small>min leg ${Number(play.minimumLegVolume).toLocaleString("en-US")}</small></td>
+          <td><strong>${recent.profitableEvents}/${recent.events}</strong><small>${number(recent.profitableRatePct, 1)}%</small></td>
+          <td><strong>${number(recent.averageGrossPayoutMultiple, 2)}×</strong><small>includes losses</small></td>
+          <td><strong>${number(recent.averageWinnerPayoutMultiple, 2)}×</strong></td>
+          <td><strong>${number(recent.maximumGrossPayoutMultiple, 2)}×</strong></td>
+          <td><strong>${lifetime.profitableEvents}/${lifetime.events}</strong><small>${number(lifetime.averageGrossPayoutMultiple, 2)}× avg</small></td>
+        </tr>`;
       }).join("");
+
+      const selectStructure = (index) => {
+        state.selectedStructureIndex = Math.max(0, Math.min(index, history.structures.length - 1));
+        const selected = history.structures[state.selectedStructureIndex];
+        rows.querySelectorAll("tr").forEach((row, rowIndex) => {
+          const active = rowIndex === state.selectedStructureIndex;
+          row.setAttribute("aria-selected", String(active));
+          const radio = row.querySelector('input[type="radio"]');
+          if (radio) radio.checked = active;
+        });
+        text("selected-structure-label", `${selected.name} · payout and breakevens`);
+        text("selected-payout-summary", `${selected.name}: ${priceMoney(selected.debitAsk)} ask debit; profitable in ${selected.trailing12.profitableEvents}/${selected.trailing12.events} comparable events; ${number(selected.trailing12.averageWinnerPayoutMultiple, 2)}× average winner. Chart labels show gross expiration payout divided by the debit.`);
+        renderChart();
+      };
+      rows.querySelectorAll("tr").forEach((row) => {
+        const index = Number(row.dataset.structureIndex);
+        row.addEventListener("click", () => selectStructure(index));
+        row.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          selectStructure(index);
+        });
+      });
+      selectStructure(state.selectedStructureIndex);
     }
     const note = $("options-method-note");
     if (note && history) note.textContent = `${options.model.description} Current structure screen requires volume of at least 25 contracts in each leg in addition to the published spread and open-interest gates. Historical replay: ${history.method} Limitation: ${history.limitation} The fan is mapped to the chart’s spot total-return scale; dollar labels remain actual option-implied prices.`;
@@ -210,6 +234,8 @@
     const stage = $("market-chart-stage");
     if (!data || !stage) return;
     const options = data.earningsOptions || null;
+    const structures = options && options.historicalAnalysis ? options.historicalAnalysis.structures || [] : [];
+    const selectedStructure = structures[state.selectedStructureIndex] || structures[0] || null;
     const spotRows = visibleSeries(data, "spot");
     const perpRows = visibleSeries(data, "perp");
     const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
@@ -226,7 +252,7 @@
 
     const width = 1280;
     const height = 590;
-    const margin = { top: 40, right: options ? 140 : 76, bottom: 50, left: 72 };
+    const margin = { top: 40, right: options ? 190 : 76, bottom: 50, left: 72 };
     const plotWidth = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;
     const startMs = new Date(`${dates[0]}T00:00:00Z`).getTime();
@@ -242,6 +268,14 @@
     const optionIndex = (price) => lastSpotIndex * Number(price) / optionUnderlying;
     if (options && Number.isFinite(optionUnderlying) && optionUnderlying > 0) {
       options.fan.forEach((row) => values.push(optionIndex(row.earningsPrice), optionIndex(row.expirationPrice)));
+      if (selectedStructure) {
+        values.push(
+          optionIndex(selectedStructure.put.strike),
+          optionIndex(selectedStructure.call.strike),
+          optionIndex(selectedStructure.lowerBreakeven),
+          optionIndex(selectedStructure.upperBreakeven)
+        );
+      }
     }
     let low = Math.min(...values);
     let high = Math.max(...values);
@@ -254,7 +288,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks${options ? ", plus a liquid-options risk-neutral probability fan through " + options.chain.expiration : ""}`,
+      "aria-label": `${data.symbol} spot total-return line and seven-day long perpetual-swap total-return candlesticks${options ? ", plus a liquid-options risk-neutral probability fan through " + options.chain.expiration : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -273,13 +307,25 @@
       const fanStartDate = dates[dates.length - 1];
       const earningsDate = options.earnings.date;
       const expirationDate = options.chain.expiration;
+      const earningsX = x(earningsDate);
+      const expiryX = x(expirationDate);
+
+      if (selectedStructure) {
+        const upperBreakevenY = y(optionIndex(selectedStructure.upperBreakeven));
+        const lowerBreakevenY = y(optionIndex(selectedStructure.lowerBreakeven));
+        const futureWidth = Math.max(expiryX - earningsX, 0);
+        svg.appendChild(svgNode("rect", { x: earningsX, y: margin.top, width: futureWidth, height: Math.max(upperBreakevenY - margin.top, 0), class: "options-profit-zone" }));
+        svg.appendChild(svgNode("rect", { x: earningsX, y: upperBreakevenY, width: futureWidth, height: Math.max(lowerBreakevenY - upperBreakevenY, 0), class: "options-loss-zone" }));
+        svg.appendChild(svgNode("rect", { x: earningsX, y: lowerBreakevenY, width: futureWidth, height: Math.max(height - margin.bottom - lowerBreakevenY, 0), class: "options-profit-zone" }));
+      }
+
       if (lower && upper) {
         const band = [
           `M${x(fanStartDate)},${y(lastSpotIndex)}`,
-          `L${x(earningsDate)},${y(optionIndex(upper.earningsPrice))}`,
-          `L${x(expirationDate)},${y(optionIndex(upper.expirationPrice))}`,
-          `L${x(expirationDate)},${y(optionIndex(lower.expirationPrice))}`,
-          `L${x(earningsDate)},${y(optionIndex(lower.earningsPrice))}`,
+          `L${earningsX},${y(optionIndex(upper.earningsPrice))}`,
+          `L${expiryX},${y(optionIndex(upper.expirationPrice))}`,
+          `L${expiryX},${y(optionIndex(lower.expirationPrice))}`,
+          `L${earningsX},${y(optionIndex(lower.earningsPrice))}`,
           "Z",
         ].join(" ");
         svg.appendChild(svgNode("path", { d: band, class: "options-fan-band" }));
@@ -289,23 +335,48 @@
         if (!row) return;
         const path = [
           `M${x(fanStartDate)},${y(lastSpotIndex)}`,
-          `L${x(earningsDate)},${y(optionIndex(row.earningsPrice))}`,
-          `L${x(expirationDate)},${y(optionIndex(row.expirationPrice))}`,
+          `L${earningsX},${y(optionIndex(row.earningsPrice))}`,
+          `L${expiryX},${y(optionIndex(row.expirationPrice))}`,
         ].join(" ");
         svg.appendChild(svgNode("path", { d: path, class: probability === .5 ? "options-fan-line median" : "options-fan-line" }));
       });
-      const earningsX = x(earningsDate);
+
+      if (selectedStructure) {
+        [
+          [selectedStructure.lowerBreakeven, `LOWER BE · ${priceMoney(selectedStructure.lowerBreakeven)}`, "options-breakeven-line"],
+          [selectedStructure.upperBreakeven, `UPPER BE · ${priceMoney(selectedStructure.upperBreakeven)}`, "options-breakeven-line"],
+        ].forEach(([price, labelText, className]) => {
+          const py = y(optionIndex(price));
+          svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: className }));
+          const label = svgNode("text", { x: earningsX + 6, y: py - 5, class: "options-level-label" });
+          label.textContent = labelText;
+          svg.appendChild(label);
+        });
+        const strikeLevels = [...new Set([Number(selectedStructure.put.strike), Number(selectedStructure.call.strike)])];
+        strikeLevels.forEach((price) => {
+          const py = y(optionIndex(price));
+          svg.appendChild(svgNode("line", { x1: earningsX, y1: py, x2: expiryX, y2: py, class: "options-strike-line" }));
+        });
+      }
+
       svg.appendChild(svgNode("line", { x1: earningsX, y1: margin.top, x2: earningsX, y2: height - margin.bottom, class: "options-event-line" }));
       const earningsLabel = svgNode("text", { x: earningsX, y: margin.top - 12, class: "options-event-label", "text-anchor": "middle" });
       earningsLabel.textContent = `EARNINGS · ${dateLabel(earningsDate, false).toUpperCase()} · ${String(options.earnings.timing || "").toUpperCase()}`;
       svg.appendChild(earningsLabel);
-      const expiryX = x(expirationDate);
       svg.appendChild(svgNode("line", { x1: expiryX, y1: margin.top, x2: expiryX, y2: height - margin.bottom, class: "options-expiry-line" }));
       [[.90, "90th"], [.50, "median"], [.10, "10th"]].forEach(([probability, labelText]) => {
         const row = fanByProbability.get(probability);
         if (!row) return;
-        const label = svgNode("text", { x: expiryX + 7, y: y(optionIndex(row.expirationPrice)) + 4, class: probability === .5 ? "options-price-label median" : "options-price-label" });
-        label.textContent = `${priceMoney(row.expirationPrice)} · ${labelText}`;
+        const price = Number(row.expirationPrice);
+        const payoff = selectedStructure
+          ? Math.max(Number(selectedStructure.put.strike) - price, 0) + Math.max(price - Number(selectedStructure.call.strike), 0)
+          : 0;
+        const grossMultiple = selectedStructure ? payoff / Number(selectedStructure.debitAsk) : NaN;
+        const profitable = Number.isFinite(grossMultiple) && grossMultiple > 1;
+        const label = svgNode("text", { x: expiryX + 7, y: y(optionIndex(price)) + 4, class: `options-price-label${probability === .5 ? " median" : ""}${profitable ? " profitable" : ""}` });
+        label.textContent = selectedStructure
+          ? `${labelText} · ${priceMoney(price)} · ${number(grossMultiple, 2)}×`
+          : `${priceMoney(price)} · ${labelText}`;
         svg.appendChild(label);
       });
     }

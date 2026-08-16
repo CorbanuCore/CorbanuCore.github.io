@@ -105,6 +105,11 @@ def main() -> int:
                     raise AssertionError("aapl: historical structure does not use exactly 12 recent events")
                 if len(recent.get("outcomes") or []) != 12:
                     raise AssertionError("aapl: historical payout tape is incomplete")
+            page_markup = (SITE_ROOT / slug / "index.html").read_text()
+            if 'id="historical-structure-rows"' not in page_markup:
+                raise AssertionError("aapl: selectable historical structure table is missing")
+            if "historical-play-card" in page_markup:
+                raise AssertionError("aapl: obsolete historical payout cards remain")
             validated_option_contracts = len(contracts)
             validated_historical_structures = len(structures)
 

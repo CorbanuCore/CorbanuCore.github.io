@@ -83,6 +83,7 @@ main { min-height: 80vh; }
 .legend-item { display: inline-flex; align-items: center; gap: .55rem; color: #d9ddd4; font-size: .8rem; }
 .legend-line { width: 27px; height: 0; border-top: 2px solid var(--blue); }
 .legend-range { width: 27px; height: 9px; border-top: 1px solid rgba(204, 255, 0, .72); border-bottom: 1px solid rgba(204, 255, 0, .72); background: rgba(204, 255, 0, .06); }
+.legend-payoff { width: 27px; height: 9px; border-top: 1px dashed #b9c0b5; border-bottom: 1px dashed #b9c0b5; background: rgba(255, 139, 124, .055); }
 .legend-candle { position: relative; width: 9px; height: 18px; border: 1px solid var(--lime); background: rgba(204, 255, 0, .3); }
 .legend-candle::before { content: ""; position: absolute; top: -5px; bottom: -5px; left: 3px; width: 1px; background: var(--lime); }
 .range-controls { display: flex; gap: .35rem; }
@@ -112,6 +113,12 @@ main { min-height: 80vh; }
 .options-event-label { fill: var(--lime); font: 700 9px var(--mono); letter-spacing: .08em; }
 .options-price-label { fill: #8a9285; font: 9px var(--mono); }
 .options-price-label.median { fill: #e8ece4; }
+.options-price-label.profitable { fill: var(--lime); font-weight: 700; }
+.options-profit-zone { fill: rgba(204, 255, 0, .025); }
+.options-loss-zone { fill: rgba(255, 139, 124, .035); }
+.options-breakeven-line { stroke: rgba(235, 239, 230, .56); stroke-width: 1; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.options-strike-line { stroke: rgba(255, 139, 124, .45); stroke-width: 1; stroke-dasharray: 2 4; vector-effect: non-scaling-stroke; }
+.options-level-label { fill: #aeb5aa; font: 700 8px var(--mono); letter-spacing: .04em; }
 .market-wick { stroke: #d7dfd1; stroke-width: 1; vector-effect: non-scaling-stroke; opacity: .78; }
 .market-body-up { fill: rgba(190, 230, 37, .72); stroke: #d4ff35; stroke-width: 1; vector-effect: non-scaling-stroke; }
 .market-body-down { fill: rgba(224, 117, 104, .68); stroke: #ff9a8d; stroke-width: 1; vector-effect: non-scaling-stroke; }
@@ -157,32 +164,24 @@ main { min-height: 80vh; }
 .historical-plays > header span { color: var(--lime); font: 700 .52rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
 .historical-plays > header h3 { margin: .4rem 0 0; font: 500 clamp(.95rem, 1.45vw, 1.2rem)/1.2 var(--sans); }
 .historical-plays > header p { margin: 0; color: #6f776b; font: .55rem/1.4 var(--mono); text-align: right; text-transform: uppercase; }
-.historical-play-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
-.historical-play-loading { grid-column: 1 / -1; padding: 1.2rem; color: var(--dim); border: 1px dashed var(--line); font: .65rem/1.5 var(--mono); }
-.historical-play-card { min-width: 0; border: 1px solid rgba(255, 255, 255, .13); border-radius: 7px; background: rgba(0, 0, 0, .24); overflow: hidden; }
-.historical-play-card > header { display: flex; align-items: start; justify-content: space-between; gap: 1rem; padding: .95rem 1rem .8rem; border-bottom: 1px solid rgba(255, 255, 255, .08); }
-.historical-play-card > header span { color: #8d9588; font: 700 .5rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-.historical-play-card h4 { margin: .38rem 0 0; font: 600 1.05rem/1.1 var(--sans); }
-.historical-play-card > header > strong { color: var(--lime); font: 700 1.15rem/1 var(--mono); text-align: right; white-space: nowrap; }
-.historical-play-card > header > strong small { display: block; margin-top: .35rem; color: #737b70; font-size: .47rem; letter-spacing: .06em; text-transform: uppercase; }
-.play-legs { margin: 0; padding: .72rem 1rem; color: #b7beb2; border-bottom: 1px solid rgba(255, 255, 255, .07); font: .62rem/1.45 var(--mono); }
-.play-legs b { color: var(--ink); }
-.play-metrics { display: grid; grid-template-columns: repeat(3, 1fr); }
-.play-metrics > div { min-width: 0; padding: .8rem 1rem; border-right: 1px solid rgba(255, 255, 255, .07); }
-.play-metrics > div:last-child { border-right: 0; }
-.play-metrics small { display: block; min-height: 2.2em; color: #747c70; font: .5rem/1.2 var(--mono); letter-spacing: .055em; text-transform: uppercase; }
-.play-metrics strong { display: block; margin-top: .38rem; color: var(--ink); font: 700 1.15rem/1 var(--mono); }
-.play-metrics span { display: block; margin-top: .38rem; color: #656d62; font: .48rem/1.3 var(--mono); }
-.play-cost { display: flex; justify-content: space-between; gap: 1rem; padding: .65rem 1rem; color: #777f74; border-top: 1px solid rgba(255, 255, 255, .07); font: .54rem/1.4 var(--mono); }
-.play-cost b { color: #d7dcd3; }
-.payout-tape { display: grid; grid-template-columns: repeat(12, minmax(34px, 1fr)); gap: 3px; padding: .65rem 1rem; overflow-x: auto; border-top: 1px solid rgba(255, 255, 255, .07); }
-.payout-tape-cell { min-width: 0; padding: .42rem .2rem; color: #777f74; border: 1px solid rgba(255, 255, 255, .08); text-align: center; }
-.payout-tape-cell b { display: block; font: 700 .56rem/1 var(--mono); }
-.payout-tape-cell small { display: block; margin-top: .3rem; color: #5f675d; font: .42rem/1 var(--mono); }
-.payout-tape-cell.profitable { color: var(--lime); border-color: rgba(204, 255, 0, .34); }
-.payout-tape-cell.profitable small { color: #94a15f; }
-.historical-play-card > footer { display: grid; gap: .3rem; padding: .65rem 1rem .8rem; color: #697166; border-top: 1px solid rgba(255, 255, 255, .07); font: .5rem/1.4 var(--mono); }
-.historical-play-card > footer b { color: #b9c0b5; }
+.historical-table-scroll { overflow-x: auto; border: 1px solid rgba(255, 255, 255, .13); border-radius: 6px; }
+.historical-table-scroll:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.historical-structure-table { width: 100%; min-width: 1060px; border-collapse: collapse; color: #bdc4b9; font: .61rem/1.3 var(--mono); font-variant-numeric: tabular-nums; }
+.historical-structure-table th { padding: .6rem .7rem; color: #747c70; background: rgba(255, 255, 255, .025); font-size: .5rem; letter-spacing: .07em; text-align: right; text-transform: uppercase; white-space: nowrap; }
+.historical-structure-table th:first-child, .historical-structure-table th:nth-child(2) { text-align: left; }
+.historical-structure-table tbody tr { border-top: 1px solid rgba(255, 255, 255, .075); cursor: pointer; }
+.historical-structure-table tbody tr:hover { background: rgba(255, 255, 255, .025); }
+.historical-structure-table tbody tr[aria-selected="true"] { background: rgba(204, 255, 0, .055); box-shadow: inset 3px 0 0 var(--lime); }
+.historical-structure-table tbody tr:focus-visible { outline: 2px solid var(--lime); outline-offset: -2px; }
+.historical-structure-table td { padding: .72rem .7rem; text-align: right; white-space: nowrap; }
+.historical-structure-table td:first-child, .historical-structure-table td:nth-child(2) { text-align: left; }
+.historical-structure-table td:first-child { min-width: 180px; }
+.historical-structure-table td:first-child input { width: 14px; height: 14px; margin: 0 .5rem 0 0; accent-color: var(--lime); vertical-align: middle; pointer-events: none; }
+.historical-structure-table td strong { color: var(--ink); font-weight: 700; }
+.historical-structure-table td:first-child > strong { font-size: .68rem; vertical-align: middle; }
+.historical-structure-table td small, .historical-structure-table td span { display: block; margin-top: .25rem; color: #687065; font-size: .49rem; }
+.historical-structure-table td:first-child small { margin-left: 1.65rem; }
+.selected-payout-summary { margin: .65rem 0 0; color: #939b8e; font: .57rem/1.5 var(--mono); }
 .options-method-note { margin: .85rem 2rem 1.35rem; color: #697066; font: .58rem/1.55 var(--mono); }
 .funding-forecast { border-top: 1px solid var(--line); background: rgba(5, 7, 5, .92); }
 .funding-forecast-head {
@@ -393,7 +392,6 @@ footer {
 }
 
 @media (max-width: 760px) {
-  .historical-play-cards { grid-template-columns: 1fr; }
   .onchain-table-head { display: none; }
   .onchain-market-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
   .onchain-cell.contracts { grid-column: 1 / -1; padding: .75rem 0; border-top: 1px solid rgba(255, 255, 255, .08); border-bottom: 1px solid rgba(255, 255, 255, .08); }
@@ -452,7 +450,6 @@ footer {
   .historical-plays { padding: 1rem 1.15rem .2rem; }
   .historical-plays > header { display: grid; gap: .5rem; }
   .historical-plays > header p { text-align: left; }
-  .play-cost { display: grid; gap: .35rem; }
   .options-method-note { margin: .75rem 1.15rem 1.1rem; }
   .funding-forecast-head { align-items: start; padding: 1.1rem 1.15rem .75rem; }
   .funding-forecast-asof { max-width: 42%; text-align: right; white-space: normal; }

@@ -79,7 +79,7 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
     continuous_spot = symbol == "GOLD"
     options_enabled = symbol == "AAPL"
     options_legend = (
-        '\n              <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>liquid options risk-neutral probability fan</span>'
+        '\n              <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>liquid options risk-neutral probability fan</span>\n              <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>'
         if options_enabled
         else ""
     )
@@ -101,10 +101,16 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
           </div>
           <section class="historical-plays" aria-labelledby="historical-plays-title">
             <header>
-              <div><span>Volume-screened structures</span><h3 id="historical-plays-title">Current earnings setups with historical payout context</h3></div>
+              <div><span>Volume-screened structures</span><h3 id="historical-plays-title">Select a structure to display its payout on the chart</h3></div>
               <p>Ask-price debit · same normalized strikes · same event horizon</p>
             </header>
-            <div id="historical-play-cards" class="historical-play-cards"><div class="historical-play-loading">Replaying prior earnings…</div></div>
+            <div class="historical-table-scroll" tabindex="0" role="region" aria-label="Selectable earnings option structures and historical payouts">
+              <table class="historical-structure-table">
+                <thead><tr><th>Structure</th><th>Legs</th><th>Ask debit</th><th>Volume</th><th>Profitable · 12</th><th>Avg gross</th><th>Avg winner</th><th>Maximum</th><th>Full history</th></tr></thead>
+                <tbody id="historical-structure-rows"><tr><td colspan="9">Replaying prior earnings…</td></tr></tbody>
+              </table>
+            </div>
+            <p id="selected-payout-summary" class="selected-payout-summary" aria-live="polite">Select a structure to inspect its payout.</p>
           </section>
           <p id="options-method-note" class="options-method-note">Historical replay loading…</p>
         </section>"""
