@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/pltr/">
   <link rel="canonical" href="https://corbanu.com/pltr/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>PLTR Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="pltr" data-market-version="cf6e41984093">
+<body data-market-slug="pltr" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>PLTR perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>PLTR spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">PLTR Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>XYZ100 is an equity_index row with displayed 24-hour perp liquidity of 21.944 USD millions. It hedges the Nasdaq-listed high-growth AI and software factor that dominates Palantir more directly than the broader SP500, while still being much deeper than Palantir&#x27;s 0.544 USD millions.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>24.9%</td><td>$1.386M</td><td>3/3</td><td>Microsoft is the closest large-scale software and enterprise AI comparator in CORE_UNIVERSE; its displayed 24-hour perp liquidity is 1.386 USD millions, deeper than Palantir&#x27;s 0.544 USD millions, so it can carry the largest peer weight.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>22.0%</td><td>$2.262M</td><td>3/3</td><td>Alphabet adds data, applied AI model, and cloud software exposure with displayed 24-hour perp liquidity of 2.262 USD millions, making it a high-comparability and deeper-liquidity peer.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>21.2%</td><td>$3.384M</td><td>3/3</td><td>NVIDIA is the primary AI compute equity and effectively sets the AI factor that PLTR&#x27;s software story trades against, giving it the highest economic comparability in the block. Its displayed 24-hour perp liquidity is 3.384 USD millions, which supports the largest peer weight.</td></tr><tr><td><strong>META</strong><span>Meta Platforms</span></td><td>13.6%</td><td>$1.343M</td><td>3/3</td><td>Meta Platforms is not a pure enterprise software match, but its AI model spending and data-driven platform make it a useful high-beta technology peer; displayed 24-hour perp liquidity is 1.343 USD millions.</td></tr><tr><td><strong>NBIS</strong><span>Nebius Group</span></td><td>9.9%</td><td>$2.350M</td><td>3/3</td><td>Nebius Group provides AI cloud infrastructure, so it captures the infrastructure side of Palantir&#x27;s AI theme with displayed 24-hour perp liquidity of 2.35 USD millions; because it is less like Palantir&#x27;s software business, it gets the smallest positive peer weight.</td></tr><tr><td><strong>AMD</strong><span>Advanced Micro Devices</span></td><td>8.4%</td><td>$1.180M</td><td>2/3</td><td>Advanced Micro Devices is a second AI compute supplier that diversifies the semiconductor factor in the block while keeping positive sensitivity to AI capital spending; displayed 24-hour perp liquidity is 1.18 USD millions.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block uses only CORE_UNIVERSE symbols and excludes PLTR from the peer sleeve. Peer weights are positive and sum to exactly 1: comparability is led by Microsoft and Alphabet, supported by Meta Platforms, while NVIDIA, Advanced Micro Devices, and Nebius Group add AI compute and infrastructure exposure at lower weights. The liquidity check uses the displayed 24-hour perp liquidity in USD millions, not market capitalization or share volume; every selected peer is deeper than Palantir&#x27;s 0.544 USD millions, so the sleeve avoids leaning on books thinner than the target while retaining single-name equity specificity. The sole primary index hedge is XYZ100, and commodity rows and other ETF rows were not used.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

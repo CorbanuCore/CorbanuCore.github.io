@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/be/">
   <link rel="canonical" href="https://corbanu.com/be/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>BE Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="be" data-market-version="cf6e41984093">
+<body data-market-slug="be" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>BE perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>BE spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">BE Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>SP500 · S&amp;P 500 · $30.814M 24h</strong>
+            <p>SP500 is the broad US equity beta hedge and has the deepest displayed 24-hour perp liquidity among the eligible equity_index and equity_etf rows at 30.814 USD millions, large relative to BE at 0.582 USD millions; the broader index also avoids over-hedging the specific AI and memory factor already represented in the peer basket.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>TSLA</strong><span>Tesla</span></td><td>35.8%</td><td>$4.551M</td><td>3/3</td><td>TSLA is the closest economic adjacency because it contains energy storage and clean-energy hardware alongside vehicles, and it also has the strongest displayed 24-hour perp liquidity among the chosen peers at 4.551 USD millions, so it receives the largest peer weight.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>22.2%</td><td>$3.384M</td><td>3/3</td><td>NVDA is included as a high-liquidity proxy for the AI data-center demand cycle that drives interest in Bloom Energy&#x27;s onsite power systems; its displayed 24-hour perp liquidity is 3.384 USD millions, supporting the second-largest weight.</td></tr><tr><td><strong>NBIS</strong><span>Nebius Group</span></td><td>21.2%</td><td>$2.350M</td><td>3/3</td><td>AI cloud and data-center capacity make power procurement and energization timing central to the equity story, similar to BE&#x27;s onsite power pitch for data centers; displayed 24-hour perp liquidity is 2.35 USD millions.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>14.2%</td><td>$2.262M</td><td>3/3</td><td>GOOGL represents the hyperscale data-center customer side of the same power-demand theme, but it is a more diversified advertising and software business, and its displayed 24-hour perp liquidity is 2.262 USD millions; therefore it receives the smallest weight.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>6.6%</td><td>$1.386M</td><td>2/3</td><td>Microsoft is another hyperscaler whose data-center expansion drives demand for reliable onsite power, an indirect but real economic linkage to Bloom Energy. Displayed 24-hour perp liquidity of 1.386 USD millions is adequate for a moderate weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">This is a long BE versus short peer basket construction with a separate SP500 market hedge. The basket favors business models tied to firm onsite power, grid scarcity, and AI data-center load growth rather than the memory and semiconductor manufacturing names that dominate the universe. Weights sum to exactly 1 and are highest for TSLA and NBIS because their economics are closest to power-constrained infrastructure; NVDA is meaningful but less direct; GOOGL and MSFT are demand-side references only. All peer weights respect displayed 24-hour perp liquidity in USD millions: each chosen peer is above BE&#x27;s 0.582 USD millions, and lower-comparability or more diversified names receive smaller weights.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

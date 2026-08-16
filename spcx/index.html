@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/spcx/">
   <link rel="canonical" href="https://corbanu.com/spcx/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>SPCX Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="spcx" data-market-version="cf6e41984093">
+<body data-market-slug="spcx" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>SPCX perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>SPCX spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">SPCX Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>XYZ100 is classified equity_index and is the cleanest primary hedge for SPCX because it removes concentrated mega-cap growth and Nasdaq-style beta without introducing commodity or Korea-specific memory exposure. Its displayed 24-hour perp liquidity is 21.944 USD millions, comfortably above SPCX at 11.804 USD millions, while SP500 at 30.814 USD millions is more diversified but less aligned with the growth factor being hedged.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>TSLA</strong><span>Tesla</span></td><td>31.9%</td><td>$4.551M</td><td>3/3</td><td>Tesla carries the largest peer weight because it shares the same founder risk factor, vertically integrated engineering, manufacturing scale, autonomy and AI narrative, and high-beta growth sensitivity. Its 4.551 USD millions of 24-hour perp liquidity is the strongest in this peer basket.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>21.5%</td><td>$3.384M</td><td>3/3</td><td>NVIDIA is a liquid expression of AI accelerators, high-performance compute, and high-multiple hardware demand that also sits under SpaceX and Starlink operations. Its 3.384 USD millions of 24-hour perp liquidity supports the second-largest weight.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>17.4%</td><td>$2.262M</td><td>3/3</td><td>Alphabet adds scaled data distribution, cloud, AI, and network infrastructure that rhyme with Starlink as a global connectivity platform. Its 2.262 USD millions of 24-hour perp liquidity is adequate for a mid-tier weight.</td></tr><tr><td><strong>PLTR</strong><span>Palantir Technologies</span></td><td>10.4%</td><td>$0.544M</td><td>3/3</td><td>Defense and government analytics overlap with SpaceX launch contracts and security-sensitive satellite demand; its displayed 24-hour perp liquidity is lower at 0.544 USD millions, so the weight is capped.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>10.1%</td><td>$1.386M</td><td>3/3</td><td>MSFT provides cloud, AI, and government enterprise demand exposure that partly overlaps with satellite and mission procurement; displayed 24-hour perp liquidity is 1.386 USD millions, keeping the weight moderate.</td></tr><tr><td><strong>AMZN</strong><span>Amazon</span></td><td>8.7%</td><td>$0.462M</td><td>2/3</td><td>AMZN is a direct Starlink competitor through Project Kuiper and also brings AWS and logistics-scale execution; displayed 24-hour perp liquidity is only 0.462 USD millions, so economic relevance is capped at a smaller weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block targets SPCX with XYZ100 as the sole primary index hedge and six single-name equity peers whose weights sum to exactly 1.000. Peer selection favors economic comparability to SpaceX: reusable launch and Starlink-like satellite competition, high-beta founder-led growth, government and defense procurement sensitivity, and capital-intensive AI or network infrastructure. Displayed 24-hour perp liquidity is respected in USD millions: SPCX shows 11.804 USD millions, so the more comparable but thinner names such as AMZN at 0.462 USD millions and PLTR at 0.544 USD millions are kept to smaller weights, while TSLA, NVDA, GOOGL, and MSFT carry larger but still bounded weights.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

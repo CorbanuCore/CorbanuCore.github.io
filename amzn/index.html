@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/amzn/">
   <link rel="canonical" href="https://corbanu.com/amzn/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>AMZN Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="amzn" data-market-version="cf6e41984093">
+<body data-market-slug="amzn" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>AMZN perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>AMZN spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">AMZN Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>Amazon is a mega-cap Nasdaq-100 constituent whose equity risk is dominated by US large-cap growth and cloud/AI sentiment, so the Nasdaq-100 is the cleanest primary index hedge; its displayed 24-hour perp liquidity is 21.944 USD millions, which is deep relative to Amazon&#x27;s own 0.462 USD millions.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>24.7%</td><td>$2.262M</td><td>3/3</td><td>Alphabet matches Amazon on cloud infrastructure, digital advertising, and consumer internet scale, giving it the highest economic comparability alongside Microsoft; its 24-hour perp liquidity is 2.262 USD millions, comfortably above AMZN, so it can carry a joint-largest weight.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>24.0%</td><td>$1.386M</td><td>3/3</td><td>Microsoft is the closest cloud hyperscaler comparison through Azure against AWS, with added enterprise software and AI platform exposure. Its displayed 24-hour perp liquidity is 1.386 USD millions, exactly three times AMZN at 0.462 USD millions, supporting a top peer weight.</td></tr><tr><td><strong>META</strong><span>Meta Platforms</span></td><td>18.2%</td><td>$1.343M</td><td>3/3</td><td>Meta Platforms is a mega-cap consumer internet and advertising name with similar growth-factor sensitivity and index co-movement to Amazon, though it lacks a large cloud arm, so it receives a slightly lower weight; its 24-hour perp liquidity is 1.343 USD millions.</td></tr><tr><td><strong>AAPL</strong><span>Apple</span></td><td>13.8%</td><td>$1.422M</td><td>3/3</td><td>Apple contributes mega-cap consumer ecosystem and services exposure that overlaps Amazon&#x27;s retail and subscription businesses, but with weaker cloud and logistics comparability, so it is weighted lower; its 24-hour perp liquidity is 1.422 USD millions.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>13.8%</td><td>$3.384M</td><td>3/3</td><td>NVIDIA is included because AI data-center demand tightly links it to Amazon&#x27;s cloud capex cycle and growth-factor returns, even though its semiconductor economics are less directly comparable; its 24-hour perp liquidity is 3.384 USD millions, the deepest among the selected peers, which helps execution despite the lower economic weight.</td></tr><tr><td><strong>TSLA</strong><span>Tesla</span></td><td>5.4%</td><td>$4.551M</td><td>2/3</td><td>Adds high-beta US mega-cap consumer/tech exposure, but it is the least economically comparable name in the block, so despite relatively deep 24-hour perp liquidity of 4.551 USD millions it receives the smallest weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block uses XYZ100 as the single primary index hedge because Amazon&#x27;s dominant systematic exposure is US mega-cap growth and cloud/AI beta rather than broad value or commodity risk. Peers are all single-name equities from CORE_UNIVERSE, exclude AMZN, have positive weights, and sum to exactly 1. The weighting prioritizes economic comparability first: GOOGL and MSFT carry the largest weights because cloud plus advertising and enterprise cloud are closest to Amazon&#x27;s AWS and ads engine; META and AAPL add consumer internet and mega-cap platform exposure; NVDA is included for the AI/cloud capex cycle but sized below the closest business-model peers; TSLA is kept smallest because liquidity alone does not offset weaker comparability. All displayed 24-hour perp liquidity figures are stated in USD millions, and because AMZN itself shows only 0.462 USD millions while every selected peer is more liquid, the construction can absorb the hedge without letting the most liquid but less comparable names dominate the block.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/mrvl/">
   <link rel="canonical" href="https://corbanu.com/mrvl/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>MRVL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="mrvl" data-market-version="cf6e41984093">
+<body data-market-slug="mrvl" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>MRVL perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>MRVL spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">MRVL Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>XYZ100 is the cleanest primary hedge because it is classified as equity_index, tracks the Nasdaq-100 large-cap technology complex that dominates MRVL&#x27;s market beta, and shows 21.944 USD millions of 24-hour perp liquidity. It is broader than DRAM, not leveraged like SOXL, and keeps more technology and semiconductor factor exposure than SP500.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>28.3%</td><td>$3.384M</td><td>3/3</td><td>NVDA is the closest available AI data-center semiconductor comparator: GPUs, networking and accelerated computing are driven by the same hyperscale capex cycle as Marvell&#x27;s custom silicon, DSP and optical interconnect products. Its 24-hour perp liquidity is 3.384 USD millions versus 1.269 USD millions for MRVL, so it can carry the largest peer weight.</td></tr><tr><td><strong>AMD</strong><span>Advanced Micro Devices</span></td><td>23.9%</td><td>$1.180M</td><td>3/3</td><td>AMD has high economic comparability through data-center CPUs and GPUs tied to AI server demand. Its 24-hour perp liquidity is 1.180 USD millions, slightly below MRVL at 1.269 USD millions, so the weight is large for product fit but not above NVDA.</td></tr><tr><td><strong>INTC</strong><span>Intel</span></td><td>18.8%</td><td>$6.434M</td><td>3/3</td><td>INTC is less aligned because of client PCs, CPUs and foundry execution, but it remains a large diversified semiconductor issuer with the same broad chip-cycle and US large-cap trading factors. Its 24-hour perp liquidity is 6.434 USD millions, comfortably above MRVL&#x27;s 1.269 USD millions, supporting a meaningful but secondary weight.</td></tr><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>18.0%</td><td>$11.877M</td><td>3/3</td><td>MU is very liquid at 11.877 USD millions of displayed 24-hour perp liquidity and has strong AI data-center memory exposure, but its commodity memory mix is less directly comparable than AI compute and networking silicon, so it is sized below NVDA and AMD.</td></tr><tr><td><strong>SNDK</strong><span>Sandisk</span></td><td>11.0%</td><td>$31.164M</td><td>3/3</td><td>SNDK has the deepest displayed 24-hour perp liquidity in the peer set at 31.164 USD millions, but it is mainly NAND storage rather than MRVL&#x27;s mixed-signal interconnect and custom silicon franchise, so high liquidity is not allowed to dominate the weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block uses XYZ100 as the single primary index hedge and five positive-weight single-name equity peers, with weights summing to exactly 1. The peer basket is weighted 75 percent to logic and AI compute semiconductors through NVDA, AMD and INTC, and 25 percent to memory and storage through MU and SNDK, matching MRVL&#x27;s AI data-center, networking, custom silicon and storage exposure while avoiding non-semiconductor names. Displayed 24-hour perp liquidity is respected in USD millions: MRVL is 1.269 USD millions, NVDA is 3.384 USD millions, AMD is 1.180 USD millions, INTC is 6.434 USD millions, MU is 11.877 USD millions and SNDK is 31.164 USD millions. Liquidity sets capacity, but final weights still prioritize economic comparability, which is why highly liquid memory and storage names are included yet capped.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/googl/">
   <link rel="canonical" href="https://corbanu.com/googl/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>GOOGL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="googl" data-market-version="cf6e41984093">
+<body data-market-slug="googl" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>GOOGL perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>GOOGL spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">GOOGL Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>I use the Nasdaq-100 because it is classified as equity_index and is the closest listed index hedge for Alphabet&#x27;s mega-cap technology, AI, advertising, and platform beta. Its displayed 24-hour perp liquidity is 21.944 USD millions, much deeper than GOOGL at 2.262 USD millions, making it practical as the primary hedge while the single-name peers supply the intra-market economic comparison.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>META</strong><span>Meta Platforms</span></td><td>26.0%</td><td>$1.343M</td><td>3/3</td><td>Closest single-name economic match through digital advertising, attention platforms, and AI ranking systems; displayed liquidity is 1.343 USD millions, below GOOGL at 2.262 USD millions, so the high comparability is not pushed further.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>25.7%</td><td>$1.386M</td><td>3/3</td><td>Microsoft is the closest listed single-name mix of cloud infrastructure, AI services, and high-margin software. Its displayed 24-hour perp liquidity is 1.386 USD millions, below GOOGL at 2.262 USD millions, so it receives the largest peer weight for comparability while still respecting the liquidity guardrail.</td></tr><tr><td><strong>AMZN</strong><span>Amazon</span></td><td>18.2%</td><td>$0.462M</td><td>3/3</td><td>Amazon overlaps through AWS cloud, a growing advertising business, and a large consumer ecosystem, although retail margin structure makes it less pure than Alphabet. Its displayed 24-hour perp liquidity is only 0.462 USD millions versus GOOGL at 2.262 USD millions, so the weight stays moderate despite strong thematic overlap.</td></tr><tr><td><strong>AAPL</strong><span>Apple</span></td><td>14.5%</td><td>$1.422M</td><td>3/3</td><td>Apple adds mega-cap consumer-platform and services exposure, with a strong ecosystem but less direct advertising or cloud-infrastructure overlap than the first three peers. Its displayed 24-hour perp liquidity is 1.422 USD millions, below GOOGL at 2.262 USD millions, supporting a smaller diversifying weight.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>10.8%</td><td>$3.384M</td><td>3/3</td><td>NVIDIA is included for AI infrastructure and accelerator exposure that increasingly drives Alphabet&#x27;s cloud and data-center economics; displayed 24-hour perp liquidity is 3.384 USD millions, but business-model overlap is less direct than the advertising and cloud peers.</td></tr><tr><td><strong>AMD</strong><span>Advanced Micro Devices</span></td><td>4.7%</td><td>$1.180M</td><td>2/3</td><td>Adds a second AI accelerator and semiconductor sensitivity with displayed liquidity of 1.18 USD millions; comparability is positive but more indirect, so this is the smallest peer weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block is built as an intra-TradeXYZ peer basket for GOOGL using only CORE_UNIVERSE symbols. The primary hedge is XYZ100 rather than SP500 because Alphabet&#x27;s risk is concentrated in large-cap technology and AI-linked growth factors, and XYZ100 displayed 24-hour perp liquidity of 21.944 USD millions is deep enough for the hedge leg. Peer weights are positive and sum to exactly 1. The largest weights go to Microsoft, Meta Platforms, and Amazon because they best match Alphabet&#x27;s combined exposure to digital advertising, cloud infrastructure, subscription and platform services, and AI investment. Apple is weighted next as a mega-cap ecosystem comparator. NVIDIA, AMD, and Intel are smaller satellite peers that capture AI compute and data-center supply-chain sensitivity without overwhelming the advertising and internet-platform core. Liquidity is respected by keeping the most economically central names at the top of the basket and limiting lower-overlap or more cyclical semiconductor names to smaller weights, with all displayed 24-hour perp liquidity figures interpreted in USD millions exactly as stated.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

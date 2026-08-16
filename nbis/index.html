@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/nbis/">
   <link rel="canonical" href="https://corbanu.com/nbis/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>NBIS Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="nbis" data-market-version="cf6e41984093">
+<body data-market-slug="nbis" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>NBIS perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>NBIS spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">NBIS Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>Nebius Group is a high-beta AI infrastructure and cloud compute name whose fortunes track the large-cap technology complex. The Nasdaq-100, with displayed 24-hour perp liquidity of 21.944 USD millions, offers deep, tradable exposure to that exact factor basket, making it a cleaner macro hedge for an AI compute story than the broader S&amp;P 500 at 30.814 USD millions or the narrower leveraged and thematic ETFs.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>27.5%</td><td>$3.384M</td><td>3/3</td><td>NVIDIA is the closest economic proxy because GPU supply, accelerator pricing, and AI data-center buildouts directly drive NBIS utilization and revenue quality; its 24-hour perp liquidity is 3.384 USD millions, above NBIS at 2.35 USD millions, supporting the largest peer weight.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>20.7%</td><td>$1.386M</td><td>3/3</td><td>Microsoft is a scaled AI cloud buyer and operator, so its AI infrastructure cycle maps to demand for NBIS capacity; liquidity is 1.386 USD millions, so the weight is high for comparability but below NVIDIA.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>17.5%</td><td>$2.262M</td><td>3/3</td><td>Alphabet adds hyperscale AI demand and in-house accelerator exposure, making it a strong demand-side comparator with 24-hour perp liquidity of 2.262 USD millions, close to NBIS at 2.35 USD millions.</td></tr><tr><td><strong>AMD</strong><span>Advanced Micro Devices</span></td><td>12.9%</td><td>$1.180M</td><td>3/3</td><td>Advanced Micro Devices is a leading accelerator supplier whose AI GPU cycle moves with the same infrastructure buildout that drives Nebius. Its displayed liquidity of 1.18 USD millions is thinner than NBIS, so the weight is held moderate.</td></tr><tr><td><strong>MRVL</strong><span>Marvell Technology</span></td><td>7.9%</td><td>$1.269M</td><td>2/3</td><td>Marvell supplies data-center networking and custom silicon that sit alongside GPU clusters, giving relevant but less direct comparability; its 24-hour perp liquidity is 1.269 USD millions.</td></tr><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>7.9%</td><td>$11.877M</td><td>2/3</td><td>Micron supplies the high-bandwidth memory that sits inside every AI server Nebius deploys, making it a sensitive upstream gauge of AI infrastructure demand. Its displayed liquidity of 11.877 USD millions is deep, but as a component supplier rather than a cloud operator it receives a mid-tier weight.</td></tr><tr><td><strong>AMZN</strong><span>Amazon</span></td><td>5.7%</td><td>$0.462M</td><td>2/3</td><td>Amazon Web Services is the benchmark hyperscale cloud against which neocloud pricing and capacity decisions are set, so Amazon is economically comparable. However, its displayed liquidity of 0.462 USD millions is the weakest in the peer set, so it receives the smallest weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">This block pairs a long or short NBIS position with a Nasdaq-100 primary hedge and seven single-name peers that together span the AI compute value chain: GPU and memory suppliers, hyperscale cloud operators, and the largest AI capex spenders. Peer weights are tilted toward names with the tightest economic linkage to Nebius Group&#x27;s AI cloud model, with NVIDIA carrying the largest weight and Amazon the smallest. All weights are positive and sum to exactly 1. Weights also respect the displayed 24-hour perp liquidity figures, which are stated in USD millions: NBIS itself trades 2.35 USD millions, peers with comparable or deeper liquidity such as NVIDIA at 3.384 USD millions, Alphabet at 2.262 USD millions, and Micron at 11.877 USD millions carry larger weights, while thinner books such as Amazon at 0.462 USD millions and AMD at 1.18 USD millions are sized down to keep the basket executable against the target. The result is a diversified, liquidity-aware AI infrastructure basket that neutralizes broad technology beta through the index hedge while isolating NBIS-specific idiosyncrasies against its closest economic comparables.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

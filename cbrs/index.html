@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/cbrs/">
   <link rel="canonical" href="https://corbanu.com/cbrs/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>CBRS Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="cbrs" data-market-version="cf6e41984093">
+<body data-market-slug="cbrs" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>CBRS perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>CBRS spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">CBRS Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>XYZ100 is the Nasdaq-100 with 24-hour perp liquidity of 21.944 USD millions, a liquid equity index hedge for CBRS&#x27;s high-beta AI and semiconductor exposure; it is closer to growth and AI compute risk than SP500, while avoiding the leverage embedded in SOXL and the narrower memory focus of DRAM.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>33.7%</td><td>$3.384M</td><td>3/3</td><td>Most direct public comparable for AI accelerators and GPU compute demand; with 24-hour perp liquidity of 3.384 USD millions it is much more tradable than CBRS at 0.419 USD millions, so it anchors the peer sleeve.</td></tr><tr><td><strong>AMD</strong><span>Advanced Micro Devices</span></td><td>23.8%</td><td>$1.180M</td><td>3/3</td><td>Second-source AI accelerator and server CPU exposure makes AMD highly comparable; 24-hour perp liquidity of 1.18 USD millions is adequate but below NVDA, supporting a smaller weight.</td></tr><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>12.3%</td><td>$11.877M</td><td>3/3</td><td>Micron is not a compute designer, but AI server demand and memory intensity make it highly sensitive to the same AI infrastructure cycle that drives Cerebras sentiment. Displayed 24-hour perp liquidity is 11.877 USD millions, far above CBRS at 0.419 USD millions, justifying a solid weight despite lower product overlap.</td></tr><tr><td><strong>NBIS</strong><span>Nebius Group</span></td><td>10.0%</td><td>$2.350M</td><td>3/3</td><td>Nebius provides AI cloud and compute infrastructure exposure, making it a useful customer-side and demand-side proxy for the AI compute ecosystem around Cerebras. Displayed 24-hour perp liquidity is 2.35 USD millions versus 0.419 USD millions for CBRS, which supports inclusion at a moderate weight.</td></tr><tr><td><strong>INTC</strong><span>Intel</span></td><td>8.8%</td><td>$6.434M</td><td>3/3</td><td>Intel is less pure on AI accelerators but still captures advanced compute, foundry, and semiconductor-cycle beta that can hedge part of CBRS sector risk. Its displayed 24-hour perp liquidity is 6.434 USD millions, much higher than CBRS at 0.419 USD millions, but economic comparability is weaker, so the weight is capped.</td></tr><tr><td><strong>MRVL</strong><span>Marvell Technology</span></td><td>11.5%</td><td>$1.269M</td><td>2/3</td><td>Custom AI silicon, networking, and data-center connectivity give strong economic overlap with CBRS; 24-hour perp liquidity of 1.269 USD millions supports a meaningful but not anchor weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block is long CBRS against a short XYZ100 primary hedge and a diversified single-name peer basket. CBRS has only 0.419 USD millions of displayed 24-hour perp liquidity, so the basket favors economically close AI compute names while using more liquid peers for executability; it does not set weights by liquidity alone. NVDA and AMD carry the largest weights because they are the closest AI accelerator comparables, MRVL adds custom silicon and data-center networking, MU and INTC are capped despite higher liquidity because memory and CPU or foundry exposure are less pure, and NBIS is kept small as downstream AI infrastructure rather than silicon. Peer weights are positive and sum to exactly 1.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/coin/">
   <link rel="canonical" href="https://corbanu.com/coin/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>COIN Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="coin" data-market-version="cf6e41984093">
+<body data-market-slug="coin" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>COIN perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>COIN spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">COIN Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>XYZ100 is the cleanest primary hedge because COIN trades mainly as a high-beta growth and risk-appetite stock. Its displayed 24-hour perp liquidity is 21.944 USD millions, which is deep for an intra-TradeXYZ hedge while keeping the exposure closer to growth-factor moves than a broad market gauge.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>CRCL</strong><span>Circle Internet Group</span></td><td>40.9%</td><td>$1.655M</td><td>3/3</td><td>Circle Internet Group is the closest economic peer because stablecoin infrastructure and crypto transaction activity share the same digital-asset adoption and revenue cycle as Coinbase. Its displayed 24-hour perp liquidity is 1.655 USD millions, above COIN at 0.710 USD millions, so it receives the largest peer weight.</td></tr><tr><td><strong>MSTR</strong><span>Strategy</span></td><td>28.2%</td><td>$1.484M</td><td>3/3</td><td>Strategy is the next best peer because its equity value is closely tied to bitcoin holdings and crypto risk appetite, which also drive Coinbase trading volume and custody economics. Its displayed 24-hour perp liquidity is 1.484 USD millions, comfortably above COIN at 0.710 USD millions, supporting a large but secondary weight.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>11.3%</td><td>$3.384M</td><td>3/3</td><td>NVIDIA adds high-beta growth and momentum exposure that often trades with the same risk appetite as Coinbase, but its semiconductor business is less economically comparable; its 24-hour perp liquidity is 3.384 USD millions, so the weight is capped below the crypto-native peers.</td></tr><tr><td><strong>TSLA</strong><span>Tesla</span></td><td>10.5%</td><td>$4.551M</td><td>3/3</td><td>Tesla is not a crypto company, but it overlaps with Coinbase through retail speculative positioning and high-beta growth factor exposure; with 24-hour perp liquidity of 4.551 USD millions, it is liquid enough for a meaningful but still secondary weight.</td></tr><tr><td><strong>PLTR</strong><span>Palantir Technologies</span></td><td>9.1%</td><td>$0.544M</td><td>3/3</td><td>Palantir is not a crypto company, but it is a high-beta software name that can transmit the same speculative growth and retail-risk factor that often moves COIN. Its displayed 24-hour perp liquidity is 0.544 USD millions, below COIN at 0.710 USD millions, so the weight is kept moderate.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block is built as long COIN against a short peer basket plus the XYZ100 hedge. Direct crypto-linked economics drive the largest weights: CRCL and MSTR carry 0.625 combined because their revenues or balance-sheet value are most exposed to crypto-asset prices, trading activity, and speculative positioning. NVDA, AMD, TSLA, and PLTR fill out the high-beta growth and retail-risk factor that COIN also exhibits, but they are capped because their business models are less comparable. All liquidity references use the displayed 24-hour perp liquidity in USD millions; COIN is 0.71 USD millions, so the basket avoids overloading very large but less similar names and keeps the smallest weights on TSLA and PLTR. Peer weights are positive and sum to exactly 1.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>

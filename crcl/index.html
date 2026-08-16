@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/crcl/">
   <link rel="canonical" href="https://corbanu.com/crcl/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=cf6e41984093">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=099406d8182f">
   <title>CRCL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="crcl" data-market-version="cf6e41984093">
+<body data-market-slug="crcl" data-market-version="099406d8182f">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>CRCL perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>CRCL spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">CRCL Weighted Peer Basket</h2>
+            </div>
+            <small>moonshotai/kimi-k3 · temperature 0 · 3 validated blocks</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary index hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $21.944M 24h</strong>
+            <p>CRCL is a high-beta growth and crypto-linked equity, so the Nasdaq-100 is the closest listed broad hedge in CORE_UNIVERSE; its displayed 24-hour perp liquidity is 21.944 USD millions, deep enough for the hedge leg while keeping a growth-equity mix.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>COIN</strong><span>Coinbase</span></td><td>43.7%</td><td>$0.710M</td><td>3/3</td><td>Closest economic peer in the universe: Coinbase is a digital asset exchange that also earns USDC-related revenue sharing tied to Circle&#x27;s stablecoin economics, so both equities carry direct stablecoin and crypto cycle beta. Its 24-hour perp liquidity is 0.71 USD millions, thinner than CRCL&#x27;s 1.655 USD millions, so the position is given the largest weight for comparability but not oversized.</td></tr><tr><td><strong>MSTR</strong><span>Strategy</span></td><td>28.0%</td><td>$1.484M</td><td>3/3</td><td>Strategy functions as a leveraged digital asset treasury vehicle, so its equity shares the crypto factor that dominates CRCL&#x27;s risk even though the underlying business differs. Its 24-hour perp liquidity of 1.484 USD millions is close to CRCL&#x27;s 1.655 USD millions, supporting a secondary anchor weight.</td></tr><tr><td><strong>PLTR</strong><span>Palantir Technologies</span></td><td>9.0%</td><td>$0.544M</td><td>3/3</td><td>Smallest peer because the overlap is mainly high-multiple software and valuation sensitivity, not crypto market structure; displayed 24-hour perp liquidity is 0.544 USD millions, well below CRCL, so the weight is capped.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>10.0%</td><td>$3.384M</td><td>2/3</td><td>Large-cap technology proxy used to diversify away from pure crypto idiosyncrasy and to stabilize the basket&#x27;s factor mix with a deep, liquid growth equity. Its 24-hour perp liquidity of 3.384 USD millions is deeper than CRCL&#x27;s, which comfortably absorbs its moderate allocation.</td></tr><tr><td><strong>NBIS</strong><span>Nebius Group</span></td><td>9.3%</td><td>$2.350M</td><td>2/3</td><td>NBIS adds liquid high-beta infrastructure exposure that tends to trade with the same growth, funding-cost, and risk-appetite currents that can move CRCL. Its displayed 24-hour perp liquidity is 2.350 USD millions, above CRCL at 1.655 USD millions, so liquidity does not require a cut, but the weaker business link keeps the weight moderate.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block is long CRCL risk versus one growth-index hedge and five single-name peers. Weights are positive and sum to exactly 1. COIN carries the largest weight because it is the closest economic match, but its displayed 24-hour perp liquidity of 0.710 USD millions is below CRCL at 1.655 USD millions, so the weight is kept below a pure comparability score. MSTR adds crypto balance-sheet beta with 1.484 USD millions of displayed 24-hour perp liquidity, closer to CRCL. NVDA and NBIS are smaller liquidity-aware growth and AI-infrastructure proxies, with displayed 24-hour perp liquidity of 3.384 USD millions and 2.350 USD millions. PLTR is the smallest peer because the business match is only high-multiple software and risk appetite, and its displayed 24-hour perp liquidity is 0.544 USD millions. Sector and country ETFs were not used as the primary hedge because XYZ100 best matches CRCL&#x27;s dominant growth beta among the listed equity index and equity ETF rows.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=cf6e41984093"></script>
+  <script src="/assets/js/market-lens.js?v=099406d8182f"></script>
 </body>
 </html>
