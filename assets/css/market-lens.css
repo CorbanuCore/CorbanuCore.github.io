@@ -152,17 +152,37 @@ main { min-height: 80vh; }
 .earnings-options-summary small { display: block; color: var(--dim); font: 650 .57rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
 .earnings-options-summary strong { display: block; margin-top: .5rem; color: var(--ink); font: 650 clamp(.95rem, 1.55vw, 1.25rem)/1.15 var(--mono); font-variant-numeric: tabular-nums; }
 .earnings-options-summary span { display: block; margin-top: .4rem; color: #747c70; font: .55rem/1.4 var(--mono); }
-.options-table-scroll { margin: 1rem 2rem 0; overflow-x: auto; border: 1px solid rgba(255, 255, 255, .11); border-radius: 7px; }
-.options-table-scroll:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
-.options-table { width: 100%; min-width: 980px; border-collapse: collapse; color: #cbd0c7; font: .65rem/1.3 var(--mono); font-variant-numeric: tabular-nums; }
-.options-table th { padding: .62rem .7rem; color: #767e72; background: rgba(255, 255, 255, .025); font-size: .52rem; letter-spacing: .075em; text-align: right; text-transform: uppercase; }
-.options-table th:first-child { text-align: left; }
-.options-table td { padding: .58rem .7rem; border-top: 1px solid rgba(255, 255, 255, .065); text-align: right; white-space: nowrap; }
-.options-table td:first-child { min-width: 195px; text-align: left; }
-.options-table td small { display: inline; margin-left: .55rem; color: #666e63; font-size: .52rem; }
-.option-side { display: inline-block; min-width: 34px; padding: .2rem .28rem; border: 1px solid rgba(255, 255, 255, .15); border-radius: 2px; color: #cdd2c9; font-size: .48rem; letter-spacing: .06em; text-align: center; }
-.option-side.call { border-color: rgba(204, 255, 0, .3); color: #c9e75a; }
-.option-side.put { border-color: rgba(255, 139, 124, .3); color: #dd9a90; }
+.historical-plays { padding: 1.2rem 2rem .2rem; }
+.historical-plays > header { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: .8rem; }
+.historical-plays > header span { color: var(--lime); font: 700 .52rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.historical-plays > header h3 { margin: .4rem 0 0; font: 500 clamp(.95rem, 1.45vw, 1.2rem)/1.2 var(--sans); }
+.historical-plays > header p { margin: 0; color: #6f776b; font: .55rem/1.4 var(--mono); text-align: right; text-transform: uppercase; }
+.historical-play-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.historical-play-loading { grid-column: 1 / -1; padding: 1.2rem; color: var(--dim); border: 1px dashed var(--line); font: .65rem/1.5 var(--mono); }
+.historical-play-card { min-width: 0; border: 1px solid rgba(255, 255, 255, .13); border-radius: 7px; background: rgba(0, 0, 0, .24); overflow: hidden; }
+.historical-play-card > header { display: flex; align-items: start; justify-content: space-between; gap: 1rem; padding: .95rem 1rem .8rem; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+.historical-play-card > header span { color: #8d9588; font: 700 .5rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.historical-play-card h4 { margin: .38rem 0 0; font: 600 1.05rem/1.1 var(--sans); }
+.historical-play-card > header > strong { color: var(--lime); font: 700 1.15rem/1 var(--mono); text-align: right; white-space: nowrap; }
+.historical-play-card > header > strong small { display: block; margin-top: .35rem; color: #737b70; font-size: .47rem; letter-spacing: .06em; text-transform: uppercase; }
+.play-legs { margin: 0; padding: .72rem 1rem; color: #b7beb2; border-bottom: 1px solid rgba(255, 255, 255, .07); font: .62rem/1.45 var(--mono); }
+.play-legs b { color: var(--ink); }
+.play-metrics { display: grid; grid-template-columns: repeat(3, 1fr); }
+.play-metrics > div { min-width: 0; padding: .8rem 1rem; border-right: 1px solid rgba(255, 255, 255, .07); }
+.play-metrics > div:last-child { border-right: 0; }
+.play-metrics small { display: block; min-height: 2.2em; color: #747c70; font: .5rem/1.2 var(--mono); letter-spacing: .055em; text-transform: uppercase; }
+.play-metrics strong { display: block; margin-top: .38rem; color: var(--ink); font: 700 1.15rem/1 var(--mono); }
+.play-metrics span { display: block; margin-top: .38rem; color: #656d62; font: .48rem/1.3 var(--mono); }
+.play-cost { display: flex; justify-content: space-between; gap: 1rem; padding: .65rem 1rem; color: #777f74; border-top: 1px solid rgba(255, 255, 255, .07); font: .54rem/1.4 var(--mono); }
+.play-cost b { color: #d7dcd3; }
+.payout-tape { display: grid; grid-template-columns: repeat(12, minmax(34px, 1fr)); gap: 3px; padding: .65rem 1rem; overflow-x: auto; border-top: 1px solid rgba(255, 255, 255, .07); }
+.payout-tape-cell { min-width: 0; padding: .42rem .2rem; color: #777f74; border: 1px solid rgba(255, 255, 255, .08); text-align: center; }
+.payout-tape-cell b { display: block; font: 700 .56rem/1 var(--mono); }
+.payout-tape-cell small { display: block; margin-top: .3rem; color: #5f675d; font: .42rem/1 var(--mono); }
+.payout-tape-cell.profitable { color: var(--lime); border-color: rgba(204, 255, 0, .34); }
+.payout-tape-cell.profitable small { color: #94a15f; }
+.historical-play-card > footer { display: grid; gap: .3rem; padding: .65rem 1rem .8rem; color: #697166; border-top: 1px solid rgba(255, 255, 255, .07); font: .5rem/1.4 var(--mono); }
+.historical-play-card > footer b { color: #b9c0b5; }
 .options-method-note { margin: .85rem 2rem 1.35rem; color: #697066; font: .58rem/1.55 var(--mono); }
 .funding-forecast { border-top: 1px solid var(--line); background: rgba(5, 7, 5, .92); }
 .funding-forecast-head {
@@ -373,6 +393,7 @@ footer {
 }
 
 @media (max-width: 760px) {
+  .historical-play-cards { grid-template-columns: 1fr; }
   .onchain-table-head { display: none; }
   .onchain-market-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
   .onchain-cell.contracts { grid-column: 1 / -1; padding: .75rem 0; border-top: 1px solid rgba(255, 255, 255, .08); border-bottom: 1px solid rgba(255, 255, 255, .08); }
@@ -428,7 +449,10 @@ footer {
   .earnings-options-head { display: grid; gap: .75rem; align-items: start; padding: 1.1rem 1.15rem .85rem; }
   .earnings-options-asof { white-space: normal; }
   .earnings-options-summary > div { padding: .9rem .95rem 1rem; }
-  .options-table-scroll { margin: .85rem 1.15rem 0; }
+  .historical-plays { padding: 1rem 1.15rem .2rem; }
+  .historical-plays > header { display: grid; gap: .5rem; }
+  .historical-plays > header p { text-align: left; }
+  .play-cost { display: grid; gap: .35rem; }
   .options-method-note { margin: .75rem 1.15rem 1.1rem; }
   .funding-forecast-head { align-items: start; padding: 1.1rem 1.15rem .75rem; }
   .funding-forecast-asof { max-width: 42%; text-align: right; white-space: normal; }
