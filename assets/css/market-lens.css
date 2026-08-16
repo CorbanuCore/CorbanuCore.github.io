@@ -140,13 +140,6 @@ main { min-height: 80vh; }
 .tooltip-row strong { color: var(--ink); font: 600 .73rem/1 var(--mono); font-variant-numeric: tabular-nums; }
 .tooltip-row.spot strong { color: var(--blue); }
 .tooltip-precision { margin: .65rem 0 0; color: var(--dim); font: .62rem/1.45 var(--mono); }
-.chart-foot {
-  display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); background: rgba(3, 4, 3, .7);
-}
-.chart-foot > div { padding: 1.1rem 1.35rem; border-right: 1px solid var(--line); }
-.chart-foot > div:last-child { border-right: 0; }
-.chart-foot small { display: block; color: var(--dim); font: .62rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
-.chart-foot strong { display: block; margin-top: .55rem; font: 600 clamp(.85rem, 1.4vw, 1.05rem)/1.2 var(--mono); font-variant-numeric: tabular-nums; }
 .earnings-options-panel { border-top: 1px solid var(--line); background: rgba(3, 4, 3, .82); }
 .earnings-options-head { display: flex; align-items: end; justify-content: space-between; gap: 2rem; padding: 1.35rem 2rem 1rem; }
 .earnings-options-kicker { color: var(--lime); font: 700 .55rem/1 var(--mono); letter-spacing: .11em; text-transform: uppercase; }
@@ -378,9 +371,6 @@ footer {
   .chart-section { width: calc(100% - 1.5rem); }
   .chart-head { grid-template-columns: 1fr; align-items: start; }
   .range-controls { justify-content: flex-start; }
-  .chart-foot { grid-template-columns: repeat(2, 1fr); }
-  .chart-foot > div:nth-child(2) { border-right: 0; }
-  .chart-foot > div:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
   .earnings-options-summary { grid-template-columns: 1fr 1fr; }
   .earnings-options-summary > div:nth-child(2) { border-right: 0; }
   .earnings-options-summary > div:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
@@ -460,8 +450,6 @@ footer {
   .onchain-status strong, .onchain-live-stamp { text-align: right; white-space: normal; }
   .onchain-table { margin: 0 1.15rem; }
   .onchain-note { margin: .75rem 1.15rem 1.2rem; }
-  .chart-foot { grid-template-columns: 1fr 1fr; }
-  .chart-foot > div { padding: .95rem; }
   footer { grid-template-columns: 1fr; }
 }
 
