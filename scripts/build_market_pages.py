@@ -77,6 +77,36 @@ def _timestamp(value: Any) -> str | None:
 
 def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_version: str) -> str:
     continuous_spot = symbol == "GOLD"
+    options_enabled = symbol == "AAPL"
+    options_legend = (
+        '\n              <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>liquid options risk-neutral probability fan</span>'
+        if options_enabled
+        else ""
+    )
+    options_panel = "" if not options_enabled else f"""
+        <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
+          <header class="earnings-options-head">
+            <div>
+              <span class="earnings-options-kicker">Listed options · event distribution</span>
+              <h2 id="earnings-options-title">{symbol} Earnings Probability Cone</h2>
+              <p>Risk-neutral probabilities inferred only from liquid two-sided option quotes.</p>
+            </div>
+            <span id="earnings-options-asof" class="earnings-options-asof">Loading chain…</span>
+          </header>
+          <div class="earnings-options-summary">
+            <div><small>Next earnings</small><strong id="options-earnings-date">—</strong><span id="options-earnings-timing">—</span></div>
+            <div><small>Implied 68% move</small><strong id="options-implied-move">—</strong><span id="options-event-range">—</span></div>
+            <div><small>Chain used</small><strong id="options-chain-expiry">—</strong><span>First liquid expiry after the event</span></div>
+            <div><small>Liquid inputs</small><strong id="options-contract-count">—</strong><span id="options-filter-short">—</span></div>
+          </div>
+          <div class="options-table-scroll" tabindex="0" role="region" aria-label="Liquid option contracts used in the earnings probability cone">
+            <table class="options-table">
+              <thead><tr><th>Contract</th><th>Strike</th><th>Bid</th><th>Ask</th><th>Mid</th><th>Spread</th><th>Volume</th><th>Open interest</th><th>IV</th><th>Delta</th></tr></thead>
+              <tbody id="options-contract-rows"><tr><td colspan="10">Loading liquid chain…</td></tr></tbody>
+            </table>
+          </div>
+          <p id="options-method-note" class="options-method-note">Adjacent liquid vertical spreads infer the risk-neutral distribution. These are market-implied prices under the pricing measure, not historical outcome frequencies.</p>
+        </section>"""
     ratio_subtitle = (
         "1.00 = equal return since shared anchor · XAUT sampled on the same seven-day New York session"
         if continuous_spot
@@ -124,7 +154,7 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
             <div class="chart-title-row"><h1 id="chart-title">{symbol} Spot and Perp Total Returns</h1></div>
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>{symbol} perp total return · long · seven-day</span>
-              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>{spot_symbol} spot total return</span>
+              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>{spot_symbol} spot total return</span>{options_legend}
             </div>
           </div>
           <div class="range-controls" role="group" aria-label="Chart window">
@@ -146,7 +176,7 @@ def _page_html(*, slug: str, symbol: str, spot_symbol: str, name: str, asset_ver
           <div><small>Swap begins</small><strong id="perp-start">—</strong></div>
           <div><small>Shared 100 anchor</small><strong id="anchor-date">—</strong></div>
           <div><small>Exact 30-minute sessions</small><strong id="exact-start">—</strong></div>
-        </div>
+        </div>{options_panel}
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
             <div>
@@ -230,10 +260,16 @@ def build(nav_root: Path) -> None:
     metadata = json.loads(metadata_path.read_text())
     catalog_path = SITE_ROOT / "assets" / "market-data" / "onchain-spot-catalog.json"
     onchain_catalog = json.loads(catalog_path.read_text()) if catalog_path.exists() else {"generatedAt": None, "instruments": {}}
+    options_paths = sorted((SITE_ROOT / "assets" / "market-data").glob("*-options.json"))
+    earnings_options = {
+        str(payload["symbol"]).upper(): payload
+        for payload in (json.loads(path.read_text()) for path in options_paths)
+    }
     asset_fingerprint = hashlib.sha256()
     for path in (
         metadata_path,
         catalog_path,
+        *options_paths,
         SITE_ROOT / "assets" / "js" / "market-lens.js",
         SITE_ROOT / "assets" / "css" / "market-lens.css",
     ):
@@ -344,6 +380,8 @@ def build(nav_root: Path) -> None:
                 "venueSplit": True,
             },
         }
+        if symbol in earnings_options:
+            payload["earningsOptions"] = earnings_options[symbol]
         _atomic_text(
             SITE_ROOT / "assets/market-data" / f"{slug}.json",
             json.dumps(payload, separators=(",", ":"), allow_nan=False) + "\n",

@@ -25,6 +25,7 @@ cd "$nav_root"
 
 cd "$site_root"
 python3 scripts/refresh_onchain_spot_catalog.py
+python3 scripts/refresh_earnings_options.py --symbol AAPL
 "$nav_root/.venv/bin/python" scripts/build_market_pages.py
 
 python3 scripts/validate_market_lens.py

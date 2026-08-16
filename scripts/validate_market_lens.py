@@ -26,6 +26,7 @@ def main() -> int:
 
     listed_cex_markets = 0
     contract_backed_dex_routes = 0
+    validated_option_contracts = 0
     for instrument in instruments:
         slug = str(instrument["slug"])
         payload = load_json(DATA_ROOT / f"{slug}.json")
@@ -69,13 +70,36 @@ def main() -> int:
                     )
                 contract_backed_dex_routes += 1
 
+        if slug == "aapl":
+            options = payload.get("earningsOptions")
+            if not options:
+                raise AssertionError("aapl: earnings options payload is missing")
+            earnings_date = str(options["earnings"]["date"])
+            expiration = str(options["chain"]["expiration"])
+            if expiration < earnings_date:
+                raise AssertionError("aapl: selected option expiry precedes earnings")
+            probabilities = [float(row["probability"]) for row in options.get("fan", [])]
+            if probabilities != [0.10, 0.16, 0.25, 0.50, 0.75, 0.84, 0.90]:
+                raise AssertionError(f"aapl: invalid probability fan {probabilities}")
+            contracts = options.get("contracts", [])
+            if len(contracts) != int(options["chain"]["liquidContractsUsed"]):
+                raise AssertionError("aapl: liquid contract count does not match table")
+            maximum_spread = float(options["liquidityFilter"]["maxBidAskSpreadPct"])
+            for contract in contracts:
+                if not (float(contract["bid"]) > 0 and float(contract["ask"]) > float(contract["bid"])):
+                    raise AssertionError("aapl: option row lacks a two-sided executable quote")
+                if float(contract["spreadPct"]) > maximum_spread:
+                    raise AssertionError("aapl: option row violates the published spread gate")
+            validated_option_contracts = len(contracts)
+
         if not (SITE_ROOT / slug / "index.html").exists():
             raise AssertionError(f"{slug}: generated page is missing")
 
     print(
         f"validated {len(instruments)} Market Lens pages: "
         f"{listed_cex_markets} listed CEX markets, "
-        f"{contract_backed_dex_routes} contract-backed DEX routes"
+        f"{contract_backed_dex_routes} contract-backed DEX routes, "
+        f"{validated_option_contracts} liquid AAPL option inputs"
     )
     return 0
 
