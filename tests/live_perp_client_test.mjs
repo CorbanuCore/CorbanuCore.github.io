@@ -60,8 +60,22 @@ context.globalThis = context;
 let source = fs.readFileSync(new URL("../assets/js/market-lens.js", import.meta.url), "utf8");
 const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
-source = source.replace(marker, "  window.__startLivePerpPrice = startLivePerpPrice;\n\n" + marker);
+source = source.replace(
+  marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n\n" + marker,
+);
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
+
+const sparseRows = Array.from({ length: 10 }, (_, index) => ({ d: `2026-08-${String(index + 7).padStart(2, "0")}` }));
+const sparseX = Object.fromEntries(sparseRows.map((row, index) => [row.d, index * 4.779342723]));
+const sparseWidth = context.window.__candleWidthForRows(sparseRows, (date) => sparseX[date], 1018);
+assert.ok(sparseWidth < 4.779342723, "sparse perp candle bodies must not overlap adjacent dates");
+assert.ok(Math.abs(sparseWidth - 3.919061033) < 1e-6);
+
+const establishedRows = Array.from({ length: 182 }, (_, index) => ({ d: String(index) }));
+const establishedWidth = context.window.__candleWidthForRows(establishedRows, (date) => Number(date) * 4.757, 1018);
+assert.ok(establishedWidth < 4.757, "established-history candles must retain a visible gap");
+assert.ok(establishedWidth > 3.8, "established-history candles should retain their existing visual weight");
 
 context.window.__startLivePerpPrice({ rawSymbol: "xyz:TSLA" });
 assert.equal(FakeWebSocket.instances.length, 1);

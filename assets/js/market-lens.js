@@ -29,6 +29,18 @@
     return `${parsed >= 0 ? "+" : ""}${parsed.toFixed(digits == null ? 2 : digits)}%`;
   }
 
+  function candleWidthForRows(rows, x, plotWidth) {
+    const countWidth = plotWidth / Math.max(rows.length, 1) * .72;
+    const centers = [...new Set(rows.map((row) => Number(x(row.d))).filter(Number.isFinite))].sort((left, right) => left - right);
+    let nearestGap = Infinity;
+    for (let index = 1; index < centers.length; index += 1) {
+      const gap = centers[index] - centers[index - 1];
+      if (gap > 0) nearestGap = Math.min(nearestGap, gap);
+    }
+    const spacingWidth = Number.isFinite(nearestGap) ? nearestGap * .82 : countWidth;
+    return Math.max(2.4, Math.min(10, countWidth, spacingWidth));
+  }
+
   function livePriceLabel(value) {
     const parsed = Number(value);
     if (!Number.isFinite(parsed) || parsed <= 0) return "—";
@@ -666,7 +678,7 @@
     const line = spotRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.c).toFixed(2)}`).join(" ");
     if (line) svg.appendChild(svgNode("path", { d: line, class: "market-spot" }));
 
-    const candleWidth = Math.max(3.2, Math.min(10, plotWidth / Math.max(perpRows.length, 1) * .72));
+    const candleWidth = candleWidthForRows(perpRows, x, plotWidth);
     perpRows.forEach((row) => {
       const px = x(row.d);
       const groupClass = row.p === "partial" ? "market-partial" : row.p === "hourly" ? "market-proxy" : "market-exact";
