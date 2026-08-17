@@ -13,6 +13,7 @@ from typing import Any
 import pandas as pd
 
 from navstrategies.coverage_universe.tradexyz_peers import (
+    build_live_peer_splice_inputs,
     build_weighted_peer_total_return_history,
 )
 
@@ -102,7 +103,7 @@ def _page_html(
         else ""
     )
     peer_legend = (
-        '\n              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Kimi K3 weighted TradeXYZ peers</span>'
+        '\n              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · spot history + live TradeXYZ perps</span>'
         if peer_mapping
         else ""
     )
@@ -125,7 +126,7 @@ def _page_html(
               <span>Kimi K3 · intra-TradeXYZ</span>
               <h2 id="peer-panel-title">{symbol} Weighted Peer Basket</h2>
             </div>
-            <small>{html.escape(str(peer_mapping["model"]))} · temperature 0 · 3 validated blocks</small>
+            <small>Spot-return history · live TradeXYZ perp marks · {html.escape(str(peer_mapping["model"]))}</small>
           </header>
           <div class="peer-hedge-row">
             <span>Primary index hedge</span>
@@ -453,9 +454,11 @@ def build(nav_root: Path) -> None:
                 {
                     "d": _date(row.date),
                     "c": _json_value(target_start_level * row.basket_factor),
+                    "n": int(row.peer_count),
                 }
                 for row in peer_history.itertuples(index=False)
             ]
+            live_splice_inputs = build_live_peer_splice_inputs(spot, peer_block)
             peer_mapping = {
                 **peer_block,
                 "model": peer_manifest["model"],
@@ -463,7 +466,15 @@ def build(nav_root: Path) -> None:
                 "promptVersion": peer_manifest["prompt_version"],
                 "replicatesPerTarget": peer_manifest["replicates_per_target"],
                 "historyStart": peer_rows[0]["d"],
-                "historyMethod": "static initial Kimi weights applied to peer gross-total-return factors; peer closes forward-filled only across asynchronous exchange holidays; basket rebased to the target spot total-return level at the first fully covered date",
+                "historyEnd": peer_rows[-1]["d"],
+                "historyMethod": "daily-rebalanced peer spot total returns using the fixed Kimi weights; unavailable pre-listing peers are omitted and remaining weights renormalized once at least three peers exist; basket rebased to the target spot level at the first overlapping date",
+                "liveSplice": {
+                    "dex": "xyz",
+                    "baseDate": peer_rows[-1]["d"],
+                    "baseLevel": peer_rows[-1]["c"],
+                    "inputs": live_splice_inputs,
+                    "method": "current TradeXYZ perp mid divided by each peer's latest USD cash close; available Kimi weights renormalized and applied as a one-period return from the published peer spot close",
+                },
             }
 
         spot_rows = [

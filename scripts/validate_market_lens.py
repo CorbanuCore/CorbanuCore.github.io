@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pandas as pd
+
 try:
     from scripts.options_profiles import OPTIONS_PROFILES, UNSUPPORTED_OPTIONS_PAGES, options_profile
 except ModuleNotFoundError:
@@ -108,12 +110,35 @@ def main() -> int:
                 raise AssertionError(f"{slug}: primary index hedge liquidity snapshot is missing")
             if not peer_rows or str(peer_mapping.get("historyStart")) != str(peer_rows[0].get("d")):
                 raise AssertionError(f"{slug}: weighted peer history is missing its audited start")
+            if str(peer_mapping.get("historyEnd")) != str(peer_rows[-1].get("d")):
+                raise AssertionError(f"{slug}: weighted peer history is missing its audited end")
             spot_by_date = {str(row["d"]): float(row["c"]) for row in spot_rows}
             first_peer_date = str(peer_rows[0]["d"])
             if first_peer_date not in spot_by_date or abs(float(peer_rows[0]["c"]) - spot_by_date[first_peer_date]) > 1e-5:
                 raise AssertionError(f"{slug}: peer history is not rebased to the target spot level")
             if any(float(row.get("c") or 0) <= 0 for row in peer_rows):
                 raise AssertionError(f"{slug}: weighted peer history contains an invalid level")
+            if any(not 3 <= int(row.get("n") or 0) <= len(peers) for row in peer_rows):
+                raise AssertionError(f"{slug}: weighted peer history has invalid active-peer breadth")
+            if str(payload.get("spotStart")) < "2020-01-01":
+                lag = (
+                    pd.Timestamp(first_peer_date) - pd.Timestamp(str(payload["spotStart"]))
+                ).days
+                if lag > 10:
+                    raise AssertionError(f"{slug}: peer spot backfill starts {lag} days after target spot")
+            live_splice = peer_mapping.get("liveSplice") or {}
+            live_inputs = live_splice.get("inputs") or []
+            if live_splice.get("dex") != "xyz" or len(live_inputs) != len(peers):
+                raise AssertionError(f"{slug}: live TradeXYZ peer splice is incomplete")
+            if str(live_splice.get("baseDate")) != str(peer_rows[-1]["d"]):
+                raise AssertionError(f"{slug}: live peer splice base date differs from spot history")
+            if abs(float(live_splice.get("baseLevel") or 0) - float(peer_rows[-1]["c"])) > 1e-5:
+                raise AssertionError(f"{slug}: live peer splice base level differs from spot history")
+            live_symbols = [str(row.get("raw_symbol") or "") for row in live_inputs]
+            if live_symbols != [str(peer.get("raw_symbol") or "") for peer in peers]:
+                raise AssertionError(f"{slug}: live peer splice symbols differ from the mapping")
+            if any(float(row.get("spot_close_usd") or 0) <= 0 or not str(row.get("spot_close_date") or "") for row in live_inputs):
+                raise AssertionError(f"{slug}: live peer splice lacks a positive USD cash close")
             for required_markup in ('class="legend-peer"', 'class="peer-panel"', 'class="peer-table"'):
                 if required_markup not in page_markup:
                     raise AssertionError(f"{slug}: peer chart or justification block is missing: {required_markup}")
