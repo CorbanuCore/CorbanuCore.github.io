@@ -133,8 +133,6 @@ def _page_html(
             f"<td><strong>{html.escape(str(peer['ticker']))}</strong><span>{html.escape(str(peer['name']))}</span></td>"
             f"<td>{float(peer['weight']) * 100:.1f}%</td>"
             f"<td>${float(peer['liquidity_24h_usd_millions']):,.3f}M</td>"
-            f"<td>{int(peer['replicate_support'])}/3</td>"
-            f"<td>{html.escape(str(peer['reason']))}</td>"
             "</tr>"
             for peer in peer_mapping["peers"]
         )
@@ -145,20 +143,18 @@ def _page_html(
               <span>Kimi K3 · Market Lens universe</span>
               <h2 id="peer-panel-title">{symbol} Weighted Peer Basket</h2>
             </div>
-            <small>Spot-return history · live Hyperliquid perp marks · {html.escape(str(peer_mapping["model"]))}</small>
+            <small>Spot-return history · live Hyperliquid perp marks</small>
           </header>
           <div class="peer-hedge-row">
             <span>{hedge_label}</span>
             <strong>{html.escape(str(hedge["ticker"]))} · {html.escape(str(hedge["name"]))} · ${float(hedge["liquidity_24h_usd_millions"]):,.3f}M 24h</strong>
-            <p>{html.escape(str(hedge["reason"]))}</p>
           </div>
           <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted Market Lens return peers">
             <table class="peer-table">
-              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th></tr></thead>
               <tbody>{peer_rows}</tbody>
             </table>
           </div>
-          <p class="peer-justification">{html.escape(str(peer_mapping["justification"]))}</p>
         </section>'''
     else:
         peer_panel = ""
@@ -507,12 +503,30 @@ def build(nav_root: Path) -> None:
                 for row in peer_history.itertuples(index=False)
             ]
             live_splice_inputs = build_live_peer_splice_inputs(spot, peer_block, perp)
+            public_peer_fields = (
+                "ticker",
+                "raw_symbol",
+                "name",
+                "day_notional_volume_usd",
+                "liquidity_24h_usd_millions",
+                "weight",
+            )
+            public_hedge_fields = public_peer_fields[:-1]
             peer_mapping = {
-                **peer_block,
+                "target": peer_block["target"],
+                "targetName": peer_block["target_name"],
+                "targetRawSymbol": peer_block["target_raw_symbol"],
+                "primary_index_hedge": {
+                    field: peer_block["primary_index_hedge"][field]
+                    for field in public_hedge_fields
+                },
+                "peers": [
+                    {field: peer[field] for field in public_peer_fields}
+                    for peer in peer_block["peers"]
+                ],
                 "model": peer_manifest["model"],
                 "temperature": peer_manifest["temperature"],
                 "promptVersion": peer_manifest["prompt_version"],
-                "replicatesPerTarget": peer_manifest["replicates_per_target"],
                 "targetAssetClass": target_asset_class,
                 "historyStart": peer_rows[0]["d"],
                 "historyEnd": peer_rows[-1]["d"],

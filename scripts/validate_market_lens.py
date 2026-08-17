@@ -112,8 +112,6 @@ def main() -> int:
                 raise AssertionError(f"{slug}: peer model is not locked Kimi K3")
             if float(peer_mapping.get("temperature")) != 0.0:
                 raise AssertionError(f"{slug}: peer temperature is not zero")
-            if int(peer_mapping.get("replicatesPerTarget") or 0) != 3:
-                raise AssertionError(f"{slug}: peer mapping does not contain three validated blocks")
             if str(peer_mapping.get("target")) != str(instrument["symbol"]).upper():
                 raise AssertionError(f"{slug}: peer mapping target differs from the page symbol")
             if not 3 <= len(peers) <= 9:
@@ -123,17 +121,19 @@ def main() -> int:
                 raise AssertionError(f"{slug}: peer mapping contains a duplicate or the target")
             if abs(sum(float(peer.get("weight") or 0) for peer in peers) - 1.0) > 1e-5:
                 raise AssertionError(f"{slug}: peer weights do not sum to one")
-            if any(not str(peer.get("reason") or "").strip() for peer in peers):
-                raise AssertionError(f"{slug}: peer rationale is missing")
+            if any("reason" in peer or "replicate_support" in peer for peer in peers):
+                raise AssertionError(f"{slug}: peer rationale or consensus leaked into the public payload")
             if any(float(peer.get("day_notional_volume_usd") or 0) <= 0 for peer in peers):
                 raise AssertionError(f"{slug}: peer liquidity snapshot is missing")
             if any(float(peer.get("liquidity_24h_usd_millions") or 0) <= 0 for peer in peers):
                 raise AssertionError(f"{slug}: peer liquidity display value is missing")
-            if any(not 1 <= int(peer.get("replicate_support") or 0) <= 3 for peer in peers):
-                raise AssertionError(f"{slug}: peer replicate support is invalid")
+            if "justification" in peer_mapping or "replicatesPerTarget" in peer_mapping:
+                raise AssertionError(f"{slug}: peer rationale or consensus metadata leaked into the public payload")
             hedge = peer_mapping.get("primary_index_hedge") or {}
-            if not str(hedge.get("ticker") or "").strip() or not str(hedge.get("reason") or "").strip():
+            if not str(hedge.get("ticker") or "").strip():
                 raise AssertionError(f"{slug}: primary index hedge is incomplete")
+            if "reason" in hedge or "replicate_support" in hedge:
+                raise AssertionError(f"{slug}: hedge rationale or consensus leaked into the public payload")
             if float(hedge.get("day_notional_volume_usd") or 0) <= 0 or float(hedge.get("liquidity_24h_usd_millions") or 0) <= 0:
                 raise AssertionError(f"{slug}: primary index hedge liquidity snapshot is missing")
             if not peer_rows or str(peer_mapping.get("historyStart")) != str(peer_rows[0].get("d")):
@@ -180,7 +180,7 @@ def main() -> int:
                 raise AssertionError(f"{slug}: live peer splice lacks a positive spot disclosure or perp anchor")
             for required_markup in ('class="legend-peer"', 'class="peer-panel"', 'class="peer-table"'):
                 if required_markup not in page_markup:
-                    raise AssertionError(f"{slug}: peer chart or justification block is missing: {required_markup}")
+                    raise AssertionError(f"{slug}: peer chart or basket table is missing: {required_markup}")
             validated_peer_targets += 1
         elif 'class="peer-panel"' in page_markup or 'class="legend-peer"' in page_markup:
             raise AssertionError(f"{slug}: peer UI is rendered without a validated mapping")
