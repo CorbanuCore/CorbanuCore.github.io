@@ -880,9 +880,13 @@
         : perp.p === "exact"
         ? "Exact 09:30–16:00 from 30-minute bars"
         : "Hourly proxy: 09:00 open; exact 16:00 close";
+      const spotPrecision = spot && spot.t
+        ? `Spot ${spot.s === "live_partial" ? "live through" : "observed through"} ${timestampLabel(spot.t)} UTC`
+        : "";
       tooltip.innerHTML = [
         `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
         spot ? `<div class="tooltip-row spot"><span>${escapeHtml(spotCloseLabel)}</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
+        spotPrecision ? `<p class="tooltip-precision">${spotPrecision}</p>` : "",
         peer ? `<div class="tooltip-row peer"><span>${peer.live ? "Live Hyperliquid peer basket" : escapeHtml(peerCloseLabel)}</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
         peer && peer.viewAnchor ? `<p class="tooltip-precision">Peer basket rebased to ${data.symbol} on ${dateLabel(peer.viewAnchor, true)}</p>` : "",
         perp ? `<div class="tooltip-row"><span>Perp total-return O / C</span><strong>${priceMoney(perp.o)} / ${priceMoney(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Perp</span><strong>Not listed</strong></div>',
