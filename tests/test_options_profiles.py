@@ -13,9 +13,9 @@ class OptionsProfilesTests(unittest.TestCase):
             options_profile("ETH")["underlierCandidates"],
             ("ETHA", "ETHE", "FETH", "ETHW"),
         )
-        self.assertEqual(set(UNSUPPORTED_OPTIONS_PAGES), {"COPPER", "CXMT", "SMSN"})
+        self.assertEqual(set(UNSUPPORTED_OPTIONS_PAGES), {"COPPER", "CXMT", "SMSN", "SOL", "XRP"})
         self.assertFalse(set(OPTIONS_PROFILES) & set(UNSUPPORTED_OPTIONS_PAGES))
-        self.assertEqual(len(set(OPTIONS_PROFILES) | set(UNSUPPORTED_OPTIONS_PAGES)), 37)
+        self.assertEqual(len(set(OPTIONS_PROFILES) | set(UNSUPPORTED_OPTIONS_PAGES)), 39)
 
     def test_equity_earnings_profiles_use_the_exact_listed_underlier(self) -> None:
         for symbol in ("AAPL", "AMD", "AMZN", "NVDA", "TSLA"):

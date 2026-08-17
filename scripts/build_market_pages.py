@@ -607,6 +607,7 @@ def build(nav_root: Path) -> None:
             "symbol": symbol,
             "rawSymbol": raw_symbol,
             "name": name,
+            "assetClass": target_asset_class,
             "spotReferenceSymbol": spot_symbol,
             "spotReturnSource": spot_source,
             "spotStart": spot_rows[0]["d"],

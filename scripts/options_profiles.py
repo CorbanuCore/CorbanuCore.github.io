@@ -61,6 +61,8 @@ UNSUPPORTED_OPTIONS_PAGES: dict[str, str] = {
     "COPPER": "CPER currently lacks two distinct liquid paired ATM expiries",
     "CXMT": "the Shanghai-listed common has no Schwab-listed options chain",
     "SMSN": "Samsung common and its US OTC line have no Schwab-listed options chain",
+    "SOL": "BSOL has listed options, but no production Schwab chain has passed the paired ATM liquidity gate",
+    "XRP": "spot XRP ETFs exist, but no production Schwab chain has passed the paired ATM liquidity gate",
 }
 
 OPTIONS_PROFILES: dict[str, dict[str, Any]] = {

@@ -29,8 +29,8 @@ def load_json(path: Path) -> dict[str, Any]:
 def main() -> int:
     universe = load_json(DATA_ROOT / "universe.json")
     instruments = universe.get("instruments", [])
-    if len(instruments) != 37:
-        raise AssertionError(f"expected 37 instruments, found {len(instruments)}")
+    if len(instruments) != 39:
+        raise AssertionError(f"expected 39 instruments, found {len(instruments)}")
 
     listed_cex_markets = 0
     contract_backed_dex_routes = 0
@@ -191,11 +191,12 @@ def main() -> int:
 
         cex_rows = onchain.get("cexMarkets", [])
         venues = {str(row.get("venue")) for row in cex_rows}
-        if slug not in {"btc", "eth"} and venues != EXPECTED_CEX_VENUES:
+        is_native_crypto = str(payload.get("assetClass") or "") == "crypto"
+        if not is_native_crypto and venues != EXPECTED_CEX_VENUES:
             raise AssertionError(
                 f"{slug}: expected {sorted(EXPECTED_CEX_VENUES)}, found {sorted(venues)}"
             )
-        if slug in {"btc", "eth"} and cex_rows:
+        if is_native_crypto and cex_rows:
             raise AssertionError(f"{slug}: tokenized-stock CEX rows must not be attached to native crypto")
         listed = [
             row
