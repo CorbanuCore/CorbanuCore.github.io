@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/btc/">
   <link rel="canonical" href="https://corbanu.com/btc/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=8720fa8f8c51">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=d05126c91ca5">
   <title>BTC Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="btc" data-market-version="8720fa8f8c51">
+<body data-market-slug="btc" data-market-version="d05126c91ca5">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>BTC perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>BTC spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · rebased at range start · live perps</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · Market Lens universe</span>
+              <h2 id="peer-panel-title">BTC Weighted Peer Basket</h2>
+            </div>
+            <small>Spot-return history · live Hyperliquid perp marks · moonshotai/kimi-k3</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary risk hedge</span>
+            <strong>XYZ100 · Nasdaq-100 · $112.294M 24h</strong>
+            <p>Nasdaq-100 is used only as the primary hedge for generic risk-appetite and dollar-liquidity shocks that can move Bitcoin; it is not treated as an economic peer.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted Market Lens return peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>ETH</strong><span>Ethereum</span></td><td>52.6%</td><td>$533.862M</td><td>3/3</td><td>Ethereum is the closest return comparator: it is a directly traded crypto underlying driven by the same crypto market factor, the same investor base, and the same on-chain activity cycle as Bitcoin, so it receives the largest peer weight rather than being diluted across remote analogies.</td></tr><tr><td><strong>MSTR</strong><span>Strategy</span></td><td>28.1%</td><td>$3.174M</td><td>3/3</td><td>Strategy is a corporate Bitcoin treasury proxy, so its equity return is dominated by the same underlying exposure even though it adds financing, leverage, and equity-market noise; ETH still receives more weight because it is the directly traded crypto asset.</td></tr><tr><td><strong>COIN</strong><span>Coinbase</span></td><td>19.3%</td><td>$1.656M</td><td>3/3</td><td>Coinbase is the leading listed US crypto exchange, and its transaction and custody revenues scale directly with crypto asset prices and trading activity, making its cash flows economically tied to the Bitcoin cycle. It is a major customer-facing gateway for the same asset ecosystem rather than a remote factor analogy.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">Three-run Kimi K3 consensus selected only the displayed peers: ETH 52.6% with 3/3 replicate support; MSTR 28.1% with 3/3 replicate support; COIN 19.3% with 3/3 replicate support. Individual rationales state each economic relationship.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=8720fa8f8c51"></script>
+  <script src="/assets/js/market-lens.js?v=d05126c91ca5"></script>
 </body>
 </html>

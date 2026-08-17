@@ -272,18 +272,31 @@
     };
   }
 
+  async function fetchLivePeerMids(splice) {
+    const configured = Array.isArray(splice && splice.dexes) && splice.dexes.length
+      ? splice.dexes
+      : [splice && typeof splice.dex === "string" ? splice.dex : "xyz"];
+    const dexes = [...new Set(configured.map((dex) => String(dex || "")))];
+    const snapshots = await Promise.all(dexes.map(async (dex) => {
+      const payload = { type: "allMids" };
+      if (dex) payload.dex = dex;
+      const response = await fetch("https://api.hyperliquid.xyz/info", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }));
+    return Object.assign({}, ...snapshots);
+  }
+
   async function refreshLivePeerBasket() {
     const data = state.data;
     const splice = data && data.peerMapping && data.peerMapping.liveSplice;
     if (!splice || !navigator.onLine) return false;
     try {
-      const response = await fetch("https://api.hyperliquid.xyz/info", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "allMids", dex: splice.dex || "xyz" }),
-      });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const row = computeLivePeerRow(data, await response.json(), new Date());
+      const row = computeLivePeerRow(data, await fetchLivePeerMids(splice), new Date());
       if (!row) return false;
       const previous = state.livePeerRow;
       state.livePeerRow = row;
@@ -658,7 +671,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} ${isIndexProxy ? data.spotReferenceSymbol + " total-return proxy expressed in " + data.symbol + " index points" : "terminal-anchored spot total-return price line"} and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history rebased to the target at the selected window start and extended by live TradeXYZ perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} ${isIndexProxy ? data.spotReferenceSymbol + " total-return proxy expressed in " + data.symbol + " index points" : "terminal-anchored spot total-return price line"} and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history rebased to the target at the selected window start and extended by live Hyperliquid perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -854,7 +867,7 @@
       tooltip.innerHTML = [
         `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
         spot ? `<div class="tooltip-row spot"><span>${escapeHtml(spotCloseLabel)}</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
-        peer ? `<div class="tooltip-row peer"><span>${peer.live ? "Live TradeXYZ peer basket" : escapeHtml(peerCloseLabel)}</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
+        peer ? `<div class="tooltip-row peer"><span>${peer.live ? "Live Hyperliquid peer basket" : escapeHtml(peerCloseLabel)}</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
         peer && peer.viewAnchor ? `<p class="tooltip-precision">Peer basket rebased to ${data.symbol} on ${dateLabel(peer.viewAnchor, true)}</p>` : "",
         perp ? `<div class="tooltip-row"><span>Perp total-return O / C</span><strong>${priceMoney(perp.o)} / ${priceMoney(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Perp</span><strong>Not listed</strong></div>',
         perp ? `<div class="tooltip-row"><span>Perp total-return H / L</span><strong>${priceMoney(perp.h)} / ${priceMoney(perp.l)}</strong></div>` : "",

@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/cxmt/">
   <link rel="canonical" href="https://corbanu.com/cxmt/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=8720fa8f8c51">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=d05126c91ca5">
   <title>CXMT Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="cxmt" data-market-version="8720fa8f8c51">
+<body data-market-slug="cxmt" data-market-version="d05126c91ca5">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -71,23 +71,23 @@
         <section class="peer-panel" aria-labelledby="peer-panel-title">
           <header class="peer-panel-head">
             <div>
-              <span>Kimi K3 · intra-TradeXYZ</span>
+              <span>Kimi K3 · Market Lens universe</span>
               <h2 id="peer-panel-title">CXMT Weighted Peer Basket</h2>
             </div>
-            <small>Spot-return history · live TradeXYZ perp marks · moonshotai/kimi-k3</small>
+            <small>Spot-return history · live Hyperliquid perp marks · moonshotai/kimi-k3</small>
           </header>
           <div class="peer-hedge-row">
             <span>Primary index hedge</span>
-            <strong>DRAM · Roundhill Memory ETF · $9.122M 24h</strong>
-            <p>DRAM is classified as equity_etf and is the most direct hedge for CXMT because it targets the memory cycle rather than broad equity beta. Its displayed 24-hour perp liquidity is 9.122 USD millions, which is adequate for a primary hedge sleeve, and it avoids the daily leverage reset risk of SOXL.</p>
+            <strong>DRAM · Roundhill Memory ETF · $63.645M 24h</strong>
+            <p>CXMT is a merchant DRAM maker, so its dominant systematic driver is the global memory pricing cycle rather than generic equity beta. The Roundhill Memory ETF is the eligible equity_etf that most directly tracks that memory-cycle factor, so hedging with it isolates CXMT&#x27;s idiosyncratic and China-specific component instead of merely removing broad market risk. Its 24-hour liquidity of about 63.645 USD millions is adequate for execution and is in line with Micron, so the hedge is tradable. I prefer it over the leveraged SOXL wrapper and over broad SP500 or XYZ100, which would only capture generic risk-on co-movement.</p>
           </div>
-          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted Market Lens return peers">
             <table class="peer-table">
               <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
-              <tbody><tr><td><strong>SKHX</strong><span>SK hynix common</span></td><td>31.6%</td><td>$18.246M</td><td>3/3</td><td>SK hynix common is the closest listed memory comparator because it is a DRAM and high bandwidth memory supplier exposed to the same AI server memory cycle as CXMT. Its displayed 24-hour perp liquidity is 18.246 USD millions, supporting the largest peer weight.</td></tr><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>30.5%</td><td>$11.877M</td><td>3/3</td><td>Micron is one of the closest listed DRAM and memory comparables to CXMT. Its displayed 24-hour perp liquidity is 11.877 USD millions, supporting the largest peer weight.</td></tr><tr><td><strong>SMSN</strong><span>Samsung Electronics common</span></td><td>17.5%</td><td>$2.550M</td><td>3/3</td><td>Samsung Electronics common is a major DRAM and NAND competitor, but the company also has phones, displays, and foundry operations, so it receives a smaller weight than the purer memory names. Its displayed 24-hour perp liquidity is 2.55 USD millions, close to CXMT at 2.38 USD millions.</td></tr><tr><td><strong>SNDK</strong><span>Sandisk</span></td><td>15.7%</td><td>$31.164M</td><td>3/3</td><td>Sandisk adds pure-play NAND and storage memory exposure that complements CXMT&#x27;s DRAM risk, and its displayed 24-hour perp liquidity of 31.164 USD millions is the deepest in the peer set.</td></tr><tr><td><strong>INTC</strong><span>Intel</span></td><td>4.7%</td><td>$6.434M</td><td>2/3</td><td>Intel is included only as a secondary semiconductor comparator because it is broader than memory. Its displayed 24-hour perp liquidity is 6.434 USD millions, but limited economic overlap keeps the weight small.</td></tr></tbody>
+              <tbody><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>30.0%</td><td>$59.489M</td><td>3/3</td><td>Micron is the closest pure-play economic comparator: a memory manufacturer whose revenue is overwhelmingly DRAM and NAND, exposed to the same spot and contract pricing cycle, the same capital expenditure and wafer supply dynamics, and the same data center and AI memory demand drivers as CXMT. It carries deep 24-hour perp liquidity of 59.489 USD millions, making it both the most similar and a readily executable peer.</td></tr><tr><td><strong>SKHX</strong><span>SK hynix common</span></td><td>26.7%</td><td>$104.714M</td><td>3/3</td><td>SK hynix common is a direct DRAM and HBM competitor selling into the same memory cycle and sharing the same customers and capex and wafer cost structure, making it a same-underlying-exposure peer. I use the common line rather than the SK hynix ADR because the directly traded underlying is preferred over the ADR wrapper, and the common line also has higher 24-hour liquidity at about 104.714 versus 32.365 USD millions, which is only an execution tie-breaker on top of the economic match.</td></tr><tr><td><strong>SMSN</strong><span>Samsung Electronics common</span></td><td>20.0%</td><td>$23.185M</td><td>3/3</td><td>Samsung Electronics common is the largest merchant DRAM producer and therefore a direct substitute for CXMT&#x27;s core exposure, with shared memory pricing and input costs. It is weighted slightly below the two pure plays because its returns are also driven by foundry, logic, smartphones, and consumer devices, which dilute the clean DRAM signal even though the memory franchise is dominant.</td></tr><tr><td><strong>SNDK</strong><span>Sandisk</span></td><td>15.0%</td><td>$250.017M</td><td>3/3</td><td>Sandisk is a pure memory name that shares the broader memory-storage cycle and fab input-cost exposure with CXMT, so it is a legitimate economic peer rather than a factor analogy. It receives the lowest weight because it is NAND-flash centric while CXMT is DRAM centric, so its end-market pricing driver is related but not identical; its very high 24-hour liquidity of about 250.017 USD millions is treated as execution convenience, not as evidence of closer similarity.</td></tr><tr><td><strong>DRAM</strong><span>Roundhill Memory ETF</span></td><td>8.3%</td><td>$63.645M</td><td>2/3</td><td>The Roundhill Memory ETF also belongs in the peer basket because it is a traded basket of exactly the global memory producers that define CXMT&#x27;s pricing environment. It captures the sector-wide return exposure that no single name can, and the guidance allows a broad or sector index to carry a large peer weight when it captures a major share of the target&#x27;s return exposure; here it is held at a moderate weight alongside the single-name direct competitors.</td></tr></tbody>
             </table>
           </div>
-          <p class="peer-justification">CXMT is a DRAM memory manufacturer, so the block is weighted toward memory makers rather than broad artificial intelligence semiconductors. MU carries the largest peer weight at 0.34 because it is a close DRAM comparable with 11.877 USD millions of displayed 24-hour perp liquidity. SKHX is next at 0.26 because SK hynix is a direct global DRAM peer and shows 18.246 USD millions of displayed 24-hour perp liquidity. SMSN receives 0.18 because Samsung has major memory exposure but is more diversified, with 2.55 USD millions of displayed 24-hour perp liquidity. SNDK receives 0.14 because it is adjacent through NAND and storage rather than DRAM, despite 31.164 USD millions of displayed 24-hour perp liquidity. INTC receives 0.08 only as a secondary semiconductor comparator, because its business is broader than memory and its displayed 24-hour perp liquidity is 6.434 USD millions. The primary hedge is DRAM rather than SP500 or XYZ100 because it isolates the memory cycle; EWY is not used because it would add South Korea country and broad market exposure. All peer weights are positive and sum to exactly 1.</p>
+          <p class="peer-justification">Three-run Kimi K3 consensus selected only the displayed peers: MU 30.0% with 3/3 replicate support; SKHX 26.7% with 3/3 replicate support; SMSN 20.0% with 3/3 replicate support; SNDK 15.0% with 3/3 replicate support; DRAM 8.3% with 2/3 replicate support. Individual rationales state each economic relationship.</p>
         </section>
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
@@ -157,6 +157,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=8720fa8f8c51"></script>
+  <script src="/assets/js/market-lens.js?v=d05126c91ca5"></script>
 </body>
 </html>

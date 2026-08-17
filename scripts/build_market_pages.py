@@ -142,17 +142,17 @@ def _page_html(
         <section class="peer-panel" aria-labelledby="peer-panel-title">
           <header class="peer-panel-head">
             <div>
-              <span>Kimi K3 · intra-TradeXYZ</span>
+              <span>Kimi K3 · Market Lens universe</span>
               <h2 id="peer-panel-title">{symbol} Weighted Peer Basket</h2>
             </div>
-            <small>Spot-return history · live TradeXYZ perp marks · {html.escape(str(peer_mapping["model"]))}</small>
+            <small>Spot-return history · live Hyperliquid perp marks · {html.escape(str(peer_mapping["model"]))}</small>
           </header>
           <div class="peer-hedge-row">
             <span>{hedge_label}</span>
             <strong>{html.escape(str(hedge["ticker"]))} · {html.escape(str(hedge["name"]))} · ${float(hedge["liquidity_24h_usd_millions"]):,.3f}M 24h</strong>
             <p>{html.escape(str(hedge["reason"]))}</p>
           </div>
-          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted Market Lens return peers">
             <table class="peer-table">
               <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
               <tbody>{peer_rows}</tbody>
@@ -516,13 +516,13 @@ def build(nav_root: Path) -> None:
                 "targetAssetClass": target_asset_class,
                 "historyStart": peer_rows[0]["d"],
                 "historyEnd": peer_rows[-1]["d"],
-                "historyMethod": "daily-rebalanced peer spot total returns using the fixed Kimi weights; unavailable pre-listing peers are omitted and remaining weights renormalized once at least three peers exist; the browser rebases the basket to the target spot level at the first shared date of each selected chart range",
+                "historyMethod": "daily-rebalanced peer spot total returns using the fixed Kimi weights; the basket begins with the first available selected peer, unavailable pre-listing peers are omitted, and remaining weights are renormalized; the browser rebases the basket to the target spot level at the first shared date of each selected chart range",
                 "liveSplice": {
-                    "dex": "xyz",
+                    "dexes": sorted({str(row["dex"]) for row in live_splice_inputs}),
                     "baseDate": peer_rows[-1]["d"],
                     "baseLevel": peer_rows[-1]["c"],
                     "inputs": live_splice_inputs,
-                    "method": "current TradeXYZ perp mid divided by that peer's TradeXYZ close on its latest spot date; available Kimi weights renormalized and applied as a one-period return from the published peer spot endpoint; USD cash close is retained for disclosure but never mixed with a differently scaled perp contract",
+                    "method": "current Hyperliquid native or TradeXYZ perp mid divided by that peer's matching-venue perp close on its latest spot date; available Kimi weights are renormalized and applied as a one-period return from the published peer spot endpoint; USD cash close is retained for disclosure but never mixed with a differently scaled perp contract",
                 },
             }
 

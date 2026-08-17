@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/natgas/">
   <link rel="canonical" href="https://corbanu.com/natgas/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=8720fa8f8c51">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=d05126c91ca5">
   <title>NATGAS Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="natgas" data-market-version="8720fa8f8c51">
+<body data-market-slug="natgas" data-market-version="d05126c91ca5">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -78,23 +78,23 @@
         <section class="peer-panel" aria-labelledby="peer-panel-title">
           <header class="peer-panel-head">
             <div>
-              <span>Kimi K3 · intra-TradeXYZ</span>
+              <span>Kimi K3 · Market Lens universe</span>
               <h2 id="peer-panel-title">NATGAS Weighted Peer Basket</h2>
             </div>
-            <small>Spot-return history · live TradeXYZ perp marks · moonshotai/kimi-k3</small>
+            <small>Spot-return history · live Hyperliquid perp marks · moonshotai/kimi-k3</small>
           </header>
           <div class="peer-hedge-row">
             <span>Primary risk hedge</span>
-            <strong>CL · WTI crude oil · $40.091M 24h</strong>
-            <p>WTI crude is the most liquid listed energy-complex hedge available in CORE_UNIVERSE, with 40.091 USD millions of displayed 24-hour perp liquidity versus NATGAS at 2.186 USD millions; it shares fuel-demand, inventory, and broad energy shock sensitivity with natural gas while leaving weather and storage idiosyncrasy unhedged.</p>
+            <strong>CL · WTI crude oil · $102.282M 24h</strong>
+            <p>Despite the legacy field name, the best listed hedge is a commodity rather than an index. WTI crude oil is the closest available hedge for the energy-complex share of natural gas risk because it is a directly traded North American energy underlying with shared inflation, dollar, geopolitical, and energy-supply shocks. It cannot hedge gas-specific weather, storage, or pipeline basis, but it is more relevant than any equity index, metal, crypto asset, or single-name stock in the list. Its 24-hour perp liquidity is 102.282 USD millions versus 4.553 USD millions for NATGAS, which helps execution but is only a tie-breaker.</p>
           </div>
-          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted Market Lens return peers">
             <table class="peer-table">
               <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
-              <tbody><tr><td><strong>BRENTOIL</strong><span>Brent crude oil</span></td><td>43.6%</td><td>$36.440M</td><td>3/3</td><td>Brent crude oil is the global seaborne energy benchmark; oil-linked LNG contracts, fuel switching in power and industry, and common growth, inflation and US-dollar shocks make its returns economically comparable to natural gas, and its displayed 24-hour perp liquidity is 36.44 USD millions.</td></tr><tr><td><strong>COPPER</strong><span>Copper</span></td><td>25.5%</td><td>$6.262M</td><td>3/3</td><td>Copper is an industrial-growth and electrification proxy: construction, manufacturing, grid investment and data-center power demand tie it to the same macro demand and inflation and US-dollar cycle that moves natural gas, with displayed 24-hour perp liquidity of 6.262 USD millions.</td></tr><tr><td><strong>BE</strong><span>Bloom Energy</span></td><td>20.0%</td><td>$1.355M</td><td>3/3</td><td>Bloom Energy sells fuel-cell power systems whose economics are tied to natural gas or biogas input costs and to power-market demand; this direct input-cost and power-demand link earns weight even though displayed 24-hour perp liquidity is only 1.355 USD millions.</td></tr><tr><td><strong>SP500</strong><span>S&amp;P 500</span></td><td>10.9%</td><td>$50.729M</td><td>2/3</td><td>SP500 is the broad risk-on proxy: stronger equities usually imply better industrial demand, power load, and capital availability for energy supply, while risk-off selloffs often coincide with demand downgrades. Its 50.729 USD millions liquidity is very high, so the weight is capped for lower gas specificity.</td></tr></tbody>
+              <tbody><tr><td><strong>CL</strong><span>WTI crude oil</span></td><td>56.7%</td><td>$102.282M</td><td>3/3</td><td>WTI is the closest return comparator: same US energy complex, direct commodity underlying, shared associated-gas production, inventory and storage dynamics, energy inflation, US-dollar sensitivity, and weather-driven energy demand. It receives the largest weight because it is both the primary hedge and the most economically similar traded exposure available.</td></tr><tr><td><strong>BRENTOIL</strong><span>Brent crude oil</span></td><td>30.0%</td><td>$73.627M</td><td>3/3</td><td>Second energy leg: the global seaborne crude benchmark shares oil-energy demand, geopolitical supply risk, inflation, and dollar exposure with natural gas. It is slightly less tied to North American gas than WTI, so it receives a smaller weight. Its 24-hour perp liquidity is 73.627 USD millions, ample relative to NATGAS.</td></tr><tr><td><strong>BE</strong><span>Bloom Energy</span></td><td>13.3%</td><td>$5.896M</td><td>3/3</td><td>Bloom Energy is the only clear demand-side comparator in the universe because its fuel-cell power systems are commonly deployed with natural gas or biogas, linking returns to gas-fueled distributed power economics. The weight is kept smaller because a single-name equity adds company execution, customer concentration, and equity-market risk on top of the natural gas relationship.</td></tr></tbody>
             </table>
           </div>
-          <p class="peer-justification">The block keeps NATGAS as target and uses CL as the single primary_index_hedge despite the legacy field name. Peer weights are positive and sum to exactly 1.00. BRENTOIL receives 0.40 for closest listed comparability after the CL hedge and 36.44 USD millions of displayed 24-hour perp liquidity. BE receives 0.25 because the gas input-cost and power-generation link is strong even with only 1.355 USD millions. COPPER receives 0.20 as a cyclical industrial-demand and risk-on proxy with 6.262 USD millions. SP500 receives only 0.15 because it is highly liquid at 50.729 USD millions but supplies a generic macro channel rather than a natural-gas-specific exposure.</p>
+          <p class="peer-justification">Three-run Kimi K3 consensus selected only the displayed peers: CL 56.7% with 3/3 replicate support; BRENTOIL 30.0% with 3/3 replicate support; BE 13.3% with 3/3 replicate support. Individual rationales state each economic relationship.</p>
         </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
@@ -192,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=8720fa8f8c51"></script>
+  <script src="/assets/js/market-lens.js?v=d05126c91ca5"></script>
 </body>
 </html>

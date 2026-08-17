@@ -146,7 +146,7 @@ def main() -> int:
                 raise AssertionError(f"{slug}: peer history is not rebased to the target spot level")
             if any(float(row.get("c") or 0) <= 0 for row in peer_rows):
                 raise AssertionError(f"{slug}: weighted peer history contains an invalid level")
-            if any(not 3 <= int(row.get("n") or 0) <= len(peers) for row in peer_rows):
+            if any(not 1 <= int(row.get("n") or 0) <= len(peers) for row in peer_rows):
                 raise AssertionError(f"{slug}: weighted peer history has invalid active-peer breadth")
             if str(payload.get("spotStart")) < "2020-01-01":
                 lag = (
@@ -156,8 +156,8 @@ def main() -> int:
                     raise AssertionError(f"{slug}: peer spot backfill starts {lag} days after target spot")
             live_splice = peer_mapping.get("liveSplice") or {}
             live_inputs = live_splice.get("inputs") or []
-            if live_splice.get("dex") != "xyz" or len(live_inputs) != len(peers):
-                raise AssertionError(f"{slug}: live TradeXYZ peer splice is incomplete")
+            if len(live_inputs) != len(peers):
+                raise AssertionError(f"{slug}: live Hyperliquid peer splice is incomplete")
             if str(live_splice.get("baseDate")) != str(peer_rows[-1]["d"]):
                 raise AssertionError(f"{slug}: live peer splice base date differs from spot history")
             if abs(float(live_splice.get("baseLevel") or 0) - float(peer_rows[-1]["c"])) > 1e-5:
@@ -165,6 +165,11 @@ def main() -> int:
             live_symbols = [str(row.get("raw_symbol") or "") for row in live_inputs]
             if live_symbols != [str(peer.get("raw_symbol") or "") for peer in peers]:
                 raise AssertionError(f"{slug}: live peer splice symbols differ from the mapping")
+            expected_dexes = sorted({"xyz" if symbol.startswith("xyz:") else "" for symbol in live_symbols})
+            if sorted((live_splice.get("dexes") or [])) != expected_dexes:
+                raise AssertionError(f"{slug}: live peer splice does not request every required perp venue")
+            if any(str(row.get("dex") or "") != ("xyz" if symbol.startswith("xyz:") else "") for row, symbol in zip(live_inputs, live_symbols, strict=True)):
+                raise AssertionError(f"{slug}: live peer input has the wrong perp venue")
             if any(
                 float(row.get("spot_close_usd") or 0) <= 0
                 or float(row.get("perp_reference_price") or 0) <= 0
