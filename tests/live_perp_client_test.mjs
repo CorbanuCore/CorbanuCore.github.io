@@ -62,9 +62,15 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
+
+const xrpDomain = context.window.__priceDomainForValues([.992346, 1.7422357]);
+assert.ok(xrpDomain.low > .9, "sub-dollar and low-dollar charts must not be forced to a zero baseline");
+assert.ok(xrpDomain.high < 1.82, "XRP-scale charts should retain local price resolution");
+const solDomain = context.window.__priceDomainForValues([70, 82]);
+assert.ok(solDomain.low > 68 && solDomain.high < 84, "larger-dollar charts should keep proportional padding");
 
 const sparseRows = Array.from({ length: 10 }, (_, index) => ({ d: `2026-08-${String(index + 7).padStart(2, "0")}` }));
 const sparseX = Object.fromEntries(sparseRows.map((row, index) => [row.d, index * 4.779342723]));
