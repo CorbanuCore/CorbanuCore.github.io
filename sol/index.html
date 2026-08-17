@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Compare NATGAS spot total return with Hyperliquid perpetual-swap total return, including realized funding.">
+  <meta name="description" content="Compare SOL spot total return with Hyperliquid perpetual-swap total return, including realized funding.">
   <meta name="theme-color" content="#030403">
-  <meta property="og:title" content="NATGAS Spot and Swap Total Return — Corbanu">
-  <meta property="og:description" content="Natural gas terminal-anchored spot and funding-inclusive perpetual-swap price history.">
+  <meta property="og:title" content="SOL Spot and Swap Total Return — Corbanu">
+  <meta property="og:description" content="SOL terminal-anchored spot and funding-inclusive perpetual-swap price history.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://corbanu.com/natgas/">
-  <link rel="canonical" href="https://corbanu.com/natgas/">
+  <meta property="og:url" content="https://corbanu.com/sol/">
+  <link rel="canonical" href="https://corbanu.com/sol/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
   <link rel="stylesheet" href="/assets/css/market-lens.css?v=c33be616a1f5">
-  <title>NATGAS Spot and Swap Total Return — Corbanu</title>
+  <title>SOL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="natgas" data-market-version="c33be616a1f5">
+<body data-market-slug="sol" data-market-version="c33be616a1f5">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -22,7 +22,7 @@
       <a href="/">Home</a><a href="/terminal/">Terminal</a><a href="/#newsletter">Weekly research</a>
     </nav>
     <div class="header-market-tools">
-      <div id="live-perp-module" class="live-perp is-connecting" role="group" aria-label="NATGAS Hyperliquid perpetual mid price">
+      <div id="live-perp-module" class="live-perp is-connecting" role="group" aria-label="SOL Hyperliquid perpetual mid price">
         <div class="live-perp-status">
           <span class="live-perp-dot" aria-hidden="true"></span>
           <span class="live-perp-feed">
@@ -47,13 +47,11 @@
       <div class="chart-frame">
         <header class="chart-head">
           <div>
-            <div class="chart-title-row"><h1 id="chart-title">NATGAS Spot and Perp Total Returns</h1></div>
+            <div class="chart-title-row"><h1 id="chart-title">SOL Spot and Perp Total Returns</h1></div>
             <div class="legend" aria-label="Chart legend">
-              <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>NATGAS perp total return · long · seven-day</span>
-              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>UNG spot total return</span>
+              <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>SOL perp total return · long · seven-day</span>
+              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>SOL spot total return</span>
               <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · rebased at range start · live perps</span>
-              <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
-              <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
           </div>
           <div class="range-controls" role="group" aria-label="Chart window">
@@ -69,60 +67,27 @@
             <div class="chart-loading">Loading spot and swap history…</div>
           </div>
         </div>
-        <div class="distribution-center-controls" role="group" aria-label="Options distribution center">
-          <span>Distribution center</span>
-          <button type="button" data-distribution-center="spot" aria-pressed="true">Center distribution for Spot</button>
-          <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
-        </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
         <section class="peer-panel" aria-labelledby="peer-panel-title">
           <header class="peer-panel-head">
             <div>
               <span>Kimi K3 · Market Lens universe</span>
-              <h2 id="peer-panel-title">NATGAS Weighted Peer Basket</h2>
+              <h2 id="peer-panel-title">SOL Weighted Peer Basket</h2>
             </div>
             <small>Spot-return history · live Hyperliquid perp marks · moonshotai/kimi-k3</small>
           </header>
           <div class="peer-hedge-row">
             <span>Primary risk hedge</span>
-            <strong>CL · WTI crude oil · $138.059M 24h</strong>
-            <p>WTI crude oil is the best single hedge for NATGAS because it is a directly traded energy commodity with the closest shared drivers: North American energy supply and demand, associated gas production from oil drilling, fuel substitution in power and industrial use, and common inflation or geopolitical shocks. Its displayed 24-hour perp liquidity is 138.059 USD millions versus 6.228 USD millions for NATGAS, so it is also the more executable hedge; liquidity is used only as an execution constraint and tie-breaker.</p>
+            <strong>BTC · Bitcoin · $1,888.107M 24h</strong>
+            <p>Bitcoin is the dominant crypto asset and the closest executable hedge for market-wide digital-asset risk. Its displayed 24-hour perp liquidity is 1888.107 USD millions, far above SOL at 90.531 USD millions, so it is the cleanest hedge for systematic crypto exposure while leaving Solana-specific application and validator risk unhedged.</p>
           </div>
           <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted Market Lens return peers">
             <table class="peer-table">
               <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
-              <tbody><tr><td><strong>CL</strong><span>WTI crude oil</span></td><td>55.9%</td><td>$138.059M</td><td>3/3</td><td>Largest peer weight because WTI is the closest traded energy underlying to Henry Hub natural gas, sharing US energy production, associated gas output, power and industrial fuel demand, inventory cycles, and geopolitical supply risk.</td></tr><tr><td><strong>BRENTOIL</strong><span>Brent crude oil</span></td><td>28.8%</td><td>$98.495M</td><td>3/3</td><td>Brent crude oil is the global oil benchmark and captures the international side of energy pricing, including oil-linked gas contracts, LNG trade, global fuel demand, and supply responses across the energy complex. It is slightly less tied to North American gas field economics than WTI and has lower 24-hour perp liquidity at 98.495 USD millions, so it receives the second weight rather than the lead weight.</td></tr><tr><td><strong>BE</strong><span>Bloom Energy</span></td><td>15.3%</td><td>$11.194M</td><td>3/3</td><td>Bloom Energy is a major demand-side customer of natural gas: its solid-oxide fuel cells run largely on natural gas, so gas prices are a direct input cost and driver of its project economics and margins. This is a genuine economic link, but as a single-name equity it carries substantial company-specific risk and only 11.194 USD millions of 24-hour perp liquidity, so it receives a modest weight.</td></tr></tbody>
+              <tbody><tr><td><strong>ETH</strong><span>Ethereum</span></td><td>58.7%</td><td>$570.484M</td><td>3/3</td><td>Closest economic peer: a large smart-contract platform competing for the same developers, users, transaction fees, staking and validator economics, DeFi activity, and token-issuance cycles as Solana. It is a directly traded crypto underlying, with 570.484 USD millions of 24-hour perp liquidity as an execution check.</td></tr><tr><td><strong>BTC</strong><span>Bitcoin</span></td><td>32.0%</td><td>$1,888.107M</td><td>3/3</td><td>Bitcoin is not a smart-contract substitute, but it is the dominant crypto reserve asset and systematic crypto factor; a large share of SOL return variation is broad crypto beta, so BTC belongs in the basket as well as serving as the primary hedge.</td></tr><tr><td><strong>XRP</strong><span>XRP</span></td><td>9.3%</td><td>$32.086M</td><td>3/3</td><td>Directly traded large-cap crypto with the same market plumbing, exchange cycle, and regulatory catalysts, but its payments-focused use case is less similar to Solana&#x27;s smart-contract economics, so it receives only a small weight.</td></tr></tbody>
             </table>
           </div>
-          <p class="peer-justification">Three-run Kimi K3 consensus selected only the displayed peers: CL 55.9% with 3/3 replicate support; BRENTOIL 28.8% with 3/3 replicate support; BE 15.3% with 3/3 replicate support. Individual rationales state each economic relationship.</p>
-        </section>
-        <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
-          <header class="earnings-options-head">
-            <div>
-              <span class="earnings-options-kicker">Listed options · term structure</span>
-              <h2 id="earnings-options-title">NATGAS 1- and 3-Month ATM Straddle Targets</h2>
-              <p>UNG listed-options proxy · select a term to display its implied distribution and payout.</p>
-            </div>
-            <span id="earnings-options-asof" class="earnings-options-asof">Loading chain…</span>
-          </header>
-          <section class="historical-plays" aria-labelledby="historical-plays-title">
-            <header>
-              <div><span>Liquid ATM structures</span><h3 id="historical-plays-title">Select a term to display its payout on the chart</h3></div>
-            </header>
-            <div class="historical-table-scroll" tabindex="0" role="region" aria-label="Selectable one-month and three-month ATM option straddles">
-              <table class="historical-structure-table">
-                <thead><tr><th>Term</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Open interest</th><th>Implied move</th><th>Lower BE</th><th>Upper BE</th><th>Listed days</th></tr></thead>
-                <tbody id="historical-structure-rows"><tr><td colspan="9">Loading ATM straddles…</td></tr></tbody>
-              </table>
-            </div>
-          </section>
-          <div class="earnings-options-summary">
-            <div><small>Options underlier</small><strong id="options-underlier">—</strong><span>Listed proxy used for the distribution</span></div>
-            <div><small>1-month target</small><strong id="options-term-one">—</strong><span id="options-term-one-days">—</span></div>
-            <div><small>3-month target</small><strong id="options-term-three">—</strong><span id="options-term-three-days">—</span></div>
-            <div><small>Chain quote</small><strong id="options-chain-quote-date">—</strong><span>Current listed-options snapshot</span></div>
-          </div>
-          <p id="options-method-note" class="options-method-note">Term structure loading…</p>
+          <p class="peer-justification">Three-run Kimi K3 consensus selected only the displayed peers: ETH 58.7% with 3/3 replicate support; BTC 32.0% with 3/3 replicate support; XRP 9.3% with 3/3 replicate support. Individual rationales state each economic relationship.</p>
         </section>
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
@@ -149,7 +114,7 @@
         <section class="ratio-panel" aria-labelledby="ratio-title">
           <header class="ratio-head">
             <div>
-              <h2 id="ratio-title">NATGAS Perp Long / UNG Spot Long Total Return Ratio</h2>
+              <h2 id="ratio-title">SOL Perp Long / SOL Spot Long Total Return Ratio</h2>
               <span>1.00 = equal return since shared anchor · spot held at its last close between cash sessions</span>
             </div>
             <strong id="ratio-latest">—</strong>

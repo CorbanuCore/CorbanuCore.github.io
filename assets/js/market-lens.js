@@ -1450,14 +1450,25 @@
     const preferredNode = $("onchain-preferred");
     if (!rowsNode) return;
     const markets = data.onchainSpot && Array.isArray(data.onchainSpot.markets) ? data.onchainSpot.markets : [];
-    if (data.onchainSpot && data.onchainSpot.venueSplit) {
+    const cexMarkets = data.onchainSpot && Array.isArray(data.onchainSpot.cexMarkets) ? data.onchainSpot.cexMarkets : [];
+    if (data.onchainSpot && data.onchainSpot.venueSplit && (data.assetClass !== "crypto" || markets.length || cexMarkets.length)) {
       await renderVenueSplit(data, markets, rowsNode, stampNode, preferredNode);
       return;
     }
     if (!markets.length) {
-      rowsNode.innerHTML = '<div class="onchain-empty">No verified on-chain spot wrapper found in the indexed issuer registries.</div>';
-      if (preferredNode) preferredNode.textContent = "No indexed wrapper";
-      if (stampNode) stampNode.textContent = "Registries checked";
+      if (data.assetClass === "crypto") {
+        const title = $("onchain-title");
+        const subtitle = $("onchain-subtitle");
+        if (title) title.textContent = `${data.symbol} Native Spot`;
+        if (subtitle) subtitle.textContent = "The native token is the spot asset; no tokenized equity wrapper is required";
+        rowsNode.innerHTML = `<div class="onchain-empty">${data.symbol} spot returns use the native ${data.spotReferenceSymbol} USD market directly.</div>`;
+        if (preferredNode) preferredNode.textContent = "Native spot asset";
+        if (stampNode) stampNode.textContent = "Bitfinex USD reference";
+      } else {
+        rowsNode.innerHTML = '<div class="onchain-empty">No verified on-chain spot wrapper found in the indexed issuer registries.</div>';
+        if (preferredNode) preferredNode.textContent = "No indexed wrapper";
+        if (stampNode) stampNode.textContent = "Registries checked";
+      }
       return;
     }
     const preferred = markets.find((market) => market.preferred);
