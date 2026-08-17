@@ -95,6 +95,19 @@ def _page_html(
     peer_mapping: dict[str, Any] | None,
 ) -> str:
     continuous_spot = symbol in {"BTC", "ETH", "GOLD"}
+    is_index_proxy = bool(
+        peer_mapping and peer_mapping.get("targetAssetClass") == "equity_index"
+    )
+    spot_legend = (
+        f"{spot_symbol} return proxy · {symbol} point scale"
+        if is_index_proxy
+        else f"{spot_symbol} spot total return"
+    )
+    ratio_spot_label = (
+        f"{spot_symbol} Return Proxy"
+        if is_index_proxy
+        else f"{spot_symbol} Spot Long"
+    )
     options_enabled = options_payload is not None
     options_mode = str((options_payload or {}).get("mode") or "")
     options_underlier = str((options_payload or {}).get("underlierSymbol") or symbol)
@@ -222,11 +235,15 @@ def _page_html(
           <p id="options-method-note" class="options-method-note">Historical replay loading…</p>
         </section>"""
     ratio_subtitle = (
-        f"1.00 = equal return since shared anchor · {spot_symbol} sampled on the same seven-day New York session"
+        f"1.00 = equal return since shared anchor · {spot_symbol} return proxy held at its last cash close"
+        if is_index_proxy
+        else f"1.00 = equal return since shared anchor · {spot_symbol} sampled on the same seven-day New York session"
         if continuous_spot
         else "1.00 = equal return since shared anchor · spot held at its last close between cash sessions"
     )
-    if symbol == "GOLD":
+    if is_index_proxy:
+        chart_disclosure = f"{spot_symbol} supplies the listed spot total-return proxy. Its percentage return path is expressed in {symbol} index-point units using the same-date {symbol} perp close, so the proxy, weighted peers, options distribution, and perp candles share one readable axis without changing any return. The tooltip identifies these as scaled proxy levels. Perp history includes realized hourly funding and its newest close remains the actual perp price."
+    elif symbol == "GOLD":
         chart_disclosure = "Perp candlesticks and XAUT spot run seven days a week. XAUT closes use Bitfinex 30-minute spot candles aligned to 09:30–16:00 New York; the on-chain section reports executable Ethereum Uniswap V3 PAXG and XAUT quotes and depth. Each history is scaled to its own latest raw USD close: prior XAUT levels include spot total return and prior perp levels include realized hourly funding. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
     elif continuous_spot:
         chart_disclosure = f"Perp candlesticks and {spot_symbol} spot run seven days a week. Spot closes use Bitfinex 30-minute candles aligned to 09:30–16:00 New York. Each history is scaled to its own latest raw USD close: prior spot levels include spot total return and prior perp levels include realized hourly funding. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
@@ -284,7 +301,7 @@ def _page_html(
             <div class="chart-title-row"><h1 id="chart-title">{symbol} Spot and Perp Total Returns</h1></div>
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>{symbol} perp total return · long · seven-day</span>
-              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>{spot_symbol} spot total return</span>{peer_legend}{options_legend}
+              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>{spot_legend}</span>{peer_legend}{options_legend}
             </div>
           </div>
           <div class="range-controls" role="group" aria-label="Chart window">
@@ -326,7 +343,7 @@ def _page_html(
         <section class="ratio-panel" aria-labelledby="ratio-title">
           <header class="ratio-head">
             <div>
-              <h2 id="ratio-title">{symbol} Perp Long / {spot_symbol} Spot Long Total Return Ratio</h2>
+              <h2 id="ratio-title">{symbol} Perp Long / {ratio_spot_label} Total Return Ratio</h2>
               <span>{ratio_subtitle}</span>
             </div>
             <strong id="ratio-latest">—</strong>
@@ -457,9 +474,20 @@ def build(nav_root: Path) -> None:
             perp_terminal_price,
         ) <= 0:
             raise RuntimeError(f"invalid terminal total-return anchor for {raw_symbol}")
-        spot_scale = spot_terminal_price / spot_terminal_index
-        perp_scale = perp_terminal_price / perp_terminal_index
         peer_block = peer_targets.get(symbol)
+        target_asset_class = peer_target_classes.get(symbol)
+        is_index_proxy = target_asset_class == "equity_index"
+        spot_terminal_date = pd.Timestamp(spot_group.iloc[-1]["date"])
+        spot_display_anchor_price = spot_terminal_price
+        if is_index_proxy:
+            matching_perp = perp_group.loc[perp_group["date"].eq(spot_terminal_date)]
+            if matching_perp.empty:
+                raise RuntimeError(
+                    f"same-date perp display anchor is missing for index proxy {raw_symbol}"
+                )
+            spot_display_anchor_price = float(matching_perp.iloc[-1]["price_close"])
+        spot_scale = spot_display_anchor_price / spot_terminal_index
+        perp_scale = perp_terminal_price / perp_terminal_index
         peer_rows: list[dict[str, Any]] = []
         peer_mapping: dict[str, Any] | None = None
         if peer_block:
@@ -485,7 +513,7 @@ def build(nav_root: Path) -> None:
                 "temperature": peer_manifest["temperature"],
                 "promptVersion": peer_manifest["prompt_version"],
                 "replicatesPerTarget": peer_manifest["replicates_per_target"],
-                "targetAssetClass": peer_target_classes[symbol],
+                "targetAssetClass": target_asset_class,
                 "historyStart": peer_rows[0]["d"],
                 "historyEnd": peer_rows[-1]["d"],
                 "historyMethod": "daily-rebalanced peer spot total returns using the fixed Kimi weights; unavailable pre-listing peers are omitted and remaining weights renormalized once at least three peers exist; the browser rebases the basket to the target spot level at the first shared date of each selected chart range",
@@ -544,6 +572,35 @@ def build(nav_root: Path) -> None:
             )
         one_day_forecast = symbol_forecasts.loc[24]
         seven_day_forecast = symbol_forecasts.loc[168]
+        if is_index_proxy:
+            basis = (
+                f"{spot_symbol} gross-total-return proxy expressed on the matching-date "
+                f"{symbol} perp point scale; perp history ends at its latest raw price"
+            )
+            spot_display = {
+                "mode": "return_proxy_on_matching_perp_scale",
+                "sourceSymbol": spot_symbol,
+                "sourceTerminalPrice": _json_value(spot_terminal_price),
+                "displaySymbol": symbol,
+                "displayAnchorPrice": _json_value(spot_display_anchor_price),
+                "displayAnchorDate": _date(spot_terminal_date),
+                "scaleFactor": _json_value(
+                    spot_display_anchor_price / spot_terminal_price, 9
+                ),
+                "returnPathUnchanged": True,
+            }
+        else:
+            basis = "each funding- or dividend-inclusive history is scaled to its own latest raw USD close"
+            spot_display = {
+                "mode": "raw_terminal_price",
+                "sourceSymbol": spot_symbol,
+                "sourceTerminalPrice": _json_value(spot_terminal_price),
+                "displaySymbol": spot_symbol,
+                "displayAnchorPrice": _json_value(spot_terminal_price),
+                "displayAnchorDate": _date(spot_terminal_date),
+                "scaleFactor": 1.0,
+                "returnPathUnchanged": True,
+            }
         payload = {
             "version": 2,
             "generatedAt": metadata["finished_at_utc"],
@@ -557,12 +614,15 @@ def build(nav_root: Path) -> None:
             "anchorDate": _date(anchor_date),
             "exactStart": _date(exact["date"].min()) if not exact.empty else None,
             "endDate": max(spot_rows[-1]["d"], perp_rows[-1]["d"]),
-            "basis": "each funding- or dividend-inclusive history is scaled to its own latest raw USD close",
+            "basis": basis,
+            "spotDisplay": spot_display,
             "terminalAnchors": {
                 "spot": {
-                    "price": _json_value(spot_terminal_price),
+                    "price": _json_value(spot_display_anchor_price),
+                    "rawPrice": _json_value(spot_terminal_price),
                     "date": spot_rows[-1]["d"],
                     "symbol": spot_symbol,
+                    "displaySymbol": symbol if is_index_proxy else spot_symbol,
                 },
                 "perp": {
                     "price": _json_value(perp_terminal_price),

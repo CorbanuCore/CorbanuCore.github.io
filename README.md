@@ -30,7 +30,11 @@ latest peer cash close with current perp returns. Commodities, ETFs, and
 indices use cross-asset peers and a primary risk hedge rather than the
 single-stock index-hedge restriction. Every selected chart range rebases the
 peer basket to the target at its first shared date so split-adjusted long
-histories remain visually comparable.
+histories remain visually comparable. SP500 and XYZ100 use SPY and QQQ as
+listed total-return proxies, but express those return paths on the matching-date
+perp index-point scale. This preserves the proxy returns while avoiding an
+ETF-dollar versus index-point axis mismatch; payloads retain both raw proxy
+prices and the exact display scale.
 The mapping is frozen by `moonshotai/kimi-k3` at temperature zero from three
 validated blocks per instrument; every prompt receives the complete 35-contract
 TradeXYZ core with names, asset classes, and live 24-hour perp liquidity. The
