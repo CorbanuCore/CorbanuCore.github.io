@@ -52,6 +52,30 @@ def main() -> int:
             raise AssertionError(f"{slug}: Hyperliquid raw symbol is missing")
         if int(payload.get("version") or 0) != 2:
             raise AssertionError(f"{slug}: terminal-anchored payload version is missing")
+        if "Funding APY" in page_markup or "Predicted Perp Long Funding APR" not in page_markup:
+            raise AssertionError(f"{slug}: funding display must use simple annualized APR")
+        funding_forecast = payload.get("fundingForecast") or {}
+        for key in ("oneDayLongAprPct", "sevenDayLongAprPct"):
+            if funding_forecast.get(key) is None:
+                raise AssertionError(f"{slug}: funding forecast is missing {key}")
+        if funding_forecast.get("model") not in {
+            "ridge_1d_to_30d",
+            "blend_1d_1w_short_history",
+        }:
+            raise AssertionError(f"{slug}: unapproved one-day funding model")
+        if funding_forecast.get("sevenDayModel") not in {
+            "blend_7d_30d",
+            "mean_7d_short_history",
+        }:
+            raise AssertionError(f"{slug}: unapproved seven-day funding model")
+        if funding_forecast.get("sevenDayModel") == "blend_7d_30d" and funding_forecast.get(
+            "sevenDayValidationScope"
+        ) != "aggregate_22_contract_sweep":
+            raise AssertionError(f"{slug}: seven-day aggregate winner lacks validation scope")
+        if funding_forecast.get("sevenDayModel") == "mean_7d_short_history" and funding_forecast.get(
+            "sevenDayValidationScope"
+        ) != "short_history_fallback":
+            raise AssertionError(f"{slug}: seven-day fallback lacks short-history scope")
         anchors = payload.get("terminalAnchors") or {}
         spot_rows = payload.get("spot") or []
         perp_rows = payload.get("perp") or []

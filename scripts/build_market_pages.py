@@ -317,7 +317,7 @@ def _page_html(
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
             <div>
-              <h2 id="funding-forecast-title">Predicted Perp Long Funding APY</h2>
+              <h2 id="funding-forecast-title">Predicted Perp Long Funding APR</h2>
               <span>Forward mean hourly funding · positive means the long earns</span>
             </div>
             <span id="funding-forecast-asof" class="funding-forecast-asof">—</span>
@@ -333,7 +333,7 @@ def _page_html(
               <strong id="funding-forecast-7d">—</strong>
               <span id="funding-forecast-7d-direction">—</span>
             </div>
-            <p>Existing walk-forward funding model · simple annualized cash yield before fees and slippage</p>
+            <p>Validated horizon-specific funding rules · simple annualized cash yield before fees and slippage</p>
           </div>
         </section>
         <section class="ratio-panel" aria-labelledby="ratio-title">
@@ -662,14 +662,20 @@ def build(nav_root: Path) -> None:
                 "model": str(one_day_forecast["model"]),
                 "sevenDayModel": str(seven_day_forecast["model"]),
                 "displaySign": "positive is earned by a perp long; negative is paid by a perp long",
-                "oneDayLongApyPct": _json_value(
-                    one_day_forecast["predicted_long_funding_apy"] * 100.0, 4
+                "oneDayLongAprPct": _json_value(
+                    one_day_forecast["predicted_long_funding_apr"] * 100.0, 4
                 ),
-                "sevenDayLongApyPct": _json_value(
-                    seven_day_forecast["predicted_long_funding_apy"] * 100.0, 4
+                "sevenDayLongAprPct": _json_value(
+                    seven_day_forecast["predicted_long_funding_apr"] * 100.0, 4
                 ),
-                "oneDayTrainingDays": int(one_day_forecast["training_observations"]),
-                "sevenDayTrainingDays": int(seven_day_forecast["training_observations"]),
+                "oneDayCompletedTargetDays": int(
+                    one_day_forecast["completed_target_observations"]
+                ),
+                "sevenDayCompletedTargetDays": int(
+                    seven_day_forecast["completed_target_observations"]
+                ),
+                "oneDayValidationScope": str(one_day_forecast["validation_scope"]),
+                "sevenDayValidationScope": str(seven_day_forecast["validation_scope"]),
             },
             "onchainSpot": {
                 "generatedAt": onchain_catalog.get("generatedAt"),
