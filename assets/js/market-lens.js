@@ -435,8 +435,8 @@
     const asOf = forecast && forecast.asOf;
     text("funding-forecast-asof", asOf ? `As of ${timestampLabel(asOf)} UTC` : "Forecast unavailable");
     [
-      ["1d", forecast && forecast.oneDayLongApyPct],
-      ["7d", forecast && forecast.sevenDayLongApyPct],
+      ["1d", forecast && forecast.oneDayLongAprPct],
+      ["7d", forecast && forecast.sevenDayLongAprPct],
     ].forEach(([horizon, value]) => {
       const valueNode = $(`funding-forecast-${horizon}`);
       const directionNode = $(`funding-forecast-${horizon}-direction`);
