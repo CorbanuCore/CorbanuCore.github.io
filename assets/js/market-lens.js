@@ -56,6 +56,14 @@
     };
   }
 
+  function structureImpliedVolPct(play) {
+    const optionLegs = [play && play.put, play && play.call].filter(Boolean);
+    const impliedVols = optionLegs.map((leg) => Number(leg.impliedVolPct)).filter(Number.isFinite);
+    return impliedVols.length
+      ? impliedVols.reduce((total, value) => total + value, 0) / impliedVols.length
+      : NaN;
+  }
+
   function livePriceLabel(value) {
     const parsed = Number(value);
     if (!Number.isFinite(parsed) || parsed <= 0) return "—";
@@ -497,17 +505,15 @@
           : play.structure === "long put"
           ? [`Buy ${underlier} ${expirationLabel} ${priceMoney(play.put.strike)} put`]
           : [`Buy ${underlier} ${expirationLabel} ${priceMoney(play.call.strike)} call`];
+        const impliedVolPct = structureImpliedVolPct(play);
         const metricCells = termMode
           ? `<td><strong>${Number(play.combinedOpenInterest).toLocaleString("en-US")}</strong></td>
              <td><strong>±${number(play.impliedMovePct, 2)}%</strong></td>
              <td><strong>${priceMoney(play.lowerBreakeven)}</strong></td>
              <td><strong>${priceMoney(play.upperBreakeven)}</strong></td>
              <td><strong>${play.daysToExpiration}</strong></td>`
-          : `<td><strong>${play.trailing12.profitableEvents}/${play.trailing12.events}</strong></td>
-             <td><strong>${number(play.trailing12.averageGrossPayoutMultiple, 2)}×</strong></td>
-             <td><strong>${number(play.trailing12.averageWinnerPayoutMultiple, 2)}×</strong></td>
-             <td><strong>${number(play.trailing12.maximumGrossPayoutMultiple, 2)}×</strong></td>
-             <td><strong>${play.fullHistory.profitableEvents}/${play.fullHistory.events} · ${number(play.fullHistory.averageGrossPayoutMultiple, 2)}×</strong></td>`;
+          : `<td><strong>${number(play.trailing12.averageGrossPayoutMultiple, 2)}×</strong></td>
+             <td><strong>${number(impliedVolPct, 1)}%</strong></td>`;
         return `<tr data-structure-index="${index}" tabindex="0" aria-selected="${index === state.selectedStructureIndex}">
           <td><input type="radio" name="earnings-structure" tabindex="-1" aria-label="Display ${escapeHtml(play.name)} payout"${index === state.selectedStructureIndex ? " checked" : ""}><strong>${escapeHtml(play.name)}</strong></td>
           <td>${contractLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</td>
