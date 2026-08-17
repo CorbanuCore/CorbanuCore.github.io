@@ -62,7 +62,7 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__computeLivePeerRow = computeLivePeerRow;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
 
@@ -82,9 +82,9 @@ const livePeerData = {
     liveSplice: {
       baseLevel: 100,
       inputs: [
-        { raw_symbol: "xyz:MSFT", weight: .5, spot_close_usd: 100 },
-        { raw_symbol: "xyz:GOOGL", weight: .3, spot_close_usd: 100 },
-        { raw_symbol: "xyz:AMZN", weight: .2, spot_close_usd: 100 },
+        { raw_symbol: "xyz:MSFT", weight: .5, spot_close_usd: 50, perp_reference_price: 100 },
+        { raw_symbol: "xyz:GOOGL", weight: .3, spot_close_usd: 200, perp_reference_price: 100 },
+        { raw_symbol: "xyz:AMZN", weight: .2, spot_close_usd: 25, perp_reference_price: 100 },
       ],
     },
   },
@@ -103,6 +103,17 @@ assert.equal(
   null,
   "the live splice must require at least three current perp mids",
 );
+
+const rebasedPeers = context.window.__rebasePeerSeriesToSpot(
+  [{ d: "2026-02-17", c: 12 }, { d: "2026-08-14", c: 30, live: true }],
+  [{ d: "2026-02-17", c: 180 }, { d: "2026-08-14", c: 225 }],
+);
+assert.deepEqual(
+  rebasedPeers.map((row) => row.c),
+  [180, 450],
+  "the peer basket must share the target level at the selected range anchor",
+);
+assert.equal(rebasedPeers[1].viewAnchor, "2026-02-17");
 
 context.window.__startLivePerpPrice({ rawSymbol: "xyz:TSLA" });
 assert.equal(FakeWebSocket.instances.length, 1);

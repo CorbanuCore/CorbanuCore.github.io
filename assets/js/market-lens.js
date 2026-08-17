@@ -252,11 +252,11 @@
     let peerCount = 0;
     inputs.forEach((input) => {
       const weight = Number(input.weight);
-      const spotClose = Number(input.spot_close_usd);
+      const perpReference = Number(input.perp_reference_price);
       const perpMid = Number(mids[input.raw_symbol]);
-      if (!(weight > 0) || !(spotClose > 0) || !(perpMid > 0)) return;
+      if (!(weight > 0) || !(perpReference > 0) || !(perpMid > 0)) return;
       activeWeight += weight;
-      weightedReturn += weight * (perpMid / spotClose - 1);
+      weightedReturn += weight * (perpMid / perpReference - 1);
       peerCount += 1;
     });
     if (peerCount < 3 || !(activeWeight > 0)) return null;
@@ -538,6 +538,19 @@
     return data[key].filter((row) => new Date(`${row.d}T00:00:00Z`).getTime() >= cutoff);
   }
 
+  function rebasePeerSeriesToSpot(peerRows, spotRows) {
+    if (!peerRows.length || !spotRows.length) return peerRows;
+    const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
+    const anchorPeer = peerRows.find((row) => spotByDate.has(row.d));
+    if (!anchorPeer) return peerRows;
+    const anchorSpot = spotByDate.get(anchorPeer.d);
+    const peerLevel = Number(anchorPeer.c);
+    const spotLevel = Number(anchorSpot.c);
+    if (!(peerLevel > 0) || !(spotLevel > 0)) return peerRows;
+    const scale = spotLevel / peerLevel;
+    return peerRows.map((row) => ({ ...row, c: Number(row.c) * scale, viewScale: scale, viewAnchor: anchorPeer.d }));
+  }
+
   function svgNode(name, attributes) {
     const node = document.createElementNS(NS, name);
     Object.entries(attributes || {}).forEach(([key, value]) => node.setAttribute(key, value));
@@ -581,6 +594,7 @@
         peerRows.sort((left, right) => left.d.localeCompare(right.d));
       }
     }
+    peerRows = rebasePeerSeriesToSpot(peerRows, spotRows);
     const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
     const perpByDate = new Map(perpRows.map((row) => [row.d, row]));
     const peerByDate = new Map(peerRows.map((row) => [row.d, row]));
@@ -636,7 +650,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} terminal-anchored spot total-return price line and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history extended by live TradeXYZ perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} terminal-anchored spot total-return price line and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history rebased to the target at the selected window start and extended by live TradeXYZ perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -833,6 +847,7 @@
         `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
         spot ? `<div class="tooltip-row spot"><span>Spot total-return close</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
         peer ? `<div class="tooltip-row peer"><span>${peer.live ? "Live TradeXYZ peer basket" : "Peer spot-return basket"}</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
+        peer && peer.viewAnchor ? `<p class="tooltip-precision">Peer basket rebased to ${data.symbol} on ${dateLabel(peer.viewAnchor, true)}</p>` : "",
         perp ? `<div class="tooltip-row"><span>Perp total-return O / C</span><strong>${priceMoney(perp.o)} / ${priceMoney(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Perp</span><strong>Not listed</strong></div>',
         perp ? `<div class="tooltip-row"><span>Perp total-return H / L</span><strong>${priceMoney(perp.h)} / ${priceMoney(perp.l)}</strong></div>` : "",
         perp ? `<div class="tooltip-row"><span>${perp.p === "partial" ? "Funding observed" : "Funding to close"}</span><strong>${percent(perp.f * 100, 3)}</strong></div>` : "",

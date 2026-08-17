@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/copper/">
   <link rel="canonical" href="https://corbanu.com/copper/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=5337c135bc9c">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=c1bd65d5dc59">
   <title>COPPER Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="copper" data-market-version="5337c135bc9c">
+<body data-market-slug="copper" data-market-version="c1bd65d5dc59">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>COPPER perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>CPER spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · rebased at range start · live perps</span>
             </div>
           </div>
           <div class="range-controls" role="group" aria-label="Chart window">
@@ -67,6 +68,27 @@
           </div>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">COPPER Weighted Peer Basket</h2>
+            </div>
+            <small>Spot-return history · live TradeXYZ perp marks · moonshotai/kimi-k3</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary risk hedge</span>
+            <strong>SP500 · S&amp;P 500 · $50.729M 24h</strong>
+            <p>Copper&#x27;s dominant risk is cyclical global-growth and risk-on or risk-off shocks. The S&amp;P 500 is the deepest listed risk-asset proxy in CORE_UNIVERSE, with displayed 24-hour perp liquidity of 50.729 USD millions, making it the most practical single instrument to position opposite copper and offset that growth beta.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>SILVER</strong><span>Silver</span></td><td>40.6%</td><td>$32.581M</td><td>3/3</td><td>Closest cross-commodity peer: silver shares the US dollar and real-rate channel with copper, has meaningful industrial demand, and is often co-produced with copper, while its 32.581 USD millions liquidity supports the largest weight.</td></tr><tr><td><strong>TSLA</strong><span>Tesla</span></td><td>14.6%</td><td>$4.787M</td><td>3/3</td><td>Tesla ties copper to electric vehicles, charging, and storage, where copper intensity per vehicle is high; the single-name equity risk and 4.787 USD millions liquidity argue for a moderate weight.</td></tr><tr><td><strong>CL</strong><span>WTI crude oil</span></td><td>18.4%</td><td>$40.091M</td><td>2/3</td><td>WTI crude oil shares copper&#x27;s global growth, industrial activity, and reflation channel, and energy also feeds mining and smelting costs. CL has very deep displayed 24-hour perp liquidity of 40.091 USD millions, but oil has separate supply shocks, so it ranks below silver.</td></tr><tr><td><strong>GOLD</strong><span>Gold</span></td><td>11.5%</td><td>$23.982M</td><td>2/3</td><td>Common macro factor is the US dollar and real yields; it adds the risk-off side of the metal complex while copper is the more industrial side. Its displayed 24-hour perp liquidity is 23.982 USD millions, so it receives a high but smaller weight than SILVER.</td></tr><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>8.1%</td><td>$4.508M</td><td>2/3</td><td>NVIDIA is included for data-center and AI capex that pulls power-grid, cooling, and electrification demand, plus a broad risk-on channel, rather than as a generic tech holding. Its displayed 24-hour perp liquidity is 4.508 USD millions, close to TSLA, so it receives a similar small weight.</td></tr><tr><td><strong>NATGAS</strong><span>Natural gas</span></td><td>6.8%</td><td>$2.186M</td><td>2/3</td><td>Natural gas captures the input-cost channel through power and fuel used in refining and smelting, but the link is narrower than the metal-complex and global-growth peers. Its displayed 24-hour perp liquidity is only 2.186 USD millions, so the weight is kept small.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block is built around COPPER as a pro-cyclical industrial metal with 6.262 USD millions displayed 24-hour perp liquidity. The peer set is not a generic commodity basket: SILVER and GOLD express the shared US dollar and real-rate channel, CL and NATGAS express global growth plus energy input costs into mining and smelting, and TSLA, NVDA, and BE express electrification, data-center power, and distributed-energy demand for copper. Weights are positive binary fractions that sum to exactly 1, with the largest weight on the most comparable liquid metal and smaller weights where the economic link is indirect or displayed liquidity in USD millions is low.</p>
+        </section>
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
             <div>
@@ -135,6 +157,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=5337c135bc9c"></script>
+  <script src="/assets/js/market-lens.js?v=c1bd65d5dc59"></script>
 </body>
 </html>

@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/xyz100/">
   <link rel="canonical" href="https://corbanu.com/xyz100/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=5337c135bc9c">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=c1bd65d5dc59">
   <title>XYZ100 Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="xyz100" data-market-version="5337c135bc9c">
+<body data-market-slug="xyz100" data-market-version="c1bd65d5dc59">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>XYZ100 perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>QQQ spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · rebased at range start · live perps</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">XYZ100 Weighted Peer Basket</h2>
+            </div>
+            <small>Spot-return history · live TradeXYZ perp marks · moonshotai/kimi-k3</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary risk hedge</span>
+            <strong>SP500 · S&amp;P 500 · $50.729M 24h</strong>
+            <p>SP500 is the cleanest primary risk hedge for XYZ100 because it shares the same US equity risk-on/risk-off channel, the same dollar and interest-rate discounting channel, and the same broad earnings cycle, while diluting the Nasdaq-100&#x27;s extra concentration in mega-cap AI and semiconductor names. Its displayed 24-hour perp liquidity is 50.729 USD millions, close to XYZ100 at 52.585 USD millions, so the hedge can be sized with similar depth.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>22.5%</td><td>$4.508M</td><td>3/3</td><td>NVIDIA is the clearest common-factor peer: AI accelerator revenue, data-center capital expenditure, and high-beta growth positioning transmit directly into Nasdaq-100 leadership. Its weight is highest despite only 4.508 USD millions of displayed liquidity because comparability is strongest.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>16.7%</td><td>$2.581M</td><td>3/3</td><td>Microsoft shares the same cloud, enterprise software, and AI-capex monetization channel, and its large capitalization makes it a core long-duration growth exposure inside the Nasdaq-100 rather than an unrelated diversification name.</td></tr><tr><td><strong>AAPL</strong><span>Apple</span></td><td>14.9%</td><td>$2.905M</td><td>3/3</td><td>AAPL is a core Nasdaq-100 mega-cap growth exposure tied to consumer hardware, services margins, buybacks, and the same real-rate valuation channel as the index. It is less purely tied to AI servers than NVDA or MSFT, and displayed 24-hour perp liquidity is 2.905 USD millions, supporting a large but not top weight.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>14.5%</td><td>$4.758M</td><td>3/3</td><td>Alphabet combines digital-advertising cyclicality with cloud and AI infrastructure exposure; with 4.758 USD millions of displayed liquidity it can carry a slightly higher weight than Apple while still explaining the same risk-on growth channel.</td></tr><tr><td><strong>AMZN</strong><span>Amazon</span></td><td>9.4%</td><td>$1.649M</td><td>3/3</td><td>AMZN captures the same cloud and AI infrastructure cycle through AWS plus the US consumer spending channel that matters for Nasdaq-100 earnings breadth. Displayed 24-hour perp liquidity is 1.649 USD millions, thinner than the other mega caps, so the weight is moderated.</td></tr><tr><td><strong>META</strong><span>Meta Platforms</span></td><td>9.1%</td><td>$2.610M</td><td>3/3</td><td>Meta Platforms exposes the block to advertising cyclicality plus AI model and recommendation monetization, which is a common earnings lever for the mega-cap growth factor that dominates Nasdaq-100.</td></tr><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>6.5%</td><td>$21.299M</td><td>2/3</td><td>MU adds the AI memory and storage cycle that feeds the same data-center buildout as the Nasdaq-100&#x27;s semiconductor complex, but with more commodity-like memory pricing beta than the platform mega caps. Displayed 24-hour perp liquidity is 21.299 USD millions, the deepest in this peer set, so it receives a liquidity-aware boost above what index size alone would imply.</td></tr><tr><td><strong>TSLA</strong><span>Tesla</span></td><td>6.5%</td><td>$4.787M</td><td>2/3</td><td>Tesla is a high-beta mega-cap growth name in the same risk-on equity channel, and 4.787 USD millions of displayed liquidity is deep relative to other single-name peers.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The construction is an AI and mega-cap growth sleeve rather than a generic basket. Nasdaq-100 returns are driven mainly by a small group of long-duration platform and semiconductor names, so the sleeve weights NVDA, Microsoft, Alphabet, Apple, Amazon, Meta, Micron, and Tesla according to economic comparability while using the displayed 24-hour perp liquidity stated in USD millions as a constraint. Micron has very deep displayed liquidity at 21.299 USD millions but receives only 0.07 because memory supply is an input-cost channel for the AI-hardware complex, not a full substitute for the whole index. Amazon is highly relevant through cloud and consumer-cycle exposure but is capped at 0.10 because its displayed liquidity is only 1.649 USD millions. The SP500 hedge is a correlated equity-beta substitute: it should offset part of broad index risk, but it will not perfectly protect a pure Nasdaq-100 technology concentration drawdown.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=5337c135bc9c"></script>
+  <script src="/assets/js/market-lens.js?v=c1bd65d5dc59"></script>
 </body>
 </html>

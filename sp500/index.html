@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/sp500/">
   <link rel="canonical" href="https://corbanu.com/sp500/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=5337c135bc9c">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=c1bd65d5dc59">
   <title>SP500 Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="sp500" data-market-version="5337c135bc9c">
+<body data-market-slug="sp500" data-market-version="c1bd65d5dc59">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -51,6 +51,7 @@
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>SP500 perp total return · long · seven-day</span>
               <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>SPY spot total return</span>
+              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · rebased at range start · live perps</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
             </div>
@@ -74,6 +75,27 @@
           <button type="button" data-distribution-center="perp" aria-pressed="false">Center distribution for Perp</button>
         </div>
         <p id="chart-live" class="sr-only" aria-live="polite"></p>
+        <section class="peer-panel" aria-labelledby="peer-panel-title">
+          <header class="peer-panel-head">
+            <div>
+              <span>Kimi K3 · intra-TradeXYZ</span>
+              <h2 id="peer-panel-title">SP500 Weighted Peer Basket</h2>
+            </div>
+            <small>Spot-return history · live TradeXYZ perp marks · moonshotai/kimi-k3</small>
+          </header>
+          <div class="peer-hedge-row">
+            <span>Primary risk hedge</span>
+            <strong>GOLD · Gold · $23.982M 24h</strong>
+            <p>Gold is the cleanest non-equity hedge in CORE_UNIVERSE for SP500 because it can absorb risk-off flows when real yields fall, the dollar softens, or equity volatility rises. Its 23.982 USD millions of 24-hour perp liquidity is deep enough to size a hedge without switching into another equity index.</p>
+          </div>
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+            <table class="peer-table">
+              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
+              <tbody><tr><td><strong>NVDA</strong><span>NVIDIA</span></td><td>16.9%</td><td>$4.508M</td><td>3/3</td><td>NVDA is a dominant SP500 return driver through AI semiconductors, data-center capex, and index concentration. It transmits the same earnings-revision and real-rate channel as SP500, but the weight is capped because displayed 24-hour perp liquidity is 4.508 USD millions, far below the equity index.</td></tr><tr><td><strong>MSFT</strong><span>Microsoft</span></td><td>14.6%</td><td>$2.581M</td><td>3/3</td><td>MSFT is a core mega-cap constituent linking SP500 to cloud software, enterprise spending, AI infrastructure, and buyback-supported earnings. Its long-duration cash flows make it sensitive to the same discount-rate moves as the index; displayed 24-hour perp liquidity is 2.581 USD millions, so the weight stays below the hedge.</td></tr><tr><td><strong>AAPL</strong><span>Apple</span></td><td>13.2%</td><td>$2.905M</td><td>3/3</td><td>AAPL connects SP500 to global consumer hardware demand, services margins, supply-chain costs, and large buybacks. It is highly comparable as a mega-cap index weight, but displayed 24-hour perp liquidity is 2.905 USD millions, which is modest next to SP500.</td></tr><tr><td><strong>GOOGL</strong><span>Alphabet</span></td><td>10.5%</td><td>$4.758M</td><td>3/3</td><td>GOOGL reflects the digital advertising cycle, cloud growth, AI investment, and regulatory risk inside SP500 communication services. It shares the index&#x27;s growth and discount-rate channel, with displayed 24-hour perp liquidity of 4.758 USD millions.</td></tr><tr><td><strong>AMZN</strong><span>Amazon</span></td><td>9.2%</td><td>$1.649M</td><td>3/3</td><td>AMZN gives SP500 exposure to consumer discretionary spending, cloud computing through AWS, advertising, and logistics input costs. It is a risk-on earnings proxy with displayed 24-hour perp liquidity of 1.649 USD millions, so its weight is meaningful but limited.</td></tr><tr><td><strong>META</strong><span>Meta Platforms</span></td><td>6.8%</td><td>$2.610M</td><td>3/3</td><td>META is another advertising and AI-capex proxy that co-moves with SP500 when risk appetite and nominal growth expectations rise. Its displayed 24-hour perp liquidity is 2.61 USD millions, and idiosyncratic regulatory and metaverse spending risk keep the weight moderate.</td></tr><tr><td><strong>XYZ100</strong><span>Nasdaq-100</span></td><td>22.0%</td><td>$52.585M</td><td>2/3</td><td>Nasdaq-100 is the closest return substitute because it overlaps heavily with the mega-cap growth stocks that drive SP500 and shares the same long-duration discount-rate and risk-on channel. Its 52.585 USD millions of 24-hour perp liquidity is the closest match to SP500 at 50.729 USD millions.</td></tr><tr><td><strong>TSLA</strong><span>Tesla</span></td><td>3.7%</td><td>$4.787M</td><td>2/3</td><td>TSLA adds high-beta consumer discretionary, electric-vehicle margin, and rate-sensitive risk-on exposure that can amplify SP500 drawdowns and rebounds. Displayed 24-hour perp liquidity is 4.787 USD millions, but company-specific volatility is high, so the weight is small.</td></tr><tr><td><strong>CL</strong><span>WTI crude oil</span></td><td>3.1%</td><td>$40.091M</td><td>2/3</td><td>CL is the cross-asset input-cost and inflation peer: stronger oil can signal firm global demand but also pressure margins, consumer real income, and rate expectations for SP500. Its displayed 24-hour perp liquidity is 40.091 USD millions, yet its return comparability to a broad equity index is lower, so it receives only a small weight.</td></tr></tbody>
+            </table>
+          </div>
+          <p class="peer-justification">The block is built around SP500 at 50.729 USD millions of 24-hour perp liquidity. XYZ100 carries the largest peer weight because it is the nearest index substitute, while the single-name peers are the mega-cap constituents that explain much of SP500 earnings, duration, and risk-on beta. Weights are positive, sum to exactly 1, and are tilted by economic comparability first, then restrained where displayed 24-hour perp liquidity in USD millions is far below the target. GOLD is used only as the primary risk hedge, not as a peer, because its risk-off and real-rate channel diversifies the equity return stream.</p>
+        </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
             <div>
@@ -170,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=5337c135bc9c"></script>
+  <script src="/assets/js/market-lens.js?v=c1bd65d5dc59"></script>
 </body>
 </html>
