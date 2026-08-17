@@ -4,12 +4,13 @@
   const page = document.body;
   const slug = page.dataset.marketSlug;
   const marketVersion = page.dataset.marketVersion || "";
-  const state = { data: null, range: "6M", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1, selectedStructureIndex: 0, distributionCenter: "spot" };
+  const state = { data: null, range: "6M", rows: [], focusIndex: -1, ratioRows: [], ratioFocusIndex: -1, selectedStructureIndex: 0, distributionCenter: "spot", livePeerRow: null };
   const liveFeed = {
     rawSymbol: "", socket: null, status: "", retry: 0, lastMessageAt: 0,
     reconnectTimer: null, heartbeatTimer: null, staleTimer: null,
     connectTimer: null, snapshotTimer: null, destroyed: false,
   };
+  const livePeerFeed = { timer: null, stopped: false };
   const NS = "http://www.w3.org/2000/svg";
   const $ = (id) => document.getElementById(id);
 
@@ -238,6 +239,72 @@
       clearLiveFeedTimer("reconnectTimer");
       clearLiveConnectionTimers();
       closeLiveSocket();
+    }, { once: true });
+  }
+
+  function computeLivePeerRow(data, mids, now) {
+    const splice = data && data.peerMapping && data.peerMapping.liveSplice;
+    const inputs = splice && Array.isArray(splice.inputs) ? splice.inputs : [];
+    const baseLevel = Number(splice && splice.baseLevel);
+    if (!mids || !Number.isFinite(baseLevel) || baseLevel <= 0 || inputs.length < 3) return null;
+    let activeWeight = 0;
+    let weightedReturn = 0;
+    let peerCount = 0;
+    inputs.forEach((input) => {
+      const weight = Number(input.weight);
+      const spotClose = Number(input.spot_close_usd);
+      const perpMid = Number(mids[input.raw_symbol]);
+      if (!(weight > 0) || !(spotClose > 0) || !(perpMid > 0)) return;
+      activeWeight += weight;
+      weightedReturn += weight * (perpMid / spotClose - 1);
+      peerCount += 1;
+    });
+    if (peerCount < 3 || !(activeWeight > 0)) return null;
+    const level = baseLevel * (1 + weightedReturn / activeWeight);
+    if (!Number.isFinite(level) || level <= 0) return null;
+    const observedAt = now instanceof Date ? now : new Date();
+    return {
+      d: observedAt.toISOString().slice(0, 10),
+      c: level,
+      n: peerCount,
+      live: true,
+      t: observedAt.toISOString(),
+    };
+  }
+
+  async function refreshLivePeerBasket() {
+    const data = state.data;
+    const splice = data && data.peerMapping && data.peerMapping.liveSplice;
+    if (!splice || !navigator.onLine) return false;
+    try {
+      const response = await fetch("https://api.hyperliquid.xyz/info", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "allMids", dex: splice.dex || "xyz" }),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const row = computeLivePeerRow(data, await response.json(), new Date());
+      if (!row) return false;
+      const previous = state.livePeerRow;
+      state.livePeerRow = row;
+      if (!previous || previous.d !== row.d || Math.abs(previous.c - row.c) > 1e-8) renderChart();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function startLivePeerBasket(data) {
+    if (!(data && data.peerMapping && data.peerMapping.liveSplice)) return;
+    livePeerFeed.stopped = false;
+    void refreshLivePeerBasket();
+    livePeerFeed.timer = setInterval(() => {
+      if (!livePeerFeed.stopped) void refreshLivePeerBasket();
+    }, 5000);
+    window.addEventListener("pagehide", () => {
+      livePeerFeed.stopped = true;
+      if (livePeerFeed.timer) clearInterval(livePeerFeed.timer);
+      livePeerFeed.timer = null;
     }, { once: true });
   }
 
@@ -504,7 +571,16 @@
     const earningsDate = options && !termMode ? options.earnings.date : null;
     const spotRows = visibleSeries(data, "spot");
     const perpRows = visibleSeries(data, "perp");
-    const peerRows = Array.isArray(data.peer) ? visibleSeries(data, "peer") : [];
+    let peerRows = Array.isArray(data.peer) ? visibleSeries(data, "peer") : [];
+    if (state.livePeerRow) {
+      const cutoff = cutoffForRange(data).getTime();
+      const liveTime = new Date(`${state.livePeerRow.d}T00:00:00Z`).getTime();
+      if (liveTime >= cutoff) {
+        peerRows = peerRows.filter((row) => row.d !== state.livePeerRow.d);
+        peerRows.push(state.livePeerRow);
+        peerRows.sort((left, right) => left.d.localeCompare(right.d));
+      }
+    }
     const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
     const perpByDate = new Map(perpRows.map((row) => [row.d, row]));
     const peerByDate = new Map(peerRows.map((row) => [row.d, row]));
@@ -552,7 +628,7 @@
     let low = Math.min(...values);
     let high = Math.max(...values);
     const pad = Math.max((high - low) * .09, 1);
-    low -= pad;
+    low = Math.max(0, low - pad);
     high += pad;
     const y = (value) => margin.top + (high - Number(value)) / (high - low) * plotHeight;
 
@@ -560,7 +636,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} terminal-anchored spot total-return price line and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the Kimi K3 weighted TradeXYZ peer total-return line" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} terminal-anchored spot total-return price line and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history extended by live TradeXYZ perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -682,6 +758,8 @@
     if (line) svg.appendChild(svgNode("path", { d: line, class: "market-spot" }));
     const peerLine = peerRows.map((row, index) => `${index ? "L" : "M"}${x(row.d).toFixed(2)},${y(row.c).toFixed(2)}`).join(" ");
     if (peerLine) svg.appendChild(svgNode("path", { d: peerLine, class: "market-peer" }));
+    const livePeer = peerRows.length && peerRows[peerRows.length - 1].live ? peerRows[peerRows.length - 1] : null;
+    if (livePeer) svg.appendChild(svgNode("circle", { cx: x(livePeer.d), cy: y(livePeer.c), r: 4.2, class: "market-peer-live" }));
 
     const candleWidth = candleWidthForRows(perpRows, x, plotWidth);
     perpRows.forEach((row) => {
@@ -754,7 +832,7 @@
       tooltip.innerHTML = [
         `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
         spot ? `<div class="tooltip-row spot"><span>Spot total-return close</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
-        peer ? `<div class="tooltip-row peer"><span>Kimi K3 peer basket</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
+        peer ? `<div class="tooltip-row peer"><span>${peer.live ? "Live TradeXYZ peer basket" : "Peer spot-return basket"}</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
         perp ? `<div class="tooltip-row"><span>Perp total-return O / C</span><strong>${priceMoney(perp.o)} / ${priceMoney(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Perp</span><strong>Not listed</strong></div>',
         perp ? `<div class="tooltip-row"><span>Perp total-return H / L</span><strong>${priceMoney(perp.h)} / ${priceMoney(perp.l)}</strong></div>` : "",
         perp ? `<div class="tooltip-row"><span>${perp.p === "partial" ? "Funding observed" : "Funding to close"}</span><strong>${percent(perp.f * 100, 3)}</strong></div>` : "",
@@ -766,7 +844,7 @@
       const cssY = pointerY == null ? y(focusValue) / height * stageRect.height : pointerY;
       tooltip.style.left = `${Math.min(Math.max(cssX + 14, 8), stageRect.width - 243)}px`;
       tooltip.style.top = `${Math.min(Math.max(cssY - 78, 8), stageRect.height - tooltip.offsetHeight - 8)}px`;
-      text("chart-live", `${row.d}. ${spot ? `Spot total-return close ${priceMoney(spot.c)}.` : "Cash spot closed."}${peer ? ` Kimi K3 peer-basket total-return level ${priceMoney(peer.c)}.` : ""}${perp ? ` Perp total-return open ${priceMoney(perp.o)}, high ${priceMoney(perp.h)}, low ${priceMoney(perp.l)}, close ${priceMoney(perp.c)}.` : " Perp not yet available."}`);
+      text("chart-live", `${row.d}. ${spot ? `Spot total-return close ${priceMoney(spot.c)}.` : "Cash spot closed."}${peer ? ` ${peer.live ? "Live TradeXYZ" : "Spot-return"} peer-basket level ${priceMoney(peer.c)}.` : ""}${perp ? ` Perp total-return open ${priceMoney(perp.o)}, high ${priceMoney(perp.h)}, low ${priceMoney(perp.l)}, close ${priceMoney(perp.c)}.` : " Perp not yet available."}`);
     }
 
     svg.addEventListener("pointermove", (event) => {
@@ -1443,6 +1521,7 @@
       startLivePerpPrice(data);
       updateCopy(data);
       renderAllCharts();
+      startLivePeerBasket(data);
       renderOnchainMarkets(data);
     } catch (error) {
       const stage = $("market-chart-stage");

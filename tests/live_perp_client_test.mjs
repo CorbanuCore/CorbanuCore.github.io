@@ -62,7 +62,7 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__computeLivePeerRow = computeLivePeerRow;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
 
@@ -76,6 +76,33 @@ const establishedRows = Array.from({ length: 182 }, (_, index) => ({ d: String(i
 const establishedWidth = context.window.__candleWidthForRows(establishedRows, (date) => Number(date) * 4.757, 1018);
 assert.ok(establishedWidth < 4.757, "established-history candles must retain a visible gap");
 assert.ok(establishedWidth > 3.8, "established-history candles should retain their existing visual weight");
+
+const livePeerData = {
+  peerMapping: {
+    liveSplice: {
+      baseLevel: 100,
+      inputs: [
+        { raw_symbol: "xyz:MSFT", weight: .5, spot_close_usd: 100 },
+        { raw_symbol: "xyz:GOOGL", weight: .3, spot_close_usd: 100 },
+        { raw_symbol: "xyz:AMZN", weight: .2, spot_close_usd: 100 },
+      ],
+    },
+  },
+};
+const livePeerRow = context.window.__computeLivePeerRow(
+  livePeerData,
+  { "xyz:MSFT": 110, "xyz:GOOGL": 100, "xyz:AMZN": 90 },
+  new Date("2026-08-17T01:02:03Z"),
+);
+assert.equal(livePeerRow.d, "2026-08-17");
+assert.ok(Math.abs(livePeerRow.c - 103) < 1e-9);
+assert.equal(livePeerRow.n, 3);
+assert.equal(livePeerRow.live, true);
+assert.equal(
+  context.window.__computeLivePeerRow(livePeerData, { "xyz:MSFT": 110, "xyz:GOOGL": 100 }, new Date()),
+  null,
+  "the live splice must require at least three current perp mids",
+);
 
 context.window.__startLivePerpPrice({ rawSymbol: "xyz:TSLA" });
 assert.equal(FakeWebSocket.instances.length, 1);
