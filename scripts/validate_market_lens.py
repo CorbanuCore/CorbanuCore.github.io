@@ -39,6 +39,7 @@ def main() -> int:
     validated_term_profiles = 0
     expected_peer_targets = int(universe.get("peerTargetCount") or 0)
     validated_peer_targets = 0
+    tiingo_iex_spot_points = 0
     for instrument in instruments:
         slug = str(instrument["slug"])
         payload = load_json(DATA_ROOT / f"{slug}.json")
@@ -88,6 +89,16 @@ def main() -> int:
                 raise AssertionError(f"{slug}: {side} history does not end at its disclosed display anchor")
             if any(float(row.get("r") or 0) <= 0 for row in rows):
                 raise AssertionError(f"{slug}: {side} shared-anchor return factor is invalid")
+        spot_source = str(payload.get("spotReturnSource") or "")
+        if spot_source == "tiingo_iex_realtime_session":
+            observed_through = str(payload.get("spotObservedThrough") or "")
+            if not observed_through or str(spot_rows[-1].get("t") or "") != observed_through:
+                raise AssertionError(f"{slug}: Tiingo IEX terminal point lacks its observation timestamp")
+            if str((anchors.get("spot") or {}).get("observedThrough") or "") != observed_through:
+                raise AssertionError(f"{slug}: Tiingo IEX terminal anchor timestamp is inconsistent")
+            if str(spot_rows[-1].get("s") or "") not in {"complete", "live_partial"}:
+                raise AssertionError(f"{slug}: Tiingo IEX terminal session status is invalid")
+            tiingo_iex_spot_points += 1
         spot_display = payload.get("spotDisplay") or {}
         expected_proxy = INDEX_RETURN_PROXIES.get(slug)
         if expected_proxy:
@@ -361,6 +372,7 @@ def main() -> int:
     print(
         f"validated {len(instruments)} Market Lens pages: "
         f"{validated_peer_targets} Kimi K3 peer charts, "
+        f"{tiingo_iex_spot_points} Tiingo IEX terminal spot points, "
         f"{listed_cex_markets} listed CEX markets, "
         f"{contract_backed_dex_routes} contract-backed DEX routes, "
         f"{validated_option_contracts} liquid listed-option inputs across "

@@ -545,6 +545,12 @@ def build(nav_root: Path) -> None:
                 "d": _date(row.date),
                 "c": _json_value(row.close_index * spot_scale),
                 "r": _json_value(row.close_index / spot_anchor, 9),
+                "t": _timestamp(getattr(row, "observed_through_utc", None)),
+                "s": (
+                    "live_partial"
+                    if str(getattr(row, "spot_session_status", "complete")) == "live_partial"
+                    else "complete"
+                ),
             }
             for row in spot_group.itertuples(index=False)
         ]
@@ -624,6 +630,8 @@ def build(nav_root: Path) -> None:
             "assetClass": target_asset_class,
             "spotReferenceSymbol": spot_symbol,
             "spotReturnSource": spot_source,
+            "spotObservedThrough": spot_rows[-1]["t"],
+            "spotSessionStatus": spot_rows[-1]["s"],
             "spotStart": spot_rows[0]["d"],
             "perpStart": perp_rows[0]["d"],
             "anchorDate": _date(anchor_date),
@@ -636,6 +644,8 @@ def build(nav_root: Path) -> None:
                     "price": _json_value(spot_display_anchor_price),
                     "rawPrice": _json_value(spot_terminal_price),
                     "date": spot_rows[-1]["d"],
+                    "observedThrough": spot_rows[-1]["t"],
+                    "sessionStatus": spot_rows[-1]["s"],
                     "symbol": spot_symbol,
                     "displaySymbol": symbol if is_index_proxy else spot_symbol,
                 },
