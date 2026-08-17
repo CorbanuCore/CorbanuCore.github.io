@@ -186,7 +186,7 @@ def _page_html(
               <div><span>Liquid ATM structures</span><h3 id="historical-plays-title">Select a term to display its payout on the chart</h3></div>
             </header>
             <div class="historical-table-scroll" tabindex="0" role="region" aria-label="Selectable one-month and three-month ATM option straddles">
-              <table class="historical-structure-table">
+              <table class="historical-structure-table term-structure-table">
                 <thead><tr><th>Term</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Open interest</th><th>Implied move</th><th>Lower BE</th><th>Upper BE</th><th>Listed days</th></tr></thead>
                 <tbody id="historical-structure-rows"><tr><td colspan="9">Loading ATM straddles…</td></tr></tbody>
               </table>
@@ -216,9 +216,9 @@ def _page_html(
               <div><span>Highest historical payouts</span><h3 id="historical-plays-title">Select a trade to display its payout on the chart</h3></div>
             </header>
             <div class="historical-table-scroll" tabindex="0" role="region" aria-label="Selectable earnings option structures and historical payouts">
-              <table class="historical-structure-table">
-                <thead><tr><th>Trade</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Profitable / recent</th><th>Avg payout</th><th>Avg winner</th><th>Max payout</th><th>Full history</th></tr></thead>
-                <tbody id="historical-structure-rows"><tr><td colspan="9">Replaying prior earnings…</td></tr></tbody>
+              <table class="historical-structure-table earnings-structure-table">
+                <thead><tr><th>Trade</th><th>What you buy</th><th>Total ask</th><th>Volume</th><th>Avg payout</th><th>Implied vol</th></tr></thead>
+                <tbody id="historical-structure-rows"><tr><td colspan="6">Replaying prior earnings…</td></tr></tbody>
               </table>
             </div>
           </section>

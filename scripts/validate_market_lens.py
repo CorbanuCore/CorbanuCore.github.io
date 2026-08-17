@@ -297,6 +297,15 @@ def main() -> int:
                     raise AssertionError(f"{slug}: historical structure uses the wrong recent window")
                 if len(recent.get("outcomes") or []) != recent_events:
                     raise AssertionError(f"{slug}: historical payout tape is incomplete")
+                legs = [leg for leg in (structure.get("put"), structure.get("call")) if leg]
+                if not legs or any(float(leg.get("impliedVolPct") or 0) <= 0 for leg in legs):
+                    raise AssertionError(f"{slug}: displayed structure lacks implied volatility")
+            for required_heading in ("<th>Avg payout</th>", "<th>Implied vol</th>"):
+                if required_heading not in page_markup:
+                    raise AssertionError(f"{slug}: compact payout table is missing {required_heading}")
+            for obsolete_heading in ("<th>Profitable / recent</th>", "<th>Avg winner</th>", "<th>Max payout</th>", "<th>Full history</th>"):
+                if obsolete_heading in page_markup:
+                    raise AssertionError(f"{slug}: obsolete payout column remains: {obsolete_heading}")
             validated_earnings_profiles += 1
         else:
             structures = options.get("structures") or []

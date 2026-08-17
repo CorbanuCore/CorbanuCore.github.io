@@ -62,7 +62,7 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
 
@@ -71,6 +71,17 @@ assert.ok(xrpDomain.low > .9, "sub-dollar and low-dollar charts must not be forc
 assert.ok(xrpDomain.high < 1.82, "XRP-scale charts should retain local price resolution");
 const solDomain = context.window.__priceDomainForValues([70, 82]);
 assert.ok(solDomain.low > 68 && solDomain.high < 84, "larger-dollar charts should keep proportional padding");
+
+assert.equal(
+  context.window.__structureImpliedVolPct({ put: { impliedVolPct: 75.851 }, call: { impliedVolPct: 75.851 } }),
+  75.851,
+  "ATM straddle IV should average its call and put IVs",
+);
+assert.equal(
+  context.window.__structureImpliedVolPct({ call: { impliedVolPct: 79.383 } }),
+  79.383,
+  "single-leg rows should display that contract IV",
+);
 
 const sparseRows = Array.from({ length: 10 }, (_, index) => ({ d: `2026-08-${String(index + 7).padStart(2, "0")}` }));
 const sparseX = Object.fromEntries(sparseRows.map((row, index) => [row.d, index * 4.779342723]));
