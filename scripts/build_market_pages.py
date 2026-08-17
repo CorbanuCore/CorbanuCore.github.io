@@ -13,6 +13,7 @@ from typing import Any
 import pandas as pd
 
 from navstrategies.coverage_universe.tradexyz_peers import (
+    KIMI_PEER_MODEL,
     build_live_peer_splice_inputs,
     build_weighted_peer_total_return_history,
 )
@@ -103,12 +104,17 @@ def _page_html(
         else ""
     )
     peer_legend = (
-        '\n              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · spot history + live TradeXYZ perps</span>'
+        '\n              <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · rebased at range start · live perps</span>'
         if peer_mapping
         else ""
     )
     if peer_mapping:
         hedge = dict(peer_mapping["primary_index_hedge"])
+        hedge_label = (
+            "Primary index hedge"
+            if peer_mapping.get("targetAssetClass") == "single_name_equity"
+            else "Primary risk hedge"
+        )
         peer_rows = "".join(
             "<tr>"
             f"<td><strong>{html.escape(str(peer['ticker']))}</strong><span>{html.escape(str(peer['name']))}</span></td>"
@@ -129,7 +135,7 @@ def _page_html(
             <small>Spot-return history · live TradeXYZ perp marks · {html.escape(str(peer_mapping["model"]))}</small>
           </header>
           <div class="peer-hedge-row">
-            <span>Primary index hedge</span>
+            <span>{hedge_label}</span>
             <strong>{html.escape(str(hedge["ticker"]))} · {html.escape(str(hedge["name"]))} · ${float(hedge["liquidity_24h_usd_millions"]):,.3f}M 24h</strong>
             <p>{html.escape(str(hedge["reason"]))}</p>
           </div>
@@ -376,16 +382,29 @@ def build(nav_root: Path) -> None:
     funding_forecasts = pd.read_parquet(source / "funding_forecasts.parquet")
     metadata_path = source / "metadata.json"
     metadata = json.loads(metadata_path.read_text())
-    peer_manifest_path = (
-        nav_root
-        / "navstrategies/strategy_definitions/tradexyz_kimi_k3_peers_v1.json"
-    )
-    peer_manifest = (
-        json.loads(peer_manifest_path.read_text())
-        if peer_manifest_path.exists()
-        else {"targets": {}}
-    )
-    peer_targets = dict(peer_manifest.get("targets") or {})
+    peer_manifest_paths = [
+        nav_root / "navstrategies/strategy_definitions/tradexyz_kimi_k3_peers_v1.json",
+        nav_root / "navstrategies/strategy_definitions/tradexyz_kimi_k3_macro_peers_v1.json",
+    ]
+    peer_manifests = [
+        json.loads(path.read_text())
+        for path in peer_manifest_paths
+        if path.exists()
+    ]
+    peer_targets: dict[str, dict[str, Any]] = {}
+    peer_target_manifests: dict[str, dict[str, Any]] = {}
+    peer_target_classes: dict[str, str] = {}
+    for manifest in peer_manifests:
+        classes = {
+            str(row["symbol"]): str(row["asset_class"])
+            for row in manifest.get("core_universe") or []
+        }
+        for target, block in (manifest.get("targets") or {}).items():
+            if target in peer_targets:
+                raise RuntimeError(f"duplicate promoted peer target: {target}")
+            peer_targets[target] = block
+            peer_target_manifests[target] = manifest
+            peer_target_classes[target] = classes[target]
     catalog_path = SITE_ROOT / "assets" / "market-data" / "onchain-spot-catalog.json"
     onchain_catalog = json.loads(catalog_path.read_text()) if catalog_path.exists() else {"generatedAt": None, "instruments": {}}
     options_paths = sorted((SITE_ROOT / "assets" / "market-data").glob("*-options.json"))
@@ -396,7 +415,7 @@ def build(nav_root: Path) -> None:
     asset_fingerprint = hashlib.sha256()
     for path in (
         metadata_path,
-        peer_manifest_path,
+        *peer_manifest_paths,
         catalog_path,
         *options_paths,
         SITE_ROOT / "assets" / "js" / "market-lens.js",
@@ -444,6 +463,7 @@ def build(nav_root: Path) -> None:
         peer_rows: list[dict[str, Any]] = []
         peer_mapping: dict[str, Any] | None = None
         if peer_block:
+            peer_manifest = peer_target_manifests[symbol]
             peer_history = build_weighted_peer_total_return_history(spot, peer_block)
             peer_start = pd.Timestamp(peer_history.iloc[0]["date"])
             target_start_rows = spot_group.loc[spot_group["date"].eq(peer_start)]
@@ -458,22 +478,23 @@ def build(nav_root: Path) -> None:
                 }
                 for row in peer_history.itertuples(index=False)
             ]
-            live_splice_inputs = build_live_peer_splice_inputs(spot, peer_block)
+            live_splice_inputs = build_live_peer_splice_inputs(spot, peer_block, perp)
             peer_mapping = {
                 **peer_block,
                 "model": peer_manifest["model"],
                 "temperature": peer_manifest["temperature"],
                 "promptVersion": peer_manifest["prompt_version"],
                 "replicatesPerTarget": peer_manifest["replicates_per_target"],
+                "targetAssetClass": peer_target_classes[symbol],
                 "historyStart": peer_rows[0]["d"],
                 "historyEnd": peer_rows[-1]["d"],
-                "historyMethod": "daily-rebalanced peer spot total returns using the fixed Kimi weights; unavailable pre-listing peers are omitted and remaining weights renormalized once at least three peers exist; basket rebased to the target spot level at the first overlapping date",
+                "historyMethod": "daily-rebalanced peer spot total returns using the fixed Kimi weights; unavailable pre-listing peers are omitted and remaining weights renormalized once at least three peers exist; the browser rebases the basket to the target spot level at the first shared date of each selected chart range",
                 "liveSplice": {
                     "dex": "xyz",
                     "baseDate": peer_rows[-1]["d"],
                     "baseLevel": peer_rows[-1]["c"],
                     "inputs": live_splice_inputs,
-                    "method": "current TradeXYZ perp mid divided by each peer's latest USD cash close; available Kimi weights renormalized and applied as a one-period return from the published peer spot close",
+                    "method": "current TradeXYZ perp mid divided by that peer's TradeXYZ close on its latest spot date; available Kimi weights renormalized and applied as a one-period return from the published peer spot endpoint; USD cash close is retained for disclosure but never mixed with a differently scaled perp contract",
                 },
             }
 
@@ -621,8 +642,8 @@ def build(nav_root: Path) -> None:
 
     universe = {
         "generatedAt": metadata["finished_at_utc"],
-        "peerModel": peer_manifest.get("model"),
-        "peerTargetCount": int(peer_manifest.get("stock_target_count") or 0),
+        "peerModel": KIMI_PEER_MODEL if peer_targets else None,
+        "peerTargetCount": len(peer_targets),
         "instruments": instruments,
     }
     _atomic_text(

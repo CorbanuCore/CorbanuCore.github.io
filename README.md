@@ -21,14 +21,18 @@ historical payout. Supported index, commodity, BTC, and ETH pages display
 selectable ATM straddles for the listed expiries closest to 30 and 90 days.
 Every options chart can center the same option-implied percentage distribution
 on either the terminal spot price or terminal perp price.
-Single-stock pages also display a dashed weighted peer line and a plain table
-of hedge, peer weights, three-run consensus support, and rationale. The line
+All 35 TradeXYZ pages display a dashed weighted peer line and a plain table of
+hedge, peer weights, three-run consensus support, and rationale. The line
 uses daily-rebalanced spot total returns back to 2015 where the target and at
 least three peers exist. Pre-listing peers are omitted and the remaining Kimi
 weights are renormalized. A five-second TradeXYZ `allMids` snapshot extends the
-latest peer cash close with current perp prices.
+latest peer cash close with current perp returns. Commodities, ETFs, and
+indices use cross-asset peers and a primary risk hedge rather than the
+single-stock index-hedge restriction. Every selected chart range rebases the
+peer basket to the target at its first shared date so split-adjusted long
+histories remain visually comparable.
 The mapping is frozen by `moonshotai/kimi-k3` at temperature zero from three
-validated blocks per stock; every prompt receives the complete 35-contract
+validated blocks per instrument; every prompt receives the complete 35-contract
 TradeXYZ core with names, asset classes, and live 24-hour perp liquidity. The
 daily publisher refreshes the spot backfill, cash-close splice inputs, and peer
 performance without rerunning the model.

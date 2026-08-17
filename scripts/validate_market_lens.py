@@ -137,8 +137,14 @@ def main() -> int:
             live_symbols = [str(row.get("raw_symbol") or "") for row in live_inputs]
             if live_symbols != [str(peer.get("raw_symbol") or "") for peer in peers]:
                 raise AssertionError(f"{slug}: live peer splice symbols differ from the mapping")
-            if any(float(row.get("spot_close_usd") or 0) <= 0 or not str(row.get("spot_close_date") or "") for row in live_inputs):
-                raise AssertionError(f"{slug}: live peer splice lacks a positive USD cash close")
+            if any(
+                float(row.get("spot_close_usd") or 0) <= 0
+                or float(row.get("perp_reference_price") or 0) <= 0
+                or not str(row.get("spot_close_date") or "")
+                or not str(row.get("perp_reference_date") or "")
+                for row in live_inputs
+            ):
+                raise AssertionError(f"{slug}: live peer splice lacks a positive spot disclosure or perp anchor")
             for required_markup in ('class="legend-peer"', 'class="peer-panel"', 'class="peer-table"'):
                 if required_markup not in page_markup:
                     raise AssertionError(f"{slug}: peer chart or justification block is missing: {required_markup}")
