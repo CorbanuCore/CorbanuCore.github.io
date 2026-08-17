@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/ewy/">
   <link rel="canonical" href="https://corbanu.com/ewy/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=8720fa8f8c51">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=d05126c91ca5">
   <title>EWY Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="ewy" data-market-version="8720fa8f8c51">
+<body data-market-slug="ewy" data-market-version="d05126c91ca5">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -78,23 +78,23 @@
         <section class="peer-panel" aria-labelledby="peer-panel-title">
           <header class="peer-panel-head">
             <div>
-              <span>Kimi K3 · intra-TradeXYZ</span>
+              <span>Kimi K3 · Market Lens universe</span>
               <h2 id="peer-panel-title">EWY Weighted Peer Basket</h2>
             </div>
-            <small>Spot-return history · live TradeXYZ perp marks · moonshotai/kimi-k3</small>
+            <small>Spot-return history · live Hyperliquid perp marks · moonshotai/kimi-k3</small>
           </header>
           <div class="peer-hedge-row">
             <span>Primary risk hedge</span>
-            <strong>DRAM · Roundhill Memory ETF · $20.791M 24h</strong>
-            <p>Despite the legacy field name primary_index_hedge, the best hedge here is an equity ETF rather than an index: EWY&#x27;s return is driven overwhelmingly by the semiconductor memory cycle through Samsung Electronics and SK hynix, so shorting DRAM, the Roundhill Memory ETF, directly neutralizes that dominant factor more precisely than shorting a broad equity index would.</p>
+            <strong>SP500 · S&amp;P 500 · $89.359M 24h</strong>
+            <p>EWY is a broad single-country equity basket, so after its Korea-specific memory exposure is accounted for by the peers, the dominant residual risk is generic global equity beta and risk-on/risk-off moves in the US dollar and US rates. The S&amp;P 500 is the cleanest, most liquid expression of that systematic equity risk, with 24-hour perp liquidity of 89.359 USD millions, and it avoids adding overlapping memory-sector exposure that the peer basket already covers.</p>
           </div>
-          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted single-stock TradeXYZ peers">
+          <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted Market Lens return peers">
             <table class="peer-table">
               <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th><th>Consensus</th><th>Rationale</th></tr></thead>
-              <tbody><tr><td><strong>SMSN</strong><span>Samsung Electronics common</span></td><td>25.9%</td><td>$7.229M</td><td>3/3</td><td>Samsung Electronics common is the single largest constituent of EWY, roughly a quarter of the fund, so it is the dominant source of the ETF&#x27;s return and shares the same DRAM, NAND, and foundry cycle; it receives the highest peer weight because it is literally the target&#x27;s core holding.</td></tr><tr><td><strong>SKHX</strong><span>SK hynix common</span></td><td>22.7%</td><td>$34.707M</td><td>3/3</td><td>SK hynix common is one of the dominant holdings behind EWY, so returns share DRAM, HBM, memory-cycle, and Korean export sensitivity; displayed 24-hour perp liquidity is 34.707 USD millions, supporting the largest peer weight.</td></tr><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>16.4%</td><td>$21.299M</td><td>3/3</td><td>Micron is the US memory peer whose DRAM and NAND pricing, capital spending discipline, and AI high-bandwidth memory demand move with the Korean memory complex that drives EWY. Displayed 24-hour perp liquidity is 21.299 USD millions, deep enough for a meaningful but not dominant weight.</td></tr><tr><td><strong>SNDK</strong><span>Sandisk</span></td><td>13.3%</td><td>$98.839M</td><td>3/3</td><td>Sandisk is a NAND and flash storage substitute and competitor to the memory franchises that dominate EWY; displayed 24-hour perp liquidity is very high at 98.839 USD millions, but the product mix is narrower than Samsung, so the weight is capped.</td></tr><tr><td><strong>CXMT</strong><span>CXMT Corp. Class A</span></td><td>7.0%</td><td>$9.812M</td><td>3/3</td><td>CXMT is a Chinese DRAM producer whose wafer supply decisions influence the worldwide memory price that EWY&#x27;s holdings monetize, so it is a supply-side substitute relationship in the same factor.</td></tr><tr><td><strong>DRAM</strong><span>Roundhill Memory ETF</span></td><td>8.7%</td><td>$20.791M</td><td>2/3</td><td>The Roundhill Memory ETF is a diversified memory basket that substitutes for the sector sleeve inside EWY rather than a generic equity factor; displayed 24-hour perp liquidity is 20.791 USD millions.</td></tr><tr><td><strong>SKHY</strong><span>SK hynix ADR</span></td><td>5.9%</td><td>$14.334M</td><td>2/3</td><td>The SK hynix ADR line duplicates the common-share exposure through a different access wrapper, so it is included for completeness but weighted lower to avoid double-counting the same factor.</td></tr></tbody>
+              <tbody><tr><td><strong>SMSN</strong><span>Samsung Electronics common</span></td><td>36.8%</td><td>$23.207M</td><td>3/3</td><td>Samsung Electronics is the largest single holding in EWY at roughly a quarter of the fund, so it is the closest possible return comparator: a direct underlying exposure rather than a proxy. Its memory, foundry, and consumer electronics earnings drive a major share of EWY&#x27;s daily return, justifying the largest peer weight. Its 24-hour perp liquidity of 23.207 USD millions is adequate for execution.</td></tr><tr><td><strong>SKHX</strong><span>SK hynix common</span></td><td>28.1%</td><td>$104.892M</td><td>3/3</td><td>SK hynix common is the second-largest EWY holding and the other Korean memory giant whose DRAM and HBM results drive the fund. The directly traded common line is preferred over the SKHY ADR wrapper, and it offers the strongest 24-hour perp liquidity in this group at 104.892 USD millions, making it both the closest and most executable comparator.</td></tr><tr><td><strong>DRAM</strong><span>Roundhill Memory ETF</span></td><td>15.8%</td><td>$63.835M</td><td>3/3</td><td>The Roundhill Memory ETF holds the global memory complex built around Samsung, SK hynix, and Micron, so it packages the same underlying memory-cycle exposure that explains most of EWY&#x27;s return variance. It is the same underlying exposure in fund form rather than a remote factor analogy.</td></tr><tr><td><strong>MU</strong><span>Micron Technology</span></td><td>14.0%</td><td>$59.583M</td><td>3/3</td><td>Micron is the closest US-listed pure-play memory manufacturer and shares the same DRAM and NAND pricing cycle and AI-related HBM demand that drive Samsung and SK hynix earnings, so it transmits the identical industry shock that moves most of EWY. It is a genuinely independent name rather than a wrapper, with strong 24-hour perp liquidity of 59.583 USD millions.</td></tr><tr><td><strong>SNDK</strong><span>Sandisk</span></td><td>5.3%</td><td>$250.204M</td><td>2/3</td><td>Sandisk is a pure-play NAND flash supplier whose revenue moves with the same memory pricing cycle that drives EWY&#x27;s largest holdings, so it completes the memory-chain basket at a smaller weight.</td></tr></tbody>
             </table>
           </div>
-          <p class="peer-justification">EWY is a Korea equity ETF whose performance is dominated by semiconductor memory exposure, chiefly Samsung Electronics and SK hynix, plus a foreign-investor risk-on flow component. The primary hedge is DRAM, a memory-focused equity ETF, because shorting that basket neutralizes the exact memory-cycle factor that drives most of EWY&#x27;s return more directly than any broad index or commodity. Peers are weighted by economic comparability to that memory factor, with all displayed 24-hour perp liquidity figures preserved in USD millions: target liquidity is 6.848, and every selected peer trades comfortably above that level (SMSN 7.229, SKHX 34.707, MU 21.299, SKHY 14.334, SNDK 98.839, XYZ100 52.585, CXMT 9.812), so the weighting scheme is not liquidity-constrained. Samsung and the two SK hynix lines together carry 0.58 because they are literal EWY constituents; Micron, Sandisk, and CXMT carry 0.32 as global memory-cycle substitutes and supply-side competitors; Nasdaq-100 carries 0.10 to capture the risk-on flow channel; weights sum to exactly 1.00.</p>
+          <p class="peer-justification">Three-run Kimi K3 consensus selected only the displayed peers: SMSN 36.8% with 3/3 replicate support; SKHX 28.1% with 3/3 replicate support; DRAM 15.8% with 3/3 replicate support; MU 14.0% with 3/3 replicate support; SNDK 5.3% with 2/3 replicate support. Individual rationales state each economic relationship.</p>
         </section>
         <section class="earnings-options-panel" aria-labelledby="earnings-options-title">
           <header class="earnings-options-head">
@@ -192,6 +192,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=8720fa8f8c51"></script>
+  <script src="/assets/js/market-lens.js?v=d05126c91ca5"></script>
 </body>
 </html>

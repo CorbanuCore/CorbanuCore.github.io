@@ -62,7 +62,7 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
 
@@ -76,6 +76,23 @@ const establishedRows = Array.from({ length: 182 }, (_, index) => ({ d: String(i
 const establishedWidth = context.window.__candleWidthForRows(establishedRows, (date) => Number(date) * 4.757, 1018);
 assert.ok(establishedWidth < 4.757, "established-history candles must retain a visible gap");
 assert.ok(establishedWidth > 3.8, "established-history candles should retain their existing visual weight");
+
+const allMidsRequests = [];
+context.fetch = async (_url, options) => {
+  const payload = JSON.parse(options.body);
+  allMidsRequests.push(payload);
+  return {
+    ok: true,
+    json: async () => payload.dex === "xyz"
+      ? { "xyz:MSFT": "110" }
+      : { BTC: "65000", ETH: "2000" },
+  };
+};
+const mixedMids = await context.window.__fetchLivePeerMids({ dexes: ["", "xyz"] });
+assert.deepEqual(allMidsRequests, [{ type: "allMids" }, { type: "allMids", dex: "xyz" }]);
+assert.equal(mixedMids.BTC, "65000");
+assert.equal(mixedMids["xyz:MSFT"], "110");
+context.fetch = async () => { throw new Error("REST fallback was not expected"); };
 
 const livePeerData = {
   peerMapping: {
