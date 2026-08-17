@@ -559,6 +559,14 @@
 
   function renderChart() {
     const data = state.data;
+    const spotDisplay = data && data.spotDisplay || {};
+    const isIndexProxy = spotDisplay.mode === "return_proxy_on_matching_perp_scale";
+    const spotCloseLabel = isIndexProxy
+      ? `${data.spotReferenceSymbol} return proxy · ${data.symbol} points`
+      : "Spot total-return close";
+    const peerCloseLabel = isIndexProxy
+      ? `Peer return basket · ${data.symbol} points`
+      : "Peer spot-return basket";
     const stage = $("market-chart-stage");
     if (!data || !stage) return;
     const options = data.earningsOptions || null;
@@ -650,7 +658,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} terminal-anchored spot total-return price line and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history rebased to the target at the selected window start and extended by live TradeXYZ perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} ${isIndexProxy ? data.spotReferenceSymbol + " total-return proxy expressed in " + data.symbol + " index points" : "terminal-anchored spot total-return price line"} and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history rebased to the target at the selected window start and extended by live TradeXYZ perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -845,8 +853,8 @@
         : "Hourly proxy: 09:00 open; exact 16:00 close";
       tooltip.innerHTML = [
         `<div class="tooltip-date">${dateLabel(row.d, true).toUpperCase()}</div>`,
-        spot ? `<div class="tooltip-row spot"><span>Spot total-return close</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
-        peer ? `<div class="tooltip-row peer"><span>${peer.live ? "Live TradeXYZ peer basket" : "Peer spot-return basket"}</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
+        spot ? `<div class="tooltip-row spot"><span>${escapeHtml(spotCloseLabel)}</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
+        peer ? `<div class="tooltip-row peer"><span>${peer.live ? "Live TradeXYZ peer basket" : escapeHtml(peerCloseLabel)}</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
         peer && peer.viewAnchor ? `<p class="tooltip-precision">Peer basket rebased to ${data.symbol} on ${dateLabel(peer.viewAnchor, true)}</p>` : "",
         perp ? `<div class="tooltip-row"><span>Perp total-return O / C</span><strong>${priceMoney(perp.o)} / ${priceMoney(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Perp</span><strong>Not listed</strong></div>',
         perp ? `<div class="tooltip-row"><span>Perp total-return H / L</span><strong>${priceMoney(perp.h)} / ${priceMoney(perp.l)}</strong></div>` : "",
@@ -859,7 +867,7 @@
       const cssY = pointerY == null ? y(focusValue) / height * stageRect.height : pointerY;
       tooltip.style.left = `${Math.min(Math.max(cssX + 14, 8), stageRect.width - 243)}px`;
       tooltip.style.top = `${Math.min(Math.max(cssY - 78, 8), stageRect.height - tooltip.offsetHeight - 8)}px`;
-      text("chart-live", `${row.d}. ${spot ? `Spot total-return close ${priceMoney(spot.c)}.` : "Cash spot closed."}${peer ? ` ${peer.live ? "Live TradeXYZ" : "Spot-return"} peer-basket level ${priceMoney(peer.c)}.` : ""}${perp ? ` Perp total-return open ${priceMoney(perp.o)}, high ${priceMoney(perp.h)}, low ${priceMoney(perp.l)}, close ${priceMoney(perp.c)}.` : " Perp not yet available."}`);
+      text("chart-live", `${row.d}. ${spot ? `${spotCloseLabel} ${priceMoney(spot.c)}.` : "Cash spot closed."}${peer ? ` ${peer.live ? "Live TradeXYZ" : peerCloseLabel} level ${priceMoney(peer.c)}.` : ""}${perp ? ` Perp total-return open ${priceMoney(perp.o)}, high ${priceMoney(perp.h)}, low ${priceMoney(perp.l)}, close ${priceMoney(perp.c)}.` : " Perp not yet available."}`);
     }
 
     svg.addEventListener("pointermove", (event) => {
