@@ -42,6 +42,20 @@
     return Math.max(2.4, Math.min(10, countWidth, spacingWidth));
   }
 
+  function priceDomainForValues(values) {
+    const finite = values.map(Number).filter(Number.isFinite);
+    if (!finite.length) return { low: 0, high: 1 };
+    const observedLow = Math.min(...finite);
+    const observedHigh = Math.max(...finite);
+    const observedRange = Math.max(observedHigh - observedLow, 0);
+    const priceMagnitude = Math.max(Math.abs(observedLow), Math.abs(observedHigh), 1e-8);
+    const pad = Math.max(observedRange * .09, priceMagnitude * .015, 1e-8);
+    return {
+      low: Math.max(0, observedLow - pad),
+      high: observedHigh + pad,
+    };
+  }
+
   function livePriceLabel(value) {
     const parsed = Number(value);
     if (!Number.isFinite(parsed) || parsed <= 0) return "—";
@@ -660,11 +674,7 @@
         if (selectedStructure.lowerBreakeven != null) values.push(optionLevel(selectedStructure.lowerBreakeven));
       }
     }
-    let low = Math.min(...values);
-    let high = Math.max(...values);
-    const pad = Math.max((high - low) * .09, 1);
-    low = Math.max(0, low - pad);
-    high += pad;
+    const { low, high } = priceDomainForValues(values);
     const y = (value) => margin.top + (high - Number(value)) / (high - low) * plotHeight;
 
     stage.innerHTML = "";
