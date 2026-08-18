@@ -168,10 +168,10 @@ def _earnings_ledger_html(
         and (options_payload.get("historicalEarnings") or {}).get("events")
     )
     if precise_history:
-        events = list(precise_history)[:12]
+        events = list(precise_history)
         method = str((options_payload.get("historicalEarnings") or {}).get("method") or "")
     else:
-        events = list((analyst_packet or {}).get("fallbackEarningsEvents") or [])[:12]
+        events = list((analyst_packet or {}).get("fallbackEarningsEvents") or [])
         method = str((analyst_packet or {}).get("fallbackEarningsMethod") or "")
     if not events:
         return ""
