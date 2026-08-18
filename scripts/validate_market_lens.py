@@ -165,6 +165,21 @@ def main() -> int:
                 raise AssertionError(f"{slug}: peer liquidity snapshot is missing")
             if any(float(peer.get("liquidity_24h_usd_millions") or 0) <= 0 for peer in peers):
                 raise AssertionError(f"{slug}: peer liquidity display value is missing")
+            performance_fields = {
+                "performanceMarkPrice", "performanceObservedAt", "reference24hPrice",
+                "reference7dPrice", "change24hPct", "change7dPct",
+            }
+            if any(not performance_fields.issubset(peer) for peer in peers):
+                raise AssertionError(f"{slug}: peer performance changes are incomplete")
+            if any(
+                min(float(peer.get("reference24hPrice") or 0), float(peer.get("reference7dPrice") or 0)) <= 0
+                for peer in peers
+            ):
+                raise AssertionError(f"{slug}: peer performance references are invalid")
+            if "<th>24h change</th>" not in page_markup or "<th>7d change</th>" not in page_markup:
+                raise AssertionError(f"{slug}: peer table lacks performance headings")
+            if page_markup.count('data-peer-raw-symbol=') < len(peers):
+                raise AssertionError(f"{slug}: peer table lacks live performance bindings")
             if "justification" in peer_mapping or "replicatesPerTarget" in peer_mapping:
                 raise AssertionError(f"{slug}: peer rationale or consensus metadata leaked into the public payload")
             if peer_mapping.get("targetAssetClass") == "single_name_equity":
@@ -181,6 +196,8 @@ def main() -> int:
                 }
                 if any(not metric_fields.issubset(row) for row in comparisons):
                     raise AssertionError(f"{slug}: comparison packet lacks locked signal metrics")
+                if not performance_fields.issubset(comparisons[0]):
+                    raise AssertionError(f"{slug}: target row lacks perp performance changes")
                 if not str(peer_mapping.get("fundamentalsAsOf") or ""):
                     raise AssertionError(f"{slug}: comparison packet lacks factor as-of date")
                 for heading in (

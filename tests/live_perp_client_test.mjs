@@ -62,7 +62,7 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
 
@@ -109,6 +109,18 @@ const mixedMids = await context.window.__fetchLivePeerMids({ dexes: ["", "xyz"] 
 assert.deepEqual(allMidsRequests, [{ type: "allMids" }, { type: "allMids", dex: "xyz" }]);
 assert.equal(mixedMids.BTC, "65000");
 assert.equal(mixedMids["xyz:MSFT"], "110");
+const change24h = { dataset: { referencePrice: "100" }, textContent: "", className: "" };
+const change7d = { dataset: { referencePrice: "120" }, textContent: "", className: "" };
+const performanceRow = {
+  dataset: { peerRawSymbol: "xyz:MSFT" },
+  querySelectorAll: () => [change24h, change7d],
+};
+context.document.querySelectorAll = () => [performanceRow];
+context.window.__renderPeerPerformance({ "xyz:MSFT": "110" });
+assert.equal(change24h.textContent, "+10.00%");
+assert.equal(change24h.className, "peer-change positive");
+assert.equal(change7d.textContent, "-8.33%");
+assert.equal(change7d.className, "peer-change negative");
 context.fetch = async () => { throw new Error("REST fallback was not expected"); };
 
 const livePeerData = {

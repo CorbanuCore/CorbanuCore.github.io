@@ -6,8 +6,25 @@ from scripts.build_market_pages import (
     _earnings_ledger_html,
     _uses_matching_perp_scale,
     _markdown_brief,
+    _perp_change_metrics,
     _transcript_surrounding_moves,
 )
+
+
+def test_perp_change_metrics_use_exact_hourly_24h_and_7d_references() -> None:
+    times = pd.date_range("2026-08-11T12:00:00Z", periods=169, freq="h")
+    rows = pd.DataFrame({
+        "bar_close_time": times,
+        "price_close": [100.0 + index for index in range(len(times))],
+    })
+
+    result = _perp_change_metrics(rows)
+
+    assert result["performanceMarkPrice"] == 268.0
+    assert result["reference24hPrice"] == 244.0
+    assert result["reference7dPrice"] == 100.0
+    assert result["change24hPct"] == round((268.0 / 244.0 - 1.0) * 100.0, 4)
+    assert result["change7dPct"] == 168.0
 
 
 def test_matching_perp_scale_covers_mismatched_cash_proxies_only() -> None:
