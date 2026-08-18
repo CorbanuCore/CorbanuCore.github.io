@@ -102,6 +102,20 @@ def _format_metric(value: Any, *, suffix: str = "", digits: int = 1) -> str:
     return f"{float(parsed):,.{digits}f}{suffix}"
 
 
+def _peer_ticker_link(ticker: Any) -> str:
+    label = html.escape(str(ticker))
+    href = html.escape(f"/{str(ticker).lower()}/", quote=True)
+    return f'<a class="peer-ticker-link" href="{href}"><strong>{label}</strong></a>'
+
+
+def _peer_funding_cell(row: dict[str, Any]) -> str:
+    value = pd.to_numeric(row.get("sevenDayLongAprPct"), errors="coerce")
+    if pd.isna(value):
+        return '<td class="peer-funding">—</td>'
+    direction = "positive" if float(value) >= 0 else "negative"
+    return f'<td class="peer-funding {direction}">{float(value):+.2f}%</td>'
+
+
 def _perp_change_metrics(hourly_bars: pd.DataFrame) -> dict[str, Any]:
     """Calculate exact trailing perp-price changes from completed hourly bars."""
     rows = hourly_bars.loc[:, ["bar_close_time", "price_close"]].copy()
@@ -163,6 +177,7 @@ def _weighted_peer_average(rows: list[dict[str, Any]]) -> dict[str, Any]:
     metric_fields = (
         "change24hPct",
         "change7dPct",
+        "sevenDayLongAprPct",
         "forwardPE",
         "forwardSalesGrowthPct",
         "forwardEPSGrowthPct",
@@ -396,8 +411,8 @@ def _page_html(
                         f' data-peer-raw-symbol="{html.escape(str(row["raw_symbol"]), quote=True)}"'
                     )
                     company_cell = (
-                        f"<strong>{html.escape(str(row['ticker']))}</strong>"
-                        f"<span>{html.escape(str(row['name']))}</span>"
+                        _peer_ticker_link(row["ticker"])
+                        + f"<span>{html.escape(str(row['name']))}</span>"
                     )
                     weight_cell = "Target"
                 elif role == "peer_average":
@@ -411,8 +426,8 @@ def _page_html(
                         f' data-peer-weight="{weight:.10g}"'
                     )
                     company_cell = (
-                        f"<strong>{html.escape(str(row['ticker']))}</strong>"
-                        f"<span>{html.escape(str(row['name']))}</span>"
+                        _peer_ticker_link(row["ticker"])
+                        + f"<span>{html.escape(str(row['name']))}</span>"
                     )
                     weight_cell = _format_metric(weight * 100, suffix="%")
                 liquidity = pd.to_numeric(
@@ -426,6 +441,7 @@ def _page_html(
                     f"<td>{company_cell}</td><td>{weight_cell}</td>"
                     + _peer_change_cell(row, "24h")
                     + _peer_change_cell(row, "7d")
+                    + _peer_funding_cell(row)
                     + f"<td>{_format_metric(row.get('forwardPE'), digits=1)}</td>"
                     f"<td>{_format_metric(row.get('forwardSalesGrowthPct'), suffix='%')}</td>"
                     f"<td>{_format_metric(row.get('forwardEPSGrowthPct'), suffix='%')}</td>"
@@ -433,32 +449,37 @@ def _page_html(
                     f"<td>{liquidity_cell}</td></tr>"
                 )
             peer_rows = "".join(rendered_rows)
-            peer_headings = "<th>Company</th><th>Basket weight</th><th>24h change</th><th>7d change</th><th>Forward P/E</th><th>Sales growth</th><th>EPS growth</th><th>28d EPS rev / price</th><th>24h liquidity</th>"
+            peer_headings = "<th>Company</th><th>Basket weight</th><th>24h change</th><th>7d change</th><th>T+7d funding APR</th><th>Forward P/E</th><th>Sales growth</th><th>EPS growth</th><th>28d EPS rev / price</th><th>24h liquidity</th>"
             performance_asof = max(
                 (str(row.get("performanceObservedAt") or "") for row in comparison_rows),
                 default="",
             )
             table_note = (
                 f"Perp price changes through {html.escape(performance_asof or 'unavailable')} · "
-                f"locked factors {html.escape(str(peer_mapping.get('fundamentalsAsOf') or 'unavailable'))}"
+                f"locked factors {html.escape(str(peer_mapping.get('fundamentalsAsOf') or 'unavailable'))} · "
+                "positive funding means the perp long earns"
             )
         else:
             peer_rows = "".join(
                 f'<tr data-peer-raw-symbol="{html.escape(str(peer["raw_symbol"]), quote=True)}">'
-                f"<td><strong>{html.escape(str(peer['ticker']))}</strong><span>{html.escape(str(peer['name']))}</span></td>"
+                f"<td>{_peer_ticker_link(peer['ticker'])}<span>{html.escape(str(peer['name']))}</span></td>"
                 f"<td>{float(peer['weight']) * 100:.1f}%</td>"
                 + _peer_change_cell(peer, "24h")
                 + _peer_change_cell(peer, "7d")
+                + _peer_funding_cell(peer)
                 + f"<td>${float(peer['liquidity_24h_usd_millions']):,.3f}M</td>"
                 "</tr>"
                 for peer in peer_mapping["peers"]
             )
-            peer_headings = "<th>Peer</th><th>Weight</th><th>24h change</th><th>7d change</th><th>24h liquidity</th>"
+            peer_headings = "<th>Peer</th><th>Weight</th><th>24h change</th><th>7d change</th><th>T+7d funding APR</th><th>24h liquidity</th>"
             performance_asof = max(
                 (str(peer.get("performanceObservedAt") or "") for peer in peer_mapping["peers"]),
                 default="",
             )
-            table_note = f"Perp price changes through {html.escape(performance_asof or 'unavailable')} · live mids"
+            table_note = (
+                f"Perp price changes through {html.escape(performance_asof or 'unavailable')} · "
+                "positive funding means the perp long earns"
+            )
         peer_panel = f'''
         <section class="peer-panel" aria-labelledby="peer-panel-title">
           <header class="peer-panel-head">
@@ -726,6 +747,14 @@ def build(nav_root: Path) -> None:
         columns=["bar_close_time", "raw_symbol", "price_close"],
     )
     funding_forecasts = pd.read_parquet(source / "funding_forecasts.parquet")
+    seven_day_funding_apr_pct = {
+        str(row.raw_symbol): _json_value(
+            float(row.predicted_long_funding_apr) * 100.0, 4
+        )
+        for row in funding_forecasts.loc[
+            funding_forecasts["horizon_hours"].eq(168)
+        ].itertuples(index=False)
+    }
     metadata_path = source / "metadata.json"
     metadata = json.loads(metadata_path.read_text())
     peer_manifest_paths = [
@@ -875,6 +904,9 @@ def build(nav_root: Path) -> None:
                     {
                         **{field: peer[field] for field in public_peer_fields},
                         **dict(perp_performance.get(str(peer["raw_symbol"])) or {}),
+                        "sevenDayLongAprPct": seven_day_funding_apr_pct.get(
+                            str(peer["raw_symbol"])
+                        ),
                     }
                     for peer in peer_block["peers"]
                 ],
@@ -905,6 +937,9 @@ def build(nav_root: Path) -> None:
                         float(peer_block["target_day_notional_volume_usd"]) / 1_000_000.0, 3
                     ),
                     **dict(perp_performance.get(str(peer_block["target_raw_symbol"])) or {}),
+                    "sevenDayLongAprPct": seven_day_funding_apr_pct.get(
+                        str(peer_block["target_raw_symbol"])
+                    ),
                     **{
                         key: target_metrics.get(key)
                         for key in (

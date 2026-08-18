@@ -172,6 +172,15 @@ def main() -> int:
             }
             if any(not performance_fields.issubset(peer) for peer in peers):
                 raise AssertionError(f"{slug}: peer performance changes are incomplete")
+            if any(peer.get("sevenDayLongAprPct") is None for peer in peers):
+                raise AssertionError(f"{slug}: peer T+7d funding forecasts are incomplete")
+            if "<th>T+7d funding APR</th>" not in page_markup:
+                raise AssertionError(f"{slug}: peer table lacks T+7d funding heading")
+            for peer in peers:
+                ticker = str(peer["ticker"])
+                expected_link = f'<a class="peer-ticker-link" href="/{ticker.lower()}/"><strong>{ticker}</strong></a>'
+                if expected_link not in page_markup:
+                    raise AssertionError(f"{slug}: {ticker} peer ticker link is missing")
             if any(
                 min(float(peer.get("reference24hPrice") or 0), float(peer.get("reference7dPrice") or 0)) <= 0
                 for peer in peers
@@ -199,7 +208,8 @@ def main() -> int:
                     raise AssertionError(f"{slug}: comparison packet lacks locked signal metrics")
                 average = peer_mapping.get("weightedPeerAverage") or {}
                 average_fields = metric_fields | {
-                    "change24hPct", "change7dPct", "liquidity_24h_usd_millions",
+                    "change24hPct", "change7dPct", "sevenDayLongAprPct",
+                    "liquidity_24h_usd_millions",
                 }
                 if average.get("role") != "peer_average" or not average_fields.issubset(average):
                     raise AssertionError(f"{slug}: weighted peer average is incomplete")
@@ -219,6 +229,12 @@ def main() -> int:
                         raise AssertionError(f"{slug}: {field} weighted peer average is wrong")
                 if not performance_fields.issubset(comparisons[0]):
                     raise AssertionError(f"{slug}: target row lacks perp performance changes")
+                if comparisons[0].get("sevenDayLongAprPct") is None:
+                    raise AssertionError(f"{slug}: target row lacks T+7d funding forecast")
+                target_ticker = str(comparisons[0]["ticker"])
+                target_link = f'<a class="peer-ticker-link" href="/{target_ticker.lower()}/"><strong>{target_ticker}</strong></a>'
+                if target_link not in page_markup:
+                    raise AssertionError(f"{slug}: target ticker link is missing")
                 if not str(peer_mapping.get("fundamentalsAsOf") or ""):
                     raise AssertionError(f"{slug}: comparison packet lacks factor as-of date")
                 for heading in (

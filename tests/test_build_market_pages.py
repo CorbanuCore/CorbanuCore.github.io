@@ -34,6 +34,7 @@ def test_weighted_peer_average_renormalizes_each_available_metric() -> None:
             "weight": 0.6,
             "change24hPct": 2.0,
             "change7dPct": -1.0,
+            "sevenDayLongAprPct": 12.0,
             "forwardPE": 10.0,
             "forwardSalesGrowthPct": None,
             "forwardEPSGrowthPct": 8.0,
@@ -45,6 +46,7 @@ def test_weighted_peer_average_renormalizes_each_available_metric() -> None:
             "weight": 0.4,
             "change24hPct": -1.0,
             "change7dPct": 3.0,
+            "sevenDayLongAprPct": -8.0,
             "forwardPE": 20.0,
             "forwardSalesGrowthPct": 25.0,
             "forwardEPSGrowthPct": 18.0,
@@ -60,6 +62,7 @@ def test_weighted_peer_average_renormalizes_each_available_metric() -> None:
     assert average["weight"] == 1.0
     assert average["change24hPct"] == 0.8
     assert average["change7dPct"] == 0.6
+    assert average["sevenDayLongAprPct"] == 4.0
     assert average["forwardPE"] == 14.0
     assert average["forwardSalesGrowthPct"] == 25.0
     assert average["forwardEPSGrowthPct"] == 12.0
