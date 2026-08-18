@@ -62,6 +62,34 @@ def test_earnings_ledger_matches_nearby_transcript_and_shows_session_move() -> N
     assert "Q3 FY2026" in rendered
     assert 'class="transcript-brief"' in rendered
     assert "Current-quarter evidence" in rendered
+    assert "after close" not in rendered
+    assert "event close to next close" not in rendered
+    assert "Session move:" in rendered
+
+
+def test_earnings_ledger_shows_only_latest_eight_events() -> None:
+    events = [
+        {
+            "earningsDate": f"2026-{month:02d}-15",
+            "timing": "after close",
+            "reactionWindow": "event close to next close",
+            "movePct": float(month),
+        }
+        for month in range(1, 11)
+    ]
+    rendered = _earnings_ledger_html(
+        symbol="INTC",
+        options_payload={
+            "mode": "earnings",
+            "historicalEarnings": {"events": events},
+        },
+        analyst_packet=None,
+    )
+    assert "8 historical reactions" in rendered
+    assert "Oct 15, 2026" in rendered
+    assert "Mar 15, 2026" in rendered
+    assert "Feb 15, 2026" not in rendered
+    assert "Jan 15, 2026" not in rendered
 
 
 def test_earnings_ledger_uses_fallback_events_without_an_options_profile() -> None:

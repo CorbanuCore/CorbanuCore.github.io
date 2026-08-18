@@ -240,6 +240,24 @@ class EarningsOptionsHistoryTests(unittest.TestCase):
         self.assertEqual(rows[1]["reactionWindow"], "prior close to event close")
         self.assertEqual(rows[1]["movePct"], 10.0)
 
+    def test_intraday_release_uses_prior_close_to_event_close(self) -> None:
+        history = {
+            "events": [{
+                "accepted_at_eastern": "2026-04-30 12:15:00",
+                "source": "SEC earnings release history",
+            }],
+            "prices": [
+                {"date": "2026-04-29", "closeadj": "100"},
+                {"date": "2026-04-30", "closeadj": "108"},
+            ],
+        }
+
+        rows = _historical_earnings_moves(history)
+
+        self.assertEqual(rows[0]["timing"], "during/unspecified")
+        self.assertEqual(rows[0]["reactionWindow"], "prior close to event close")
+        self.assertEqual(rows[0]["movePct"], 8.0)
+
     def test_historical_windows_match_current_calendar_day_horizon(self) -> None:
         history = {
             "events": [{"accepted_at_eastern": "2025-01-30 16:30:00"}],

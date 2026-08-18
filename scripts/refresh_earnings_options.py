@@ -1080,7 +1080,7 @@ def build_payload(
         "fan": fan,
         "historicalEarnings": {
             "priceSource": "Sharadar split-adjusted close",
-            "method": "After-close releases use event close to next trading close; before-open releases use prior trading close to event close. SEC acceptance time is used when available, with the historical calendar timing as fallback.",
+            "method": "After-close releases use event close to next trading close. Premarket and intraday releases use prior trading close to event close; an intraday result therefore includes the full session containing the release. SEC acceptance time is used when available, with historical calendar timing as fallback.",
             "events": historical_earnings,
         },
         "historicalAnalysis": {
@@ -1144,7 +1144,7 @@ def _retain_last_good_payload(
     if payload["mode"] == "earnings" and historical_earnings is not None:
         payload["historicalEarnings"] = {
             "priceSource": "Sharadar split-adjusted close",
-            "method": "After-close releases use event close to next trading close; before-open releases use prior trading close to event close. SEC acceptance time is used when available, with the historical calendar timing as fallback.",
+            "method": "After-close releases use event close to next trading close. Premarket and intraday releases use prior trading close to event close; an intraday result therefore includes the full session containing the release. SEC acceptance time is used when available, with historical calendar timing as fallback.",
             "events": historical_earnings,
         }
     payload["refreshStatus"] = {

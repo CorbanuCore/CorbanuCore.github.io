@@ -179,12 +179,22 @@ def _earnings_ledger_html(
     )
     if precise_history:
         events = list(precise_history)
-        method = str((options_payload.get("historicalEarnings") or {}).get("method") or "")
+        method = (
+            "Session move: after-close releases use event close to next trading close. "
+            "Premarket and intraday releases use prior trading close to event close; "
+            "an intraday result includes the full session containing the release. "
+            "SEC acceptance time is used when available, with calendar timing as fallback."
+        )
     else:
         events = list((analyst_packet or {}).get("fallbackEarningsEvents") or [])
         method = str((analyst_packet or {}).get("fallbackEarningsMethod") or "")
     if not events:
         return ""
+    events = sorted(
+        events,
+        key=lambda row: pd.Timestamp(row["earningsDate"]),
+        reverse=True,
+    )[:8]
     summaries = list((analyst_packet or {}).get("summaries") or [])
     unused = set(range(len(summaries)))
     rows: list[str] = []
@@ -216,8 +226,8 @@ def _earnings_ledger_html(
         )
         rows.append(
             "<tr>"
-            f"<td><strong>{event_date.strftime('%b %-d, %Y')}</strong><span>{html.escape(str(event['timing']))}</span></td>"
-            f'<td class="{move_class}">{move:+.2f}%<span>{html.escape(str(event["reactionWindow"]))}</span></td>'
+            f"<td><strong>{event_date.strftime('%b %-d, %Y')}</strong></td>"
+            f'<td class="{move_class}">{move:+.2f}%</td>'
             f"<td>{html.escape(fiscal)}</td><td>{summary_cell}</td>"
             "</tr>"
         )
