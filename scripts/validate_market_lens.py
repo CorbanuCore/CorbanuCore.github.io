@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 import pandas as pd
@@ -196,6 +197,26 @@ def main() -> int:
                 }
                 if any(not metric_fields.issubset(row) for row in comparisons):
                     raise AssertionError(f"{slug}: comparison packet lacks locked signal metrics")
+                average = peer_mapping.get("weightedPeerAverage") or {}
+                average_fields = metric_fields | {
+                    "change24hPct", "change7dPct", "liquidity_24h_usd_millions",
+                }
+                if average.get("role") != "peer_average" or not average_fields.issubset(average):
+                    raise AssertionError(f"{slug}: weighted peer average is incomplete")
+                for field in average_fields:
+                    available = [
+                        (float(row["weight"]), float(row[field]))
+                        for row in comparisons[1:]
+                        if row.get(field) is not None
+                    ]
+                    if not available:
+                        if average.get(field) is not None:
+                            raise AssertionError(f"{slug}: {field} average should be unavailable")
+                        continue
+                    total_weight = sum(weight for weight, _ in available)
+                    expected = sum(weight * value for weight, value in available) / total_weight
+                    if abs(float(average[field]) - expected) > 1e-3:
+                        raise AssertionError(f"{slug}: {field} weighted peer average is wrong")
                 if not performance_fields.issubset(comparisons[0]):
                     raise AssertionError(f"{slug}: target row lacks perp performance changes")
                 if not str(peer_mapping.get("fundamentalsAsOf") or ""):
@@ -208,6 +229,12 @@ def main() -> int:
                         raise AssertionError(f"{slug}: comparison table is missing {heading}")
                 if 'class="peer-target-row"' not in page_markup:
                     raise AssertionError(f"{slug}: target stock row is missing")
+                if not re.search(
+                    r'class="peer-target-row".*?</tr><tr class="peer-average-row"',
+                    page_markup,
+                    flags=re.DOTALL,
+                ):
+                    raise AssertionError(f"{slug}: weighted peer average is not directly below target")
             hedge = peer_mapping.get("primary_index_hedge") or {}
             if not str(hedge.get("ticker") or "").strip():
                 raise AssertionError(f"{slug}: primary index hedge is incomplete")

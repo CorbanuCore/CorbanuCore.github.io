@@ -8,6 +8,7 @@ from scripts.build_market_pages import (
     _markdown_brief,
     _perp_change_metrics,
     _transcript_surrounding_moves,
+    _weighted_peer_average,
 )
 
 
@@ -25,6 +26,46 @@ def test_perp_change_metrics_use_exact_hourly_24h_and_7d_references() -> None:
     assert result["reference7dPrice"] == 100.0
     assert result["change24hPct"] == round((268.0 / 244.0 - 1.0) * 100.0, 4)
     assert result["change7dPct"] == 168.0
+
+
+def test_weighted_peer_average_renormalizes_each_available_metric() -> None:
+    rows = [
+        {
+            "weight": 0.6,
+            "change24hPct": 2.0,
+            "change7dPct": -1.0,
+            "forwardPE": 10.0,
+            "forwardSalesGrowthPct": None,
+            "forwardEPSGrowthPct": 8.0,
+            "epsRevision28dPctOfPrice": 0.5,
+            "liquidity_24h_usd_millions": 20.0,
+            "performanceObservedAt": "2026-08-18T13:00:00Z",
+        },
+        {
+            "weight": 0.4,
+            "change24hPct": -1.0,
+            "change7dPct": 3.0,
+            "forwardPE": 20.0,
+            "forwardSalesGrowthPct": 25.0,
+            "forwardEPSGrowthPct": 18.0,
+            "epsRevision28dPctOfPrice": -0.5,
+            "liquidity_24h_usd_millions": 10.0,
+            "performanceObservedAt": "2026-08-18T14:00:00Z",
+        },
+    ]
+
+    average = _weighted_peer_average(rows)
+
+    assert average["role"] == "peer_average"
+    assert average["weight"] == 1.0
+    assert average["change24hPct"] == 0.8
+    assert average["change7dPct"] == 0.6
+    assert average["forwardPE"] == 14.0
+    assert average["forwardSalesGrowthPct"] == 25.0
+    assert average["forwardEPSGrowthPct"] == 12.0
+    assert average["epsRevision28dPctOfPrice"] == 0.1
+    assert average["liquidity_24h_usd_millions"] == 16.0
+    assert average["performanceObservedAt"] == "2026-08-18T14:00:00Z"
 
 
 def test_matching_perp_scale_covers_mismatched_cash_proxies_only() -> None:

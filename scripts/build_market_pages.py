@@ -138,10 +138,51 @@ def _peer_change_cell(row: dict[str, Any], horizon: str) -> str:
     value_text = "—" if pd.isna(value) else f"{float(value):+.2f}%"
     direction = "" if pd.isna(value) else " positive" if float(value) >= 0 else " negative"
     reference_attribute = "" if pd.isna(reference) else f' data-reference-price="{float(reference):.10g}"'
+    value_attribute = "" if pd.isna(value) else f' data-peer-change-value="{float(value):.10g}"'
     return (
         f'<td class="peer-change{direction}" data-peer-change="{horizon}"'
-        f'{reference_attribute}>{value_text}</td>'
+        f'{reference_attribute}{value_attribute}>{value_text}</td>'
     )
+
+
+def _weighted_peer_metric(rows: list[dict[str, Any]], field: str) -> float | None:
+    """Return a Kimi-weighted peer metric, renormalizing available values."""
+    weighted_sum = 0.0
+    available_weight = 0.0
+    for row in rows:
+        weight = pd.to_numeric(row.get("weight"), errors="coerce")
+        value = pd.to_numeric(row.get(field), errors="coerce")
+        if pd.isna(weight) or float(weight) <= 0.0 or pd.isna(value):
+            continue
+        weighted_sum += float(weight) * float(value)
+        available_weight += float(weight)
+    return weighted_sum / available_weight if available_weight > 0.0 else None
+
+
+def _weighted_peer_average(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    metric_fields = (
+        "change24hPct",
+        "change7dPct",
+        "forwardPE",
+        "forwardSalesGrowthPct",
+        "forwardEPSGrowthPct",
+        "epsRevision28dPctOfPrice",
+        "liquidity_24h_usd_millions",
+    )
+    result: dict[str, Any] = {
+        "role": "peer_average",
+        "ticker": "PEER AVG",
+        "name": "Kimi-weighted basket",
+        "weight": 1.0,
+        "performanceObservedAt": max(
+            (str(row.get("performanceObservedAt") or "") for row in rows),
+            default="",
+        ),
+    }
+    for field in metric_fields:
+        value = _weighted_peer_metric(rows, field)
+        result[field] = _json_value(value, 4) if value is not None else None
+    return result
 
 
 def _inline_markdown(value: str) -> str:
@@ -341,21 +382,57 @@ def _page_html(
         comparison_rows = list(peer_mapping.get("comparisonRows") or [])
         show_fundamentals = peer_mapping.get("targetAssetClass") == "single_name_equity"
         if show_fundamentals:
-            peer_rows = "".join(
-                "<tr" + (' class="peer-target-row"' if row.get("role") == "target" else "")
-                + f' data-peer-raw-symbol="{html.escape(str(row["raw_symbol"]), quote=True)}">'
-                f"<td><strong>{html.escape(str(row['ticker']))}</strong><span>{html.escape(str(row['name']))}</span></td>"
-                f"<td>{'Target' if row.get('role') == 'target' else _format_metric(float(row['weight']) * 100, suffix='%')}</td>"
-                + _peer_change_cell(row, "24h")
-                + _peer_change_cell(row, "7d")
-                + f"<td>{_format_metric(row.get('forwardPE'), digits=1)}</td>"
-                f"<td>{_format_metric(row.get('forwardSalesGrowthPct'), suffix='%')}</td>"
-                f"<td>{_format_metric(row.get('forwardEPSGrowthPct'), suffix='%')}</td>"
-                f"<td>{_format_metric(row.get('epsRevision28dPctOfPrice'), suffix='%', digits=2)}</td>"
-                f"<td>${float(row['liquidity_24h_usd_millions']):,.3f}M</td>"
-                "</tr>"
-                for row in comparison_rows
+            average_row = dict(
+                peer_mapping.get("weightedPeerAverage")
+                or _weighted_peer_average(comparison_rows[1:])
             )
+            display_rows = [comparison_rows[0], average_row, *comparison_rows[1:]]
+            rendered_rows = []
+            for row in display_rows:
+                role = str(row.get("role") or "peer")
+                if role == "target":
+                    row_attributes = (
+                        ' class="peer-target-row"'
+                        f' data-peer-raw-symbol="{html.escape(str(row["raw_symbol"]), quote=True)}"'
+                    )
+                    company_cell = (
+                        f"<strong>{html.escape(str(row['ticker']))}</strong>"
+                        f"<span>{html.escape(str(row['name']))}</span>"
+                    )
+                    weight_cell = "Target"
+                elif role == "peer_average":
+                    row_attributes = ' class="peer-average-row" data-peer-average-row'
+                    company_cell = "<strong>Blended peer average</strong><span>Kimi-weighted basket</span>"
+                    weight_cell = "100%"
+                else:
+                    weight = float(row["weight"])
+                    row_attributes = (
+                        f' data-peer-raw-symbol="{html.escape(str(row["raw_symbol"]), quote=True)}"'
+                        f' data-peer-weight="{weight:.10g}"'
+                    )
+                    company_cell = (
+                        f"<strong>{html.escape(str(row['ticker']))}</strong>"
+                        f"<span>{html.escape(str(row['name']))}</span>"
+                    )
+                    weight_cell = _format_metric(weight * 100, suffix="%")
+                liquidity = pd.to_numeric(
+                    row.get("liquidity_24h_usd_millions"), errors="coerce"
+                )
+                liquidity_cell = (
+                    "—" if pd.isna(liquidity) else f"${float(liquidity):,.3f}M"
+                )
+                rendered_rows.append(
+                    f"<tr{row_attributes}>"
+                    f"<td>{company_cell}</td><td>{weight_cell}</td>"
+                    + _peer_change_cell(row, "24h")
+                    + _peer_change_cell(row, "7d")
+                    + f"<td>{_format_metric(row.get('forwardPE'), digits=1)}</td>"
+                    f"<td>{_format_metric(row.get('forwardSalesGrowthPct'), suffix='%')}</td>"
+                    f"<td>{_format_metric(row.get('forwardEPSGrowthPct'), suffix='%')}</td>"
+                    f"<td>{_format_metric(row.get('epsRevision28dPctOfPrice'), suffix='%', digits=2)}</td>"
+                    f"<td>{liquidity_cell}</td></tr>"
+                )
+            peer_rows = "".join(rendered_rows)
             peer_headings = "<th>Company</th><th>Basket weight</th><th>24h change</th><th>7d change</th><th>Forward P/E</th><th>Sales growth</th><th>EPS growth</th><th>28d EPS rev / price</th><th>24h liquidity</th>"
             performance_asof = max(
                 (str(row.get("performanceObservedAt") or "") for row in comparison_rows),
@@ -850,6 +927,9 @@ def build(nav_root: Path) -> None:
                         },
                     })
                 peer_mapping["comparisonRows"] = comparison_rows
+                peer_mapping["weightedPeerAverage"] = _weighted_peer_average(
+                    comparison_rows[1:]
+                )
                 peer_mapping["fundamentalsAsOf"] = fundamentals_payload.get("asOf")
                 peer_mapping["fundamentalsMethod"] = fundamentals_payload.get("method")
 

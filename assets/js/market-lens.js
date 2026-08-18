@@ -264,6 +264,31 @@
     }, { once: true });
   }
 
+  function renderWeightedPeerAverages() {
+    document.querySelectorAll("[data-peer-average-row]").forEach((averageRow) => {
+      const table = averageRow.closest("table");
+      if (!table) return;
+      ["24h", "7d"].forEach((horizon) => {
+        let weightedChange = 0;
+        let availableWeight = 0;
+        table.querySelectorAll("[data-peer-raw-symbol][data-peer-weight]").forEach((peerRow) => {
+          const weight = Number(peerRow.dataset.peerWeight);
+          const source = peerRow.querySelector(`[data-peer-change="${horizon}"]`);
+          const change = Number(source && source.dataset.peerChangeValue);
+          if (!(weight > 0) || !Number.isFinite(change)) return;
+          weightedChange += weight * change;
+          availableWeight += weight;
+        });
+        const cell = averageRow.querySelector(`[data-peer-change="${horizon}"]`);
+        if (!cell || !(availableWeight > 0)) return;
+        const change = weightedChange / availableWeight;
+        cell.dataset.peerChangeValue = String(change);
+        cell.textContent = percent(change, 2);
+        cell.className = `peer-change ${change >= 0 ? "positive" : "negative"}`;
+      });
+    });
+  }
+
   function renderPeerPerformance(mids) {
     if (!mids) return;
     document.querySelectorAll("[data-peer-raw-symbol]").forEach((row) => {
@@ -274,10 +299,12 @@
         const reference = Number(cell.dataset.referencePrice);
         if (!(reference > 0)) return;
         const change = (mid / reference - 1) * 100;
+        cell.dataset.peerChangeValue = String(change);
         cell.textContent = percent(change, 2);
         cell.className = `peer-change ${change >= 0 ? "positive" : "negative"}`;
       });
     });
+    renderWeightedPeerAverages();
   }
 
   function computeLivePeerRow(data, mids, now) {
