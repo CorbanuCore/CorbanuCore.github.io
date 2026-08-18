@@ -62,7 +62,7 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__renderWeightedPeerAverages = renderWeightedPeerAverages;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
 
@@ -115,12 +115,38 @@ const performanceRow = {
   dataset: { peerRawSymbol: "xyz:MSFT" },
   querySelectorAll: () => [change24h, change7d],
 };
-context.document.querySelectorAll = () => [performanceRow];
+context.document.querySelectorAll = (selector) => selector === "[data-peer-raw-symbol]" ? [performanceRow] : [];
 context.window.__renderPeerPerformance({ "xyz:MSFT": "110" });
 assert.equal(change24h.textContent, "+10.00%");
 assert.equal(change24h.className, "peer-change positive");
 assert.equal(change7d.textContent, "-8.33%");
 assert.equal(change7d.className, "peer-change negative");
+
+const peerCells = (change24hPct, change7dPct) => ({
+  "24h": { dataset: { peerChangeValue: String(change24hPct) } },
+  "7d": { dataset: { peerChangeValue: String(change7dPct) } },
+});
+const peerAChanges = peerCells(10, -2);
+const peerBChanges = peerCells(-5, 3);
+const weightedPeerRows = [
+  { dataset: { peerWeight: "0.75" }, querySelector: (selector) => peerAChanges[selector.includes("24h") ? "24h" : "7d"] },
+  { dataset: { peerWeight: "0.25" }, querySelector: (selector) => peerBChanges[selector.includes("24h") ? "24h" : "7d"] },
+];
+const averageCells = {
+  "24h": { dataset: {}, textContent: "", className: "" },
+  "7d": { dataset: {}, textContent: "", className: "" },
+};
+const peerTable = { querySelectorAll: () => weightedPeerRows };
+const averageRow = {
+  closest: () => peerTable,
+  querySelector: (selector) => averageCells[selector.includes("24h") ? "24h" : "7d"],
+};
+context.document.querySelectorAll = (selector) => selector === "[data-peer-average-row]" ? [averageRow] : [];
+context.window.__renderWeightedPeerAverages();
+assert.equal(averageCells["24h"].textContent, "+6.25%");
+assert.equal(averageCells["24h"].className, "peer-change positive");
+assert.equal(averageCells["7d"].textContent, "-0.75%");
+assert.equal(averageCells["7d"].className, "peer-change negative");
 context.fetch = async () => { throw new Error("REST fallback was not expected"); };
 
 const livePeerData = {
