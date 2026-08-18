@@ -19,7 +19,10 @@ SITE_ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = SITE_ROOT / "assets" / "market-data"
 EXPECTED_CEX_VENUES = {"Binance", "Bitget", "Bybit", "OKX"}
 DEX_KINDS = {"ammPool", "ammQuoteDepth", "aggregatorQuote"}
-INDEX_RETURN_PROXIES = {"sp500": "SPY", "xyz100": "QQQ"}
+RETURN_PROXIES = {
+    "brentoil": "BNO", "cl": "USO", "copper": "CPER", "natgas": "UNG",
+    "silver": "SLV", "sp500": "SPY", "xyz100": "QQQ",
+}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -100,32 +103,32 @@ def main() -> int:
                 raise AssertionError(f"{slug}: Tiingo IEX terminal session status is invalid")
             tiingo_iex_spot_points += 1
         spot_display = payload.get("spotDisplay") or {}
-        expected_proxy = INDEX_RETURN_PROXIES.get(slug)
+        expected_proxy = RETURN_PROXIES.get(slug)
         if expected_proxy:
             if spot_display.get("mode") != "return_proxy_on_matching_perp_scale":
-                raise AssertionError(f"{slug}: index spot proxy is not on the matching perp scale")
+                raise AssertionError(f"{slug}: spot return proxy is not on the matching perp scale")
             if spot_display.get("sourceSymbol") != expected_proxy:
                 raise AssertionError(f"{slug}: wrong listed return proxy")
             raw_price = float(spot_display.get("sourceTerminalPrice") or 0)
             display_price = float(spot_display.get("displayAnchorPrice") or 0)
             scale_factor = float(spot_display.get("scaleFactor") or 0)
             if min(raw_price, display_price, scale_factor) <= 0:
-                raise AssertionError(f"{slug}: index proxy display scale is invalid")
+                raise AssertionError(f"{slug}: return proxy display scale is invalid")
             if abs(display_price / raw_price - scale_factor) > 1e-6:
-                raise AssertionError(f"{slug}: index proxy scale factor is inconsistent")
+                raise AssertionError(f"{slug}: return proxy scale factor is inconsistent")
             if abs(float((anchors.get("spot") or {}).get("rawPrice") or 0) - raw_price) > 1e-5:
                 raise AssertionError(f"{slug}: raw ETF proxy price disclosure is inconsistent")
             if spot_display.get("displayAnchorDate") != spot_rows[-1]["d"]:
-                raise AssertionError(f"{slug}: index proxy does not use the matching cash date")
+                raise AssertionError(f"{slug}: return proxy does not use the matching cash date")
             terminal_scale_ratio = float(spot_rows[-1]["c"]) / float(perp_rows[-1]["c"])
             if not 0.5 <= terminal_scale_ratio <= 2.0:
-                raise AssertionError(f"{slug}: index proxy and perp remain on incompatible axes")
+                raise AssertionError(f"{slug}: return proxy and perp remain on incompatible axes")
             if spot_display.get("returnPathUnchanged") is not True:
-                raise AssertionError(f"{slug}: index proxy does not disclose unchanged returns")
-            if f"{expected_proxy} return proxy" not in page_markup or "index-point units" not in page_markup:
-                raise AssertionError(f"{slug}: index proxy scale is not clearly labeled on the page")
+                raise AssertionError(f"{slug}: return proxy does not disclose unchanged returns")
+            if f"{expected_proxy} return proxy" not in page_markup or "matching-date" not in page_markup:
+                raise AssertionError(f"{slug}: return proxy scale is not clearly labeled on the page")
         elif spot_display.get("mode") != "raw_terminal_price":
-            raise AssertionError(f"{slug}: non-index spot history has an unexpected display scale")
+            raise AssertionError(f"{slug}: raw spot history has an unexpected display scale")
         if "close at 100" in str(payload.get("basis") or "").lower():
             raise AssertionError(f"{slug}: obsolete arbitrary index basis remains")
         for required_markup in (

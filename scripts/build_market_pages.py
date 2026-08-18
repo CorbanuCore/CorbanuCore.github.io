@@ -22,6 +22,16 @@ from navstrategies.coverage_universe.tradexyz_peers import (
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_NAV_ROOT = Path("/home/postfiat/repos/navstrategies")
+RETURN_PROXY_SPOT_SYMBOLS = frozenset({"BNO", "CPER", "SLV", "UNG", "USO"})
+
+
+def _uses_matching_perp_scale(asset_class: str | None, spot_symbol: str) -> bool:
+    """Identify benchmarks whose cash proxy uses different price units from the perp."""
+    return asset_class == "equity_index" or (
+        asset_class == "commodity" and spot_symbol.upper() in RETURN_PROXY_SPOT_SYMBOLS
+    )
+
+
 NAMES = {
     "AAPL": "Apple",
     "AMD": "Advanced Micro Devices",
@@ -241,17 +251,19 @@ def _page_html(
     analyst_packet: dict[str, Any] | None,
 ) -> str:
     continuous_spot = symbol in {"BTC", "ETH", "GOLD"}
-    is_index_proxy = bool(
-        peer_mapping and peer_mapping.get("targetAssetClass") == "equity_index"
+    is_return_proxy = bool(
+        peer_mapping and _uses_matching_perp_scale(
+            str(peer_mapping.get("targetAssetClass") or ""), spot_symbol
+        )
     )
     spot_legend = (
         f"{spot_symbol} return proxy · {symbol} point scale"
-        if is_index_proxy
+        if is_return_proxy
         else f"{spot_symbol} spot total return"
     )
     ratio_spot_label = (
         f"{spot_symbol} Return Proxy"
-        if is_index_proxy
+        if is_return_proxy
         else f"{spot_symbol} Spot Long"
     )
     options_enabled = options_payload is not None
@@ -403,13 +415,13 @@ def _page_html(
     )
     ratio_subtitle = (
         f"1.00 = equal return since shared anchor · {spot_symbol} return proxy held at its last cash close"
-        if is_index_proxy
+        if is_return_proxy
         else f"1.00 = equal return since shared anchor · {spot_symbol} sampled on the same seven-day New York session"
         if continuous_spot
         else "1.00 = equal return since shared anchor · spot held at its last close between cash sessions"
     )
-    if is_index_proxy:
-        chart_disclosure = f"{spot_symbol} supplies the listed spot total-return proxy. Its percentage return path is expressed in {symbol} index-point units using the same-date {symbol} perp close, so the proxy, weighted peers, options distribution, and perp candles share one readable axis without changing any return. The tooltip identifies these as scaled proxy levels. Perp history includes realized hourly funding and its newest close remains the actual perp price."
+    if is_return_proxy:
+        chart_disclosure = f"{spot_symbol} supplies the listed spot total-return proxy. Its percentage return path is expressed on the matching-date {symbol} perp price scale, so the proxy, weighted peers, options distribution, and perp candles share one readable axis without changing any return. The tooltip identifies these as scaled proxy levels. Perp history includes realized hourly funding and its newest close remains the actual perp price."
     elif symbol == "GOLD":
         chart_disclosure = "Perp candlesticks and XAUT spot run seven days a week. XAUT closes use Bitfinex 30-minute spot candles aligned to 09:30–16:00 New York; the on-chain section reports executable Ethereum Uniswap V3 PAXG and XAUT quotes and depth. Each history is scaled to its own latest raw USD close: prior XAUT levels include spot total return and prior perp levels include realized hourly funding. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close."
     elif continuous_spot:
@@ -656,14 +668,14 @@ def build(nav_root: Path) -> None:
             raise RuntimeError(f"invalid terminal total-return anchor for {raw_symbol}")
         peer_block = peer_targets.get(symbol)
         target_asset_class = peer_target_classes.get(symbol)
-        is_index_proxy = target_asset_class == "equity_index"
+        is_return_proxy = _uses_matching_perp_scale(target_asset_class, spot_symbol)
         spot_terminal_date = pd.Timestamp(spot_group.iloc[-1]["date"])
         spot_display_anchor_price = spot_terminal_price
-        if is_index_proxy:
+        if is_return_proxy:
             matching_perp = perp_group.loc[perp_group["date"].eq(spot_terminal_date)]
             if matching_perp.empty:
                 raise RuntimeError(
-                    f"same-date perp display anchor is missing for index proxy {raw_symbol}"
+                    f"same-date perp display anchor is missing for return proxy {raw_symbol}"
                 )
             spot_display_anchor_price = float(matching_perp.iloc[-1]["price_close"])
         spot_scale = spot_display_anchor_price / spot_terminal_index
@@ -811,7 +823,7 @@ def build(nav_root: Path) -> None:
             )
         one_day_forecast = symbol_forecasts.loc[24]
         seven_day_forecast = symbol_forecasts.loc[168]
-        if is_index_proxy:
+        if is_return_proxy:
             basis = (
                 f"{spot_symbol} gross-total-return proxy expressed on the matching-date "
                 f"{symbol} perp point scale; perp history ends at its latest raw price"
@@ -880,7 +892,7 @@ def build(nav_root: Path) -> None:
                     "observedThrough": spot_rows[-1]["t"],
                     "sessionStatus": spot_rows[-1]["s"],
                     "symbol": spot_symbol,
-                    "displaySymbol": symbol if is_index_proxy else spot_symbol,
+                    "displaySymbol": symbol if is_return_proxy else spot_symbol,
                 },
                 "perp": {
                     "price": _json_value(perp_terminal_price),

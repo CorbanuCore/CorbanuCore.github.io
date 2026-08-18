@@ -4,9 +4,18 @@ import pandas as pd
 
 from scripts.build_market_pages import (
     _earnings_ledger_html,
+    _uses_matching_perp_scale,
     _markdown_brief,
     _transcript_surrounding_moves,
 )
+
+
+def test_matching_perp_scale_covers_mismatched_cash_proxies_only() -> None:
+    for symbol in ("UNG", "USO", "BNO", "CPER", "SLV"):
+        assert _uses_matching_perp_scale("commodity", symbol)
+    assert _uses_matching_perp_scale("equity_index", "SPY")
+    assert not _uses_matching_perp_scale("commodity", "XAUT")
+    assert not _uses_matching_perp_scale("single_name_equity", "AAPL")
 
 
 def test_markdown_brief_escapes_model_output_and_renders_structure() -> None:
