@@ -264,6 +264,22 @@
     }, { once: true });
   }
 
+  function renderPeerPerformance(mids) {
+    if (!mids) return;
+    document.querySelectorAll("[data-peer-raw-symbol]").forEach((row) => {
+      const rawSymbol = String(row.dataset.peerRawSymbol || "");
+      const mid = Number(mids[rawSymbol]);
+      if (!(mid > 0)) return;
+      row.querySelectorAll("[data-peer-change]").forEach((cell) => {
+        const reference = Number(cell.dataset.referencePrice);
+        if (!(reference > 0)) return;
+        const change = (mid / reference - 1) * 100;
+        cell.textContent = percent(change, 2);
+        cell.className = `peer-change ${change >= 0 ? "positive" : "negative"}`;
+      });
+    });
+  }
+
   function computeLivePeerRow(data, mids, now) {
     const splice = data && data.peerMapping && data.peerMapping.liveSplice;
     const inputs = splice && Array.isArray(splice.inputs) ? splice.inputs : [];
@@ -318,7 +334,9 @@
     const splice = data && data.peerMapping && data.peerMapping.liveSplice;
     if (!splice || !navigator.onLine) return false;
     try {
-      const row = computeLivePeerRow(data, await fetchLivePeerMids(splice), new Date());
+      const mids = await fetchLivePeerMids(splice);
+      renderPeerPerformance(mids);
+      const row = computeLivePeerRow(data, mids, new Date());
       if (!row) return false;
       const previous = state.livePeerRow;
       state.livePeerRow = row;
