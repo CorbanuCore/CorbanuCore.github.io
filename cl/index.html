@@ -11,10 +11,10 @@
   <meta property="og:url" content="https://corbanu.com/cl/">
   <link rel="canonical" href="https://corbanu.com/cl/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=74c25e294f8d">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=1c52dc17616e">
   <title>CL Spot and Swap Total Return — Corbanu</title>
 </head>
-<body data-market-slug="cl" data-market-version="74c25e294f8d">
+<body data-market-slug="cl" data-market-version="1c52dc17616e">
   <a class="skip" href="#main">Skip to chart</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="Corbanu home"><img src="/assets/corbanu-logo.webp" width="45" height="45" alt="">Corbanu</a>
@@ -50,7 +50,7 @@
             <div class="chart-title-row"><h1 id="chart-title">CL Spot and Perp Total Returns</h1></div>
             <div class="legend" aria-label="Chart legend">
               <span class="legend-item"><i class="legend-candle" aria-hidden="true"></i>CL perp total return · long · seven-day</span>
-              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>USO spot total return</span>
+              <span class="legend-item"><i class="legend-line" aria-hidden="true"></i>USO return proxy · CL point scale</span>
               <span class="legend-item"><i class="legend-peer" aria-hidden="true"></i>Weighted peers · rebased at range start · live perps</span>
               <span class="legend-item"><i class="legend-range" aria-hidden="true"></i>listed-options implied probability fan</span>
               <span class="legend-item"><i class="legend-payoff" aria-hidden="true"></i><span id="selected-structure-label">selected structure payout</span></span>
@@ -147,8 +147,8 @@
         <section class="ratio-panel" aria-labelledby="ratio-title">
           <header class="ratio-head">
             <div>
-              <h2 id="ratio-title">CL Perp Long / USO Spot Long Total Return Ratio</h2>
-              <span>1.00 = equal return since shared anchor · spot held at its last close between cash sessions</span>
+              <h2 id="ratio-title">CL Perp Long / USO Return Proxy Total Return Ratio</h2>
+              <span>1.00 = equal return since shared anchor · USO return proxy held at its last cash close</span>
             </div>
             <strong id="ratio-latest">—</strong>
           </header>
@@ -181,7 +181,7 @@
           <p id="onchain-note" class="onchain-note"><strong>Preferred</strong> marks the wrapper with the highest summed measured 24-hour turnover. Order-book depth is resting dollar notional within 2% of mid; ≥ means the returned book ended before the full band. Ethereum Uniswap V3 and PancakeSwap V3 price and depth come directly from factory-verified pools and quoter calls; PancakeSwap 24-hour volume and TVL are indexed pool-event statistics. Robinhood bid and ask are official multiplier-adjusted reference prices. A Robinhood route marked unmeasured means the custom Uniswap/Pleiades route exists but its executable depth and turnover are unavailable to this adapter; it does not mean zero liquidity. Underlying share volume is excluded. AMM TVL is shown separately from executable depth. Issuer, custody, redemption, eligibility, fees, slippage, and venue risk differ.</p>
         </section>
       </div>
-      <p class="chart-disclosure" id="chart-disclosure">Perp candlesticks run seven days a week. Each history is scaled to its own latest raw USD close: prior spot levels include gross dividends and prior perp levels include realized hourly funding. Solid candles use exact 09:30–16:00 30-minute bars; an outlined final candle is the current live partial session through its displayed cutoff; faded candles use the 09:00 hourly open and exact 16:00 close. Spot remains at its last available cash close between sessions.</p>
+      <p class="chart-disclosure" id="chart-disclosure">USO supplies the listed spot total-return proxy. Its percentage return path is expressed on the matching-date CL perp price scale, so the proxy, weighted peers, options distribution, and perp candles share one readable axis without changing any return. The tooltip identifies these as scaled proxy levels. Perp history includes realized hourly funding and its newest close remains the actual perp price.</p>
     </section>
   </main>
 
@@ -190,6 +190,6 @@
     <div>Corbanu · 2026</div>
     <div class="footnote">Research visualization. No offer to buy or sell any security or digital asset. Derived spot and perpetual-swap indices can differ from executable prices. Funding, liquidity, fees, slippage, and venue risk remain material.</div>
   </footer>
-  <script src="/assets/js/market-lens.js?v=74c25e294f8d"></script>
+  <script src="/assets/js/market-lens.js?v=1c52dc17616e"></script>
 </body>
 </html>

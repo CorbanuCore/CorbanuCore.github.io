@@ -593,11 +593,11 @@
   function renderChart() {
     const data = state.data;
     const spotDisplay = data && data.spotDisplay || {};
-    const isIndexProxy = spotDisplay.mode === "return_proxy_on_matching_perp_scale";
-    const spotCloseLabel = isIndexProxy
+    const isReturnProxy = spotDisplay.mode === "return_proxy_on_matching_perp_scale";
+    const spotCloseLabel = isReturnProxy
       ? `${data.spotReferenceSymbol} return proxy · ${data.symbol} points`
       : "Spot total-return close";
-    const peerCloseLabel = isIndexProxy
+    const peerCloseLabel = isReturnProxy
       ? `Peer return basket · ${data.symbol} points`
       : "Peer spot-return basket";
     const stage = $("market-chart-stage");
@@ -687,7 +687,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} ${isIndexProxy ? data.spotReferenceSymbol + " total-return proxy expressed in " + data.symbol + " index points" : "terminal-anchored spot total-return price line"} and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history rebased to the target at the selected window start and extended by live Hyperliquid perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} ${isReturnProxy ? data.spotReferenceSymbol + " total-return proxy expressed on the " + data.symbol + " perp price scale" : "terminal-anchored spot total-return price line"} and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history rebased to the target at the selected window start and extended by live Hyperliquid perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
