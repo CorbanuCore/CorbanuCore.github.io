@@ -244,6 +244,20 @@ def main() -> int:
         elif 'class="peer-panel"' in page_markup or 'class="legend-peer"' in page_markup:
             raise AssertionError(f"{slug}: peer UI is rendered without a validated mapping")
 
+        briefings = payload.get("transcriptBriefings")
+        if briefings:
+            if briefings.get("model") != "moonshotai/kimi-k3" or float(briefings.get("temperature")) != 0.0:
+                raise AssertionError(f"{slug}: transcript briefing model is not locked Kimi K3 at temperature zero")
+            if int(briefings.get("count") or 0) != len(briefings.get("transcriptDates") or []):
+                raise AssertionError(f"{slug}: transcript briefing metadata count is inconsistent")
+            if page_markup.count('class="transcript-brief"') < 1:
+                raise AssertionError(f"{slug}: transcript briefings are not rendered in the earnings table")
+            if 'class="earnings-ledger"' not in page_markup or "<th>Session move</th>" not in page_markup:
+                raise AssertionError(f"{slug}: transcript-covered page lacks its earnings ledger")
+            for heading in ("What management is focused on", "Sell-side read-through", "Bull case", "Bear case"):
+                if heading not in page_markup:
+                    raise AssertionError(f"{slug}: transcript briefing is missing {heading}")
+
         onchain = payload["onchainSpot"]
         if onchain.get("venueSplit") is not True:
             raise AssertionError(f"{slug}: CEX/DEX split is disabled")
@@ -343,17 +357,6 @@ def main() -> int:
                 raise AssertionError(f"{slug}: historical earnings reaction row is invalid")
             if 'class="earnings-ledger"' not in page_markup or "<th>Session move</th>" not in page_markup:
                 raise AssertionError(f"{slug}: historical earnings and transcript ledger is missing")
-            briefings = payload.get("transcriptBriefings")
-            if briefings:
-                if briefings.get("model") != "moonshotai/kimi-k3" or float(briefings.get("temperature")) != 0.0:
-                    raise AssertionError(f"{slug}: transcript briefing model is not locked Kimi K3 at temperature zero")
-                if int(briefings.get("count") or 0) != len(briefings.get("transcriptDates") or []):
-                    raise AssertionError(f"{slug}: transcript briefing metadata count is inconsistent")
-                if page_markup.count('class="transcript-brief"') < 1:
-                    raise AssertionError(f"{slug}: transcript briefings are not rendered in the earnings table")
-                for heading in ("What management is focused on", "Sell-side read-through", "Bull case", "Bear case"):
-                    if heading not in page_markup:
-                        raise AssertionError(f"{slug}: transcript briefing is missing {heading}")
             historical = options.get("historicalAnalysis") or {}
             available_events = int(historical.get("availableEvents") or 0)
             recent_events = int(historical.get("primaryWindowEvents") or 0)

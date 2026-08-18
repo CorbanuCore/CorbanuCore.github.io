@@ -123,12 +123,56 @@ def _markdown_brief(markdown: str) -> str:
     return "".join(blocks)
 
 
+def _transcript_surrounding_moves(
+    spot_group: pd.DataFrame,
+    summaries: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    prices = spot_group[["date", "price_close_usd"]].copy()
+    prices["date"] = pd.to_datetime(prices["date"], utc=True).dt.date
+    prices["price_close_usd"] = pd.to_numeric(prices["price_close_usd"], errors="coerce")
+    prices = prices.dropna().sort_values("date")
+    events: list[dict[str, Any]] = []
+    for summary in summaries:
+        event_date = pd.Timestamp(summary["transcriptDate"]).date()
+        before = prices.loc[prices["date"].lt(event_date)]
+        after = prices.loc[prices["date"].gt(event_date)]
+        if before.empty or after.empty:
+            continue
+        start = before.iloc[-1]
+        end = after.iloc[0]
+        start_price = float(start["price_close_usd"])
+        end_price = float(end["price_close_usd"])
+        if min(start_price, end_price) <= 0:
+            continue
+        events.append({
+            "earningsDate": event_date.isoformat(),
+            "timing": "call timing unavailable",
+            "reactionWindow": "close before call to close after call",
+            "startDate": start["date"].isoformat(),
+            "reactionDate": end["date"].isoformat(),
+            "startPrice": round(start_price, 6),
+            "reactionPrice": round(end_price, 6),
+            "movePct": round((end_price / start_price - 1.0) * 100.0, 2),
+            "eventSource": summary.get("provider"),
+        })
+    events.sort(key=lambda row: row["earningsDate"], reverse=True)
+    return events
+
+
 def _earnings_ledger_html(
     *, symbol: str, options_payload: dict[str, Any] | None, analyst_packet: dict[str, Any] | None,
 ) -> str:
-    if not options_payload or str(options_payload.get("mode")) != "earnings":
-        return ""
-    events = list((options_payload.get("historicalEarnings") or {}).get("events") or [])[:12]
+    precise_history = (
+        options_payload
+        and str(options_payload.get("mode")) == "earnings"
+        and (options_payload.get("historicalEarnings") or {}).get("events")
+    )
+    if precise_history:
+        events = list(precise_history)[:12]
+        method = str((options_payload.get("historicalEarnings") or {}).get("method") or "")
+    else:
+        events = list((analyst_packet or {}).get("fallbackEarningsEvents") or [])[:12]
+        method = str((analyst_packet or {}).get("fallbackEarningsMethod") or "")
     if not events:
         return ""
     summaries = list((analyst_packet or {}).get("summaries") or [])
@@ -168,7 +212,7 @@ def _earnings_ledger_html(
             "</tr>"
         )
     summarized = sum("transcript-brief" in row for row in rows)
-    method = html.escape(str((options_payload.get("historicalEarnings") or {}).get("method") or ""))
+    method = html.escape(method)
     return f'''
         <section class="earnings-ledger" aria-labelledby="earnings-ledger-title">
           <header class="earnings-ledger-head">
@@ -796,12 +840,19 @@ def build(nav_root: Path) -> None:
                 "scaleFactor": 1.0,
                 "returnPathUnchanged": True,
             }
+        symbol_summaries = list(transcript_summaries.get(symbol) or [])
         analyst_packet = {
             "model": transcript_payload.get("model"),
             "temperature": transcript_payload.get("temperature"),
             "promptSha256": transcript_payload.get("promptSha256"),
             "generatedAt": transcript_payload.get("generatedAt"),
-            "summaries": list(transcript_summaries.get(symbol) or []),
+            "summaries": symbol_summaries,
+            "fallbackEarningsEvents": _transcript_surrounding_moves(
+                spot_group, symbol_summaries
+            ),
+            "fallbackEarningsMethod": (
+                "Where precise release timing is unavailable, the move spans the last cash close before the transcript date through the first cash close after it. This deliberately wider window avoids assuming whether the call occurred before or after market."
+            ),
         }
         payload = {
             "version": 2,
