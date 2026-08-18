@@ -351,6 +351,29 @@ def _median(values: list[float]) -> float:
     return ordered[center] if len(ordered) % 2 else (ordered[center - 1] + ordered[center]) / 2.0
 
 
+def _dedupe_historical_events(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Prefer SEC events and collapse one-day calendar disagreements."""
+    candidates: list[tuple[int, date, dict[str, Any]]] = []
+    for row in events:
+        raw_timestamp = str(row.get("accepted_at_eastern") or row.get("filing_date") or "")
+        try:
+            event_date = date.fromisoformat(raw_timestamp[:10])
+        except ValueError:
+            continue
+        source = str(row.get("source") or "").lower()
+        source_priority = 0 if source.startswith("sec ") else 1
+        candidates.append((source_priority, event_date, row))
+    selected: list[tuple[date, dict[str, Any]]] = []
+    for _, event_date, row in sorted(candidates, key=lambda item: (item[0], -item[1].toordinal())):
+        if any(abs((event_date - kept_date).days) <= 1 for kept_date, _ in selected):
+            continue
+        selected.append((event_date, row))
+    return [
+        row
+        for _, row in sorted(selected, key=lambda item: item[0], reverse=True)
+    ]
+
+
 def _historical_scenarios(
     history: dict[str, Any],
     *,
@@ -371,7 +394,7 @@ def _historical_scenarios(
     post_event_days = max((expiration_date - event_date).days, 1)
     seen_events: set[date] = set()
     scenarios: list[dict[str, Any]] = []
-    for row in history.get("events", []):
+    for row in _dedupe_historical_events(list(history.get("events", []))):
         raw_timestamp = str(row.get("accepted_at_eastern") or row.get("filing_date") or "")
         try:
             historical_event = date.fromisoformat(raw_timestamp[:10])
@@ -415,7 +438,7 @@ def _historical_earnings_moves(history: dict[str, Any]) -> list[dict[str, Any]]:
     price_dates = [item[0] for item in prices]
     seen: set[date] = set()
     moves: list[dict[str, Any]] = []
-    for row in history.get("events", []):
+    for row in _dedupe_historical_events(list(history.get("events", []))):
         timestamp = str(row.get("accepted_at_eastern") or row.get("filing_date") or "")
         try:
             event_day = date.fromisoformat(timestamp[:10])

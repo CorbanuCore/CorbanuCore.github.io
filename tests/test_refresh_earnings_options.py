@@ -7,6 +7,7 @@ import unittest
 from datetime import date, datetime, timezone
 
 from scripts.refresh_earnings_options import (
+    _dedupe_historical_events,
     _historical_earnings_moves,
     _historical_scenarios,
     _normalize_liquid_contracts,
@@ -196,6 +197,29 @@ class EarningsOptionsHistoryTests(unittest.TestCase):
         self.assertEqual(retained["liquidityFilter"]["minimumOpenInterestOrVolume"], "volume >= 25")
         self.assertEqual(retained["refreshStatus"]["state"], "retained_last_good")
         self.assertEqual(len(retained["historicalEarnings"]["events"]), 1)
+
+    def test_adjacent_calendar_disagreement_prefers_sec_event(self) -> None:
+        events = [
+            {
+                "accepted_at_eastern": "2026-04-29",
+                "source": "FMP historical earnings calendar",
+            },
+            {
+                "accepted_at_eastern": "2026-04-30 16:30:00",
+                "source": "SEC earnings release history",
+            },
+            {
+                "accepted_at_eastern": "2026-01-29 16:30:00",
+                "source": "SEC earnings release history",
+            },
+        ]
+
+        rows = _dedupe_historical_events(events)
+
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(rows[0]["accepted_at_eastern"], "2026-04-30 16:30:00")
+        self.assertEqual(rows[0]["source"], "SEC earnings release history")
+        self.assertEqual(rows[1]["accepted_at_eastern"], "2026-01-29 16:30:00")
 
     def test_historical_earnings_moves_respect_before_and_after_close(self) -> None:
         history = {
