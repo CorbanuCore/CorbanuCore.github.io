@@ -172,7 +172,7 @@ def _weighted_peer_average(rows: list[dict[str, Any]]) -> dict[str, Any]:
     result: dict[str, Any] = {
         "role": "peer_average",
         "ticker": "PEER AVG",
-        "name": "Kimi-weighted basket",
+        "name": "Peer basket",
         "weight": 1.0,
         "performanceObservedAt": max(
             (str(row.get("performanceObservedAt") or "") for row in rows),
@@ -402,7 +402,7 @@ def _page_html(
                     weight_cell = "Target"
                 elif role == "peer_average":
                     row_attributes = ' class="peer-average-row" data-peer-average-row'
-                    company_cell = "<strong>Blended peer average</strong><span>Kimi-weighted basket</span>"
+                    company_cell = "<strong>Blended peer average</strong><span>Peer basket</span>"
                     weight_cell = "100%"
                 else:
                     weight = float(row["weight"])
