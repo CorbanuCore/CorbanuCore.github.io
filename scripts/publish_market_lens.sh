@@ -73,6 +73,7 @@ fi
 
 cd "$nav_root"
 .venv/bin/python scripts/update_coverage_total_return_indices.py
+.venv/bin/python scripts/update_market_lens_analyst_packets.py --quarters 4
 
 cd "$publisher_root"
 python3 scripts/refresh_onchain_spot_catalog.py

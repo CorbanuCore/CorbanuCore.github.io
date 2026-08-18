@@ -8,6 +8,7 @@ import hashlib
 import html
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 import pandas as pd
@@ -84,6 +85,106 @@ def _timestamp(value: Any) -> str | None:
     return pd.Timestamp(value).isoformat().replace("+00:00", "Z")
 
 
+def _format_metric(value: Any, *, suffix: str = "", digits: int = 1) -> str:
+    parsed = pd.to_numeric(value, errors="coerce")
+    if pd.isna(parsed):
+        return "—"
+    return f"{float(parsed):,.{digits}f}{suffix}"
+
+
+def _inline_markdown(value: str) -> str:
+    escaped = html.escape(value)
+    return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", escaped)
+
+
+def _markdown_brief(markdown: str) -> str:
+    """Render the deliberately constrained Kimi briefing Markdown safely."""
+    blocks: list[str] = []
+    bullets: list[str] = []
+
+    def flush_bullets() -> None:
+        if bullets:
+            blocks.append("<ul>" + "".join(f"<li>{_inline_markdown(item)}</li>" for item in bullets) + "</ul>")
+            bullets.clear()
+
+    for raw_line in str(markdown or "").splitlines():
+        line = raw_line.strip()
+        if not line:
+            flush_bullets()
+        elif line.startswith("## "):
+            flush_bullets()
+            blocks.append(f"<h4>{_inline_markdown(line[3:])}</h4>")
+        elif line.startswith(("- ", "* ")):
+            bullets.append(line[2:].strip())
+        else:
+            flush_bullets()
+            blocks.append(f"<p>{_inline_markdown(line)}</p>")
+    flush_bullets()
+    return "".join(blocks)
+
+
+def _earnings_ledger_html(
+    *, symbol: str, options_payload: dict[str, Any] | None, analyst_packet: dict[str, Any] | None,
+) -> str:
+    if not options_payload or str(options_payload.get("mode")) != "earnings":
+        return ""
+    events = list((options_payload.get("historicalEarnings") or {}).get("events") or [])[:12]
+    if not events:
+        return ""
+    summaries = list((analyst_packet or {}).get("summaries") or [])
+    unused = set(range(len(summaries)))
+    rows: list[str] = []
+    for event in events:
+        event_date = pd.Timestamp(event["earningsDate"])
+        matches = sorted(
+            (
+                (abs((pd.Timestamp(summary["transcriptDate"]) - event_date).days), index)
+                for index, summary in enumerate(summaries)
+                if index in unused
+            ),
+            key=lambda item: item[0],
+        )
+        summary = None
+        if matches and matches[0][0] <= 7:
+            _, index = matches[0]
+            summary = summaries[index]
+            unused.remove(index)
+        fiscal = "—"
+        if summary and summary.get("fiscalQuarter") and summary.get("fiscalYear"):
+            fiscal = f"Q{summary['fiscalQuarter']} FY{summary['fiscalYear']}"
+        move = float(event["movePct"])
+        move_class = "positive" if move >= 0 else "negative"
+        summary_cell = (
+            '<details class="transcript-brief"><summary>Read transcript briefing</summary>'
+            f'<article>{_markdown_brief(str(summary["summaryMarkdown"]))}</article></details>'
+            if summary
+            else '<span class="transcript-unavailable">Transcript briefing unavailable</span>'
+        )
+        rows.append(
+            "<tr>"
+            f"<td><strong>{event_date.strftime('%b %-d, %Y')}</strong><span>{html.escape(str(event['timing']))}</span></td>"
+            f'<td class="{move_class}">{move:+.2f}%<span>{html.escape(str(event["reactionWindow"]))}</span></td>'
+            f"<td>{html.escape(fiscal)}</td><td>{summary_cell}</td>"
+            "</tr>"
+        )
+    summarized = sum("transcript-brief" in row for row in rows)
+    method = html.escape(str((options_payload.get("historicalEarnings") or {}).get("method") or ""))
+    return f'''
+        <section class="earnings-ledger" aria-labelledby="earnings-ledger-title">
+          <header class="earnings-ledger-head">
+            <div><span>Kimi K3 · chained quarter context</span><h2 id="earnings-ledger-title">{symbol} Earnings Tape and Transcript Briefings</h2></div>
+            <small>{summarized} detailed transcript briefings · {len(rows)} historical reactions</small>
+          </header>
+          <div class="earnings-ledger-scroll" tabindex="0" role="region" aria-label="{symbol} historical earnings moves and transcript briefings">
+            <table class="earnings-ledger-table">
+              <thead><tr><th>Earnings date</th><th>Session move</th><th>Fiscal period</th><th>Transcript briefing</th></tr></thead>
+              <tbody>{''.join(rows)}</tbody>
+            </table>
+          </div>
+          <p class="earnings-ledger-method">{method}</p>
+        </section>'''
+
+
 def _page_html(
     *,
     slug: str,
@@ -93,6 +194,7 @@ def _page_html(
     asset_version: str,
     options_payload: dict[str, Any] | None,
     peer_mapping: dict[str, Any] | None,
+    analyst_packet: dict[str, Any] | None,
 ) -> str:
     continuous_spot = symbol in {"BTC", "ETH", "GOLD"}
     is_index_proxy = bool(
@@ -128,14 +230,34 @@ def _page_html(
             if peer_mapping.get("targetAssetClass") == "single_name_equity"
             else "Primary risk hedge"
         )
-        peer_rows = "".join(
-            "<tr>"
-            f"<td><strong>{html.escape(str(peer['ticker']))}</strong><span>{html.escape(str(peer['name']))}</span></td>"
-            f"<td>{float(peer['weight']) * 100:.1f}%</td>"
-            f"<td>${float(peer['liquidity_24h_usd_millions']):,.3f}M</td>"
-            "</tr>"
-            for peer in peer_mapping["peers"]
-        )
+        comparison_rows = list(peer_mapping.get("comparisonRows") or [])
+        show_fundamentals = peer_mapping.get("targetAssetClass") == "single_name_equity"
+        if show_fundamentals:
+            peer_rows = "".join(
+                "<tr" + (' class="peer-target-row"' if row.get("role") == "target" else "") + ">"
+                f"<td><strong>{html.escape(str(row['ticker']))}</strong><span>{html.escape(str(row['name']))}</span></td>"
+                f"<td>{'Target' if row.get('role') == 'target' else _format_metric(float(row['weight']) * 100, suffix='%')}</td>"
+                f"<td>{_format_metric(row.get('forwardPE'), digits=1)}</td>"
+                f"<td>{_format_metric(row.get('forwardSalesGrowthPct'), suffix='%')}</td>"
+                f"<td>{_format_metric(row.get('forwardEPSGrowthPct'), suffix='%')}</td>"
+                f"<td>{_format_metric(row.get('epsRevision28dPctOfPrice'), suffix='%', digits=2)}</td>"
+                f"<td>${float(row['liquidity_24h_usd_millions']):,.3f}M</td>"
+                "</tr>"
+                for row in comparison_rows
+            )
+            peer_headings = "<th>Company</th><th>Basket weight</th><th>Forward P/E</th><th>Sales growth</th><th>EPS growth</th><th>28d EPS rev / price</th><th>24h liquidity</th>"
+            table_note = f"Locked factor snapshot · {html.escape(str(peer_mapping.get('fundamentalsAsOf') or 'unavailable'))}"
+        else:
+            peer_rows = "".join(
+                "<tr>"
+                f"<td><strong>{html.escape(str(peer['ticker']))}</strong><span>{html.escape(str(peer['name']))}</span></td>"
+                f"<td>{float(peer['weight']) * 100:.1f}%</td>"
+                f"<td>${float(peer['liquidity_24h_usd_millions']):,.3f}M</td>"
+                "</tr>"
+                for peer in peer_mapping["peers"]
+            )
+            peer_headings = "<th>Peer</th><th>Weight</th><th>24h liquidity</th>"
+            table_note = "Spot-return history · live Hyperliquid perp marks"
         peer_panel = f'''
         <section class="peer-panel" aria-labelledby="peer-panel-title">
           <header class="peer-panel-head">
@@ -143,15 +265,15 @@ def _page_html(
               <span>Kimi K3 · Market Lens universe</span>
               <h2 id="peer-panel-title">{symbol} Weighted Peer Basket</h2>
             </div>
-            <small>Spot-return history · live Hyperliquid perp marks</small>
+            <small>{table_note}</small>
           </header>
           <div class="peer-hedge-row">
             <span>{hedge_label}</span>
             <strong>{html.escape(str(hedge["ticker"]))} · {html.escape(str(hedge["name"]))} · ${float(hedge["liquidity_24h_usd_millions"]):,.3f}M 24h</strong>
           </div>
           <div class="peer-table-scroll" tabindex="0" role="region" aria-label="Weighted Market Lens return peers">
-            <table class="peer-table">
-              <thead><tr><th>Peer</th><th>Weight</th><th>24h liquidity</th></tr></thead>
+            <table class="peer-table{' peer-fundamentals-table' if show_fundamentals else ''}">
+              <thead><tr>{peer_headings}</tr></thead>
               <tbody>{peer_rows}</tbody>
             </table>
           </div>
@@ -230,6 +352,11 @@ def _page_html(
           </div>
           <p id="options-method-note" class="options-method-note">Historical replay loading…</p>
         </section>"""
+    earnings_ledger = _earnings_ledger_html(
+        symbol=symbol,
+        options_payload=options_payload,
+        analyst_packet=analyst_packet,
+    )
     ratio_subtitle = (
         f"1.00 = equal return since shared anchor · {spot_symbol} return proxy held at its last cash close"
         if is_index_proxy
@@ -313,7 +440,7 @@ def _page_html(
             <div class="chart-loading">Loading spot and swap history…</div>
           </div>
         </div>{distribution_center_controls}
-        <p id="chart-live" class="sr-only" aria-live="polite"></p>{peer_panel}{options_panel}
+        <p id="chart-live" class="sr-only" aria-live="polite"></p>{peer_panel}{options_panel}{earnings_ledger}
         <section class="funding-forecast" aria-labelledby="funding-forecast-title">
           <header class="funding-forecast-head">
             <div>
@@ -407,6 +534,17 @@ def build(nav_root: Path) -> None:
     peer_targets: dict[str, dict[str, Any]] = {}
     peer_target_manifests: dict[str, dict[str, Any]] = {}
     peer_target_classes: dict[str, str] = {}
+    analyst_root = nav_root / "var/production/market_lens_analyst_packets/latest"
+    fundamentals_path = analyst_root / "peer_fundamentals.json"
+    summaries_path = analyst_root / "transcript_summaries.json"
+    if not fundamentals_path.exists() or not summaries_path.exists():
+        raise RuntimeError(
+            "Market Lens analyst packets are missing; run scripts/update_market_lens_analyst_packets.py"
+        )
+    fundamentals_payload = json.loads(fundamentals_path.read_text())
+    peer_fundamentals = dict(fundamentals_payload.get("rows") or {})
+    transcript_payload = json.loads(summaries_path.read_text())
+    transcript_summaries = dict(transcript_payload.get("summaries") or {})
     for manifest in peer_manifests:
         classes = {
             str(row["symbol"]): str(row["asset_class"])
@@ -428,6 +566,8 @@ def build(nav_root: Path) -> None:
     asset_fingerprint = hashlib.sha256()
     for path in (
         metadata_path,
+        fundamentals_path,
+        summaries_path,
         *peer_manifest_paths,
         catalog_path,
         *options_paths,
@@ -539,6 +679,41 @@ def build(nav_root: Path) -> None:
                     "method": "current Hyperliquid native or TradeXYZ perp mid divided by that peer's matching-venue perp close on its latest spot date; available Kimi weights are renormalized and applied as a one-period return from the published peer spot endpoint; USD cash close is retained for disclosure but never mixed with a differently scaled perp contract",
                 },
             }
+            if target_asset_class == "single_name_equity":
+                target_metrics = dict(peer_fundamentals.get(symbol) or {})
+                comparison_rows = [{
+                    "role": "target",
+                    "ticker": symbol,
+                    "raw_symbol": peer_block["target_raw_symbol"],
+                    "name": peer_block["target_name"],
+                    "weight": None,
+                    "liquidity_24h_usd_millions": round(
+                        float(peer_block["target_day_notional_volume_usd"]) / 1_000_000.0, 3
+                    ),
+                    **{
+                        key: target_metrics.get(key)
+                        for key in (
+                            "forwardPE", "forwardSalesGrowthPct", "forwardEPSGrowthPct",
+                            "epsRevision28dPctOfPrice",
+                        )
+                    },
+                }]
+                for peer in peer_mapping["peers"]:
+                    metrics = dict(peer_fundamentals.get(str(peer["ticker"])) or {})
+                    comparison_rows.append({
+                        "role": "peer",
+                        **peer,
+                        **{
+                            key: metrics.get(key)
+                            for key in (
+                                "forwardPE", "forwardSalesGrowthPct", "forwardEPSGrowthPct",
+                                "epsRevision28dPctOfPrice",
+                            )
+                        },
+                    })
+                peer_mapping["comparisonRows"] = comparison_rows
+                peer_mapping["fundamentalsAsOf"] = fundamentals_payload.get("asOf")
+                peer_mapping["fundamentalsMethod"] = fundamentals_payload.get("method")
 
         spot_rows = [
             {
@@ -621,6 +796,13 @@ def build(nav_root: Path) -> None:
                 "scaleFactor": 1.0,
                 "returnPathUnchanged": True,
             }
+        analyst_packet = {
+            "model": transcript_payload.get("model"),
+            "temperature": transcript_payload.get("temperature"),
+            "promptSha256": transcript_payload.get("promptSha256"),
+            "generatedAt": transcript_payload.get("generatedAt"),
+            "summaries": list(transcript_summaries.get(symbol) or []),
+        }
         payload = {
             "version": 2,
             "generatedAt": metadata["finished_at_utc"],
@@ -702,6 +884,17 @@ def build(nav_root: Path) -> None:
             payload["peer"] = peer_rows
         if symbol in earnings_options:
             payload["earningsOptions"] = earnings_options[symbol]
+        if analyst_packet["summaries"]:
+            payload["transcriptBriefings"] = {
+                "model": analyst_packet["model"],
+                "temperature": analyst_packet["temperature"],
+                "promptSha256": analyst_packet["promptSha256"],
+                "generatedAt": analyst_packet["generatedAt"],
+                "count": len(analyst_packet["summaries"]),
+                "transcriptDates": [
+                    row["transcriptDate"] for row in analyst_packet["summaries"]
+                ],
+            }
         _atomic_text(
             SITE_ROOT / "assets/market-data" / f"{slug}.json",
             json.dumps(payload, separators=(",", ":"), allow_nan=False) + "\n",
@@ -716,6 +909,7 @@ def build(nav_root: Path) -> None:
                 asset_version=asset_version,
                 options_payload=earnings_options.get(symbol),
                 peer_mapping=peer_mapping,
+                analyst_packet=analyst_packet,
             ),
         )
         instruments.append(

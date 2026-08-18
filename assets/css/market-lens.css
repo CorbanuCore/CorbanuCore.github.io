@@ -198,6 +198,12 @@ main { min-height: 80vh; }
 .peer-table td:first-child strong { display: block; color: var(--ink); font-size: .7rem; }
 .peer-table td:first-child span { display: block; margin-top: .22rem; color: #747c70; font-size: .54rem; }
 .peer-table td:nth-child(2) { color: var(--peer); font-weight: 700; }
+.peer-fundamentals-table { min-width: 1050px; font-variant-numeric: tabular-nums; }
+.peer-fundamentals-table th:not(:first-child), .peer-fundamentals-table td:not(:first-child) { text-align: right; white-space: nowrap; }
+.peer-fundamentals-table th:nth-child(n+2), .peer-fundamentals-table td:nth-child(n+2) { width: 115px; }
+.peer-fundamentals-table th:nth-child(6), .peer-fundamentals-table td:nth-child(6) { width: 150px; }
+.peer-fundamentals-table .peer-target-row { background: rgba(174, 196, 216, .055); box-shadow: inset 3px 0 0 var(--blue); }
+.peer-fundamentals-table .peer-target-row td:first-child strong { color: var(--blue); }
 .earnings-options-panel { border-top: 1px solid var(--line); background: rgba(3, 4, 3, .82); }
 .earnings-options-head { display: flex; align-items: end; justify-content: space-between; gap: 2rem; padding: 1.35rem 2rem 1rem; }
 .earnings-options-kicker { color: var(--lime); font: 700 .55rem/1 var(--mono); letter-spacing: .11em; text-transform: uppercase; }
@@ -234,6 +240,33 @@ main { min-height: 80vh; }
 .historical-structure-table td span { display: block; color: #aab1a5; font-size: .55rem; }
 .historical-structure-table td span + span { margin-top: .3rem; }
 .options-method-note { margin: .85rem 2rem 1.35rem; color: #697066; font: .58rem/1.55 var(--mono); }
+.earnings-ledger { border-top: 1px solid var(--line); background: #050605; }
+.earnings-ledger-head { display: flex; align-items: end; justify-content: space-between; gap: 2rem; padding: 1.35rem 2rem 1rem; }
+.earnings-ledger-head span { color: var(--blue); font: 700 .55rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.earnings-ledger-head h2 { margin: .45rem 0 0; font: 500 clamp(1.1rem, 1.8vw, 1.45rem)/1.2 var(--sans); }
+.earnings-ledger-head small { color: #7f877a; font: 600 .58rem/1.45 var(--mono); text-align: right; }
+.earnings-ledger-scroll { overflow-x: auto; margin: 0 2rem; border: 1px solid rgba(255, 255, 255, .12); border-radius: 5px; }
+.earnings-ledger-scroll:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.earnings-ledger-table { width: 100%; min-width: 960px; border-collapse: collapse; font: .62rem/1.45 var(--mono); font-variant-numeric: tabular-nums; }
+.earnings-ledger-table th { padding: .6rem .75rem; color: #747c70; background: rgba(255, 255, 255, .025); font-size: .5rem; letter-spacing: .075em; text-align: left; text-transform: uppercase; }
+.earnings-ledger-table th:nth-child(1) { width: 160px; }
+.earnings-ledger-table th:nth-child(2) { width: 190px; }
+.earnings-ledger-table th:nth-child(3) { width: 110px; }
+.earnings-ledger-table tbody tr { border-top: 1px solid rgba(255, 255, 255, .07); }
+.earnings-ledger-table td { padding: .75rem; color: #aeb5aa; vertical-align: top; }
+.earnings-ledger-table td > span, .earnings-ledger-table td > strong + span { display: block; margin-top: .25rem; color: #70776d; font-size: .53rem; }
+.earnings-ledger-table td.positive { color: #a8c76b; }
+.earnings-ledger-table td.negative { color: #d68072; }
+.transcript-brief summary { color: var(--blue); cursor: pointer; font-weight: 700; list-style-position: outside; }
+.transcript-brief summary:hover, .transcript-brief summary:focus-visible { color: var(--ink); }
+.transcript-brief article { max-width: 96ch; padding: .7rem 0 .25rem; color: #b8beb4; font: .7rem/1.65 var(--sans); }
+.transcript-brief article h4 { margin: 1rem 0 .35rem; color: var(--ink); font: 650 .72rem/1.3 var(--mono); letter-spacing: .02em; }
+.transcript-brief article h4:first-child { margin-top: 0; }
+.transcript-brief article ul { margin: 0; padding-left: 1.15rem; }
+.transcript-brief article li + li { margin-top: .35rem; }
+.transcript-brief article p { margin: .3rem 0; }
+.transcript-unavailable { color: #626960 !important; }
+.earnings-ledger-method { margin: .8rem 2rem 1.25rem; color: #697066; font: .58rem/1.55 var(--mono); }
 .funding-forecast { border-top: 1px solid var(--line); background: rgba(5, 7, 5, .92); }
 .funding-forecast-head {
   display: flex; align-items: end; justify-content: space-between; gap: 1.5rem;
@@ -516,6 +549,10 @@ footer {
   .historical-plays { padding: 1rem 1.15rem .2rem; }
   .historical-plays > header { display: grid; gap: .5rem; }
   .options-method-note { margin: .75rem 1.15rem 1.1rem; }
+  .earnings-ledger-head { display: grid; gap: .65rem; padding: 1.1rem 1.15rem .85rem; }
+  .earnings-ledger-head small { text-align: left; }
+  .earnings-ledger-scroll { margin: 0 1.15rem; }
+  .earnings-ledger-method { margin: .75rem 1.15rem 1.1rem; }
   .funding-forecast-head { align-items: start; padding: 1.1rem 1.15rem .75rem; }
   .funding-forecast-asof { max-width: 42%; text-align: right; white-space: normal; }
   .funding-horizon { padding: 1rem 1.15rem 1.1rem; }

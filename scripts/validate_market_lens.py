@@ -164,6 +164,30 @@ def main() -> int:
                 raise AssertionError(f"{slug}: peer liquidity display value is missing")
             if "justification" in peer_mapping or "replicatesPerTarget" in peer_mapping:
                 raise AssertionError(f"{slug}: peer rationale or consensus metadata leaked into the public payload")
+            if peer_mapping.get("targetAssetClass") == "single_name_equity":
+                comparisons = peer_mapping.get("comparisonRows") or []
+                if len(comparisons) != len(peers) + 1:
+                    raise AssertionError(f"{slug}: target-first peer comparison packet is incomplete")
+                if comparisons[0].get("role") != "target" or comparisons[0].get("ticker") != str(instrument["symbol"]).upper():
+                    raise AssertionError(f"{slug}: target stock is not first in its comparison packet")
+                if [row.get("ticker") for row in comparisons[1:]] != peer_symbols:
+                    raise AssertionError(f"{slug}: comparison packet peer order differs from Kimi mapping")
+                metric_fields = {
+                    "forwardPE", "forwardSalesGrowthPct", "forwardEPSGrowthPct",
+                    "epsRevision28dPctOfPrice",
+                }
+                if any(not metric_fields.issubset(row) for row in comparisons):
+                    raise AssertionError(f"{slug}: comparison packet lacks locked signal metrics")
+                if not str(peer_mapping.get("fundamentalsAsOf") or ""):
+                    raise AssertionError(f"{slug}: comparison packet lacks factor as-of date")
+                for heading in (
+                    "<th>Forward P/E</th>", "<th>Sales growth</th>", "<th>EPS growth</th>",
+                    "<th>28d EPS rev / price</th>",
+                ):
+                    if heading not in page_markup:
+                        raise AssertionError(f"{slug}: comparison table is missing {heading}")
+                if 'class="peer-target-row"' not in page_markup:
+                    raise AssertionError(f"{slug}: target stock row is missing")
             hedge = peer_mapping.get("primary_index_hedge") or {}
             if not str(hedge.get("ticker") or "").strip():
                 raise AssertionError(f"{slug}: primary index hedge is incomplete")
@@ -213,7 +237,7 @@ def main() -> int:
                 for row in live_inputs
             ):
                 raise AssertionError(f"{slug}: live peer splice lacks a positive spot disclosure or perp anchor")
-            for required_markup in ('class="legend-peer"', 'class="peer-panel"', 'class="peer-table"'):
+            for required_markup in ('class="legend-peer"', 'class="peer-panel"', 'class="peer-table'):
                 if required_markup not in page_markup:
                     raise AssertionError(f"{slug}: peer chart or basket table is missing: {required_markup}")
             validated_peer_targets += 1
@@ -304,6 +328,32 @@ def main() -> int:
             probabilities = [float(row["probability"]) for row in options.get("fan", [])]
             if probabilities != expected_probabilities:
                 raise AssertionError(f"{slug}: invalid earnings probability fan {probabilities}")
+            historical_moves = (options.get("historicalEarnings") or {}).get("events") or []
+            if len(historical_moves) < 4:
+                raise AssertionError(f"{slug}: historical earnings reaction tape is incomplete")
+            if any(
+                not str(row.get("earningsDate") or "")
+                or not str(row.get("reactionDate") or "")
+                or row.get("movePct") is None
+                or str(row.get("reactionWindow") or "") not in {
+                    "event close to next close", "prior close to event close"
+                }
+                for row in historical_moves
+            ):
+                raise AssertionError(f"{slug}: historical earnings reaction row is invalid")
+            if 'class="earnings-ledger"' not in page_markup or "<th>Session move</th>" not in page_markup:
+                raise AssertionError(f"{slug}: historical earnings and transcript ledger is missing")
+            briefings = payload.get("transcriptBriefings")
+            if briefings:
+                if briefings.get("model") != "moonshotai/kimi-k3" or float(briefings.get("temperature")) != 0.0:
+                    raise AssertionError(f"{slug}: transcript briefing model is not locked Kimi K3 at temperature zero")
+                if int(briefings.get("count") or 0) != len(briefings.get("transcriptDates") or []):
+                    raise AssertionError(f"{slug}: transcript briefing metadata count is inconsistent")
+                if page_markup.count('class="transcript-brief"') < 1:
+                    raise AssertionError(f"{slug}: transcript briefings are not rendered in the earnings table")
+                for heading in ("What management is focused on", "Sell-side read-through", "Bull case", "Bear case"):
+                    if heading not in page_markup:
+                        raise AssertionError(f"{slug}: transcript briefing is missing {heading}")
             historical = options.get("historicalAnalysis") or {}
             available_events = int(historical.get("availableEvents") or 0)
             recent_events = int(historical.get("primaryWindowEvents") or 0)

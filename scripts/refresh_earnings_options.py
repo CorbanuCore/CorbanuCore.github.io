@@ -400,6 +400,73 @@ def _historical_scenarios(
     return scenarios
 
 
+def _historical_earnings_moves(history: dict[str, Any]) -> list[dict[str, Any]]:
+    """Calculate the first close-to-close move that could absorb each release."""
+    prices: list[tuple[date, float]] = []
+    for row in history.get("prices", []):
+        parsed = _number(row.get("closeadj"))
+        try:
+            price_date = date.fromisoformat(str(row.get("date"))[:10])
+        except ValueError:
+            continue
+        if parsed is not None and parsed > 0:
+            prices.append((price_date, parsed))
+    prices.sort(key=lambda item: item[0])
+    price_dates = [item[0] for item in prices]
+    seen: set[date] = set()
+    moves: list[dict[str, Any]] = []
+    for row in history.get("events", []):
+        timestamp = str(row.get("accepted_at_eastern") or row.get("filing_date") or "")
+        try:
+            event_day = date.fromisoformat(timestamp[:10])
+        except ValueError:
+            continue
+        if event_day in seen:
+            continue
+        seen.add(event_day)
+        timing = str(row.get("time") or "").strip().lower()
+        hour: int | None = None
+        minute = 0
+        match = re.search(r"[ T](\d{2}):(\d{2})", timestamp)
+        if match:
+            hour, minute = int(match.group(1)), int(match.group(2))
+        after_close = timing in {"amc", "after market close", "after close"} or (
+            hour is not None and (hour, minute) >= (16, 0)
+        )
+        event_index = bisect.bisect_left(price_dates, event_day)
+        if event_index >= len(prices):
+            continue
+        if after_close:
+            if price_dates[event_index] != event_day or event_index + 1 >= len(prices):
+                continue
+            start_day, start_price = prices[event_index]
+            end_day, end_price = prices[event_index + 1]
+            window = "event close to next close"
+            normalized_timing = "after close"
+        else:
+            if price_dates[event_index] != event_day or event_index < 1:
+                continue
+            start_day, start_price = prices[event_index - 1]
+            end_day, end_price = prices[event_index]
+            window = "prior close to event close"
+            normalized_timing = "before/open market" if timing in {"bmo", "before market open", "before open"} or (
+                hour is not None and (hour, minute) < (9, 30)
+            ) else "during/unspecified"
+        moves.append({
+            "earningsDate": event_day.isoformat(),
+            "timing": normalized_timing,
+            "reactionWindow": window,
+            "startDate": start_day.isoformat(),
+            "reactionDate": end_day.isoformat(),
+            "startPrice": round(start_price, 6),
+            "reactionPrice": round(end_price, 6),
+            "movePct": round((end_price / start_price - 1.0) * 100.0, 2),
+            "eventSource": str(row.get("source") or "historical earnings calendar"),
+        })
+    moves.sort(key=lambda item: item["earningsDate"], reverse=True)
+    return moves
+
+
 def _payout_statistics(
     scenarios: list[dict[str, Any]],
     *,
@@ -932,6 +999,7 @@ def build_payload(
         spot=spot,
         scenarios=historical_scenarios,
     )
+    historical_earnings = _historical_earnings_moves(dict(raw.get("history") or {}))
     if len(historical_scenarios) < 4:
         raise RuntimeError(f"Only {len(historical_scenarios)} comparable earnings events available for {underlier_symbol}")
     if not historical_structures:
@@ -987,6 +1055,11 @@ def build_payload(
             "expiration68High": round(expiry_quantiles[0.84], 2),
         },
         "fan": fan,
+        "historicalEarnings": {
+            "priceSource": "Sharadar split-adjusted close",
+            "method": "After-close releases use event close to next trading close; before-open releases use prior trading close to event close. SEC acceptance time is used when available, with the historical calendar timing as fallback.",
+            "events": historical_earnings,
+        },
         "historicalAnalysis": {
             "entryLeadCalendarDays": (event_date - quote_date).days,
             "postEarningsCalendarDays": (expiration_date - event_date).days,
@@ -1031,6 +1104,32 @@ def _build_profile_payload(
         today=now.date(),
     )
     return build_term_payload(raw_by_symbol, page_symbol=page_symbol, now=now)
+
+
+def _retain_last_good_payload(
+    path: Path,
+    *,
+    now: datetime,
+    failure: str,
+    historical_earnings: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    if not path.exists():
+        raise RuntimeError(f"No last-good options payload exists at {path}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if str(payload.get("mode")) not in {"earnings", "term_straddles"}:
+        raise RuntimeError(f"Invalid last-good options payload at {path}")
+    if payload["mode"] == "earnings" and historical_earnings is not None:
+        payload["historicalEarnings"] = {
+            "priceSource": "Sharadar split-adjusted close",
+            "method": "After-close releases use event close to next trading close; before-open releases use prior trading close to event close. SEC acceptance time is used when available, with the historical calendar timing as fallback.",
+            "events": historical_earnings,
+        }
+    payload["refreshStatus"] = {
+        "state": "retained_last_good",
+        "attemptedAt": now.isoformat().replace("+00:00", "Z"),
+        "reason": failure,
+    }
+    return payload
 
 
 def main() -> int:
@@ -1090,10 +1189,39 @@ def main() -> int:
                 failures[symbol] = f"remote command failed: {detail}"
             except Exception as exc:
                 failures[symbol] = f"{type(exc).__name__}: {exc}"
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    # A transient loss of qualifying current-chain volume must not weaken the
+    # liquidity screen or block unrelated pages. Retain the disclosed last-good
+    # structure and refresh its independent historical reaction tape.
+    for symbol, failure in list(sorted(failures.items())):
+        target = args.output_dir / f"{symbol.lower()}-options.json"
+        try:
+            historical_earnings = None
+            profile = options_profile(symbol)
+            if profile["kind"] == "earnings":
+                underlier = profile["underlierCandidates"][0]
+                if underlier not in forward_events:
+                    raise RuntimeError(f"No forward earnings estimate found for {underlier}")
+                raw = fetch_remote(
+                    underlier,
+                    event=forward_events[underlier],
+                    remote=args.remote,
+                    remote_repo=args.remote_repo,
+                    today=now.date(),
+                )
+                historical_earnings = _historical_earnings_moves(dict(raw.get("history") or {}))
+            payloads[symbol] = _retain_last_good_payload(
+                target,
+                now=now,
+                failure=failure,
+                historical_earnings=historical_earnings,
+            )
+            del failures[symbol]
+        except Exception as fallback_error:
+            failures[symbol] = f"{failure}; last-good retention failed: {fallback_error}"
     if failures:
         detail = "; ".join(f"{symbol}={message}" for symbol, message in sorted(failures.items()))
         raise RuntimeError(f"Options refresh failed: {detail}")
-    args.output_dir.mkdir(parents=True, exist_ok=True)
     for symbol in sorted(payloads):
         payload = payloads[symbol]
         target = args.output_dir / f"{symbol.lower()}-options.json"

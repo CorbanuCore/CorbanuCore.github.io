@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+import tempfile
 import unittest
 from datetime import date, datetime, timezone
 
 from scripts.refresh_earnings_options import (
+    _historical_earnings_moves,
     _historical_scenarios,
     _normalize_liquid_contracts,
     _pava,
     _payout_statistics,
     _quantile,
     _rank_historical_structures,
+    _retain_last_good_payload,
 )
 
 
@@ -172,6 +177,44 @@ class EarningsOptionsHistoryTests(unittest.TestCase):
             now=now,
         )
         self.assertEqual([row["symbol"] for row in rows], ["KEPT"])
+
+    def test_last_good_payload_retains_liquidity_screen_and_adds_reaction_tape(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "coin-options.json"
+            path.write_text(json.dumps({
+                "mode": "earnings",
+                "generatedAt": "2026-08-16T00:00:00Z",
+                "liquidityFilter": {"minimumOpenInterestOrVolume": "volume >= 25"},
+            }))
+            retained = _retain_last_good_payload(
+                path,
+                now=datetime(2026, 8, 18, tzinfo=timezone.utc),
+                failure="No current liquid structures",
+                historical_earnings=[{"earningsDate": "2026-07-30", "movePct": 5.0}],
+            )
+        self.assertEqual(retained["generatedAt"], "2026-08-16T00:00:00Z")
+        self.assertEqual(retained["liquidityFilter"]["minimumOpenInterestOrVolume"], "volume >= 25")
+        self.assertEqual(retained["refreshStatus"]["state"], "retained_last_good")
+        self.assertEqual(len(retained["historicalEarnings"]["events"]), 1)
+
+    def test_historical_earnings_moves_respect_before_and_after_close(self) -> None:
+        history = {
+            "events": [
+                {"accepted_at_eastern": "2026-04-30 16:30:00", "source": "SEC"},
+                {"accepted_at_eastern": "2026-01-29", "time": "bmo", "source": "calendar"},
+            ],
+            "prices": [
+                {"date": "2026-01-28", "closeadj": "100"},
+                {"date": "2026-01-29", "closeadj": "110"},
+                {"date": "2026-04-30", "closeadj": "120"},
+                {"date": "2026-05-01", "closeadj": "108"},
+            ],
+        }
+        rows = _historical_earnings_moves(history)
+        self.assertEqual(rows[0]["reactionWindow"], "event close to next close")
+        self.assertEqual(rows[0]["movePct"], -10.0)
+        self.assertEqual(rows[1]["reactionWindow"], "prior close to event close")
+        self.assertEqual(rows[1]["movePct"], 10.0)
 
     def test_historical_windows_match_current_calendar_day_horizon(self) -> None:
         history = {
