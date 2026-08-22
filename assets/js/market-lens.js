@@ -458,9 +458,33 @@
   function populateUniverse(universe) {
     const picker = $("instrument-select");
     if (!picker) return;
-    picker.innerHTML = universe.instruments.map((item) => (
-      `<option value="${item.slug}"${item.slug === slug ? " selected" : ""}>${item.symbol}</option>`
-    )).join("");
+    const categoryOrder = Array.isArray(universe.categoryOrder)
+      ? universe.categoryOrder
+      : ["Stocks", "Commodities", "Crypto"];
+    const allowedCategories = new Set(categoryOrder);
+    const rows = Array.isArray(universe.instruments) ? universe.instruments : [];
+    const unknown = rows.filter((item) => !allowedCategories.has(String(item.category || "")));
+    if (unknown.length) {
+      throw new Error(`Unknown Market Lens category: ${unknown.map((item) => item.symbol).join(", ")}`);
+    }
+
+    picker.replaceChildren();
+    categoryOrder.forEach((category) => {
+      const items = rows
+        .filter((item) => item.category === category)
+        .sort((left, right) => String(left.symbol).localeCompare(String(right.symbol)));
+      if (!items.length) throw new Error(`Empty Market Lens category: ${category}`);
+      const group = document.createElement("optgroup");
+      group.label = category;
+      items.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.slug;
+        option.textContent = `${item.symbol} - ${item.name}`;
+        option.selected = item.slug === slug;
+        group.appendChild(option);
+      });
+      picker.appendChild(group);
+    });
     picker.addEventListener("change", () => {
       window.location.href = `/${picker.value}/`;
     });

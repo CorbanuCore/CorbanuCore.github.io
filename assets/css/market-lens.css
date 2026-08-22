@@ -79,11 +79,15 @@ button, a, select { -webkit-tap-highlight-color: transparent; }
 .instrument-picker { display: flex; align-items: center; gap: .75rem; }
 .instrument-picker label { color: var(--dim); font: 600 .66rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 .instrument-picker select {
-  min-width: 132px; min-height: 43px; padding: 0 2.2rem 0 .85rem;
+  width: clamp(190px, 18vw, 270px); min-height: 44px; padding: 0 2.25rem 0 .9rem;
   color: var(--ink); border: 1px solid rgba(204, 255, 0, .38); border-radius: 999px;
-  background: #090c08; cursor: pointer;
+  background: #090c08; cursor: pointer; font: 650 .72rem/1 var(--mono);
+  text-overflow: ellipsis;
 }
+.instrument-picker select:hover { border-color: rgba(204, 255, 0, .7); background: #0d110b; }
 .instrument-picker select:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+.instrument-picker optgroup { color: var(--lime); background: #090c08; font-weight: 800; }
+.instrument-picker option { color: var(--ink); background: #090c08; font-weight: 600; }
 
 main { min-height: 80vh; }
 .chart-section { width: min(1600px, calc(100% - 3rem)); margin: 0 auto; padding: clamp(2rem, 4vw, 3.5rem) 0 5.5rem; }
@@ -539,7 +543,7 @@ footer {
   .live-perp-time { display: none; }
   .instrument-picker { flex: 0 0 auto; }
   .instrument-picker label { display: none; }
-  .instrument-picker select { min-width: 112px; max-width: 34vw; min-height: 44px; }
+  .instrument-picker select { width: min(47vw, 230px); min-width: 142px; max-width: 47vw; min-height: 44px; }
   .chart-frame { border-radius: 11px; }
   .chart-head { gap: 1.4rem; padding: 1.35rem 1.15rem 1.15rem; }
   .chart-title-row { display: grid; gap: .45rem; }
