@@ -8,7 +8,7 @@
   const liveFeed = {
     rawSymbol: "", socket: null, status: "", retry: 0, lastMessageAt: 0,
     reconnectTimer: null, heartbeatTimer: null, staleTimer: null,
-    connectTimer: null, snapshotTimer: null, destroyed: false,
+    connectTimer: null, snapshotTimer: null, chartTimer: null, destroyed: false,
   };
   const livePeerFeed = { timer: null, stopped: false };
   const NS = "http://www.w3.org/2000/svg";
@@ -124,6 +124,66 @@
     }, 15500);
   }
 
+  function upsertLivePerpCandle(data, price, now) {
+    const rows = data && Array.isArray(data.perp) ? data.perp : [];
+    const observedAt = now instanceof Date ? now : new Date();
+    const currentPrice = Number(price);
+    if (!rows.length || !(currentPrice > 0) || Number.isNaN(observedAt.getTime())) return false;
+    const today = observedAt.toISOString().slice(0, 10);
+    const last = rows[rows.length - 1];
+    if (!last || String(last.d || "") > today) return false;
+
+    let row = last;
+    if (String(last.d || "") < today) {
+      const basePrice = Number(last.c);
+      const baseReturn = Number(last.r);
+      if (!(basePrice > 0) || !(baseReturn > 0)) return false;
+      row = {
+        d: today,
+        o: currentPrice,
+        h: currentPrice,
+        l: currentPrice,
+        c: currentPrice,
+        r: baseReturn * currentPrice / basePrice,
+        f: 0,
+        p: "partial",
+        s: "live_partial",
+        t: observedAt.toISOString(),
+        live: true,
+        liveBasePrice: basePrice,
+        liveBaseReturn: baseReturn,
+      };
+      rows.push(row);
+      data.endDate = today;
+      return true;
+    }
+
+    if (row.p !== "partial" && !row.live) return false;
+    const basePrice = Number(row.liveBasePrice || row.c);
+    const baseReturn = Number(row.liveBaseReturn || row.r);
+    if (!(basePrice > 0) || !(baseReturn > 0)) return false;
+    row.liveBasePrice = basePrice;
+    row.liveBaseReturn = baseReturn;
+    row.h = Math.max(Number(row.h) || currentPrice, currentPrice);
+    row.l = Math.min(Number(row.l) || currentPrice, currentPrice);
+    row.c = currentPrice;
+    row.r = baseReturn * currentPrice / basePrice;
+    row.p = "partial";
+    row.s = "live_partial";
+    row.t = observedAt.toISOString();
+    row.live = true;
+    data.endDate = today;
+    return true;
+  }
+
+  function scheduleLiveChartRender() {
+    if (liveFeed.chartTimer) return;
+    liveFeed.chartTimer = setTimeout(() => {
+      liveFeed.chartTimer = null;
+      renderAllCharts();
+    }, 750);
+  }
+
   function renderLivePerpContext(context, status) {
     const price = Number(context && (context.midPx || context.markPx));
     if (!Number.isFinite(price) || price <= 0) return false;
@@ -146,6 +206,7 @@
       timeNode.textContent = `${liveClockLabel(now)} UTC`;
     }
     liveFeed.lastMessageAt = now.getTime();
+    if (state.data && upsertLivePerpCandle(state.data, price, now)) scheduleLiveChartRender();
     setLiveFeedState(status);
     if (status === "live") armLiveFeedStaleTimer();
     return true;
@@ -259,6 +320,7 @@
     window.addEventListener("pagehide", () => {
       liveFeed.destroyed = true;
       clearLiveFeedTimer("reconnectTimer");
+      clearLiveFeedTimer("chartTimer");
       clearLiveConnectionTimers();
       closeLiveSocket();
     }, { once: true });
@@ -945,7 +1007,9 @@
       const precision = !perp
         ? ""
         : perp.p === "partial"
-        ? `Live partial session through ${timestampLabel(perp.t)} UTC`
+        ? (perp.live
+          ? `Live browser-mid extension through ${timestampLabel(perp.t)} UTC; unfinalized funding excluded`
+          : `Live partial session through ${timestampLabel(perp.t)} UTC`)
         : perp.p === "exact"
         ? "Exact 09:30–16:00 from 30-minute bars"
         : "Hourly proxy: 09:00 open; exact 16:00 close";

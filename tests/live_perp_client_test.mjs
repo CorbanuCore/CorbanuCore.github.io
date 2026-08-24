@@ -62,7 +62,7 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__renderWeightedPeerAverages = renderWeightedPeerAverages;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__upsertLivePerpCandle = upsertLivePerpCandle;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__renderWeightedPeerAverages = renderWeightedPeerAverages;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
 
@@ -93,6 +93,46 @@ const establishedRows = Array.from({ length: 182 }, (_, index) => ({ d: String(i
 const establishedWidth = context.window.__candleWidthForRows(establishedRows, (date) => Number(date) * 4.757, 1018);
 assert.ok(establishedWidth < 4.757, "established-history candles must retain a visible gap");
 assert.ok(establishedWidth > 3.8, "established-history candles should retain their existing visual weight");
+
+const staleCandleData = {
+  endDate: "2026-08-22",
+  perp: [{
+    d: "2026-08-22", o: 100, h: 105, l: 98, c: 100, r: 2,
+    f: .0002, p: "exact", s: "complete", t: "2026-08-22T20:00:00Z",
+  }],
+};
+assert.equal(
+  context.window.__upsertLivePerpCandle(
+    staleCandleData, 90, new Date("2026-08-24T14:30:00Z"),
+  ),
+  true,
+);
+assert.equal(staleCandleData.endDate, "2026-08-24");
+assert.equal(staleCandleData.perp.length, 2);
+assert.deepEqual(
+  {
+    d: staleCandleData.perp[1].d,
+    o: staleCandleData.perp[1].o,
+    h: staleCandleData.perp[1].h,
+    l: staleCandleData.perp[1].l,
+    c: staleCandleData.perp[1].c,
+    r: staleCandleData.perp[1].r,
+    p: staleCandleData.perp[1].p,
+    live: staleCandleData.perp[1].live,
+  },
+  { d: "2026-08-24", o: 90, h: 90, l: 90, c: 90, r: 1.8, p: "partial", live: true },
+  "a stale static series must append today's live perp mid as an outlined partial candle",
+);
+context.window.__upsertLivePerpCandle(
+  staleCandleData, 94, new Date("2026-08-24T14:31:00Z"),
+);
+assert.equal(staleCandleData.perp[1].o, 90);
+assert.equal(staleCandleData.perp[1].h, 94);
+assert.equal(staleCandleData.perp[1].l, 90);
+assert.equal(staleCandleData.perp[1].c, 94);
+assert.equal(staleCandleData.perp[1].r, 1.88);
+assert.equal(staleCandleData.perp[1].f, 0);
+assert.match(staleCandleData.perp[1].t, /^2026-08-24T14:31:00/);
 
 const allMidsRequests = [];
 context.fetch = async (_url, options) => {
