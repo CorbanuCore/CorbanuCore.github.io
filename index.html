@@ -60,6 +60,31 @@
     .menu-toggle:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
     .nav-right { display: flex; align-items: center; gap: .8rem; }
     .region { color: var(--lime); font-size: .85rem; letter-spacing: .06em; }
+    .market-search { position: relative; display: flex; align-items: center; width: clamp(150px, 13vw, 210px); }
+    .market-search-icon { position: absolute; left: .75rem; width: 14px; height: 14px; color: rgba(255,255,255,.55); pointer-events: none; }
+    .market-search input {
+      width: 100%; min-height: 40px; padding: 0 .9rem 0 2.15rem; color: #fff;
+      border: 1px solid rgba(204,255,0,.38); border-radius: 999px; background: rgba(0,0,0,.45);
+      font: 600 .85rem/1 ui-monospace, "SF Mono", Menlo, monospace;
+    }
+    .market-search input::placeholder { color: rgba(255,255,255,.45); }
+    .market-search input:hover { border-color: rgba(204,255,0,.7); }
+    .market-search input:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+    #market-search-results {
+      position: absolute; top: calc(100% + .5rem); right: 0; z-index: 80;
+      width: max(100%, 320px); max-height: 336px; margin: 0; padding: .35rem; overflow-y: auto;
+      list-style: none; border: 1px solid rgba(204,255,0,.35); border-radius: 12px;
+      background: #090c08; box-shadow: 0 18px 40px rgba(0,0,0,.55); text-align: left;
+    }
+    #market-search-results li {
+      display: grid; grid-template-columns: 6.2ch minmax(0,1fr) auto; gap: .7rem; align-items: baseline;
+      padding: .55rem .7rem; border-radius: 8px; cursor: pointer;
+    }
+    #market-search-results li strong { color: var(--lime); font: 700 .84rem/1.1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .04em; }
+    #market-search-results li span { overflow: hidden; color: #e4e7df; font-size: .84rem; text-overflow: ellipsis; white-space: nowrap; }
+    #market-search-results li small { color: rgba(255,255,255,.45); font: 600 .68rem/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; }
+    #market-search-results li[aria-selected="true"], #market-search-results li:hover { background: rgba(204,255,0,.09); }
+    #market-search-results .market-search-empty { grid-template-columns: 1fr; color: rgba(255,255,255,.5); cursor: default; }
 
     .btn {
       display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: .72rem 1.55rem;
@@ -356,6 +381,7 @@
     @media (max-width: 1040px) {
       nav { padding: 1rem 1.25rem; }
       .logo { margin-right: auto; }
+      .market-search { display: none; }
       .menu-toggle { display: block; order: 3; }
       .nav-right { order: 2; }
       .nav-links {
@@ -457,6 +483,12 @@
       <span aria-hidden="true"></span><span aria-hidden="true"></span>
     </button>
     <div class="nav-right">
+      <div class="market-search" role="search" data-autofetch>
+        <label class="sr-only" for="market-search-input">Search markets</label>
+        <svg class="market-search-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M10.5 17.5a7 7 0 1 1 0-14 7 7 0 0 1 0 14Zm9.7 2.7-4.6-4.6"/></svg>
+        <input id="market-search-input" type="text" role="combobox" aria-expanded="false" aria-controls="market-search-results" aria-autocomplete="list" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search" enterkeyhint="go">
+        <ul id="market-search-results" role="listbox" aria-label="Matching markets" hidden></ul>
+      </div>
       <span class="region">⊕ GLOBAL</span>
       <a class="btn btn-outline" href="/markets/">Explore markets</a>
       <a class="btn btn-lime" href="#newsletter">Subscribe</a>
@@ -857,5 +889,6 @@
       });
     });
   </script>
+  <script src="/assets/js/market-search.js" defer></script>
 </body>
 </html>

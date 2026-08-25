@@ -7,7 +7,7 @@
   <meta name="description" content="Every Corbanu Market Lens instrument, sortable by 24h move, peer divergence, funding, and liquidity.">
   <link rel="canonical" href="https://corbanu.com/markets/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/market-lens.css?v=58a47c971e88">
+  <link rel="stylesheet" href="/assets/css/market-lens.css?v=33de3d5b0680">
   <style>
     .markets-wrap { width: min(1280px, calc(100% - 2rem)); margin: 0 auto; padding: 2.2rem 0 4rem; }
     .markets-wrap h1 { margin: 0 0 .3rem; font: 400 clamp(1.9rem, 3vw, 2.6rem)/1.1 var(--serif); }
@@ -52,7 +52,13 @@
     <nav class="site-nav" aria-label="Primary navigation">
       <a href="/">Home</a><a href="/markets/" aria-current="page">Markets</a><a href="/posts/">Posts</a><a href="/terminal/">Terminal</a><a href="/#newsletter">Subscribe</a>
     </nav>
-    <div></div>
+    <div class="market-search" role="search" data-autofetch>
+      <label class="sr-only" for="market-search-input">Search markets</label>
+      <svg class="market-search-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M10.5 17.5a7 7 0 1 1 0-14 7 7 0 0 1 0 14Zm9.7 2.7-4.6-4.6"/></svg>
+      <input id="market-search-input" type="text" role="combobox" aria-expanded="false" aria-controls="market-search-results" aria-autocomplete="list" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search" enterkeyhint="go">
+      <kbd class="market-search-kbd" aria-hidden="true">/</kbd>
+      <ul id="market-search-results" role="listbox" aria-label="Matching markets" hidden></ul>
+    </div>
   </header>
   <main class="markets-wrap">
     <h1>Markets</h1>
@@ -84,6 +90,7 @@
     </div>
     <div>Corbanu · 2026</div>
   </footer>
+  <script src="/assets/js/market-search.js?v=33de3d5b0680"></script>
   <script>
     (function () {
       const table = document.getElementById('markets-table');
