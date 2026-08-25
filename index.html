@@ -777,7 +777,7 @@
               divergence24hPct: target != null && peers != null ? target - peers : e.divergence24hPct,
             };
           });
-          render(live, `Live Hyperliquid mids vs 24h-ago reference · updated ${new Date().toUTCString().slice(17, 25)} UTC · fixed Kimi peer weights`);
+          render(live, `Ranked by live divergence: Hyperliquid mids vs 24h-ago reference, updated ${new Date().toUTCString().slice(17, 25)} UTC · the markets table shows the hourly snapshot`);
           if (liveDot) liveDot.classList.add('is-live');
         } catch (error) {
           if (liveDot) liveDot.classList.remove('is-live');
@@ -790,7 +790,7 @@
           const payload = await response.json();
           baseEntries = payload.entries || [];
           const observed = baseEntries.map((e) => e.observedAt).sort().pop() || payload.generatedAt;
-          render(baseEntries, `Perp changes observed through ${observed} · fixed Kimi peer weights`);
+          render(baseEntries, `Hourly snapshot through ${observed} · going live… · ranking updates with live Hyperliquid mids`);
           liveRefresh();
           setInterval(liveRefresh, 45000);
           document.addEventListener('visibilitychange', () => { if (!document.hidden) liveRefresh(); });
