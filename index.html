@@ -777,7 +777,7 @@
               divergence24hPct: target != null && peers != null ? target - peers : e.divergence24hPct,
             };
           });
-          render(live, `Ranked by live divergence: Hyperliquid mids vs 24h-ago reference, updated ${new Date().toUTCString().slice(17, 25)} UTC · the markets table shows the hourly snapshot`);
+          render(live, `Ranked by live divergence: Hyperliquid mids vs 24h-ago reference, updated ${new Date().toUTCString().slice(17, 25)} UTC`);
           if (liveDot) liveDot.classList.add('is-live');
         } catch (error) {
           if (liveDot) liveDot.classList.remove('is-live');
