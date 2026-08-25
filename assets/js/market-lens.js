@@ -566,8 +566,8 @@
     const asOf = forecast && forecast.asOf;
     text("funding-forecast-asof", asOf ? `As of ${timestampLabel(asOf)} UTC` : "Forecast unavailable");
     [
-      ["1d", forecast && forecast.oneDayLongAprPct],
-      ["7d", forecast && forecast.sevenDayLongAprPct],
+      ["1d", forecast && forecast.oneDayFundingAprPct],
+      ["7d", forecast && forecast.sevenDayFundingAprPct],
     ].forEach(([horizon, value]) => {
       const valueNode = $(`funding-forecast-${horizon}`);
       const directionNode = $(`funding-forecast-${horizon}-direction`);
@@ -577,15 +577,15 @@
         if (directionNode) directionNode.textContent = "Unavailable";
         return;
       }
-      const earns = parsed > 0;
-      const pays = parsed < 0;
-      const className = earns ? "positive" : pays ? "negative" : "";
+      const longsPay = parsed > 0;
+      const shortsPay = parsed < 0;
+      const className = longsPay ? "positive" : shortsPay ? "negative" : "";
       if (valueNode) {
         valueNode.textContent = percent(parsed, 2);
         valueNode.className = className;
       }
       if (directionNode) {
-        directionNode.textContent = earns ? "Long earns" : pays ? "Long pays" : "Flat";
+        directionNode.textContent = longsPay ? "Longs pay shorts" : shortsPay ? "Shorts pay longs" : "Flat";
         directionNode.className = className;
       }
     });
