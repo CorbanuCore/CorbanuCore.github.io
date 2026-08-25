@@ -1709,6 +1709,7 @@
     rowsNode.innerHTML = venueSplitMarkup(cexMarkets, markets, data.symbol);
     const leader = [...cexMarkets].filter((venue) => venue.listed !== false).sort((left, right) => Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0))[0];
     if (preferredNode) preferredNode.textContent = leader ? `CEX volume leader · ${leader.venue} ${leader.pair} · ${compactMoney(leader.quoteVolume24hUsd)}` : "No live CEX leader";
+    capVenueTables(rowsNode);
 
     const refreshes = cexMarkets.map((venue, index) => {
       if (!venue.liveAdapter) return Promise.resolve(null);
@@ -1722,8 +1723,34 @@
     rowsNode.innerHTML = venueSplitMarkup(cexMarkets, markets, data.symbol);
     const refreshedLeader = [...cexMarkets].filter((venue) => venue.listed !== false).sort((left, right) => Number(right.quoteVolume24hUsd || 0) - Number(left.quoteVolume24hUsd || 0))[0];
     if (preferredNode) preferredNode.textContent = refreshedLeader ? `CEX volume leader · ${refreshedLeader.venue} ${refreshedLeader.pair} · ${compactMoney(refreshedLeader.quoteVolume24hUsd)}` : "No live CEX leader";
+    capVenueTables(rowsNode);
     const listedCount = cexMarkets.filter((venue) => venue.listed !== false && venue.kind === "orderBook").length;
     if (stampNode) stampNode.textContent = `${listedCount} listed CEX market${listedCount === 1 ? "" : "s"} · ${liveCount} refreshed in browser · DEX contracts verified ${timestampLabel(data.onchainSpot.generatedAt)} UTC`;
+  }
+
+  function capVenueTables(scope) {
+    if (!window.matchMedia || !window.matchMedia("(max-width: 720px)").matches) return;
+    const expanded = new Set((scope.dataset.venuesExpanded || "").split(",").filter(Boolean));
+    scope.querySelectorAll(".venue-split-table").forEach((table) => {
+      const key = table.classList.contains("cex-split-table") ? "cex" : "dex";
+      const rows = table.querySelector('[role="rowgroup"]');
+      if (!rows) return;
+      const count = rows.children.length;
+      if (count <= 3 || expanded.has(key)) return;
+      table.classList.add("is-capped");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "venue-rows-toggle";
+      button.textContent = `Show all ${count} venues`;
+      button.addEventListener("click", () => {
+        table.classList.remove("is-capped");
+        button.remove();
+        const nowExpanded = new Set((scope.dataset.venuesExpanded || "").split(",").filter(Boolean));
+        nowExpanded.add(key);
+        scope.dataset.venuesExpanded = [...nowExpanded].join(",");
+      });
+      table.after(button);
+    });
   }
 
   async function renderOnchainMarkets(data) {
@@ -1840,6 +1867,9 @@
     if (!slug) return;
     wireRanges();
     wireDistributionCenter();
+    if (window.matchMedia && window.matchMedia("(max-width: 720px)").matches) {
+      document.querySelectorAll(".legend-details[open]").forEach((node) => node.removeAttribute("open"));
+    }
     try {
       const [universe, data] = await Promise.all([
         json(marketAssetUrl("/assets/market-data/universe.json")),

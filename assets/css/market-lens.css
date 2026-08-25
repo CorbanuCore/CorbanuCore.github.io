@@ -145,6 +145,8 @@ main { min-height: 80vh; }
 .chart-title-row h1 { margin: 0; font: 400 clamp(1.8rem, 3vw, 2.8rem)/1 var(--serif); }
 .legend { display: flex; flex-wrap: wrap; gap: .85rem 1.5rem; margin-top: 1.1rem; }
 .legend-item { display: inline-flex; align-items: center; gap: .55rem; color: #d9ddd4; font-size: .9rem; }
+.legend-details > summary { display: none; }
+.venue-rows-toggle { display: none; width: calc(100% - 2rem); margin: .6rem 1rem .9rem; padding: .65rem; color: var(--lime); border: 1px solid rgba(204, 255, 0, .4); border-radius: 8px; background: transparent; cursor: pointer; font: 700 .74rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .legend-line { width: 27px; height: 0; border-top: 2px solid var(--blue); }
 .legend-peer { width: 27px; height: 0; border-top: 2px dashed var(--peer); }
 .legend-range { width: 27px; height: 9px; border-top: 1px solid rgba(204, 255, 0, .72); border-bottom: 1px solid rgba(204, 255, 0, .72); background: rgba(204, 255, 0, .06); }
@@ -313,7 +315,7 @@ main { min-height: 80vh; }
 .earnings-ledger-table tbody tr { border-top: 1px solid rgba(255, 255, 255, .07); }
 .earnings-ledger-table td { padding: .75rem; color: #aeb5aa; vertical-align: top; }
 .earnings-ledger-table td > span, .earnings-ledger-table td > strong + span { display: block; margin-top: .25rem; color: #70776d; font-size: .66rem; }
-.earnings-ledger-table td.positive { color: #a8c76b; }
+.earnings-ledger-table td > span.earnings-ledger-table td > span.earnings-ledger-table td.positive { color: #a8c76b; }
 .earnings-ledger-table td.negative { color: #d68072; }
 .transcript-brief summary { color: var(--blue); cursor: pointer; font-weight: 700; list-style-position: outside; }
 .transcript-brief summary:hover, .transcript-brief summary:focus-visible { color: var(--ink); }
@@ -634,4 +636,48 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+@media (max-width: 720px) {
+  /* Chart first: the header scrolls away instead of pinning 40% of the viewport. */
+  .site-header { position: static; }
+  .chart-title-row h1 { font-size: 1.3rem; line-height: 1.15; }
+  .chart-section { padding-top: 1rem; }
+  .chart-head { gap: .9rem; padding-bottom: .9rem; }
+  /* Legend collapses behind a toggle so the first screen is the chart. */
+  .legend-details > summary {
+    display: inline-block; padding: .3rem 0; color: #9aa294; cursor: pointer;
+    font: 600 .72rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+  }
+  .legend { margin-top: .5rem; gap: .5rem 1rem; }
+  .legend-item { font-size: .78rem; }
+  /* Peer basket: no horizontal scroll; keep instrument, weight, and both changes. */
+  .peer-table { min-width: 0; font-size: .72rem; }
+  .peer-table-scroll { overflow-x: visible; }
+  .peer-table th:nth-child(n+5), .peer-table td:nth-child(n+5) { display: none; }
+  .peer-table th, .peer-table td { padding: .5rem .45rem; white-space: normal; }
+  .peer-table td:first-child { width: auto; }
+  .peer-table td:first-child span { display: none; }
+  .peer-table th:nth-child(n+2), .peer-table td:nth-child(n+2) { width: auto; }
+  /* Earnings ledger: date, move, score, briefing; fiscal period hides. */
+  .earnings-ledger-table { min-width: 0; font-size: .72rem; }
+  .earnings-ledger-scroll { overflow-x: visible; }
+  .earnings-ledger-table th:nth-child(3), .earnings-ledger-table td:nth-child(3) { display: none; }
+  .earnings-ledger-table th, .earnings-ledger-table td { padding: .5rem .45rem; }
+  .earnings-ledger-table th:nth-child(1) { width: auto; }
+  /* Options structures: trade, what you buy, and the payout/move column only. */
+  .historical-structure-table { min-width: 0; font-size: .7rem; }
+  .historical-structure-table th, .historical-structure-table td { padding: .5rem .4rem; white-space: normal; }
+  .earnings-structure-table th:nth-child(3), .earnings-structure-table td:nth-child(3),
+  .earnings-structure-table th:nth-child(4), .earnings-structure-table td:nth-child(4),
+  .earnings-structure-table th:nth-child(6), .earnings-structure-table td:nth-child(6) { display: none; }
+  .term-structure-table th:nth-child(3), .term-structure-table td:nth-child(3),
+  .term-structure-table th:nth-child(4), .term-structure-table td:nth-child(4),
+  .term-structure-table th:nth-child(5), .term-structure-table td:nth-child(5),
+  .term-structure-table th:nth-child(7), .term-structure-table td:nth-child(7),
+  .term-structure-table th:nth-child(8), .term-structure-table td:nth-child(8),
+  .term-structure-table th:nth-child(9), .term-structure-table td:nth-child(9) { display: none; }
+  /* Venue walls collapse to the top rows with an explicit expander. */
+  .venue-split-table.is-capped [role="rowgroup"] > :nth-child(n+4) { display: none; }
+  .venue-rows-toggle { display: block; }
 }
