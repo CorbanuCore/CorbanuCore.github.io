@@ -195,6 +195,22 @@
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
     .section { padding: clamp(5.5rem, 8vw, 7.5rem) 3rem; }
+    .moves .section-head { margin-bottom: 2.6rem; }
+    .moves-sub { margin: 1.2rem auto 0; max-width: 58ch; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+    .moves-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; max-width: 1320px; margin: 0 auto; }
+    .moves-card { display: block; padding: 1.15rem 1.25rem; color: inherit; border: 1px solid rgba(204,255,0,.22); border-radius: 12px; background: rgba(10,13,9,.82); text-decoration: none; }
+    .moves-card:hover { border-color: var(--lime); background: rgba(16,20,14,.92); }
+    .moves-card-top { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; }
+    .moves-card-top strong { font: 700 1.15rem/1 var(--mono); }
+    .moves-card-top span { color: #8e917b; font: 600 .68rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .moves-card-name { display: block; margin-top: .35rem; color: #b9beb0; font-size: .86rem; }
+    .moves-card-stats { display: flex; gap: 1.2rem; margin-top: .85rem; font: 600 .8rem/1.4 var(--mono); font-variant-numeric: tabular-nums; }
+    .moves-card-stats small { display: block; margin-bottom: .25rem; color: #8e917b; font: 600 .6rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    .moves-pos { color: #cdf76a; }
+    .moves-neg { color: #ff9b8a; }
+    .moves-asof { margin: 1.3rem auto 0; max-width: 1320px; color: #79816f; font: .68rem/1.4 var(--mono); text-align: center; }
+    .moves-actions { margin: 1.6rem auto 0; text-align: center; }
+    .posts-teaser-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; max-width: 1320px; margin: 0 auto; }
     .section-head { max-width: 850px; margin: 0 auto 4.2rem; text-align: center; }
     .section-head h2 { margin: .9rem auto 0; font-size: clamp(2.7rem, 6vw, 5.5rem); line-height: 1.02; }
     .section-head p { margin: 1.5rem auto 0; max-width: 62ch; color: var(--muted); font-size: 1.15rem; line-height: 1.6; }
@@ -228,24 +244,6 @@
     .orbit::before, .orbit::after { content: ""; position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 16px var(--lime); }
     .orbit::before { top: 21px; left: 62px; } .orbit::after { right: 2px; bottom: 105px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    .private-inference {
-      position: relative; overflow: hidden; border-top: 1px solid rgba(204,255,0,.16); border-bottom: 1px solid rgba(255,255,255,.08);
-      background:
-        radial-gradient(circle at 74% 12%, rgba(204,255,0,.08), transparent 31%),
-        radial-gradient(circle at 88% 72%, rgba(242,113,140,.07), transparent 28%), #050605;
-    }
-    .private-inference::before {
-      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .12;
-      background-image: linear-gradient(rgba(204,255,0,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(204,255,0,.13) 1px, transparent 1px);
-      background-size: 56px 56px; mask-image: linear-gradient(180deg, #000, transparent 78%);
-    }
-    .private-inference-inner { position: relative; max-width: 1320px; margin: 0 auto; }
-    .private-inference-head { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .6fr); gap: 3rem; align-items: end; margin-bottom: 2.4rem; }
-    .private-inference-head h2 { margin: .9rem 0 0; max-width: 14ch; font-size: clamp(2.7rem, 5vw, 5rem); line-height: .98; }
-    .private-inference-intro { margin: 0; max-width: 42ch; color: #d9dcd4; font-size: 1.08rem; line-height: 1.62; }
-    .private-inference-status { display: inline-flex; align-items: center; gap: .65rem; margin-bottom: 1rem; color: #dce1d7; font: 600 .72rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
-    .private-inference-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #ffd166; box-shadow: 0 0 14px rgba(255,209,102,.7); }
     .private-figure { margin: 0; }
     .private-scroll-note { display: none; margin: 0 0 .65rem; color: #aeb5a6; font: 600 .7rem/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
     .private-diagram-scroll { max-width: 100%; overflow-x: auto; overflow-y: hidden; border-radius: 28px; scrollbar-color: rgba(204,255,0,.55) rgba(255,255,255,.08); scrollbar-width: thin; }
@@ -360,9 +358,6 @@
       .nav-right .btn-outline { display: none; }
       .region { display: none; }
       .cards, .workspace-inner, .why-inner, .plan-grid, .stats { grid-template-columns: 1fr; }
-      .private-inference-head { grid-template-columns: 1fr; gap: 1.4rem; }
-      .private-inference-head h2 { max-width: 16ch; }
-      .private-inference-intro { max-width: 58ch; }
       .why-copy h2, .why-copy p { max-width: none; }
       .workspace-copy { grid-row: 1; text-align: center; }
       .workspace-copy h2, .workspace-copy p { margin-left: auto; margin-right: auto; }
@@ -403,7 +398,6 @@
       .install-copy-status { margin-top: .55rem; font-size: .72rem; }
       .section { padding: 5rem 1.1rem; }
       .section-head { margin-bottom: 2.6rem; }
-      .private-inference-head { margin-bottom: 2rem; }
       .private-scroll-note { display: block; }
       .private-diagram-scroll { margin-right: -1.1rem; padding-right: 1.1rem; border-radius: 18px 0 0 18px; }
       .private-diagram { width: 820px; min-width: 820px; }
@@ -442,22 +436,18 @@
       Corbanu
     </a>
     <div class="nav-links" id="primary-menu">
-      <a href="#why">Why</a>
-      <a href="#product">Product</a>
-      <a href="/aapl/">Markets</a>
+      <a href="/markets/">Markets</a>
+      <a href="/posts/">Posts</a>
       <a href="/terminal/">Terminal</a>
-      <a href="#plans">Plans</a>
-      <a href="#trust">Trust</a>
-      <a href="https://github.com/CorbanuCore">Developers</a>
-      <a class="mobile-nav-source" href="https://github.com/CorbanuCore/CorbanuTerminal">View source</a>
+      <a href="#newsletter">Subscribe</a>
     </div>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu" aria-label="Open navigation">
       <span aria-hidden="true"></span><span aria-hidden="true"></span>
     </button>
     <div class="nav-right">
       <span class="region">⊕ GLOBAL</span>
-      <a class="btn btn-outline" href="https://github.com/CorbanuCore/CorbanuTerminal">View source</a>
-      <a class="btn btn-lime" href="https://github.com/CorbanuCore/CorbanuTerminal#readme">Get started</a>
+      <a class="btn btn-outline" href="/markets/">Explore markets</a>
+      <a class="btn btn-lime" href="#newsletter">Subscribe</a>
     </div>
   </nav>
 
@@ -499,6 +489,28 @@
       </div>
     </section>
 
+    <section class="section moves" id="moves" aria-labelledby="moves-title">
+      <div class="section-head">
+        <div class="eyebrow">Significant moves</div>
+        <h2 class="display" id="moves-title">Moving against the basket</h2>
+        <p class="moves-sub">Each instrument against its Kimi-weighted peer basket over the trailing 24 hours. Divergence is the instrument's move minus its peers'.</p>
+      </div>
+      <div class="moves-grid" id="moves-grid" aria-live="polite"></div>
+      <p class="moves-asof" id="moves-asof"></p>
+      <div class="moves-actions">
+        <a class="btn btn-outline btn-big" href="/markets/">All 41 markets, sortable →</a>
+      </div>
+    </section>
+
+    <section class="section posts-teaser" id="latest-posts" aria-labelledby="posts-title" hidden>
+      <div class="section-head">
+        <div class="eyebrow">Latest posts</div>
+        <h2 class="display" id="posts-title">Trade ideas and research</h2>
+      </div>
+      <div class="posts-teaser-grid" id="posts-teaser-grid"></div>
+      <div class="moves-actions"><a class="btn btn-outline" href="/posts/">All posts →</a></div>
+    </section>
+
     <section class="terminal-install-band" aria-labelledby="terminal-install-title">
       <div class="terminal-install-cta">
           <div class="terminal-install-head">
@@ -535,254 +547,6 @@
       </div>
     </section>
 
-    <section class="section why" id="why">
-      <div class="why-inner">
-        <div class="why-copy">
-          <div class="eyebrow">The problem</div>
-        <h2 class="display">Your prompts are your positions.</h2>
-          <p>Every serious trader now works next to an AI agent. But a backtest request reveals your signal. A portfolio question reveals your book. Sending strategy to a generic AI provider hands your edge to a counterparty you cannot audit.</p>
-          <p>Basic trading expected value requires masking intent. Corbanu is a full AI workspace built around that boundary: your models, your credentials, your research — inside a perimeter you control.</p>
-        </div>
-        <div class="why-ledger" aria-hidden="true">
-          <div class="ledger-row"><span class="dim">prompt</span><span>"backtest my funding-rate signal"</span></div>
-          <div class="ledger-row leak"><span class="dim">generic API</span><span>strategy visible to provider</span></div>
-          <div class="ledger-row keep"><span class="dim">corbanu</span><span>strategy stays inside your boundary</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="product">
-      <header class="section-head">
-        <div class="eyebrow">The stack</div>
-        <h2 class="display">One workspace. Your models. Your strategy.</h2>
-        <p>A coding agent built for the daily trading workflow, a private collaboration layer that already runs in production, and a confidential-inference boundary in development.</p>
-      </header>
-      <div class="cards" tabindex="0" aria-label="Corbanu product stack. Swipe horizontally on smaller screens.">
-        <article class="card">
-          <div class="card-kicker">Shipping today · v0.1.31</div>
-          <h3>Corbanu Terminal</h3>
-          <p>A multi-model coding agent for market research, data engineering, signal development, backtesting, and portfolio analysis — with an encrypted credential vault and wallet-paid inference.</p>
-          <a class="btn btn-lime" href="https://github.com/CorbanuCore/CorbanuTerminal">View on GitHub</a>
-          <div class="card-visual" aria-hidden="true">
-            <div class="terminal-window">
-              <div class="terminal-bar"><i></i><i></i><i></i><span>CORBANU · TERMINAL</span></div>
-              <pre class="terminal-body"><span class="dim">default model</span>   <span class="lime">Ambient GLM 5.2</span>
-<span class="blue">/providers</span>      grant model access
-<span class="blue">/vault</span>          encrypted credentials
-<span class="blue">/wallet</span>         <span class="purple">Solana · USDC · locked</span>
-<span class="blue">/spawn</span>          orchestrate agents
-<span class="blue">/tasknode</span>       private collaboration
-<span class="lime">›</span> backtest this signal<span class="cursor">█</span></pre>
-            </div>
-          </div>
-        </article>
-
-        <article class="card" id="tasks">
-          <div class="card-kicker">Live in production</div>
-          <h3>Post Fiat Task Node</h3>
-          <p>The work-and-reputation application for the Post Fiat Layer 1 blockchain: encrypted publishing with full version history, a task lifecycle with evidence and rewards, and wallet-linked reputation built from verified work.</p>
-          <a class="btn btn-lime" href="https://tasknode.postfiat.org">Open Task Node</a>
-          <div class="card-visual" aria-hidden="true">
-            <div class="terminal-window">
-              <div class="terminal-bar"><i></i><i></i><i></i><span>POST FIAT · TASK NODE</span></div>
-              <pre class="terminal-body"><span class="dim">task</span>       <span class="blue">memory-sector momentum study</span>
-<span class="dim">evidence</span>   submitted · encrypted
-<span class="dim">verify</span>     <span class="lime">passed</span> · 2 reviewers
-<span class="dim">reward</span>     <span class="purple">PFT · on-chain</span>
-<span class="dim">reputation</span> +1 dot · semis / equities
-<span class="lime">›</span> request next task<span class="cursor">█</span></pre>
-            </div>
-          </div>
-        </article>
-
-        <article class="card" id="privacy">
-          <div class="card-kicker">In development</div>
-          <h3>Ambient Private Inference</h3>
-          <p>An authenticated confidential-compute boundary that transforms sensitive work before it reaches untrusted inference operators. Your strategy is never plaintext outside the enclave.</p>
-          <a class="btn btn-lime" href="#private-inference">See how it works</a>
-          <div class="card-visual" aria-hidden="true">
-            <div class="shield-wrap">
-              <div class="orbit"></div>
-              <svg class="shield" viewBox="0 0 64 64" fill="none">
-                <path d="M32 6 54 14v18q0 18-22 26Q10 50 10 32V14Z" stroke="#ccff00" stroke-width="2.5" fill="rgba(204,255,0,.08)"/>
-                <path d="m23 32 6.5 6.5L42 25" stroke="#ccff00" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="stats" role="list" tabindex="0" aria-label="Published Terminal benchmarks. Swipe horizontally on smaller screens.">
-        <div class="stat" role="listitem"><strong>2–3×</strong><span>faster than leading coding agents on paired tasks</span></div>
-        <div class="stat" role="listitem"><strong>1.4–2.6×</strong><span>cheaper per completed task</span></div>
-        <div class="stat" role="listitem"><strong>Identical</strong><span>accuracy, with evidence and a reproduction script in-repo</span></div>
-      </div>
-    </section>
-
-    <section class="section private-inference" id="private-inference" aria-labelledby="private-inference-title">
-      <div class="private-inference-inner">
-        <header class="private-inference-head">
-          <div>
-            <div class="eyebrow">Private inference · target architecture</div>
-            <h2 class="display" id="private-inference-title">The model does the work. It never reads your strategy.</h2>
-          </div>
-          <div>
-            <div class="private-inference-status">In development</div>
-            <p class="private-inference-intro">Plaintext enters an attested trusted enclave, becomes sealed tokens for computation, and is restored only inside the enclave on the way back to you.</p>
-          </div>
-        </header>
-
-        <figure class="private-figure">
-          <p class="private-scroll-note" id="private-scroll-note">Swipe to trace the request →</p>
-          <div class="private-diagram-scroll" tabindex="0" role="region" aria-label="Private inference trust-boundary diagram" aria-describedby="private-scroll-note private-inference-caption">
-            <svg class="private-diagram" viewBox="0 0 1200 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="private-diagram-title private-diagram-desc">
-              <title id="private-diagram-title">How Corbanu private inference is designed to work</title>
-              <desc id="private-diagram-desc">A user's plaintext enters a trusted enclave, is encoded, runs on an untrusted operator as sealed tokens, and is decoded back to plaintext inside the enclave.</desc>
-              <defs>
-                <filter id="privateGlowLime" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                <filter id="privateGlowRose" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                <marker id="privateArrowLime" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ccff00"/></marker>
-                <marker id="privateArrowViolet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c4b0f5"/></marker>
-                <radialGradient id="privateVignette" cx="72%" cy="10%" r="80%"><stop offset="0%" stop-color="#ccff00" stop-opacity=".07"/><stop offset="60%" stop-color="#ccff00" stop-opacity="0"/></radialGradient>
-              </defs>
-
-              <rect x="2" y="2" width="1196" height="656" rx="28" fill="#070806"/>
-              <rect x="2" y="2" width="1196" height="656" rx="28" fill="url(#privateVignette)"/>
-              <rect x="2" y="2" width="1196" height="656" rx="28" fill="none" stroke="#fff" stroke-opacity=".09"/>
-
-              <text class="pi-mono" x="56" y="66" font-size="12" letter-spacing="3" fill="#ccff00">⊕ PRIVATE INFERENCE</text>
-              <text x="56" y="106" font-size="30" font-weight="700" letter-spacing="-.5" fill="#eef1e6">A sealed circuit for sensitive work</text>
-              <line x1="836" y1="92" x2="876" y2="92" stroke="#ccff00" stroke-width="2.5"/>
-              <text class="pi-mono" x="886" y="96" font-size="11" letter-spacing="1.5" fill="#aeb5a6">PLAINTEXT</text>
-              <line x1="994" y1="92" x2="1034" y2="92" stroke="#c4b0f5" stroke-width="2.5" stroke-dasharray="6 5"/>
-              <text class="pi-mono" x="1044" y="96" font-size="11" letter-spacing="1.5" fill="#aeb5a6">SEALED</text>
-
-              <rect x="292" y="152" width="386" height="428" rx="22" fill="#ccff00" fill-opacity=".035"/>
-              <rect x="292" y="152" width="386" height="428" rx="22" fill="none" stroke="#ccff00" stroke-opacity=".55" stroke-width="1.6" stroke-dasharray="10 7" filter="url(#privateGlowLime)"/>
-              <text class="pi-mono" x="316" y="184" font-size="12" letter-spacing="2.5" fill="#ccff00">TRUSTED ENCLAVE · TEE</text>
-
-              <rect x="322" y="212" width="326" height="118" rx="14" fill="#0c0e09" stroke="#ccff00" stroke-opacity=".35"/>
-              <circle cx="342" cy="234" r="4" fill="#3a4030"/><circle cx="356" cy="234" r="4" fill="#3a4030"/><circle cx="370" cy="234" r="4" fill="#3a4030"/>
-              <text class="pi-mono" x="384" y="238" font-size="10.5" letter-spacing="2" fill="#79816f">ENCODE</text>
-              <text x="342" y="272" font-size="16.5" font-weight="700" fill="#eef1e6">Prompt is sealed</text>
-              <text x="342" y="296" font-size="12.5" fill="#aeb5a6">Tokens map into a private namespace</text>
-              <text x="342" y="314" font-size="12.5" fill="#aeb5a6">using a recipe that stays in the enclave</text>
-
-              <line x1="322" y1="366" x2="648" y2="366" stroke="#fff" stroke-opacity=".08"/>
-              <rect x="373" y="352" width="12" height="9" rx="2" fill="#ccff00"/>
-              <path d="M375.5 352v-3a3.5 3.5 0 0 1 7 0v3" fill="none" stroke="#ccff00" stroke-width="1.6"/>
-              <text class="pi-mono" x="395" y="361" font-size="11" letter-spacing="1.5" fill="#ccff00">SECRET RECIPE LIVES HERE</text>
-
-              <rect x="322" y="402" width="326" height="118" rx="14" fill="#0c0e09" stroke="#ccff00" stroke-opacity=".35"/>
-              <circle cx="342" cy="424" r="4" fill="#3a4030"/><circle cx="356" cy="424" r="4" fill="#3a4030"/><circle cx="370" cy="424" r="4" fill="#3a4030"/>
-              <text class="pi-mono" x="384" y="428" font-size="10.5" letter-spacing="2" fill="#79816f">DECODE</text>
-              <text x="342" y="462" font-size="16.5" font-weight="700" fill="#eef1e6">Answer is restored</text>
-              <text x="342" y="486" font-size="12.5" fill="#aeb5a6">Sealed output is verified and translated</text>
-              <text x="342" y="504" font-size="12.5" fill="#aeb5a6">back into readable text</text>
-              <text x="485" y="558" text-anchor="middle" font-size="12" fill="#d4dacb">Plaintext exists only here — and with you.</text>
-
-              <rect x="812" y="152" width="332" height="428" rx="22" fill="#f2718c" fill-opacity=".03"/>
-              <rect x="812" y="152" width="332" height="428" rx="22" fill="none" stroke="#f2718c" stroke-opacity=".45" stroke-width="1.4" stroke-dasharray="10 7" filter="url(#privateGlowRose)"/>
-              <text class="pi-mono" x="836" y="184" font-size="12" letter-spacing="2.5" fill="#f58aa1">UNTRUSTED OPERATOR</text>
-              <rect x="842" y="282" width="272" height="156" rx="14" fill="#0c0e09" stroke="#f2718c" stroke-opacity=".35"/>
-              <circle cx="862" cy="304" r="4" fill="#3a4030"/><circle cx="876" cy="304" r="4" fill="#3a4030"/><circle cx="890" cy="304" r="4" fill="#3a4030"/>
-              <text class="pi-mono" x="904" y="308" font-size="10.5" letter-spacing="2" fill="#79816f">SEALED MODEL</text>
-              <text x="862" y="344" font-size="16.5" font-weight="700" fill="#eef1e6">Runs the work blind</text>
-              <text x="862" y="368" font-size="12.5" fill="#aeb5a6">A transformed model computes on tokens</text>
-              <text x="862" y="386" font-size="12.5" fill="#aeb5a6">it cannot interpret — no recipe,</text>
-              <text x="862" y="404" font-size="12.5" fill="#aeb5a6">no plaintext</text>
-              <text x="978" y="558" text-anchor="middle" font-size="12" fill="#d4dacb">Sees only ciphertext-like work.</text>
-
-              <rect x="56" y="300" width="176" height="132" rx="14" fill="#0c0e09" stroke="#fff" stroke-opacity=".16"/>
-              <circle cx="76" cy="322" r="4" fill="#3a4030"/><circle cx="90" cy="322" r="4" fill="#3a4030"/><circle cx="104" cy="322" r="4" fill="#3a4030"/>
-              <text class="pi-mono" x="118" y="326" font-size="10.5" letter-spacing="2" fill="#79816f">USER</text>
-              <text x="76" y="362" font-size="16.5" font-weight="700" fill="#eef1e6">You</text>
-              <text x="76" y="386" font-size="12.5" fill="#aeb5a6">Ask in plain language,</text>
-              <text x="76" y="404" font-size="12.5" fill="#aeb5a6">get a plain answer</text>
-
-              <path d="M232 330C264 320 282 296 318 278" fill="none" stroke="#ccff00" stroke-width="2.5" marker-end="url(#privateArrowLime)"/>
-              <g class="pi-step pi-step-1"><circle cx="252" cy="300" r="11" fill="#ccff00"/><text x="252" y="304.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0c04">1</text></g>
-              <text class="pi-mono" x="252" y="279" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#ccff00">PROMPT</text>
-
-              <path class="pi-route" d="M652 271C730 271 770 300 838 320" fill="none" stroke="#c4b0f5" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#privateArrowViolet)"/>
-              <g class="pi-step pi-step-2"><circle cx="745" cy="279" r="11" fill="#c4b0f5"/><text x="745" y="283.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0c04">2</text></g>
-              <text class="pi-mono" x="745" y="258" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#c4b0f5">SEALED TOKENS</text>
-
-              <path class="pi-route" d="M838 402C770 424 730 452 652 456" fill="none" stroke="#c4b0f5" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#privateArrowViolet)"/>
-              <g class="pi-step pi-step-3"><circle cx="745" cy="437" r="11" fill="#c4b0f5"/><text x="745" y="441.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0c04">3</text></g>
-              <text class="pi-mono" x="745" y="470" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#c4b0f5">SEALED OUTPUT</text>
-
-              <path d="M318 458C282 442 264 418 236 404" fill="none" stroke="#ccff00" stroke-width="2.5" marker-end="url(#privateArrowLime)"/>
-              <g class="pi-step pi-step-4"><circle cx="262" cy="436" r="11" fill="#ccff00"/><text x="262" y="440.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0c04">4</text></g>
-              <text class="pi-mono" x="262" y="466" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#ccff00">ANSWER</text>
-
-              <text x="600" y="628" text-anchor="middle" font-size="13" fill="#aeb5a6">Your words are sealed in a trusted enclave, computed on by operators who cannot read them, and restored only on the way back to you.</text>
-            </svg>
-          </div>
-          <figcaption id="private-inference-caption">The operator supplies compute, not trust. Enclave attestation establishes the boundary; the transformation recipe stays inside it.</figcaption>
-        </figure>
-
-        <div class="private-boundaries" role="list" aria-label="Private inference boundaries">
-          <div class="private-boundary" role="listitem"><strong>01 / Plaintext</strong><span>Readable prompts and answers stay with you and inside the trusted enclave.</span></div>
-          <div class="private-boundary" role="listitem"><strong>02 / Compute</strong><span>The operator receives sealed token work and returns sealed output.</span></div>
-          <div class="private-boundary" role="listitem"><strong>03 / Verification</strong><span>Attestation is designed to prove which enclave code is handling the request.</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section workspace" id="terminal">
-      <div class="workspace-inner">
-        <div class="monitor" aria-label="Illustrative market workspace">
-          <div class="pane"><span class="ticker">BTC-PERP</span><span class="price">LIVE</span><div class="candles" id="c1"></div><div class="spark"></div></div>
-          <div class="pane"><span class="ticker">EQUITY-PERP</span><span class="price">RESEARCH</span><div class="candles" id="c2"></div><div class="spark"></div></div>
-          <div class="pane"><span class="ticker">WTI-PERP</span><span class="price">SIGNAL</span><div class="candles" id="c3"></div><div class="spark"></div></div>
-        </div>
-        <div class="workspace-copy">
-          <div class="eyebrow">Built for the whole loop</div>
-          <h2 class="display">From question to production system</h2>
-          <p>Pull data. Investigate an instrument. Write a memo. Build and backtest a signal. Schedule the pipeline. Reconcile fills and explain P&amp;L. Corbanu keeps the work inspectable and under trader control.</p>
-          <a class="btn btn-lime" href="/terminal/">Explore Terminal</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section plans" id="plans">
-      <header class="section-head">
-        <div class="eyebrow">Economics</div>
-        <h2 class="display">Trade more. Your AI gets cheaper.</h2>
-        <p>One wallet-paid plan, venue economics disclosed at the point of use, and a rebate that turns your own trading activity into inference credits.</p>
-      </header>
-      <div class="plan-grid" tabindex="0" aria-label="Corbanu economics. Swipe horizontally on smaller screens.">
-        <article class="plan-panel">
-          <div class="trust-index">01 / PLAN</div>
-          <h3>$200 / month, wallet-paid</h3>
-          <p>Pay in USDC from your wallet — no card, no work email. Frontier and private models, multi-provider routing, the encrypted vault, trader skills, and private collaboration.</p>
-        </article>
-        <article class="plan-panel">
-          <div class="trust-index">02 / DISCLOSURE</div>
-          <h3>Every fee visible</h3>
-          <p>Venue builder codes are disclosed before your first order, itemized on every fill, and published in a monthly ledger. One command opts out — globally or per venue.</p>
-        </article>
-        <article class="plan-panel highlight">
-          <div class="trust-index">03 / REBATE</div>
-          <h3>Fees come back as credits</h3>
-          <p>Subscribers earn their builder fees back as inference credits, up to the plan price. Generate $80 in fees, get $80 in credit. The more you trade, the less your AI costs.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section trust" id="trust">
-      <header class="section-head">
-        <div class="eyebrow">Designed around boundaries</div>
-        <h2 class="display">Agent competence without standing authority</h2>
-        <p>The workspace can help build and inspect systems. It does not custody assets, authorize orders, or replace venue-side permissions.</p>
-      </header>
-      <div class="trust-grid" tabindex="0" aria-label="Corbanu trust boundaries. Swipe horizontally on smaller screens.">
-        <article class="trust-item"><div class="trust-index">01 / CUSTODY</div><h3>Assets stay at the venue</h3><p>Your existing exchange or brokerage remains the custodian and source of account authority.</p></article>
-        <article class="trust-item"><div class="trust-index">02 / CREDENTIALS</div><h3>Secrets stay out of prompts</h3><p>The encrypted vault exposes scoped capabilities to approved tools without placing keys in ordinary model context.</p></article>
-        <article class="trust-item"><div class="trust-index">03 / EXECUTION</div><h3>The trader controls the loop</h3><p>Permissions are scoped at the venue. Any execution system connected to Corbanu output remains user-controlled.</p></article>
-      </div>
-    </section>
-
     <section class="join">
       <div class="rain" id="rain" aria-hidden="true"></div>
       <div class="join-inner">
@@ -810,10 +574,11 @@
       <a href="https://github.com/CorbanuCore">GitHub</a>
       <a href="https://github.com/CorbanuCore/CorbanuTerminal">Terminal source</a>
       <a href="https://tasknode.postfiat.org">Task Node</a>
-      <a href="/aapl/">Market Lens</a>
+      <a href="/markets/">Markets</a>
+      <a href="/posts/">Posts</a>
+      <a href="/compliance/">Compliance</a>
       <a href="https://x.com/corbanuAI">X</a>
       <a href="https://discord.gg/U6HjgDSmhR">Discord</a>
-      <a href="#trust">Trust model</a>
     </div>
     <div>Corbanu · 2026</div>
     <div class="footnote">Product vision. Not an offer to buy or sell any security or digital asset. Corbanu does not custody assets or hold trading authority.</div>
@@ -935,6 +700,55 @@
       tick.style.opacity = .2 + Math.random() * .5;
       rain.appendChild(tick);
     }
+
+    (async function renderSignificantMoves() {
+      const grid = document.getElementById('moves-grid');
+      const asof = document.getElementById('moves-asof');
+      if (!grid) return;
+      const fmt = (value) => value == null ? '—' : `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+      const cls = (value) => value == null ? '' : value >= 0 ? 'moves-pos' : 'moves-neg';
+      try {
+        const response = await fetch(`/assets/market-data/significant_moves.json?t=${Date.now()}`);
+        if (!response.ok) throw new Error(String(response.status));
+        const payload = await response.json();
+        const entries = (payload.entries || []).filter((e) => e.divergence24hPct != null).slice(0, 6);
+        grid.innerHTML = entries.map((e) => `
+          <a class="moves-card" href="/${e.slug}/">
+            <div class="moves-card-top"><strong>${e.symbol}</strong><span>${e.category}</span></div>
+            <span class="moves-card-name">${e.name}</span>
+            <div class="moves-card-stats">
+              <div><small>24h</small><span class="${cls(e.change24hPct)}">${fmt(e.change24hPct)}</span></div>
+              <div><small>Peers</small><span class="${cls(e.peerAvg24hPct)}">${fmt(e.peerAvg24hPct)}</span></div>
+              <div><small>Divergence</small><span class="${cls(e.divergence24hPct)}">${fmt(e.divergence24hPct)}</span></div>
+            </div>
+          </a>`).join('');
+        if (asof && payload.generatedAt) {
+          const observed = entries.map((e) => e.observedAt).sort().pop() || payload.generatedAt;
+          asof.textContent = `Perp changes observed through ${observed} · peer baskets are fixed Kimi weights`;
+        }
+      } catch (error) {
+        grid.innerHTML = '<p class="moves-asof">Live divergence data is refreshing. <a href="/markets/">Open the markets table</a>.</p>';
+      }
+    })();
+
+    (async function renderLatestPosts() {
+      const section = document.getElementById('latest-posts');
+      const grid = document.getElementById('posts-teaser-grid');
+      if (!section || !grid) return;
+      try {
+        const response = await fetch(`/posts/index.json?t=${Date.now()}`);
+        if (!response.ok) return;
+        const payload = await response.json();
+        const posts = (payload.posts || []).slice(0, 3);
+        if (!posts.length) return;
+        grid.innerHTML = posts.map((p) => `
+          <a class="moves-card" href="${p.url}">
+            <div class="moves-card-top"><strong>${p.title}</strong></div>
+            <span class="moves-card-name">${p.date} · ${p.summary || ''}</span>
+          </a>`).join('');
+        section.hidden = false;
+      } catch (error) { /* posts stay hidden */ }
+    })();
 
     const subscribeEndpoint = 'https://corbanu-newsletter-api.fly.dev/subscribe';
     document.querySelectorAll('[data-subscribe-form]').forEach((form) => {
