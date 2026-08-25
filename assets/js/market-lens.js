@@ -747,7 +747,7 @@
   function rebasePeerSeriesToSpot(peerRows, spotRows) {
     if (!peerRows.length || !spotRows.length) return peerRows;
     const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
-    const anchorPeer = peerRows.find((row) => spotByDate.has(row.d));
+    const anchorPeer = [...peerRows].reverse().find((row) => spotByDate.has(row.d));
     if (!anchorPeer) return peerRows;
     const anchorSpot = spotByDate.get(anchorPeer.d);
     const peerLevel = Number(anchorPeer.c);
@@ -860,7 +860,7 @@
     const svg = svgNode("svg", {
       viewBox: `0 0 ${width} ${height}`,
       role: "img",
-      "aria-label": `${data.symbol} ${isReturnProxy ? data.spotReferenceSymbol + " total-return proxy expressed on the " + data.symbol + " perp price scale" : "terminal-anchored spot total-return price line"} and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history rebased to the target at the selected window start and extended by live Hyperliquid perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
+      "aria-label": `${data.symbol} ${isReturnProxy ? data.spotReferenceSymbol + " total-return proxy expressed on the " + data.symbol + " perp price scale" : "terminal-anchored spot total-return price line"} and funding-inclusive perpetual total-return price candlesticks${peerRows.length ? ", plus the weighted peer spot-return history anchored to the target at the latest shared observation and extended by live Hyperliquid perp mids" : ""}${expirationDate ? ", plus a listed-options implied probability fan centered on " + state.distributionCenter + " through " + expirationDate : ""}${selectedStructure ? ", with " + selectedStructure.name + " payout zones and breakevens" : ""}`,
     });
 
     for (let index = 0; index < 6; index += 1) {
@@ -1063,7 +1063,7 @@
         spot ? `<div class="tooltip-row spot"><span>${escapeHtml(spotCloseLabel)}</span><strong>${priceMoney(spot.c)}</strong></div>` : '<div class="tooltip-row spot"><span>Spot</span><strong>Cash market closed</strong></div>',
         spotPrecision ? `<p class="tooltip-precision">${spotPrecision}</p>` : "",
         peer ? `<div class="tooltip-row peer"><span>${peer.live ? "Live Hyperliquid peer basket" : escapeHtml(peerCloseLabel)}</span><strong>${priceMoney(peer.c)}</strong></div>` : "",
-        peer && peer.viewAnchor ? `<p class="tooltip-precision">Peer basket rebased to ${data.symbol} on ${dateLabel(peer.viewAnchor, true)}</p>` : "",
+        peer && peer.viewAnchor ? `<p class="tooltip-precision">Peer basket anchored to ${data.symbol} on ${dateLabel(peer.viewAnchor, true)}</p>` : "",
         perp ? `<div class="tooltip-row"><span>Perp total-return O / C</span><strong>${priceMoney(perp.o)} / ${priceMoney(perp.c)}</strong></div>` : '<div class="tooltip-row"><span>Perp</span><strong>Not listed</strong></div>',
         perp ? `<div class="tooltip-row"><span>Perp total-return H / L</span><strong>${priceMoney(perp.h)} / ${priceMoney(perp.l)}</strong></div>` : "",
         perp ? `<div class="tooltip-row"><span>${perp.p === "partial" ? "Funding observed" : "Funding to close"}</span><strong>${percent(perp.f * 100, 3)}</strong></div>` : "",
