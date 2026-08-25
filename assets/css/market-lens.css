@@ -347,10 +347,10 @@ main { min-height: 80vh; }
 .onchain-status { display: grid; justify-items: end; gap: .45rem; text-align: right; }
 .onchain-status strong { max-width: 52ch; color: var(--ink); font: 600 .82rem/1.35 var(--mono); font-variant-numeric: tabular-nums; }
 .onchain-live-stamp { color: var(--lime); font: 600 .72rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
-.onchain-table { margin: 0 2rem; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: rgba(0, 0, 0, .2); }
+.onchain-table { margin: 0 2rem; border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; scrollbar-color: rgba(204, 255, 0, .55) rgba(255, 255, 255, .06); background: rgba(0, 0, 0, .2); }
 .onchain-table-head, .onchain-market-row {
   display: grid; grid-template-columns: minmax(145px, .8fr) minmax(165px, 1fr) minmax(280px, 1.6fr) minmax(115px, .65fr) minmax(115px, .65fr);
-  gap: 1rem; align-items: start;
+  gap: 1rem; align-items: start; min-width: 920px;
 }
 .onchain-table-head { padding: .7rem 1rem; color: var(--dim); border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .025); font: 600 .72rem/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .onchain-market-row { position: relative; padding: 1rem; border-bottom: 1px solid var(--line); }
@@ -413,7 +413,7 @@ main { min-height: 80vh; }
 .onchain-table.venue-split-mode { border: 0; border-radius: 0; overflow: visible; background: transparent; }
 .onchain-table.venue-split-mode > .onchain-table-head { display: none; }
 .venue-split-shell { display: grid; gap: 1.1rem; }
-.venue-class-section { overflow: hidden; border: 1px solid rgba(255, 255, 255, .11); border-radius: 9px; background: rgba(0, 0, 0, .28); }
+.venue-class-section { overflow-x: auto; scrollbar-color: rgba(204, 255, 0, .55) rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .11); border-radius: 9px; background: rgba(0, 0, 0, .28); }
 .venue-class-section > header { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; padding: .85rem 1rem; border-bottom: 1px solid rgba(255, 255, 255, .09); }
 .venue-class-section > header h3 { margin: .2rem 0 0; color: var(--ink); font: 650 1rem/1.1 var(--sans); }
 .venue-class-section > header p { margin: 0; color: #6f776b; font: .68rem/1.45 var(--mono); text-align: right; }
@@ -421,6 +421,7 @@ main { min-height: 80vh; }
 .cex-section, .dex-section { border-left-color: rgba(255, 255, 255, .22); }
 .cex-section .venue-class-kicker, .dex-section .venue-class-kicker { color: #a5aca2; }
 .venue-split-head, .venue-split-row { display: grid; align-items: start; column-gap: .72rem; }
+.venue-split-head, .venue-split-row { min-width: 860px; }
 .cex-split-table .venue-split-head, .cex-market-row { grid-template-columns: minmax(130px, 1.05fr) minmax(125px, .9fr) 68px minmax(100px, .78fr) minmax(95px, .74fr) minmax(95px, .74fr) minmax(105px, .8fr); }
 .dex-split-table .venue-split-head, .dex-market-row { grid-template-columns: minmax(135px, .8fr) minmax(290px, 1.85fr) minmax(90px, .58fr) minmax(100px, .65fr) minmax(100px, .62fr) minmax(90px, .58fr); }
 .venue-split-head { padding: .55rem .75rem; color: #747c70; border-bottom: 1px solid rgba(255, 255, 255, .08); background: rgba(255, 255, 255, .025); font: 700 .64rem/1.2 var(--mono); letter-spacing: .075em; text-transform: uppercase; }
@@ -498,7 +499,7 @@ footer {
 
 @media (max-width: 760px) {
   .onchain-table-head { display: none; }
-  .onchain-market-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+  .onchain-market-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; min-width: 0; }
   .onchain-cell.contracts { grid-column: 1 / -1; padding: .75rem 0; border-top: 1px solid rgba(255, 255, 255, .08); border-bottom: 1px solid rgba(255, 255, 255, .08); }
   .onchain-cell::before { display: block; margin-bottom: .5rem; color: var(--dim); font: 600 .68rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
   .onchain-cell.token::before { content: "Token"; }
@@ -519,7 +520,7 @@ footer {
   .venue-class-section > header { align-items: start; }
   .venue-class-section > header p { max-width: 48%; }
   .venue-split-head { display: none; }
-  .cex-market-row, .dex-market-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .8rem 1rem; }
+  .cex-market-row, .dex-market-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .8rem 1rem; min-width: 0; }
   .cex-market-row .split-cell.venue, .dex-market-row .split-cell.venue, .dex-market-row .dex-contracts, .split-source, .dex-quote-ladder { grid-column: 1 / -1; }
   .split-cell::before { display: block; margin-bottom: .35rem; color: #60675d; font: 700 .58rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
   .split-cell.venue::before, .split-cell.dex-contracts::before { display: none; }
