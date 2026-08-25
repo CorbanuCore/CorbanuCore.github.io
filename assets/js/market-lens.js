@@ -124,6 +124,39 @@
     }, 15500);
   }
 
+  function upsertLiveSpotPoint(data, price, now) {
+    const rows = data && Array.isArray(data.spot) ? data.spot : [];
+    const currentPrice = Number(price);
+    const observedAt = now instanceof Date ? now : new Date();
+    if (!rows.length || !(currentPrice > 0) || Number.isNaN(observedAt.getTime())) return false;
+    const today = observedAt.toISOString().slice(0, 10);
+    const last = rows[rows.length - 1];
+    if (!last || String(last.d || "") > today) return false;
+    const anchorPrice = Number(last.live ? last.liveBasePrice : last.c);
+    if (!(anchorPrice > 0) || Math.abs(currentPrice / anchorPrice - 1) > 0.25) return false;
+    if (String(last.d) === today) {
+      if (!last.live) return false;
+      if (Number(last.c) === currentPrice) return false;
+      last.c = currentPrice;
+      last.r = Number(last.liveBaseReturn) * currentPrice / Number(last.liveBasePrice);
+      last.t = observedAt.toISOString();
+      return true;
+    }
+    const baseReturn = Number(last.r);
+    if (!(baseReturn > 0)) return false;
+    rows.push({
+      d: today,
+      c: currentPrice,
+      r: baseReturn * currentPrice / anchorPrice,
+      t: observedAt.toISOString(),
+      s: "live_oracle",
+      live: true,
+      liveBasePrice: anchorPrice,
+      liveBaseReturn: baseReturn,
+    });
+    return true;
+  }
+
   function upsertLivePerpCandle(data, price, now) {
     const rows = data && Array.isArray(data.perp) ? data.perp : [];
     const observedAt = now instanceof Date ? now : new Date();
@@ -206,7 +239,11 @@
       timeNode.textContent = `${liveClockLabel(now)} UTC`;
     }
     liveFeed.lastMessageAt = now.getTime();
-    if (state.data && upsertLivePerpCandle(state.data, price, now)) scheduleLiveChartRender();
+    let chartChanged = false;
+    if (state.data && upsertLivePerpCandle(state.data, price, now)) chartChanged = true;
+    const oraclePrice = Number(context && context.oraclePx);
+    if (state.data && oraclePrice > 0 && upsertLiveSpotPoint(state.data, oraclePrice, now)) chartChanged = true;
+    if (chartChanged) scheduleLiveChartRender();
     setLiveFeedState(status);
     if (status === "live") armLiveFeedStaleTimer();
     return true;
