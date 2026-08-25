@@ -73,19 +73,16 @@
       const table = document.getElementById('markets-table');
       const tbody = table.tBodies[0];
       const headers = Array.from(table.tHead.rows[0].cells);
-      let sortKey = 4, sortDir = -1;
+      let sortKey = null, sortDir = -1;
       function applySort() {
         const rows = Array.from(tbody.rows);
         const type = headers[sortKey].dataset.type;
         rows.sort((a, b) => {
           const av = a.cells[sortKey].dataset.sort, bv = b.cells[sortKey].dataset.sort;
           if (type === 'num') {
-            const an = av === '' ? -Infinity : Math.abs(parseFloat(av));
-            const bn = bv === '' ? -Infinity : Math.abs(parseFloat(bv));
-            const rawA = av === '' ? -Infinity : parseFloat(av);
-            const rawB = bv === '' ? -Infinity : parseFloat(bv);
-            const useAbs = sortKey === 4;
-            return sortDir * ((useAbs ? an : rawA) - (useAbs ? bn : rawB));
+            const an = av === '' ? -Infinity : parseFloat(av);
+            const bn = bv === '' ? -Infinity : parseFloat(bv);
+            return sortDir * (an - bn);
           }
           return sortDir * av.localeCompare(bv);
         });
@@ -93,7 +90,12 @@
         headers.forEach((h, i) => h.setAttribute('aria-sort', i === sortKey ? (sortDir === -1 ? 'descending' : 'ascending') : 'none'));
       }
       headers.forEach((header, index) => header.addEventListener('click', () => {
-        if (sortKey === index) sortDir = -sortDir; else { sortKey = index; sortDir = -1; }
+        if (sortKey === index) {
+          sortDir = -sortDir;
+        } else {
+          sortKey = index;
+          sortDir = header.dataset.type === 'text' ? 1 : -1;
+        }
         applySort();
       }));
       document.querySelectorAll('.markets-filters button').forEach((button) => button.addEventListener('click', () => {
@@ -109,7 +111,6 @@
         const row = event.target.closest('tr');
         if (row && row.dataset.href) window.location.href = row.dataset.href;
       });
-      applySort();
     })();
   </script>
 </body>
