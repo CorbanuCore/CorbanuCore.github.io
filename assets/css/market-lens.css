@@ -659,12 +659,16 @@ footer {
   .peer-table td:first-child { width: auto; }
   .peer-table td:first-child span { display: none; }
   .peer-table th:nth-child(n+2), .peer-table td:nth-child(n+2) { width: auto; }
-  /* Earnings ledger: date, move, score, briefing; fiscal period hides. */
+  /* Earnings ledger: rows stack; the briefing breaks out to the full mobile width. */
   .earnings-ledger-table { min-width: 0; font-size: .72rem; }
   .earnings-ledger-scroll { overflow-x: visible; }
-  .earnings-ledger-table th:nth-child(3), .earnings-ledger-table td:nth-child(3) { display: none; }
+  .earnings-ledger-table th:nth-child(3), .earnings-ledger-table td:nth-child(3),
+  .earnings-ledger-table th:nth-child(4) { display: none; }
+  .earnings-ledger-table thead tr, .earnings-ledger-table tbody tr { display: grid; grid-template-columns: 1fr auto; align-items: baseline; }
   .earnings-ledger-table th, .earnings-ledger-table td { padding: .5rem .45rem; }
-  .earnings-ledger-table th:nth-child(1) { width: auto; }
+  .earnings-ledger-table th:nth-child(1), .earnings-ledger-table th:nth-child(2) { width: auto; }
+  .earnings-ledger-table td:nth-child(4) { grid-column: 1 / -1; padding-top: 0; }
+  .transcript-brief article { max-width: none; }
   /* Options structures: trade, what you buy, and the payout/move column only. */
   .historical-structure-table { min-width: 0; font-size: .7rem; }
   .historical-structure-table th, .historical-structure-table td { padding: .5rem .4rem; white-space: normal; }
