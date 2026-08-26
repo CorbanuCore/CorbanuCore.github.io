@@ -62,7 +62,7 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__upsertLivePerpCandle = upsertLivePerpCandle;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__renderWeightedPeerAverages = renderWeightedPeerAverages;\n  window.__fetchLivePeerMids = fetchLivePeerMids;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
+  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__upsertLivePerpCandle = upsertLivePerpCandle;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__renderWeightedPeerAverages = renderWeightedPeerAverages;\n  window.__fetchLivePeerContexts = fetchLivePeerContexts;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
 
@@ -134,33 +134,41 @@ assert.equal(staleCandleData.perp[1].r, 1.88);
 assert.equal(staleCandleData.perp[1].f, 0);
 assert.match(staleCandleData.perp[1].t, /^2026-08-24T14:31:00/);
 
-const allMidsRequests = [];
+const contextRequests = [];
 context.fetch = async (_url, options) => {
   const payload = JSON.parse(options.body);
-  allMidsRequests.push(payload);
+  contextRequests.push(payload);
   return {
     ok: true,
     json: async () => payload.dex === "xyz"
-      ? { "xyz:MSFT": "110" }
-      : { BTC: "65000", ETH: "2000" },
+      ? [{ universe: [{ name: "xyz:MSFT" }] }, [{ midPx: "110", prevDayPx: "100" }]]
+      : [{ universe: [{ name: "BTC" }, { name: "ETH" }] }, [{ midPx: "65000", prevDayPx: "64000" }, { midPx: "2000", prevDayPx: "1900" }]],
   };
 };
-const mixedMids = await context.window.__fetchLivePeerMids({ dexes: ["", "xyz"] });
-assert.deepEqual(allMidsRequests, [{ type: "allMids" }, { type: "allMids", dex: "xyz" }]);
-assert.equal(mixedMids.BTC, "65000");
-assert.equal(mixedMids["xyz:MSFT"], "110");
-const change24h = { dataset: { referencePrice: "100" }, textContent: "", className: "" };
+const mixedContexts = await context.window.__fetchLivePeerContexts({ dexes: ["", "xyz"] });
+assert.deepEqual(contextRequests, [{ type: "metaAndAssetCtxs" }, { type: "metaAndAssetCtxs", dex: "xyz" }]);
+assert.equal(mixedContexts.BTC.midPx, "65000");
+assert.equal(mixedContexts["xyz:MSFT"].prevDayPx, "100");
+const change24h = { dataset: {}, textContent: "", className: "" };
 const change7d = { dataset: { referencePrice: "120" }, textContent: "", className: "" };
 const performanceRow = {
   dataset: { peerRawSymbol: "xyz:MSFT" },
-  querySelectorAll: () => [change24h, change7d],
+  querySelector: (selector) => selector.includes("24h") ? change24h : null,
 };
-context.document.querySelectorAll = (selector) => selector === "[data-peer-raw-symbol]" ? [performanceRow] : [];
-context.window.__renderPeerPerformance({ "xyz:MSFT": "110" });
+const liveStamp = { textContent: "" };
+context.document.querySelectorAll = (selector) => {
+  if (selector === "[data-peer-raw-symbol]") return [performanceRow];
+  if (selector === "[data-peer-live-stamp]") return [liveStamp];
+  return [];
+};
+context.window.__renderPeerPerformance(
+  { "xyz:MSFT": { midPx: "110", prevDayPx: "100" } },
+  new Date("2026-08-26T13:14:15Z"),
+);
 assert.equal(change24h.textContent, "+10.00%");
 assert.equal(change24h.className, "peer-change positive");
-assert.equal(change7d.textContent, "-8.33%");
-assert.equal(change7d.className, "peer-change negative");
+assert.equal(change7d.textContent, "");
+assert.match(liveStamp.textContent, /updated 13:14:15 UTC/);
 
 const peerCells = (change24hPct, change7dPct) => ({
   "24h": { dataset: { peerChangeValue: String(change24hPct) } },
@@ -203,7 +211,7 @@ const livePeerData = {
 };
 const livePeerRow = context.window.__computeLivePeerRow(
   livePeerData,
-  { "xyz:MSFT": 110, "xyz:GOOGL": 100, "xyz:AMZN": 90 },
+  { "xyz:MSFT": { midPx: 110 }, "xyz:GOOGL": { midPx: 100 }, "xyz:AMZN": { midPx: 90 } },
   new Date("2026-08-17T01:02:03Z"),
 );
 assert.equal(livePeerRow.d, "2026-08-17");
@@ -211,7 +219,7 @@ assert.ok(Math.abs(livePeerRow.c - 103) < 1e-9);
 assert.equal(livePeerRow.n, 3);
 assert.equal(livePeerRow.live, true);
 assert.equal(
-  context.window.__computeLivePeerRow(livePeerData, { "xyz:MSFT": 110, "xyz:GOOGL": 100 }, new Date()),
+  context.window.__computeLivePeerRow(livePeerData, { "xyz:MSFT": { midPx: 110 }, "xyz:GOOGL": { midPx: 100 } }, new Date()),
   null,
   "the live splice must require at least three current perp mids",
 );
@@ -222,10 +230,10 @@ const rebasedPeers = context.window.__rebasePeerSeriesToSpot(
 );
 assert.deepEqual(
   rebasedPeers.map((row) => row.c),
-  [180, 450],
-  "the peer basket must share the target level at the selected range anchor",
+  [90, 225],
+  "the peer basket must share the target level at the latest common close",
 );
-assert.equal(rebasedPeers[1].viewAnchor, "2026-02-17");
+assert.equal(rebasedPeers[1].viewAnchor, "2026-08-14");
 
 context.window.__startLivePerpPrice({ rawSymbol: "xyz:TSLA" });
 assert.equal(FakeWebSocket.instances.length, 1);

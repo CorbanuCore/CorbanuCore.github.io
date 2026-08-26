@@ -388,36 +388,47 @@
     });
   }
 
-  function renderPeerPerformance(mids) {
-    if (!mids) return;
-    document.querySelectorAll("[data-peer-raw-symbol]").forEach((row) => {
-      const rawSymbol = String(row.dataset.peerRawSymbol || "");
-      const mid = Number(mids[rawSymbol]);
-      if (!(mid > 0)) return;
-      row.querySelectorAll("[data-peer-change]").forEach((cell) => {
-        const reference = Number(cell.dataset.referencePrice);
-        if (!(reference > 0)) return;
-        const change = (mid / reference - 1) * 100;
-        cell.dataset.peerChangeValue = String(change);
-        cell.textContent = percent(change, 2);
-        cell.className = `peer-change ${change >= 0 ? "positive" : "negative"}`;
-      });
-    });
-    renderWeightedPeerAverages();
+  function contextMid(context) {
+    const mid = Number(context && typeof context === "object" ? (context.midPx || context.markPx) : context);
+    return mid > 0 ? mid : NaN;
   }
 
-  function computeLivePeerRow(data, mids, now) {
+  function renderPeerPerformance(contexts, now) {
+    if (!contexts) return;
+    let updatedRows = 0;
+    document.querySelectorAll("[data-peer-raw-symbol]").forEach((row) => {
+      const rawSymbol = String(row.dataset.peerRawSymbol || "");
+      const context = contexts[rawSymbol];
+      const mid = contextMid(context);
+      const previous = Number(context && context.prevDayPx);
+      const cell = row.querySelector('[data-peer-change="24h"]');
+      if (!cell || !(mid > 0) || !(previous > 0)) return;
+      const change = (mid / previous - 1) * 100;
+      cell.dataset.peerChangeValue = String(change);
+      cell.textContent = percent(change, 2);
+      cell.className = `peer-change ${change >= 0 ? "positive" : "negative"}`;
+      updatedRows += 1;
+    });
+    if (!updatedRows) return;
+    renderWeightedPeerAverages();
+    const observedAt = now instanceof Date ? now : new Date();
+    document.querySelectorAll("[data-peer-live-stamp]").forEach((stamp) => {
+      stamp.textContent = `24h perp changes live from Hyperliquid (updated ${liveClockLabel(observedAt)} UTC)`;
+    });
+  }
+
+  function computeLivePeerRow(data, contexts, now) {
     const splice = data && data.peerMapping && data.peerMapping.liveSplice;
     const inputs = splice && Array.isArray(splice.inputs) ? splice.inputs : [];
     const baseLevel = Number(splice && splice.baseLevel);
-    if (!mids || !Number.isFinite(baseLevel) || baseLevel <= 0 || inputs.length < 3) return null;
+    if (!contexts || !Number.isFinite(baseLevel) || baseLevel <= 0 || inputs.length < 3) return null;
     let activeWeight = 0;
     let weightedReturn = 0;
     let peerCount = 0;
     inputs.forEach((input) => {
       const weight = Number(input.weight);
       const perpReference = Number(input.perp_reference_price);
-      const perpMid = Number(mids[input.raw_symbol]);
+      const perpMid = contextMid(contexts[input.raw_symbol]);
       if (!(weight > 0) || !(perpReference > 0) || !(perpMid > 0)) return;
       activeWeight += weight;
       weightedReturn += weight * (perpMid / perpReference - 1);
@@ -436,13 +447,13 @@
     };
   }
 
-  async function fetchLivePeerMids(splice) {
+  async function fetchLivePeerContexts(splice) {
     const configured = Array.isArray(splice && splice.dexes) && splice.dexes.length
       ? splice.dexes
       : [splice && typeof splice.dex === "string" ? splice.dex : "xyz"];
     const dexes = [...new Set(configured.map((dex) => String(dex || "")))];
     const snapshots = await Promise.all(dexes.map(async (dex) => {
-      const payload = { type: "allMids" };
+      const payload = { type: "metaAndAssetCtxs" };
       if (dex) payload.dex = dex;
       const response = await fetch("https://api.hyperliquid.xyz/info", {
         method: "POST",
@@ -450,7 +461,12 @@
         body: JSON.stringify(payload),
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.json();
+      const responsePayload = await response.json();
+      const universe = responsePayload[0] && Array.isArray(responsePayload[0].universe)
+        ? responsePayload[0].universe
+        : [];
+      const contexts = Array.isArray(responsePayload[1]) ? responsePayload[1] : [];
+      return Object.fromEntries(universe.map((asset, index) => [asset.name, contexts[index]]));
     }));
     return Object.assign({}, ...snapshots);
   }
@@ -460,9 +476,10 @@
     const splice = data && data.peerMapping && data.peerMapping.liveSplice;
     if (!splice || !navigator.onLine) return false;
     try {
-      const mids = await fetchLivePeerMids(splice);
-      renderPeerPerformance(mids);
-      const row = computeLivePeerRow(data, mids, new Date());
+      const contexts = await fetchLivePeerContexts(splice);
+      const now = new Date();
+      renderPeerPerformance(contexts, now);
+      const row = computeLivePeerRow(data, contexts, now);
       if (!row) return false;
       const previous = state.livePeerRow;
       state.livePeerRow = row;
