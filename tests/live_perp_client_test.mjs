@@ -230,10 +230,10 @@ const rebasedPeers = context.window.__rebasePeerSeriesToSpot(
 );
 assert.deepEqual(
   rebasedPeers.map((row) => row.c),
-  [90, 225],
-  "the peer basket must share the target level at the latest common close",
+  [180, 450],
+  "the peer basket must share the target level at the first common close of the range",
 );
-assert.equal(rebasedPeers[1].viewAnchor, "2026-08-14");
+assert.equal(rebasedPeers[1].viewAnchor, "2026-02-17");
 
 context.window.__startLivePerpPrice({ rawSymbol: "xyz:TSLA" });
 assert.equal(FakeWebSocket.instances.length, 1);
