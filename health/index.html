@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corbanu · Production Health</title>
+<meta name="robots" content="noindex">
+<style>
+:root {
+  --bg: #05070a; --surface: #0b0f14; --edge: #1a232e; --text: #cfd8e3;
+  --muted: #6b7a8c; --ok: #79d297; --warn: #e8c268; --critical: #ef6b6b;
+  --accent: #8ab4d8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.5 "SFMono-Regular", ui-monospace, "Cascadia Mono", Menlo, monospace;
+}
+a { color: var(--accent); }
+main { max-width: 980px; margin: 0 auto; padding: 32px 20px 64px; }
+header.masthead {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 24px;
+  border-bottom: 1px solid var(--edge); padding-bottom: 16px; margin-bottom: 8px;
+}
+h1 { font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0; }
+.stamp { color: var(--muted); font-size: 12px; }
+.overall {
+  display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px;
+  border: 1px solid var(--edge); border-radius: 3px; font-size: 13px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.status-ok { color: var(--ok); } .status-warn { color: var(--warn); }
+.status-critical { color: var(--critical); }
+.dot-ok { background: var(--ok); } .dot-warn { background: var(--warn); }
+.dot-critical { background: var(--critical); }
+section.category {
+  border: 1px solid var(--edge); border-radius: 4px; background: var(--surface);
+  margin-top: 20px; overflow: hidden;
+}
+section.category > header {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  padding: 12px 16px; border-bottom: 1px solid var(--edge);
+}
+section.category h2 { font-size: 14px; margin: 0; letter-spacing: 0.1em; text-transform: uppercase; }
+.summary { color: var(--muted); font-size: 12px; }
+table { width: 100%; border-collapse: collapse; }
+td, th { padding: 7px 16px; text-align: left; font-size: 13px; vertical-align: top; }
+th { color: var(--muted); font-weight: 400; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid var(--edge); }
+tr + tr td { border-top: 1px solid rgba(26,35,46,0.6); }
+td.status { white-space: nowrap; width: 100px; }
+.clear { padding: 12px 16px; color: var(--muted); font-size: 12px; }
+footer { margin-top: 32px; color: var(--muted); font-size: 11px; }
+@media (max-width: 640px) { td, th { padding: 7px 10px; } main { padding: 20px 12px 48px; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1>Corbanu Production Health</h1>
+    <span class="overall" id="overall-pill"><span class="dot" id="overall-dot" aria-hidden="true"></span><span id="overall-text">…</span></span>
+    <span class="stamp">snapshot <time id="generated-at"></time> · <span id="publish-age"></span></span>
+  </header>
+  <p class="stamp">Every stale, missing, or degraded production input, by category. Healthy items are counted, not listed. Publish age updates live; all other rows reflect the last site build.</p>
+  <div id="categories"></div>
+  <footer>Corbanu · research visualization infrastructure health · <a href="/">Market Lens</a> · machine-readable: <a href="/assets/market-data/health.json">health.json</a></footer>
+</main>
+<script type="application/json" id="health-data">{"generatedAt": "2026-08-27T19:52:58.455600Z", "overall": "critical", "publishWarnHours": 25, "publishCriticalHours": 30, "categories": [{"id": "publication", "label": "Publication", "summary": "site build recency; the timer publishes daily at 21:24 UTC plus transcript pushes", "items": [{"name": "site build", "status": "ok", "detail": "health snapshot generated 2026-08-27T19:52:58.455600Z"}], "status": "ok"}, {"id": "coverage", "label": "Spot / Perp Coverage", "summary": "42/42 instruments current", "items": [{"name": "index build", "status": "ok", "detail": "coverage indices finished 1.3h ago"}], "status": "ok"}, {"id": "options", "label": "Listed Options", "summary": "33/34 chains fresh \u00b7 8 instruments without listed options", "items": [{"name": "NBIS", "status": "critical", "detail": "chain generated 70.4h ago"}], "status": "critical"}, {"id": "transcripts", "label": "Transcript Briefings", "summary": "22 equities current at 18-quarter target", "items": [{"name": "packet build", "status": "ok", "detail": "transcript packet generated 0.9h ago"}, {"name": "fundamentals", "status": "ok", "detail": "peer fundamentals as of 2026-08-27"}], "status": "ok"}, {"id": "funding", "label": "Funding Forecasts", "summary": "42/42 perps with both horizons", "items": [], "status": "ok"}, {"id": "onchain", "label": "On-chain Spot", "summary": "DEX route and pool quotes", "items": [{"name": "catalog", "status": "ok", "detail": "35 instruments, generated 0.9h ago"}], "status": "ok"}]}</script>
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById("health-data").textContent);
+  var generated = new Date(data.generatedAt);
+  document.getElementById("generated-at").textContent = data.generatedAt.replace("T", " ").replace(/\.\d+Z$/, "Z");
+
+  function pill(status) {
+    return '<span class="dot dot-' + status + '" aria-hidden="true"></span> <span class="status-' + status + '">' + status.toUpperCase() + "</span>";
+  }
+  function renderOverall(status) {
+    document.getElementById("overall-dot").className = "dot dot-" + status;
+    var text = document.getElementById("overall-text");
+    text.textContent = status === "ok" ? "all systems current" : status === "warn" ? "degraded" : "critical";
+    text.className = "status-" + status;
+  }
+  function publishStatus() {
+    var hours = (Date.now() - generated.getTime()) / 3600000;
+    return hours >= data.publishCriticalHours ? "critical" : hours >= data.publishWarnHours ? "warn" : "ok";
+  }
+  function tick() {
+    var hours = (Date.now() - generated.getTime()) / 3600000;
+    var label = hours < 1 ? Math.round(hours * 60) + "m" : hours.toFixed(1) + "h";
+    var status = publishStatus();
+    document.getElementById("publish-age").innerHTML =
+      'published <span class="status-' + status + '">' + label + " ago</span>";
+    renderOverall(worst([data.overall, status]));
+  }
+  function worst(list) {
+    var rank = { ok: 0, warn: 1, critical: 2 };
+    return list.reduce(function (a, b) { return rank[b] > rank[a] ? b : a; }, "ok");
+  }
+
+  var host = document.getElementById("categories");
+  data.categories.forEach(function (category) {
+    var section = document.createElement("section");
+    section.className = "category";
+    section.setAttribute("aria-labelledby", "cat-" + category.id);
+    var problems = category.items.filter(function (x) { return x.status !== "ok"; });
+    var body;
+    if (problems.length) {
+      body = '<table><thead><tr><th scope="col">Item</th><th scope="col">Status</th><th scope="col">Detail</th></tr></thead><tbody>' +
+        problems.map(function (x) {
+          return "<tr><td>" + x.name + '</td><td class="status">' + pill(x.status) + "</td><td>" + x.detail + "</td></tr>";
+        }).join("") + "</tbody></table>";
+    } else {
+      body = '<div class="clear">No problems.</div>';
+    }
+    section.innerHTML =
+      "<header><h2 id=\"cat-" + category.id + "\">" + category.label + "</h2>" +
+      '<span class="summary">' + category.summary + "</span>" +
+      '<span style="margin-left:auto">' + pill(category.status) + "</span></header>" + body;
+    host.appendChild(section);
+  });
+  tick();
+  setInterval(tick, 30000);
+})();
+</script>
+</body>
+</html>
