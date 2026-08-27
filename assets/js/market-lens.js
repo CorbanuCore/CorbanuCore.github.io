@@ -762,9 +762,12 @@
   }
 
   function rebasePeerSeriesToSpot(peerRows, spotRows) {
+    // Anchor the peer basket to spot at the FIRST shared date of the visible
+    // range: both lines start at the same level and relative performance
+    // accumulates left to right, instead of only converging at the newest bar.
     if (!peerRows.length || !spotRows.length) return peerRows;
     const spotByDate = new Map(spotRows.map((row) => [row.d, row]));
-    const anchorPeer = [...peerRows].reverse().find((row) => spotByDate.has(row.d));
+    const anchorPeer = peerRows.find((row) => spotByDate.has(row.d));
     if (!anchorPeer) return peerRows;
     const anchorSpot = spotByDate.get(anchorPeer.d);
     const peerLevel = Number(anchorPeer.c);
