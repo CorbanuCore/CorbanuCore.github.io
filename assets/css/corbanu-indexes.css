@@ -66,6 +66,7 @@ textarea { min-height: 132px; resize: vertical; line-height: 1.55; }
 textarea::placeholder, input::placeholder { color: #697064; }
 textarea:focus, select:focus, input[type="text"]:focus { border-color: var(--lime); box-shadow: 0 0 0 3px rgba(204,255,0,.12); }
 .field-label { display: block; margin: 0 0 .6rem; font: 700 .69rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+.title-field { margin-bottom: 1rem; }
 .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
 .radio-card { position: relative; display: block; min-height: 155px; padding: 1.05rem; border: 1px solid rgba(255,255,255,.16); border-radius: 11px; background: #060806; cursor: pointer; }
 .radio-card input { position: absolute; opacity: 0; }
@@ -91,7 +92,8 @@ input[type="range"] { width: 100%; accent-color: var(--lime); }
 .contract-card { position: sticky; top: 100px; overflow: hidden; }
 .contract-head { padding: 1.2rem 1.35rem; border-bottom: 1px solid var(--line); }
 .contract-head-row { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
-.contract-head h2 { margin: 0; font: 400 1.25rem/1 var(--serif); }
+.contract-label { display: block; margin-bottom: .45rem; color: var(--dim); font: 700 .58rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+.contract-head h2 { max-width: 21ch; margin: 0; font: 400 1.25rem/1.15 var(--serif); overflow-wrap: anywhere; }
 .status-pill { display: inline-flex; align-items: center; gap: .4rem; padding: .42rem .58rem; color: #f0b0a7; border: 1px solid rgba(255,139,124,.4); border-radius: 999px; font: 800 .58rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .status-pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--coral); }
 .contract-phrase { min-height: 100px; margin: 0; padding: 1.35rem; color: #e8ebe4; border-bottom: 1px solid var(--line); font: 400 1.2rem/1.4 var(--serif); overflow-wrap: anywhere; }

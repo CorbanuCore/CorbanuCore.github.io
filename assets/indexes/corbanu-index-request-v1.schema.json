@@ -11,8 +11,11 @@
     "mandate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["phrase"],
-      "properties": { "phrase": { "type": "string", "minLength": 12 } }
+      "required": ["title", "phrase"],
+      "properties": {
+        "title": { "type": "string", "minLength": 3, "maxLength": 80 },
+        "phrase": { "type": "string", "minLength": 12 }
+      }
     },
     "methodology": {
       "type": "object",

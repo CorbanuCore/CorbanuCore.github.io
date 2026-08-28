@@ -23,7 +23,11 @@
 
   function validateInput(input) {
     const errors = [];
+    const title = normalizePhrase(input.title);
     const phrase = normalizePhrase(input.phrase);
+    if (title.length < 3 || title.length > 80) {
+      errors.push("Index title must be between 3 and 80 characters.");
+    }
     if (phrase.length < 12 || phrase.split(" ").length < 3) {
       errors.push("Describe the index in at least three words.");
     }
@@ -47,6 +51,7 @@
       schema: SCHEMA_VERSION,
       schema_url: SCHEMA_URL,
       mandate: {
+        title: normalizePhrase(input.title),
         phrase: normalizePhrase(input.phrase),
       },
       methodology: {

@@ -3,6 +3,7 @@
 
   const contract = window.CorbanuIndexContract;
   const form = document.getElementById("index-builder");
+  const title = document.getElementById("index-title");
   const phrase = document.getElementById("index-phrase");
   const cutoff = document.getElementById("relevance-cutoff");
   const cutoffOutput = document.getElementById("cutoff-output");
@@ -16,6 +17,7 @@
   const cutoffSummary = document.getElementById("summary-cutoff");
   const modelSummary = document.getElementById("summary-model");
   const phraseSummary = document.getElementById("summary-phrase");
+  const titleSummary = document.getElementById("summary-title");
   const requestPanel = document.getElementById("request-result");
   const requestHash = document.getElementById("request-hash");
   const requestJson = document.getElementById("request-json");
@@ -27,6 +29,7 @@
   function currentInput() {
     const isDefault = model.value === "qwen-3.8-27b";
     return {
+      title: title.value,
       phrase: phrase.value,
       weighting: form.elements.weighting.value,
       rebalance_frequency: rebalance.value,
@@ -48,6 +51,7 @@
     rebalanceSummary.textContent = titleCase(input.rebalance_frequency);
     weightingSummary.textContent = input.weighting === "fundamental" ? "Fundamental" : "Market cap";
     modelSummary.textContent = model.value === "qwen-3.8-27b" ? "Qwen 3.8 27B" : (input.model_id || "Custom model");
+    titleSummary.textContent = contract.normalizePhrase(input.title) || "Untitled index";
     phraseSummary.textContent = contract.normalizePhrase(input.phrase) || "Your index mandate will appear here.";
     customModel.hidden = model.value !== "custom";
     requestPanel.hidden = true;

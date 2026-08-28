@@ -8,6 +8,7 @@ vm.runInNewContext(source, context, { filename: "corbanu-index-contract.js" });
 const contract = context.globalThis.CorbanuIndexContract;
 
 const baseInput = {
+  title: "AI Data Center Infrastructure",
   phrase: "  Public companies providing critical equipment for AI data centers  ",
   weighting: "fundamental",
   rebalance_frequency: "quarterly",
@@ -18,6 +19,7 @@ const baseInput = {
 };
 
 const request = contract.buildRequest(baseInput);
+assert.equal(request.mandate.title, "AI Data Center Infrastructure");
 assert.equal(request.mandate.phrase, "Public companies providing critical equipment for AI data centers");
 assert.equal(request.methodology.id, "corbanu.thematic-index.v1");
 assert.match(request.methodology.mandate_compiler, /0\/25\/50\/75\/100/);
@@ -44,6 +46,10 @@ assert.equal(capRequest.construction.market_cap.provider, "Tiingo");
 assert.equal("fundamental" in capRequest.construction, false);
 
 assert.throws(
+  () => contract.buildRequest({ ...baseInput, title: "AI" }),
+  /between 3 and 80 characters/,
+);
+assert.throws(
   () => contract.buildRequest({ ...baseInput, phrase: "AI" }),
   /at least three words/,
 );
@@ -53,7 +59,9 @@ assert.throws(
 );
 
 const page = fs.readFileSync(new URL("../indexes/index.html", import.meta.url), "utf8");
+assert.match(page, /id="index-title"/);
 assert.match(page, /id="index-phrase"/);
+assert.match(page, /id="summary-title"/);
 assert.match(page, /value="fundamental" checked/);
 assert.match(page, /value="quarterly" selected/);
 assert.match(page, /value="70"/);
