@@ -61,10 +61,10 @@
         scoring_output_schema: "corbanu.thematic-company-score.v1",
       },
       universe: {
-        id: "sec-us-listed-top1000-ttm-revenue-20260827",
-        selection: "top 1,000 eligible U.S.-listed SEC registrants by positive latest trailing-four-quarter revenue",
-        source: "U.S. SEC Company Facts and company_tickers_exchange snapshot through 2026-08-27",
-        universe_sha256: "c2d44359b36a4e65a118f488c48ac7d71bd4cded69ae2d06c2f4d4ce5cf5f4d8",
+        id: "sec-registered-us-listed-top1000-4q-revenue-20260828",
+        selection: "top 1,000 eligible U.S.-listed SEC registrants by positive trailing-four-quarter revenue",
+        source: "SEC issuer registry plus frozen Sharadar SF1 revenue and profitability; SEC Company Facts cross-check through 2026-08-27",
+        universe_sha256: "26e4caa3d7530dc31de1f1cbe46570bc6ba101193276506dedc2948826625903",
       },
       classification: {
         score_range: [0, 100],
@@ -123,7 +123,7 @@
         thematic_multiplier: "locked Qwen relevance score divided by 100",
         profitability_overlay: "exp(0.03 * selected profitability population z-score)",
         profitability_router: "TTM net income for financial services and utilities; TTM free cash flow otherwise",
-        source_policy: "frozen SEC-derived fundamentals with deterministic classification and documented fallbacks",
+        source_policy: "frozen Sharadar SF1 fundamentals over the SEC issuer registry, with SEC Company Facts cross-check evidence",
       };
     }
     return request;
