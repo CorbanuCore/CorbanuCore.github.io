@@ -103,6 +103,7 @@
         temperature: 0,
         top_p: 1,
         random_seed: 438916795,
+        acceptance_replay: "two independent 32-request passes; any batch mismatch is recomputed on both idle hosts at strict concurrency one and only a byte-identical strict pair is accepted",
         thinking: false,
         radix_cache: false,
         overlap_schedule: false,

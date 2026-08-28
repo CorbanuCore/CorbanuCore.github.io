@@ -34,6 +34,7 @@ assert.equal(request.construction.holding_cap, 0.20);
 assert.equal(request.model.execution.hardware, "NVIDIA H200");
 assert.equal(request.model.execution.max_running_requests, 32);
 assert.equal(request.model.execution.random_seed, 438916795);
+assert.match(request.model.execution.acceptance_replay, /strict concurrency one/);
 assert.equal(request.model.execution.deterministic_inference, true);
 assert.equal(request.validity.status, "draft");
 assert.equal(request.validity.required_replays, 1);
