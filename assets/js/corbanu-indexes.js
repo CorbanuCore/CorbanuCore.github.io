@@ -171,6 +171,10 @@
 
   function renderArtifact(artifact) {
     lastArtifact = artifact;
+    titleSummary.textContent = artifact.index_title;
+    phraseSummary.textContent = artifact.index_mandate;
+    if (!title.value) title.value = artifact.index_title;
+    if (!phrase.value) phrase.value = artifact.index_mandate;
     resultTitle.textContent = artifact.index_title;
     resultReplay.textContent = `${artifact.replay_proof.byte_identical_count} / ${artifact.replay_proof.comparison_count} byte-identical`;
     resultCount.textContent = String(artifact.constituent_count);
