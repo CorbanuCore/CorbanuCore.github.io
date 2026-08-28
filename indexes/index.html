@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Describe a market and prepare a deterministic, replay-gated thematic index with Corbanu Indexes.">
+  <meta name="theme-color" content="#030403">
+  <meta property="og:title" content="Corbanu Indexes — Make your own index">
+  <meta property="og:description" content="Turn an investment idea into an exact index request. No index is valid until its model output replays byte for byte.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://corbanu.com/indexes/">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=1">
+  <title>Corbanu Indexes — Make your own index</title>
+</head>
+<body>
+  <a class="skip" href="#builder">Skip to index builder</a>
+  <header class="site-header">
+    <a class="brand" href="/"><img src="/assets/corbanu-logo.webp" alt="" width="45" height="45">Corbanu</a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="/">Home</a><a href="/markets/">Markets</a><a href="/indexes/" aria-current="page">Indexes</a><a href="/posts/">Posts</a><a href="/terminal/">Terminal</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Corbanu Indexes · Request builder</p>
+        <h1>Describe a market.<br>Make an index.</h1>
+        <p class="hero-copy">Write the idea in plain English. Corbanu freezes the rules, scores eligible companies against the mandate, calculates the weights, and accepts the result only after an independent replay matches byte for byte.</p>
+        <div class="replay-promise">Replay required before validity</div>
+      </div>
+    </section>
+
+    <div class="builder-shell" id="builder">
+      <div class="builder-grid">
+        <form class="builder-form" id="index-builder" novalidate>
+          <fieldset class="form-step">
+            <legend class="step-head">
+              <span class="step-number">01</span>
+              <span><h2>Define the index</h2><p>Describe the economic exposure you want. Specific beats clever.</p></span>
+            </legend>
+            <label class="field-label" for="index-phrase">Index mandate</label>
+            <textarea id="index-phrase" name="phrase" maxlength="600" placeholder="Public companies that provide critical equipment, power, and cooling for AI data centers" required></textarea>
+          </fieldset>
+
+          <fieldset class="form-step">
+            <legend class="step-head">
+              <span class="step-number">02</span>
+              <span><h2>Choose how holdings are weighted</h2><p>The relevance floor decides who qualifies. The weighting rule decides position size.</p></span>
+            </legend>
+            <div class="radio-grid">
+              <label class="radio-card">
+                <input type="radio" name="weighting" value="fundamental" checked>
+                <span class="radio-kicker">Recommended</span>
+                <strong>Fundamental weighted</strong>
+                <small>Blends thematic strength with company scale and a modest profitability adjustment. Uses free cash flow for operating companies and net income for financials and utilities.</small>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="weighting" value="market_cap">
+                <span class="radio-kicker">Tiingo data</span>
+                <strong>Cap weighted</strong>
+                <small>Weights every qualifying company in proportion to its point-in-time market capitalization. Larger companies receive larger positions.</small>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-step">
+            <legend class="step-head">
+              <span class="step-number">03</span>
+              <span><h2>Set the index rules</h2><p>These values are frozen into the request and cannot change during a run.</p></span>
+            </legend>
+            <div class="two-fields">
+              <div>
+                <label class="field-label" for="rebalance-frequency">Rebalance frequency</label>
+                <select id="rebalance-frequency" name="rebalance_frequency">
+                  <option value="monthly">Monthly</option>
+                  <option value="quarterly" selected>Quarterly — recommended</option>
+                  <option value="semiannual">Semiannual</option>
+                  <option value="annual">Annual</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label" for="relevance-cutoff">Minimum relevance</label>
+                <div class="range-row">
+                  <input id="relevance-cutoff" name="relevance_cutoff" type="range" min="0" max="100" step="1" value="70">
+                  <output class="cutoff-value" id="cutoff-output" for="relevance-cutoff">70</output>
+                </div>
+                <p class="field-note">70 / 100 recommended. Lower-scoring companies are excluded.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-step">
+            <legend class="step-head">
+              <span class="step-number">04</span>
+              <span><h2>Choose the model</h2><p>An exact model revision and execution profile are part of the index definition.</p></span>
+            </legend>
+            <label class="field-label" for="model-choice">Scoring model</label>
+            <select id="model-choice" name="model_choice">
+              <option value="qwen-3.8-27b" selected>Qwen 3.8 27B — recommended and admitted</option>
+              <option value="custom">Custom model manifest</option>
+            </select>
+            <div class="custom-fields" id="custom-model-fields" hidden>
+              <p>Custom models remain drafts until their weights, runtime, and replay profile have been admitted.</p>
+              <div><label class="field-label" for="custom-model-id">Model ID</label><input id="custom-model-id" type="text" placeholder="organization/model"></div>
+              <div><label class="field-label" for="custom-model-revision">Exact revision</label><input id="custom-model-revision" type="text" placeholder="commit or content hash"></div>
+            </div>
+          </fieldset>
+
+          <p class="draft-note">This creates the exact request packet. It does not start paid compute, publish holdings, or create a valid index.</p>
+          <button class="build-button" type="submit">Prepare index request</button>
+          <p class="form-error" id="form-error" role="alert" tabindex="-1"></p>
+
+          <section class="request-result" id="request-result" hidden aria-live="polite">
+            <header><div><h3>Request prepared</h3><p>The request is content-addressed but remains a draft until execution and replay complete.</p></div><span class="status-pill">Draft</span></header>
+            <code id="request-hash"></code>
+            <div class="result-actions"><button id="copy-request" type="button">Copy JSON</button><button id="download-request" type="button">Download JSON</button></div>
+            <pre id="request-json"></pre>
+          </section>
+        </form>
+
+        <aside class="contract-card" aria-label="Current index request summary">
+          <div class="contract-head">
+            <div class="contract-head-row"><h2>Index contract</h2><span class="status-pill">Not valid</span></div>
+          </div>
+          <p class="contract-phrase" id="summary-phrase">Your index mandate will appear here.</p>
+          <dl class="contract-rows">
+            <div><dt>Weighting</dt><dd id="summary-weighting">Fundamental</dd></div>
+            <div><dt>Rebalance</dt><dd id="summary-rebalance">Quarterly</dd></div>
+            <div><dt>Relevance floor</dt><dd id="summary-cutoff">70 / 100</dd></div>
+            <div><dt>Model</dt><dd id="summary-model">Qwen 3.8 27B</dd></div>
+            <div><dt>Universe</dt><dd>SEC top 1,000</dd></div>
+            <div><dt>Max holding</dt><dd>20%</dd></div>
+          </dl>
+          <div class="replay-gate">
+            <strong>Validity gate</strong>
+            <div class="gate-track" aria-label="Index validity stages">
+              <div class="gate-stage"><span>01</span><b>Request</b></div>
+              <div class="gate-stage"><span>02</span><b>Run</b></div>
+              <div class="gate-stage"><span>03</span><b>Replay</b></div>
+            </div>
+            <p class="gate-note">A hash proves which rules were requested. Only a byte-identical replay proves those rules produced the published scores and weights.</p>
+          </div>
+        </aside>
+      </div>
+
+      <section class="validity" aria-labelledby="validity-title">
+        <header><h2 id="validity-title">One idea. Two runs. One valid result.</h2><p>The interface keeps product creation simple without weakening the proof. Every choice that changes a constituent or weight is bound before execution.</p></header>
+        <div class="validity-grid">
+          <article class="validity-step"><span>01 / FREEZE</span><h3>Turn the phrase into a contract</h3><p>The mandate, universe, weighting rule, relevance floor, rebalance schedule, exact model, and runtime profile receive one request hash.</p></article>
+          <article class="validity-step"><span>02 / EXECUTE</span><h3>Score and weight the universe</h3><p>The admitted model scores each eligible company against the same mandate. The selected rule converts qualifying names into integer weights.</p></article>
+          <article class="validity-step"><span>03 / REPLAY</span><h3>Accept only an exact match</h3><p>An independent run must reproduce the scoring artifact byte for byte and rebuild the same weights. A mismatch leaves the index invalid.</p></article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot-links"><a href="/">Home</a><a href="/markets/">Markets</a><a href="/posts/">Posts</a><a href="/terminal/">Terminal</a><a href="/compliance/">Compliance</a><a href="/disclaimer/">Disclaimer</a></div>
+    <div>Corbanu · 2026</div>
+    <div class="footnote">Request-builder preview. Not an offer to buy or sell any security. A prepared request is not an index and is not valid until the required replay succeeds.</div>
+  </footer>
+
+  <script src="/assets/js/corbanu-index-contract.js?v=1"></script>
+  <script src="/assets/js/corbanu-indexes.js?v=1"></script>
+</body>
+</html>

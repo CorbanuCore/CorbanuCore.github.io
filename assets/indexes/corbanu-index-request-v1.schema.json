@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://corbanu.com/assets/indexes/corbanu-index-request-v1.schema.json",
+  "title": "Corbanu Index Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_url", "mandate", "methodology", "universe", "classification", "construction", "model", "validity"],
+  "properties": {
+    "schema": { "const": "corbanu.index-request.v1" },
+    "schema_url": { "const": "https://corbanu.com/assets/indexes/corbanu-index-request-v1.schema.json" },
+    "mandate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phrase"],
+      "properties": { "phrase": { "type": "string", "minLength": 12 } }
+    },
+    "methodology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "mandate_compiler", "issuer_scorer", "scoring_output_schema"],
+      "properties": {
+        "id": { "const": "corbanu.thematic-index.v1" },
+        "mandate_compiler": { "type": "string" },
+        "issuer_scorer": { "type": "string" },
+        "scoring_output_schema": { "const": "corbanu.thematic-company-score.v1" }
+      }
+    },
+    "universe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "selection", "source"],
+      "properties": {
+        "id": { "const": "sec-us-reporting-top1000-ttm-revenue" },
+        "selection": { "type": "string" },
+        "source": { "const": "SEC EDGAR" }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score_range", "relevance_cutoff", "evidence_policy"],
+      "properties": {
+        "score_range": { "type": "array", "prefixItems": [{ "const": 0 }, { "const": 100 }], "items": false },
+        "relevance_cutoff": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "evidence_policy": { "type": "string" }
+      }
+    },
+    "construction": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["weighting", "rebalance_frequency", "rebalance_trigger", "holding_cap", "integer_weight_units"],
+      "properties": {
+        "weighting": { "enum": ["fundamental", "market_cap"] },
+        "rebalance_frequency": { "enum": ["monthly", "quarterly", "semiannual", "annual"] },
+        "rebalance_trigger": { "type": "string" },
+        "holding_cap": { "const": 0.2 },
+        "integer_weight_units": { "const": 1000000000000 },
+        "market_cap": { "type": "object" },
+        "fundamental": { "type": "object" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "revision", "execution_profile"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "execution_profile": { "type": "string", "minLength": 1 },
+        "execution": { "type": "object" }
+      }
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "required_replays", "valid_only_after"],
+      "properties": {
+        "status": { "const": "draft" },
+        "required_replays": { "const": 1 },
+        "valid_only_after": { "type": "array", "minItems": 3, "items": { "type": "string" } }
+      }
+    }
+  }
+}
