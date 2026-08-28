@@ -64,7 +64,7 @@
         id: "sec-us-listed-top1000-ttm-revenue-20260827",
         selection: "top 1,000 eligible U.S.-listed SEC registrants by positive latest trailing-four-quarter revenue",
         source: "U.S. SEC Company Facts and company_tickers_exchange snapshot through 2026-08-27",
-        universe_sha256: "f6be24154337fed73b50274963202b7e82258935ef085405aaed398b9890ebaa",
+        universe_sha256: "c2d44359b36a4e65a118f488c48ac7d71bd4cded69ae2d06c2f4d4ce5cf5f4d8",
       },
       classification: {
         score_range: [0, 100],
