@@ -131,6 +131,9 @@
 
   function setJobState(state) {
     activeJobId = state.job_id;
+    const resumableLocation = new URL(window.location.href);
+    resumableLocation.searchParams.set("job", state.job_id);
+    window.history.replaceState({}, "", resumableLocation);
     requestHash.textContent = state.request_sha256 || "";
     const completed = Number((state.progress || {}).completed || 0);
     const total = Number((state.progress || {}).total || 0);
