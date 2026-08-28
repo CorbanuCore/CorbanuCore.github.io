@@ -61,9 +61,9 @@
         scoring_output_schema: "corbanu.thematic-company-score.v1",
       },
       universe: {
-        id: "sec-us-reporting-top1000-ttm-revenue",
-        selection: "top 1,000 eligible US-listed SEC reporting companies by trailing-four-quarter revenue",
-        source: "SEC EDGAR",
+        id: "corbanu-public-demo-108",
+        selection: "108-company public demonstration universe drawn from the frozen SEC fundamental research artifact",
+        source: "SEC-derived Corbanu research artifact",
       },
       classification: {
         score_range: [0, 100],
@@ -117,13 +117,11 @@
       };
     } else {
       request.construction.fundamental = {
-        score_share: 0.20,
-        fundamental_share: 0.80,
-        market_cap_provider: "Tiingo",
-        size_transform: "sqrt(point-in-time market capitalization USD)",
-        profitability_overlay: "exp(0.03 * cross-sectional z-score)",
+        size_base: "trailing-four-quarter revenue",
+        thematic_multiplier: "locked Qwen relevance score divided by 100",
+        profitability_overlay: "exp(0.03 * selected profitability population z-score)",
         profitability_router: "TTM net income for financial services and utilities; TTM free cash flow otherwise",
-        source_policy: "SEC fundamentals with deterministic classification and documented fallbacks",
+        source_policy: "frozen SEC-derived fundamentals with deterministic classification and documented fallbacks",
       };
     }
     return request;

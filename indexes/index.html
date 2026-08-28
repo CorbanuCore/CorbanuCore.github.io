@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://corbanu.com/indexes/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=1">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=2">
   <title>Corbanu Indexes — Make your own index</title>
 </head>
 <body>
@@ -61,10 +61,10 @@
                 <small>Blends thematic strength with company scale and a modest profitability adjustment. Uses free cash flow for operating companies and net income for financials and utilities.</small>
               </label>
               <label class="radio-card">
-                <input type="radio" name="weighting" value="market_cap">
-                <span class="radio-kicker">Tiingo data</span>
+                <input type="radio" name="weighting" value="market_cap" disabled>
+                <span class="radio-kicker">Next</span>
                 <strong>Cap weighted</strong>
-                <small>Weights every qualifying company in proportion to its point-in-time market capitalization. Larger companies receive larger positions.</small>
+                <small>Weights every qualifying company in proportion to point-in-time market capitalization. Disabled in this public demo pending a production market-data arrangement.</small>
               </label>
             </div>
           </fieldset>
@@ -103,7 +103,7 @@
             <label class="field-label" for="model-choice">Scoring model</label>
             <select id="model-choice" name="model_choice">
               <option value="qwen-3.8-27b" selected>Qwen 3.8 27B — recommended and admitted</option>
-              <option value="custom">Custom model manifest</option>
+              <option value="custom" disabled>Custom model manifest — admission required</option>
             </select>
             <div class="custom-fields" id="custom-model-fields" hidden>
               <p>Custom models remain drafts until their weights, runtime, and replay profile have been admitted.</p>
@@ -112,21 +112,29 @@
             </div>
           </fieldset>
 
-          <p class="draft-note">This creates the exact request packet. It does not start paid compute, publish holdings, or create a valid index.</p>
-          <button class="build-button" type="submit">Prepare index request</button>
+          <p class="draft-note">The public demo runs a frozen 108-company universe on two independent H200s. One job runs at a time and can take several minutes.</p>
+          <button class="build-button" id="run-index" type="submit">Run index</button>
           <p class="form-error" id="form-error" role="alert" tabindex="-1"></p>
 
           <section class="request-result" id="request-result" hidden aria-live="polite">
-            <header><div><h3>Request prepared</h3><p>The request is content-addressed but remains a draft until execution and replay complete.</p></div><span class="status-pill">Draft</span></header>
+            <header><div><h3 id="job-heading">Request prepared</h3><p id="job-message">The request is content-addressed and ready to run.</p></div><span class="status-pill" id="job-status">Draft</span></header>
             <code id="request-hash"></code>
+            <div class="job-progress" id="job-progress" hidden><span id="job-stage">Queued</span><div><i id="job-progress-bar"></i></div><b id="job-progress-count">0 / 0</b></div>
             <div class="result-actions"><button id="copy-request" type="button">Copy JSON</button><button id="download-request" type="button">Download JSON</button></div>
-            <pre id="request-json"></pre>
+            <details class="request-details"><summary>Exact request JSON</summary><pre id="request-json"></pre></details>
+          </section>
+
+          <section class="index-result" id="index-result" hidden aria-live="polite">
+            <header class="index-result-head"><div><span>Valid index artifact</span><h3 id="result-title"></h3></div><strong id="result-replay"></strong></header>
+            <div class="result-metrics"><div><span>Holdings</span><b id="result-count"></b></div><div><span>Artifact hash</span><code id="result-hash"></code></div></div>
+            <div class="holdings-table-wrap"><table class="holdings-table"><thead><tr><th>#</th><th>Company</th><th>Score</th><th>Weight</th><th>Reasoning</th></tr></thead><tbody id="result-holdings"></tbody></table></div>
+            <div class="result-actions"><button id="download-artifact" type="button">Download full artifact</button><button id="copy-result-link" type="button">Copy result link</button></div>
           </section>
         </form>
 
         <aside class="contract-card" aria-label="Current index request summary">
           <div class="contract-head">
-            <div class="contract-head-row"><div><span class="contract-label">Index contract</span><h2 id="summary-title">Untitled index</h2></div><span class="status-pill">Not valid</span></div>
+            <div class="contract-head-row"><div><span class="contract-label">Index contract</span><h2 id="summary-title">Untitled index</h2></div><span class="status-pill" id="contract-status">Not valid</span></div>
           </div>
           <p class="contract-phrase" id="summary-phrase">Your index mandate will appear here.</p>
           <dl class="contract-rows">
@@ -134,15 +142,15 @@
             <div><dt>Rebalance</dt><dd id="summary-rebalance">Quarterly</dd></div>
             <div><dt>Relevance floor</dt><dd id="summary-cutoff">70 / 100</dd></div>
             <div><dt>Model</dt><dd id="summary-model">Qwen 3.8 27B</dd></div>
-            <div><dt>Universe</dt><dd>SEC top 1,000</dd></div>
+            <div><dt>Universe</dt><dd>108-company demo</dd></div>
             <div><dt>Max holding</dt><dd>20%</dd></div>
           </dl>
           <div class="replay-gate">
             <strong>Validity gate</strong>
             <div class="gate-track" aria-label="Index validity stages">
-              <div class="gate-stage"><span>01</span><b>Request</b></div>
-              <div class="gate-stage"><span>02</span><b>Run</b></div>
-              <div class="gate-stage"><span>03</span><b>Replay</b></div>
+              <div class="gate-stage" id="gate-request"><span>01</span><b>Request</b></div>
+              <div class="gate-stage" id="gate-run"><span>02</span><b>Run</b></div>
+              <div class="gate-stage" id="gate-replay"><span>03</span><b>Replay</b></div>
             </div>
             <p class="gate-note">A hash proves which rules were requested. Only a byte-identical replay proves those rules produced the published scores and weights.</p>
           </div>
@@ -166,7 +174,8 @@
     <div class="footnote">Request-builder preview. Not an offer to buy or sell any security. A prepared request is not an index and is not valid until the required replay succeeds.</div>
   </footer>
 
-  <script src="/assets/js/corbanu-index-contract.js?v=1"></script>
-  <script src="/assets/js/corbanu-indexes.js?v=1"></script>
+  <script src="/assets/js/corbanu-index-config.js?v=1"></script>
+  <script src="/assets/js/corbanu-index-contract.js?v=2"></script>
+  <script src="/assets/js/corbanu-indexes.js?v=2"></script>
 </body>
 </html>
