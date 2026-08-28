@@ -64,7 +64,7 @@
                 <input type="radio" name="weighting" value="market_cap" disabled>
                 <span class="radio-kicker">Next</span>
                 <strong>Cap weighted</strong>
-                <small>Weights every qualifying company in proportion to point-in-time market capitalization. Disabled in this public demo pending a production market-data arrangement.</small>
+                <small>Weights every qualifying company in proportion to point-in-time market capitalization. Disabled pending a production market-data arrangement.</small>
               </label>
             </div>
           </fieldset>
@@ -112,7 +112,7 @@
             </div>
           </fieldset>
 
-          <p class="draft-note">The public demo runs a frozen 108-company universe on two independent H200s. One job runs at a time and can take several minutes.</p>
+          <p class="draft-note">Every run scores the frozen top-1,000 SEC-revenue universe on two independent H200s. One job runs at a time; the second pass must reproduce all 1,000 outputs byte for byte.</p>
           <button class="build-button" id="run-index" type="submit">Run index</button>
           <p class="form-error" id="form-error" role="alert" tabindex="-1"></p>
 
@@ -142,7 +142,7 @@
             <div><dt>Rebalance</dt><dd id="summary-rebalance">Quarterly</dd></div>
             <div><dt>Relevance floor</dt><dd id="summary-cutoff">70 / 100</dd></div>
             <div><dt>Model</dt><dd id="summary-model">Qwen 3.8 27B</dd></div>
-            <div><dt>Universe</dt><dd>108-company demo</dd></div>
+            <div><dt>Universe</dt><dd>Top 1,000 by SEC TTM revenue</dd></div>
             <div><dt>Max holding</dt><dd>20%</dd></div>
           </dl>
           <div class="replay-gate">
@@ -175,7 +175,7 @@
   </footer>
 
   <script src="/assets/js/corbanu-index-config.js?v=1"></script>
-  <script src="/assets/js/corbanu-index-contract.js?v=2"></script>
-  <script src="/assets/js/corbanu-indexes.js?v=4"></script>
+  <script src="/assets/js/corbanu-index-contract.js?v=3"></script>
+  <script src="/assets/js/corbanu-indexes.js?v=5"></script>
 </body>
 </html>

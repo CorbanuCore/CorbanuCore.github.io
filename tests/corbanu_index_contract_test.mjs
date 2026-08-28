@@ -25,7 +25,8 @@ assert.equal(request.methodology.id, "corbanu.thematic-index.v1");
 assert.match(request.methodology.mandate_compiler, /0\/25\/50\/75\/100/);
 assert.equal(request.classification.relevance_cutoff, 70);
 assert.equal(request.construction.weighting, "fundamental");
-assert.equal(request.universe.id, "corbanu-public-demo-108");
+assert.equal(request.universe.id, "sec-us-listed-top1000-ttm-revenue-20260827");
+assert.equal(request.universe.universe_sha256, "f6be24154337fed73b50274963202b7e82258935ef085405aaed398b9890ebaa");
 assert.equal(request.construction.fundamental.size_base, "trailing-four-quarter revenue");
 assert.equal(request.construction.fundamental.thematic_multiplier, "locked Qwen relevance score divided by 100");
 assert.equal(request.construction.fundamental.profitability_overlay, "exp(0.03 * selected profitability population z-score)");
@@ -73,5 +74,7 @@ assert.match(page, /Qwen 3\.8 27B — recommended and admitted/);
 assert.match(page, /Replay required before validity/);
 assert.match(page, /id="run-index"/);
 assert.match(page, /id="index-result"/);
+assert.match(page, /Top 1,000 by SEC TTM revenue/);
+assert.doesNotMatch(page, /108-company|public demo/i);
 
 JSON.parse(fs.readFileSync(new URL("../assets/indexes/corbanu-index-request-v1.schema.json", import.meta.url), "utf8"));

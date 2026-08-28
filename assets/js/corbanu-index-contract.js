@@ -61,9 +61,10 @@
         scoring_output_schema: "corbanu.thematic-company-score.v1",
       },
       universe: {
-        id: "corbanu-public-demo-108",
-        selection: "108-company public demonstration universe drawn from the frozen SEC fundamental research artifact",
-        source: "SEC-derived Corbanu research artifact",
+        id: "sec-us-listed-top1000-ttm-revenue-20260827",
+        selection: "top 1,000 eligible U.S.-listed SEC registrants by positive latest trailing-four-quarter revenue",
+        source: "U.S. SEC Company Facts and company_tickers_exchange snapshot through 2026-08-27",
+        universe_sha256: "f6be24154337fed73b50274963202b7e82258935ef085405aaed398b9890ebaa",
       },
       classification: {
         score_range: [0, 100],
