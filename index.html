@@ -261,6 +261,10 @@
     @keyframes private-route { to { stroke-dashoffset: -26; } }
     @keyframes private-step { 0%, 16%, 100% { opacity: .55; transform: scale(.92); } 7% { opacity: 1; transform: scale(1.08); } }
     .private-boundaries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 2rem; overflow: hidden; border: 1px solid rgba(255,255,255,.13); border-radius: 14px; background: rgba(255,255,255,.13); }
+    .private-live { margin-bottom: 2.6rem; }
+    .private-live-status::before { background: #7dff8a; box-shadow: 0 0 14px rgba(125,255,138,.7); }
+    .private-live-intro { margin: .2rem 0 1.2rem; max-width: 76ch; color: #d9dcd4; font-size: 1.02rem; line-height: 1.6; }
+    .private-live .private-boundaries { margin-top: 0; }
     .private-boundary { padding: 1.35rem 1.45rem; background: rgba(5,7,5,.96); }
     .private-boundary strong { display: block; color: var(--lime); font: 600 .7rem/1 var(--mono); letter-spacing: .11em; text-transform: uppercase; }
     .private-boundary span { display: block; margin-top: .65rem; color: #d9dcd4; font-size: .95rem; line-height: 1.5; }
@@ -313,7 +317,7 @@
     .plan-panel.highlight p { color: #e7ecda; }
 
     .trust { background: #060706; }
-    .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; max-width: 1200px; margin: 0 auto; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--line); }
+    .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; max-width: 1200px; margin: 0 auto; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--line); }
     .trust-item { min-height: 260px; padding: 2.2rem; background: #050605; }
     .trust-index { color: var(--lime); font: .75rem/1 var(--mono); }
     .trust-item h3 { margin: 3rem 0 .8rem; font-size: 1.55rem; font-weight: 500; }
@@ -445,6 +449,7 @@
       <a href="#why">Why</a>
       <a href="#product">Product</a>
       <a href="/terminal/">Terminal</a>
+      <a href="/research/cyberindex/">Research</a>
       <a href="#plans">Plans</a>
       <a href="#trust">Trust</a>
       <a href="https://github.com/CorbanuCore">Developers</a>
@@ -630,6 +635,16 @@
           </div>
         </header>
 
+        <div class="private-live">
+          <div class="private-inference-status private-live-status">Live today · Corbanu Private Inference</div>
+          <p class="private-live-intro">GLM 5.3 Flash served from GPUs Corbanu operates, running revision-pinned frozen open weights — with zero data retention. Your prompts and responses are not stored, are not shared, and are never used to train any model.</p>
+          <div class="private-boundaries" role="list" aria-label="Corbanu Private Inference zero-data-retention commitments">
+            <div class="private-boundary" role="listitem"><strong>Zero retention</strong><span>Prompts and completions exist in GPU memory only for the life of the request. Billing records token counts — never content.</span></div>
+            <div class="private-boundary" role="listitem"><strong>Zero training</strong><span>Inference on frozen, pinned open weights cannot alter a model, and no fine-tuning or dataset pipeline touches your traffic.</span></div>
+            <div class="private-boundary" role="listitem"><strong>Zero third parties</strong><span>Private routes never reach an outside model vendor and never overflow to a non-private backend — they fail closed instead.</span></div>
+          </div>
+        </div>
+
         <figure class="private-figure">
           <p class="private-scroll-note" id="private-scroll-note">Swipe to trace the request →</p>
           <div class="private-diagram-scroll" tabindex="0" role="region" aria-label="Private inference trust-boundary diagram" aria-describedby="private-scroll-note private-inference-caption">
@@ -779,6 +794,7 @@
         <article class="trust-item"><div class="trust-index">01 / CUSTODY</div><h3>Assets stay at the venue</h3><p>Your existing exchange or brokerage remains the custodian and source of account authority.</p></article>
         <article class="trust-item"><div class="trust-index">02 / CREDENTIALS</div><h3>Secrets stay out of prompts</h3><p>The encrypted vault exposes scoped capabilities to approved tools without placing keys in ordinary model context.</p></article>
         <article class="trust-item"><div class="trust-index">03 / EXECUTION</div><h3>The trader controls the loop</h3><p>Permissions are scoped at the venue. Any execution system connected to Corbanu output remains user-controlled.</p></article>
+        <article class="trust-item"><div class="trust-index">04 / RETENTION</div><h3>Zero data retention</h3><p>Corbanu Private Inference stores nothing: prompts and responses are never written to disk, never shared, and never used to train models.</p></article>
       </div>
     </section>
 
@@ -809,12 +825,13 @@
       <a href="https://github.com/CorbanuCore">GitHub</a>
       <a href="https://github.com/CorbanuCore/CorbanuTerminal">Terminal source</a>
       <a href="https://tasknode.postfiat.org">Task Node</a>
+      <a href="/research/cyberindex/">Cyber research</a>
       <a href="https://x.com/corbanuAI">X</a>
       <a href="https://discord.gg/U6HjgDSmhR">Discord</a>
       <a href="#trust">Trust model</a>
     </div>
     <div>Corbanu · 2026</div>
-    <div class="footnote">Product vision. Not an offer to buy or sell any security or digital asset. Corbanu does not custody assets or hold trading authority.</div>
+    <div class="footnote">Product vision. Not an offer to buy or sell any security or digital asset. Corbanu does not custody assets or hold trading authority. Corbanu Private Inference routes are zero data retention: prompts and responses are not stored and are never used to train models.</div>
   </footer>
 
   <script>
