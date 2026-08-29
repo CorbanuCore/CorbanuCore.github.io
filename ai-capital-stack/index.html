@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Real-time AI lab, GPU rental, neocloud credit, Nvidia, and Oracle capital-stack indicators.">
+  <meta name="theme-color" content="#050705">
+  <title>AI Capital Stack Monitor — Corbanu</title>
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/ai-capital-stack.css">
+  <style>.filters{grid-column:1/-1;display:flex;align-items:end;gap:.8rem;padding:1rem;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.filters label{display:grid;gap:.35rem;color:var(--muted);font:700 .65rem var(--mono);letter-spacing:.08em;text-transform:uppercase}.filters select,.filters button{min-height:38px;padding:.4rem .7rem;border:1px solid var(--line);border-radius:8px;background:#080a08;color:var(--ink);font:.75rem var(--mono)}.filters button{margin-left:auto;color:var(--lime);cursor:pointer}.filters select:focus-visible,.filters button:focus-visible{outline:2px solid var(--lime);outline-offset:2px}@media(max-width:620px){.filters{align-items:stretch;flex-direction:column}.filters button{margin-left:0}}</style>
+</head>
+<body>
+  <a class="skip" href="#monitor">Skip to monitor</a>
+  <header class="topbar">
+    <a class="brand" href="/"><img src="/assets/favicon.png" alt=""><span>Corbanu</span></a>
+    <nav aria-label="Primary"><a href="/">Home</a><a href="/nvda/">Market Lens</a><a aria-current="page" href="/ai-capital-stack/">AI Capital Stack</a></nav>
+    <span class="live"><i></i> 15-minute market pulse</span>
+  </header>
+  <main id="monitor">
+    <section class="hero">
+      <p class="eyebrow">AI CAPITAL STACK / EARLY-WARNING MONITOR</p>
+      <h1>The refinancing chain,<br><em>before it breaks.</em></h1>
+      <div class="verdict" id="verdict"><span class="skeleton"></span></div>
+      <p class="dek" id="summary">Loading current indicators…</p>
+      <div class="hero-meta"><span id="generated">—</span><span>Public sources + licensed derived fields</span></div>
+    </section>
+
+    <section class="gpu" aria-labelledby="gpu-title">
+      <div class="section-head"><div><p class="eyebrow">TIER 2 / LIVE RENTAL MARKET</p><h2 id="gpu-title">GPU spot asks</h2></div><p>Verified, rentable Vast.ai machines. GPU-only ask; storage and bandwidth excluded.</p></div>
+      <div id="gpu-grid" class="gpu-grid" aria-live="polite"></div>
+      <div class="chart-shell"><div class="chart-head"><strong>H100 capacity-weighted median</strong><span id="chart-note">Building history</span></div><svg id="gpu-chart" viewBox="0 0 900 210" role="img" aria-label="H100 hourly rental price history"></svg></div>
+    </section>
+
+    <section class="columns" aria-label="Leading and confirming indicators">
+      <div class="filters" aria-label="Indicator filters"><label>Tier <select id="tier-filter"><option value="all">All tiers</option><option value="1">Tier 1</option><option value="2">Tier 2</option><option value="3">Tier 3</option><option value="4">Tier 4</option><option value="5">Tier 5</option></select></label><label>State <select id="state-filter"><option value="all">All states</option><option value="healthy">Healthy</option><option value="watch">Watch</option><option value="alert">Alert</option><option value="monitoring">Monitoring</option><option value="unavailable">Unavailable</option></select></label><label>Freshness <select id="fresh-filter"><option value="all">All data</option><option value="fresh">Fresh</option><option value="stale">Stale</option><option value="unavailable">Unavailable</option></select></label><button id="clear-filters" type="button">Clear</button></div>
+      <div class="column"><div class="column-head"><span>LEADING</span><h2>Tiers 1–2</h2><p>Usually leads by 3–12 months</p></div><div id="leading-cards" class="cards"></div></div>
+      <div class="column"><div class="column-head"><span>CONFIRMING</span><h2>Tiers 3–5</h2><p>Credit, filings, and balance sheets</p></div><div id="confirming-cards" class="cards"></div></div>
+    </section>
+
+    <section class="method"><p class="eyebrow">LOCKED DECISION RULE</p><h2>Fear the pattern, not one print.</h2><p>Critical only when two Tier-1 alerts and one Tier-2 alert occur in the same monitoring window. Missing data is shown as unavailable, never silently classified as healthy.</p><details><summary>Methodology and limitations</summary><div id="methodology"></div></details></section>
+  </main>
+  <footer><span>Corbanu Research</span><span>Not investment advice</span></footer>
+  <script src="/assets/js/ai-capital-stack.js" defer></script>
+</body>
+</html>
