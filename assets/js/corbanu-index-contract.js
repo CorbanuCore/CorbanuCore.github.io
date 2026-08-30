@@ -11,7 +11,7 @@
     id: "Qwen/Qwen3.8-27B-FP8",
     label: "Qwen 3.8 27B",
     revision: "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
-    execution_profile: "qwen3.8-27b-fp8-h200-sglang-deterministic-noradix-schema-v1",
+    execution_profile: "qwen3.8-27b-fp8-h200-sglang-strict-fixed32-schema-v2",
   });
 
   const REBALANCE_VALUES = new Set(["monthly", "quarterly", "semiannual", "annual"]);
@@ -100,15 +100,18 @@
         hardware: "NVIDIA H200",
         deterministic_inference: true,
         max_running_requests: 32,
+        request_batch_size_per_host: 32,
+        attention_backend: "triton",
+        linear_attention_backend: "triton",
         temperature: 0,
         top_p: 1,
         random_seed: 438916795,
-        acceptance_replay: "two independent 32-request passes; any batch mismatch is recomputed on both idle hosts at strict concurrency one and only a byte-identical strict pair is accepted",
+        acceptance_replay: "two independent fixed 32-request passes; every accepted raw UTF-8 response must have a byte-identical replay partner",
         thinking: false,
         radix_cache: false,
-        overlap_schedule: true,
-        decode_cuda_graph: true,
-        prefill_cuda_graph: true,
+        overlap_schedule: false,
+        decode_cuda_graph: false,
+        prefill_cuda_graph: false,
       };
     }
 

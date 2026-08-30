@@ -126,7 +126,11 @@
     if (["running", "valid"].includes(state.status)) gateRun.classList.add("complete");
     else if (state.status === "queued") gateRun.classList.add("active");
     if (state.status === "valid") gateReplay.classList.add("complete");
-    else if (state.stage === "scoring_primary_and_replay" || state.stage === "constructing_weights") gateReplay.classList.add("active");
+    else if (
+      state.stage === "scoring_lockstep_replay"
+      || state.stage === "strict_replay_recovery"
+      || state.stage === "constructing_weights"
+    ) gateReplay.classList.add("active");
   }
 
   function setJobState(state) {

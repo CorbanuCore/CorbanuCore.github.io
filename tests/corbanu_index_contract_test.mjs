@@ -37,11 +37,14 @@ assert.equal(request.construction.fundamental.profitability_overlay, "exp(0.03 *
 assert.equal(request.construction.holding_cap, 0.20);
 assert.equal(request.model.execution.hardware, "NVIDIA H200");
 assert.equal(request.model.execution.max_running_requests, 32);
+assert.equal(request.model.execution.request_batch_size_per_host, 32);
+assert.equal(request.model.execution.attention_backend, "triton");
+assert.equal(request.model.execution.linear_attention_backend, "triton");
 assert.equal(request.model.execution.random_seed, 438916795);
-assert.equal(request.model.execution.overlap_schedule, true);
-assert.equal(request.model.execution.decode_cuda_graph, true);
-assert.equal(request.model.execution.prefill_cuda_graph, true);
-assert.match(request.model.execution.acceptance_replay, /strict concurrency one/);
+assert.equal(request.model.execution.overlap_schedule, false);
+assert.equal(request.model.execution.decode_cuda_graph, false);
+assert.equal(request.model.execution.prefill_cuda_graph, false);
+assert.match(request.model.execution.acceptance_replay, /fixed 32-request passes/);
 assert.equal(request.model.execution.deterministic_inference, true);
 assert.equal(request.validity.status, "draft");
 assert.equal(request.validity.required_replays, 1);
