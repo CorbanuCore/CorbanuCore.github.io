@@ -1,6 +1,6 @@
 {
- "generatedAt": "2026-08-29T21:36:59.555501Z",
- "overall": "warn",
+ "generatedAt": "2026-08-30T21:37:18.053035Z",
+ "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
  "categories": [
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-08-29T21:36:59.555501Z"
+     "detail": "health snapshot generated 2026-08-30T21:37:18.053035Z"
     }
    ],
    "status": "ok"
@@ -20,190 +20,160 @@
   {
    "id": "coverage",
    "label": "Spot / Perp Coverage",
-   "summary": "42/42 instruments current",
+   "summary": "39/42 instruments current",
    "items": [
     {
      "name": "index build",
      "status": "ok",
      "detail": "coverage indices finished 0.1h ago"
+    },
+    {
+     "name": "CXMT",
+     "status": "critical",
+     "detail": "spot series missing entirely; page retains last published data"
+    },
+    {
+     "name": "SKHX",
+     "status": "critical",
+     "detail": "spot series missing entirely; page retains last published data"
+    },
+    {
+     "name": "SMSN",
+     "status": "critical",
+     "detail": "spot series missing entirely; page retains last published data"
     }
    ],
-   "status": "ok"
+   "status": "critical"
   },
   {
    "id": "options",
    "label": "Listed Options",
-   "summary": "0/34 chains fresh \u00b7 8 instruments without listed options",
+   "summary": "0/25 chains fresh \u00b7 6 instruments without listed options",
    "items": [
     {
      "name": "BTC",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "ETH",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
-    },
-    {
-     "name": "AAPL",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "AMD",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "AMZN",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "BE",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "BRENTOIL",
      "status": "warn",
-     "detail": "retained last-good payload (50.7h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (74.7h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "CBRS",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "CL",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "COIN",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "CRCL",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
-    },
-    {
-     "name": "DRAM",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
-    },
-    {
-     "name": "EWY",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "GOLD",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "GOOGL",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
-    },
-    {
-     "name": "INTC",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "META",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "MRVL",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "MSFT",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "MSTR",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
-    },
-    {
-     "name": "MU",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "NATGAS",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "NBIS",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
-    },
-    {
-     "name": "NVDA",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "PLTR",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "SILVER",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
-    },
-    {
-     "name": "SKHX",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
-    },
-    {
-     "name": "SKHY",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
-    },
-    {
-     "name": "SNDK",
-     "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "SOXL",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "SP500",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "SPCX",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     },
     {
      "name": "TSLA",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token; independent historical refresh unavailable: Command '['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'data bridge', 'cd ~/repos/navstrategies && .venv/bin/python -c \"import base64;exec(compile(base64.b64decode(\\'aW1wb3J0IGpzb24KZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZyBpbXBvcnQgU2V0dGluZ3MKZnJvbSBuYXZzdHJhdGVnaWVzLmNvbmZpZy5jcmVkZW50aWFscy..."
     },
     {
      "name": "XYZ100",
      "status": "warn",
-     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
+     "detail": "retained last-good payload (48.1h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.brokerapi.com/v1/oauth/token"
     }
    ],
    "status": "warn"
@@ -211,7 +181,7 @@
   {
    "id": "transcripts",
    "label": "Transcript Briefings",
-   "summary": "22 equities current at 18-quarter target",
+   "summary": "15 equities current at 18-quarter target",
    "items": [
     {
      "name": "packet build",
