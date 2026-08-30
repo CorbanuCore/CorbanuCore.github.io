@@ -135,8 +135,10 @@
     resumableLocation.searchParams.set("job", state.job_id);
     window.history.replaceState({}, "", resumableLocation);
     requestHash.textContent = state.request_sha256 || "";
-    const completed = Number((state.progress || {}).completed || 0);
-    const total = Number((state.progress || {}).total || 0);
+    const inRecovery = state.stage === "strict_replay_recovery" && state.recovery;
+    const activeProgress = inRecovery ? state.recovery : (state.progress || {});
+    const completed = Number(activeProgress.completed || 0);
+    const total = Number(activeProgress.total || 0);
     const percent = total ? Math.min(100, Math.round(completed / total * 100)) : 0;
     requestPanel.hidden = false;
     jobProgress.hidden = false;
@@ -154,7 +156,9 @@
     contractStatus.dataset.status = state.status;
     jobStage.textContent = titleCase(state.stage);
     jobProgressBar.style.width = `${percent}%`;
-    jobProgressCount.textContent = `${completed} / ${total}`;
+    jobProgressCount.textContent = inRecovery
+      ? `${completed} / ${total} strict retries`
+      : `${completed} / ${total}`;
     setGate(state);
     runButton.disabled = ["queued", "running"].includes(state.status);
     runButton.textContent = runButton.disabled ? "Index running…" : "Run index";
