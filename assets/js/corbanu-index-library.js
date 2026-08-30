@@ -98,8 +98,8 @@
     title.textContent = row.index_title;
     identity.append(label, title);
     const profile = document.createElement("span");
-    profile.className = `profile-badge ${row.current_admitted_profile ? "current" : "legacy"}`;
-    profile.textContent = row.current_admitted_profile ? "Current profile" : "Prior profile";
+    profile.className = "profile-badge current";
+    profile.textContent = "Strict replay";
     head.append(identity, profile);
 
     const mandate = document.createElement("p");

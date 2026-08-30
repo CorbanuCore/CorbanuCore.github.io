@@ -12,6 +12,7 @@ assert.match(page, /corbanu-index-library\.js\?v=1/);
 assert.match(script, /fetchJson\("\/v1\/indexes"\)/);
 assert.match(script, /row\.replay_recipe_path/);
 assert.match(script, /row\.artifact_path/);
-assert.match(script, /current_admitted_profile/);
+assert.match(script, /Strict replay/);
+assert.doesNotMatch(script, /Prior profile/);
 assert.doesNotMatch(script, /innerHTML/);
 assert.match(builder, /href="\/indexes\/library\/"/);
