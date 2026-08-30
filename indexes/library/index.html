@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://corbanu.com/indexes/library/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=3">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=4">
   <title>Corbanu Index Library — Inspect and replay</title>
 </head>
 <body>
@@ -26,8 +26,7 @@
     <section class="hero library-hero">
       <div class="hero-inner">
         <p class="eyebrow">Corbanu Indexes · Evidence library</p>
-        <h1>Inspect the index.<br>Take the recipe.</h1>
-        <p class="hero-copy">Every entry below uses the current admitted model, strict fixed-32 runtime, frozen 1,000-company universe, and transcript snapshot. All 1,000 requests and raw outputs matched across both H200s without recovery. Open the holdings, download the full artifact, or take the smaller replay recipe to reproduce and audit the run.</p>
+        <div><h1>Replayable indices.</h1><p class="hero-copy">Open any index to inspect every holding, portfolio weight, score, and reasoning block. Each published run matched all 1,000 requests and raw outputs across both H200s without recovery.</p></div>
         <div class="hero-actions"><a href="/indexes/">Create a new index →</a></div>
       </div>
     </section>
@@ -41,16 +40,16 @@
       <p class="library-status" id="library-status" role="status">Loading the verified registry…</p>
       <section class="index-library-grid" id="index-library-grid" aria-live="polite"></section>
 
-      <section class="recipe-explainer" aria-labelledby="recipe-title">
-        <header><p class="eyebrow">Replay recipe</p><h2 id="recipe-title">What the download contains</h2><p>A recipe identifies everything a verifier must reconstruct and every hash the result must match. It is deliberately not a substitute for the licensed source material.</p></header>
+      <details class="recipe-explainer">
+        <summary><span><strong>What is in a replay recipe?</strong><small>Frozen inputs, model contract, company receipts, and acceptance hashes.</small></span><i aria-hidden="true"></i></summary>
         <div class="recipe-grid">
-          <article><span>01</span><h3>Frozen inputs</h3><p>The exact index request, universe fingerprint, SEC methodology manifests, and transcript-snapshot hash.</p></article>
-          <article><span>02</span><h3>Model contract</h3><p>Model revision, runtime image, fixed-32 execution controls, prompt template, response schema, and rubric bytes.</p></article>
-          <article><span>03</span><h3>Company receipts</h3><p>Per-company request, transcript, primary-output, and replay-output hashes for all 1,000 eligible names.</p></article>
-          <article><span>04</span><h3>Acceptance test</h3><p>The deterministic construction steps, expected holdings, score-vector hash, replay proof, and final artifact hash.</p></article>
+          <article><span>01</span><h3>Frozen inputs</h3><p>The exact request, universe fingerprint, SEC methodology manifests, and transcript snapshot.</p></article>
+          <article><span>02</span><h3>Model contract</h3><p>Model revision, runtime image, fixed-32 controls, prompt template, response schema, and rubric bytes.</p></article>
+          <article><span>03</span><h3>Company receipts</h3><p>Request, transcript, primary-output, and replay-output hashes for all 1,000 eligible names.</p></article>
+          <article><span>04</span><h3>Acceptance test</h3><p>Expected holdings, score-vector hash, replay proof, and final artifact hash.</p></article>
         </div>
         <p class="recipe-boundary"><strong>Source boundary:</strong> licensed transcript bodies are not embedded. A verifier obtains them separately and checks each body against the recipe’s SHA-256 before inference.</p>
-      </section>
+      </details>
     </div>
   </main>
 
@@ -61,6 +60,6 @@
   </footer>
 
   <script src="/assets/js/corbanu-index-config.js?v=2"></script>
-  <script src="/assets/js/corbanu-index-library.js?v=2"></script>
+  <script src="/assets/js/corbanu-index-library.js?v=3"></script>
 </body>
 </html>

@@ -8,11 +8,13 @@ const builder = fs.readFileSync(new URL("../indexes/index.html", import.meta.url
 assert.match(page, /id="index-library-grid"/);
 assert.match(page, /Download.*replay recipe/i);
 assert.match(page, /licensed transcript bodies are not embedded/i);
-assert.match(page, /corbanu-index-library\.js\?v=2/);
+assert.match(page, /corbanu-index-library\.js\?v=3/);
 assert.match(script, /fetchJson\("\/v1\/indexes"\)/);
 assert.match(script, /row\.replay_recipe_path/);
 assert.match(script, /row\.artifact_path/);
-assert.match(script, /Strict replay/);
+assert.match(script, /Expand holdings/);
+assert.match(script, /Portfolio weights/);
+assert.match(script, /reasoning_block/);
 assert.doesNotMatch(script, /Prior profile/);
 assert.doesNotMatch(script, /innerHTML/);
 assert.match(builder, /href="\/indexes\/library\/"/);

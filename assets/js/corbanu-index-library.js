@@ -5,24 +5,28 @@
   const apiBase = String(config.apiBase || "").replace(/\/$/, "");
   const count = document.getElementById("index-count");
   const status = document.getElementById("library-status");
-  const grid = document.getElementById("index-library-grid");
+  const list = document.getElementById("index-library-grid");
 
   function compactHash(value) {
     const text = String(value || "");
     return text.length > 18 ? `${text.slice(0, 10)}…${text.slice(-8)}` : text;
   }
 
-  function formatDate(epoch) {
-    if (!epoch) return "Unknown date";
+  function formatDate(epoch, compact = false) {
+    if (!epoch) return "Unknown";
     return new Intl.DateTimeFormat("en", {
       year: "numeric",
       month: "short",
       day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+      ...(compact ? {} : { hour: "2-digit", minute: "2-digit", timeZoneName: "short" }),
       timeZone: "UTC",
-      timeZoneName: "short",
     }).format(new Date(Number(epoch) * 1000));
+  }
+
+  function formatWeight(value) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return "—";
+    return `${number.toFixed(number >= 10 ? 2 : 3)}%`;
   }
 
   async function fetchJson(path) {
@@ -43,16 +47,6 @@
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-  }
-
-  function metric(label, value) {
-    const item = document.createElement("div");
-    const name = document.createElement("span");
-    const result = document.createElement("strong");
-    name.textContent = label;
-    result.textContent = String(value);
-    item.append(name, result);
-    return item;
   }
 
   function action(label, className, handler) {
@@ -85,68 +79,210 @@
     }
   }
 
-  function renderIndex(row) {
-    const article = document.createElement("article");
-    article.className = "library-card";
+  function appendTextCell(row, text, className = "") {
+    const cell = document.createElement("td");
+    cell.className = className;
+    cell.textContent = String(text);
+    row.appendChild(cell);
+  }
 
-    const head = document.createElement("header");
-    const identity = document.createElement("div");
-    const label = document.createElement("span");
-    const title = document.createElement("h3");
-    label.className = "library-card-label";
-    label.textContent = `${row.constituent_count} holdings · cutoff ${row.relevance_cutoff}`;
-    title.textContent = row.index_title;
-    identity.append(label, title);
-    const profile = document.createElement("span");
-    profile.className = "profile-badge current";
-    profile.textContent = "Strict replay";
-    head.append(identity, profile);
+  function renderReasoning(holding) {
+    const details = document.createElement("details");
+    details.className = "holding-reasoning";
+    const summary = document.createElement("summary");
+    summary.textContent = "Why this score";
+    const body = document.createElement("div");
+    for (const paragraph of holding.reasoning_block || []) {
+      const text = document.createElement("p");
+      text.textContent = paragraph;
+      body.appendChild(text);
+    }
+    details.append(summary, body);
+    return details;
+  }
 
-    const mandate = document.createElement("p");
-    mandate.className = "library-mandate";
-    mandate.textContent = row.index_mandate;
+  function renderWeightChart(holdings) {
+    const section = document.createElement("section");
+    section.className = "holdings-chart";
+    const header = document.createElement("header");
+    const title = document.createElement("h4");
+    title.textContent = "Portfolio weights";
+    const note = document.createElement("span");
+    const visible = holdings.slice(0, 20);
+    note.textContent = holdings.length > 20 ? `Top 20 of ${holdings.length}` : `${holdings.length} constituents`;
+    header.append(title, note);
 
-    const metrics = document.createElement("div");
-    metrics.className = "library-metrics";
-    metrics.append(
-      metric("Byte replay", `${row.replay_proof.byte_identical_count} / ${row.replay_proof.comparison_count}`),
-      metric("Batch exact", `${row.replay_proof.batch_byte_identical_count} / ${row.replay_proof.comparison_count}`),
-      metric("Strict retries", row.replay_proof.strict_retry_count),
-      metric("Completed", formatDate(row.completed_at_unix)),
+    const chart = document.createElement("div");
+    chart.className = "weight-chart";
+    const maxWeight = Math.max(...visible.map((holding) => Number(holding.weight_percent) || 0), 1);
+    visible.forEach((holding, index) => {
+      const item = document.createElement("div");
+      item.className = "weight-row";
+      const rank = document.createElement("span");
+      rank.className = "weight-rank";
+      rank.textContent = String(index + 1).padStart(2, "0");
+      const ticker = document.createElement("strong");
+      ticker.textContent = holding.ticker;
+      ticker.title = holding.company_name;
+      const track = document.createElement("span");
+      track.className = "weight-track";
+      const bar = document.createElement("i");
+      bar.style.width = `${Math.max(1.5, ((Number(holding.weight_percent) || 0) / maxWeight) * 100)}%`;
+      track.appendChild(bar);
+      const value = document.createElement("b");
+      value.textContent = formatWeight(holding.weight_percent);
+      item.append(rank, ticker, track, value);
+      chart.appendChild(item);
+    });
+    section.append(header, chart);
+    return section;
+  }
+
+  function renderHoldingsTable(holdings) {
+    const wrap = document.createElement("div");
+    wrap.className = "library-holdings-table-wrap";
+    const table = document.createElement("table");
+    table.className = "library-holdings-table";
+    const head = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    ["#", "Holding", "Score", "Confidence", "Weight", "Evidence"].forEach((label) => {
+      const th = document.createElement("th");
+      th.textContent = label;
+      headRow.appendChild(th);
+    });
+    head.appendChild(headRow);
+    const body = document.createElement("tbody");
+    holdings.forEach((holding, index) => {
+      const row = document.createElement("tr");
+      appendTextCell(row, index + 1, "holding-rank");
+      const identity = document.createElement("td");
+      const ticker = document.createElement("strong");
+      ticker.textContent = holding.ticker;
+      const company = document.createElement("small");
+      company.textContent = holding.company_name;
+      identity.append(ticker, company);
+      row.appendChild(identity);
+      appendTextCell(row, holding.score, "holding-score");
+      appendTextCell(row, holding.confidence);
+      appendTextCell(row, formatWeight(holding.weight_percent), "holding-weight");
+      const evidence = document.createElement("td");
+      evidence.appendChild(renderReasoning(holding));
+      row.appendChild(evidence);
+      body.appendChild(row);
+    });
+    table.append(head, body);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function renderArtifact(detail, artifact) {
+    const holdings = Array.from(artifact.holdings || []).sort(
+      (left, right) => Number(right.weight_percent) - Number(left.weight_percent),
     );
+    const content = document.createElement("div");
+    content.className = "library-detail-grid";
+    content.append(renderWeightChart(holdings), renderHoldingsTable(holdings));
+    detail.replaceChildren(content);
+  }
 
-    const hashes = document.createElement("dl");
-    hashes.className = "library-hashes";
-    const artifactTerm = document.createElement("dt");
-    artifactTerm.textContent = "Artifact";
-    const artifactValue = document.createElement("dd");
-    artifactValue.textContent = compactHash(row.artifact_sha256);
-    artifactValue.title = row.artifact_sha256;
-    const universeTerm = document.createElement("dt");
-    universeTerm.textContent = "Universe";
-    const universeValue = document.createElement("dd");
-    universeValue.textContent = compactHash(row.universe.universe_sha256);
-    universeValue.title = row.universe.universe_sha256;
-    hashes.append(artifactTerm, artifactValue, universeTerm, universeValue);
+  function renderIndex(row, index) {
+    const article = document.createElement("article");
+    article.className = "library-row";
 
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "library-row-toggle";
+    toggle.setAttribute("aria-expanded", "false");
+    const detailId = `holdings-${row.job_id}`;
+    toggle.setAttribute("aria-controls", detailId);
+
+    const rank = document.createElement("span");
+    rank.className = "library-row-rank";
+    rank.textContent = String(index + 1).padStart(2, "0");
+    const identity = document.createElement("span");
+    identity.className = "library-row-identity";
+    const title = document.createElement("strong");
+    title.textContent = row.index_title;
+    const mandate = document.createElement("small");
+    mandate.textContent = row.index_mandate;
+    identity.append(title, mandate);
+
+    const holdings = document.createElement("span");
+    holdings.className = "library-row-stat";
+    holdings.append(document.createTextNode(String(row.constituent_count)));
+    const holdingsLabel = document.createElement("small");
+    holdingsLabel.textContent = "holdings";
+    holdings.appendChild(holdingsLabel);
+
+    const cutoff = document.createElement("span");
+    cutoff.className = "library-row-stat";
+    cutoff.append(document.createTextNode(String(row.relevance_cutoff)));
+    const cutoffLabel = document.createElement("small");
+    cutoffLabel.textContent = "cutoff";
+    cutoff.appendChild(cutoffLabel);
+
+    const replay = document.createElement("span");
+    replay.className = "library-row-replay";
+    replay.append(document.createTextNode(`${row.replay_proof.byte_identical_count}/${row.replay_proof.comparison_count}`));
+    const replayLabel = document.createElement("small");
+    replayLabel.textContent = "byte exact";
+    replay.appendChild(replayLabel);
+
+    const date = document.createElement("span");
+    date.className = "library-row-date";
+    date.textContent = formatDate(row.completed_at_unix, true);
+
+    const affordance = document.createElement("span");
+    affordance.className = "library-row-affordance";
+    const affordanceText = document.createElement("span");
+    affordanceText.textContent = "Expand holdings";
+    const arrow = document.createElement("i");
+    arrow.setAttribute("aria-hidden", "true");
+    affordance.append(affordanceText, arrow);
+    toggle.append(rank, identity, holdings, cutoff, replay, date, affordance);
+
+    const detail = document.createElement("section");
+    detail.id = detailId;
+    detail.className = "library-row-detail";
+    detail.hidden = true;
+
+    const utility = document.createElement("div");
+    utility.className = "library-row-utility";
+    const proof = document.createElement("span");
+    proof.textContent = `Strict replay · batch ${row.replay_proof.batch_byte_identical_count}/${row.replay_proof.comparison_count} · zero retries · artifact ${compactHash(row.artifact_sha256)}`;
     const actions = document.createElement("div");
-    actions.className = "library-actions";
     const inspect = document.createElement("a");
     inspect.href = `/indexes/?job=${encodeURIComponent(row.job_id)}`;
-    inspect.textContent = "Inspect holdings";
-    inspect.className = "primary";
-    const recipeButton = action("Download replay recipe", "", (event) => download(event.currentTarget, row, "recipe"));
-    const artifactButton = action("Full artifact", "quiet", (event) => download(event.currentTarget, row, "artifact"));
-    actions.append(inspect, recipeButton, artifactButton);
+    inspect.textContent = "Open run";
+    const recipe = action("Replay recipe", "", (event) => download(event.currentTarget, row, "recipe"));
+    const artifact = action("Full artifact", "quiet", (event) => download(event.currentTarget, row, "artifact"));
+    actions.append(inspect, recipe, artifact);
+    utility.append(proof, actions);
+    detail.appendChild(utility);
 
-    const footer = document.createElement("footer");
-    const job = document.createElement("code");
-    const model = document.createElement("code");
-    job.textContent = row.job_id;
-    model.textContent = row.model.execution_profile;
-    footer.append(job, model);
+    let loaded = false;
+    toggle.addEventListener("click", async () => {
+      const opening = detail.hidden;
+      detail.hidden = !opening;
+      toggle.setAttribute("aria-expanded", String(opening));
+      affordanceText.textContent = opening ? "Collapse" : "Expand holdings";
+      if (!opening || loaded) return;
+      const loading = document.createElement("p");
+      loading.className = "holdings-loading";
+      loading.textContent = "Loading holdings and weights…";
+      detail.appendChild(loading);
+      try {
+        const payload = await fetchJson(row.artifact_path);
+        renderArtifact(detail, payload);
+        detail.prepend(utility);
+        loaded = true;
+      } catch (error) {
+        loading.textContent = error.message;
+        loading.dataset.state = "error";
+      }
+    });
 
-    article.append(head, mandate, metrics, hashes, actions, footer);
+    article.append(toggle, detail);
     return article;
   }
 
@@ -154,10 +290,10 @@
     try {
       const registry = await fetchJson("/v1/indexes");
       count.textContent = String(registry.index_count);
-      grid.replaceChildren(...registry.indexes.map(renderIndex));
+      list.replaceChildren(...registry.indexes.map(renderIndex));
       status.textContent = registry.index_count
-        ? `${registry.index_count} verified index artifacts, newest first.`
-        : "No valid index artifacts have been published yet.";
+        ? `${registry.index_count} strict replay artifact${registry.index_count === 1 ? "" : "s"}, newest first.`
+        : "No strict replay artifacts have been published yet.";
       status.dataset.state = "ready";
     } catch (error) {
       status.textContent = error.message;
