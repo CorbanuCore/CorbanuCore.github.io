@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Inspect valid Corbanu indices and download the exact evidence recipes required to replay them.">
+  <meta name="theme-color" content="#030403">
+  <meta property="og:title" content="Corbanu Index Library — Inspect and replay">
+  <meta property="og:description" content="Every valid index, its holdings, proof hashes, and a downloadable replay recipe.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://corbanu.com/indexes/library/">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=3">
+  <title>Corbanu Index Library — Inspect and replay</title>
+</head>
+<body>
+  <a class="skip" href="#index-library">Skip to index library</a>
+  <header class="site-header">
+    <a class="brand" href="/"><img src="/assets/corbanu-logo.webp" alt="" width="45" height="45">Corbanu</a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="/">Home</a><a href="/markets/">Markets</a><a href="/indexes/" aria-current="page">Indexes</a><a href="/posts/">Posts</a><a href="/terminal/">Terminal</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero library-hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Corbanu Indexes · Evidence library</p>
+        <h1>Inspect the index.<br>Take the recipe.</h1>
+        <p class="hero-copy">Every entry below is a completed index artifact whose 1,000 company scores passed the required byte-replay gate. Open the holdings, download the full artifact, or take the smaller replay recipe to reproduce and audit the run.</p>
+        <div class="hero-actions"><a href="/indexes/">Create a new index →</a></div>
+      </div>
+    </section>
+
+    <div class="library-shell" id="index-library">
+      <section class="library-summary" aria-labelledby="library-title">
+        <div><p class="eyebrow">Valid artifacts</p><h2 id="library-title">Existing indices</h2></div>
+        <div class="library-count"><strong id="index-count">—</strong><span>available</span></div>
+      </section>
+
+      <p class="library-status" id="library-status" role="status">Loading the verified registry…</p>
+      <section class="index-library-grid" id="index-library-grid" aria-live="polite"></section>
+
+      <section class="recipe-explainer" aria-labelledby="recipe-title">
+        <header><p class="eyebrow">Replay recipe</p><h2 id="recipe-title">What the download contains</h2><p>A recipe identifies everything a verifier must reconstruct and every hash the result must match. It is deliberately not a substitute for the licensed source material.</p></header>
+        <div class="recipe-grid">
+          <article><span>01</span><h3>Frozen inputs</h3><p>The exact index request, universe fingerprint, SEC methodology manifests, and transcript-snapshot hash.</p></article>
+          <article><span>02</span><h3>Model contract</h3><p>Model revision, runtime image, fixed-32 execution controls, prompt template, response schema, and rubric bytes.</p></article>
+          <article><span>03</span><h3>Company receipts</h3><p>Per-company request, transcript, primary-output, and replay-output hashes for all 1,000 eligible names.</p></article>
+          <article><span>04</span><h3>Acceptance test</h3><p>The deterministic construction steps, expected holdings, score-vector hash, replay proof, and final artifact hash.</p></article>
+        </div>
+        <p class="recipe-boundary"><strong>Source boundary:</strong> licensed transcript bodies are not embedded. A verifier obtains them separately and checks each body against the recipe’s SHA-256 before inference.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot-links"><a href="/">Home</a><a href="/markets/">Markets</a><a href="/indexes/">Create index</a><a href="/posts/">Posts</a><a href="/compliance/">Compliance</a></div>
+    <div>Corbanu · 2026</div>
+    <div class="footnote">Index artifacts and replay recipes are audit materials, not offers to buy or sell securities. Replay proves execution against frozen inputs; it does not prove investment merit or the truth of source statements.</div>
+  </footer>
+
+  <script src="/assets/js/corbanu-index-config.js?v=2"></script>
+  <script src="/assets/js/corbanu-index-library.js?v=1"></script>
+</body>
+</html>
