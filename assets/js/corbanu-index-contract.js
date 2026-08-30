@@ -61,15 +61,15 @@
         scoring_output_schema: "corbanu.thematic-company-score.v1",
       },
       universe: {
-        id: "sec-registered-us-listed-top1000-4q-revenue-20260828",
+        id: "sec-registered-us-listed-top1000-4q-revenue-v81-20260828",
         selection: "top 1,000 eligible U.S.-listed SEC registrants by positive trailing-four-quarter revenue",
-        source: "SEC issuer registry plus frozen Sharadar SF1 revenue and profitability; SEC Company Facts cross-check through 2026-08-27",
-        universe_sha256: "26e4caa3d7530dc31de1f1cbe46570bc6ba101193276506dedc2948826625903",
+        source: "Frozen SEC registry, submissions, and Company Facts through 2026-08-27; sec-fundamentals-proxy-v81",
+        universe_sha256: "232051065ec1fd268faf2e6ac9520c110bcb747193cc05195ad3ffa19b3f27c0",
       },
       classification: {
         score_range: [0, 100],
         relevance_cutoff: Number(input.relevance_cutoff),
-        evidence_policy: "model knowledge grounded by available issuer transcript text",
+        evidence_policy: "model training knowledge grounded by the issuer's latest exact-period earnings transcript when available; unavailable transcripts are explicitly recorded and never replaced with annual filings",
       },
       construction: {
         weighting,
@@ -106,9 +106,9 @@
         acceptance_replay: "two independent 32-request passes; any batch mismatch is recomputed on both idle hosts at strict concurrency one and only a byte-identical strict pair is accepted",
         thinking: false,
         radix_cache: false,
-        overlap_schedule: false,
-        decode_cuda_graph: false,
-        prefill_cuda_graph: false,
+        overlap_schedule: true,
+        decode_cuda_graph: true,
+        prefill_cuda_graph: true,
       };
     }
 
@@ -123,7 +123,7 @@
         thematic_multiplier: "locked Qwen relevance score divided by 100",
         profitability_overlay: "exp(0.03 * selected profitability population z-score)",
         profitability_router: "TTM net income for financial services and utilities; TTM free cash flow otherwise",
-        source_policy: "frozen Sharadar SF1 fundamentals over the SEC issuer registry, with SEC Company Facts cross-check evidence",
+        source_policy: "frozen SEC-only fundamentals with no licensed vendor values or fallback",
       };
     }
     return request;
