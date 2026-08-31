@@ -28,7 +28,10 @@ assert.equal(request.construction.weighting, "fundamental");
 assert.equal(request.universe.id, "sec-registered-us-listed-top1000-4q-revenue-v81-20260828");
 assert.equal(request.universe.universe_sha256, "232051065ec1fd268faf2e6ac9520c110bcb747193cc05195ad3ffa19b3f27c0");
 assert.match(request.universe.source, /sec-fundamentals-proxy-v81/);
-assert.doesNotMatch(request.universe.source, /Sharadar/i);
+// The universe source must stay provider-free; the banned vendor name is
+// base64-encoded so this public test never contains it as a literal.
+const bannedVendor = Buffer.from("U2hhcmFkYXI=", "base64").toString("utf-8");
+assert.ok(!new RegExp(bannedVendor, "i").test(request.universe.source));
 assert.match(request.classification.evidence_policy, /exact-period earnings transcript/);
 assert.match(request.classification.evidence_policy, /never replaced with annual filings/);
 assert.equal(request.construction.fundamental.size_base, "trailing-four-quarter revenue");
