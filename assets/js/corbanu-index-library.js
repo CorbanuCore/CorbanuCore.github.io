@@ -246,6 +246,16 @@
     detail.className = "library-row-detail";
     detail.hidden = true;
 
+    const detailHeader = document.createElement("div");
+    detailHeader.className = "library-row-detail-header";
+    const fullPrompt = document.createElement("section");
+    fullPrompt.className = "library-row-prompt";
+    const promptLabel = document.createElement("span");
+    promptLabel.textContent = "Index prompt";
+    const promptText = document.createElement("p");
+    promptText.textContent = row.index_mandate;
+    fullPrompt.append(promptLabel, promptText);
+
     const utility = document.createElement("div");
     utility.className = "library-row-utility";
     const proof = document.createElement("span");
@@ -258,7 +268,8 @@
     const artifact = action("Full artifact", "quiet", (event) => download(event.currentTarget, row, "artifact"));
     actions.append(inspect, recipe, artifact);
     utility.append(proof, actions);
-    detail.appendChild(utility);
+    detailHeader.append(fullPrompt, utility);
+    detail.appendChild(detailHeader);
 
     let loaded = false;
     toggle.addEventListener("click", async () => {
@@ -274,7 +285,7 @@
       try {
         const payload = await fetchJson(row.artifact_path);
         renderArtifact(detail, payload);
-        detail.prepend(utility);
+        detail.prepend(detailHeader);
         loaded = true;
       } catch (error) {
         loading.textContent = error.message;
