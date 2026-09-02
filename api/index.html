@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Corbanu API — Models, keys, and USDC funding</title>
-  <meta name="description" content="Create a Corbanu API key in Terminal or fund one with USDC from Phantom on Solana and MetaMask on Base.">
+  <meta name="description" content="Create a Corbanu API key in Terminal or fund one with native USDC on Solana, Base, or Ethereum mainnet.">
   <meta name="theme-color" content="#090b09">
   <link rel="canonical" href="https://corbanu.com/api/">
   <link rel="icon" href="/assets/favicon.png">
@@ -37,7 +37,7 @@
       </div>
       <dl class="hero-facts">
         <div><dt>Protocol</dt><dd>OpenAI + Anthropic compatible</dd></div>
-        <div><dt>Funding</dt><dd>USDC · Solana / Base</dd></div>
+        <div><dt>Funding</dt><dd>USDC · Solana / Base / Ethereum</dd></div>
         <div><dt>Billing</dt><dd>At cost · 0% markup</dd></div>
       </dl>
       <div class="signal-line" aria-hidden="true">
@@ -67,7 +67,12 @@
               </button>
               <button class="wallet-choice" type="button" data-connect-wallet="base" aria-pressed="false">
                 <span class="wallet-mark metamask-mark" aria-hidden="true">M</span>
-                <span><strong>MetaMask</strong><small>Base mainnet · USDC + ETH gas</small></span>
+                <span><strong>MetaMask</strong><small>Base · native USDC + ETH gas</small></span>
+                <span class="choice-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button class="wallet-choice" type="button" data-connect-wallet="ethereum" aria-pressed="false">
+                <span class="wallet-mark ethereum-mark" aria-hidden="true">Ξ</span>
+                <span><strong>MetaMask</strong><small>Ethereum · native USDC + L1 gas</small></span>
                 <span class="choice-arrow" aria-hidden="true">↗</span>
               </button>
             </div>
@@ -80,7 +85,7 @@
               <input id="api-top-up" data-amount name="amountUsd" value="10" inputmode="decimal" autocomplete="off" aria-describedby="amount-help">
               <b>USDC</b>
             </div>
-            <p id="amount-help">Exact amount, up to 6 decimal places. Network fees may also apply.</p>
+            <p id="amount-help">Exact amount, up to 6 decimal places. Your wallet shows the network fee before approval; Ethereum L1 usually costs more than Base or Solana.</p>
           </div>
 
           <div class="wallet-state">
@@ -96,7 +101,7 @@
           <ol>
             <li><span>01</span><div><strong>Connect</strong><p>Your public wallet address identifies the balance.</p></div></li>
             <li><span>02</span><div><strong>Sign</strong><p>A human-readable, short-lived challenge proves wallet ownership and cannot move funds.</p></div></li>
-            <li><span>03</span><div><strong>Settle</strong><p>Phantom uses x402 on Solana. MetaMask sends a standard Base USDC transfer that Corbanu verifies on-chain.</p></div></li>
+            <li><span>03</span><div><strong>Settle</strong><p>Phantom uses x402 on Solana. MetaMask sends standard native-USDC transfers on Base or Ethereum; Corbanu verifies the selected chain on-chain.</p></div></li>
             <li><span>04</span><div><strong>Issue</strong><p>Your new <code>cbn_…</code> key is revealed once.</p></div></li>
           </ol>
           <p class="security-note"><span aria-hidden="true">◇</span> The checkout does not store your full API key in local or session storage.</p>
@@ -231,6 +236,6 @@
     </nav>
   </footer>
 
-  <script src="/assets/js/api-checkout.js?v=20260902-2" defer></script>
+  <script src="/assets/js/api-checkout.js?v=20260902-3" defer></script>
 </body>
 </html>

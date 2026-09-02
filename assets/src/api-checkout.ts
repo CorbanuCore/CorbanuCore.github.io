@@ -14,13 +14,42 @@ import {
 import { VersionedTransaction } from "@solana/web3.js";
 import { base58 } from "@scure/base";
 const API_ORIGIN = "https://pfterminal-plan-gateway.fly.dev";
-const BASE_CHAIN_ID = "0x2105";
 const BASE_NETWORK = "eip155:8453";
-const BASE_USDC = "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913";
+const ETHEREUM_NETWORK = "eip155:1";
 const ERC20_TRANSFER_SELECTOR = "a9059cbb";
 const SOLANA_MAINNET = "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp";
 
-type Rail = "solana" | "base";
+type Rail = "solana" | "base" | "ethereum";
+type EvmRail = Exclude<Rail, "solana">;
+
+const EVM_NETWORKS: Record<EvmRail, {
+  chainId: string;
+  signingChainId: "1" | "8453";
+  network: string;
+  name: string;
+  rpcUrl: string;
+  explorerUrl: string;
+  usdc: string;
+}> = {
+  base: {
+    chainId: "0x2105",
+    signingChainId: "8453",
+    network: BASE_NETWORK,
+    name: "Base",
+    rpcUrl: "https://mainnet.base.org",
+    explorerUrl: "https://basescan.org",
+    usdc: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  },
+  ethereum: {
+    chainId: "0x1",
+    signingChainId: "1",
+    network: ETHEREUM_NETWORK,
+    name: "Ethereum",
+    rpcUrl: "https://ethereum-rpc.publicnode.com",
+    explorerUrl: "https://etherscan.io",
+    usdc: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+  },
+};
 type WalletOperation =
   | { kind: "account" }
   | { kind: "top_up_intent"; amountUsd: string }
@@ -41,6 +70,7 @@ interface EthereumProvider {
 interface ConnectedWallet {
   rail: Rail;
   address: string;
+  signingChainId: "1" | "8453" | "solana:mainnet";
   signOwnership(message: string): Promise<string>;
   paidFetch?: (url: string, init: RequestInit) => Promise<Response>;
   ethereumProvider?: EthereumProvider;
@@ -50,6 +80,7 @@ interface TopUpIntentResponse {
   intent: { id: string; amountUsd: string; expiresAt: string };
   payment: { url: string; network: string; rpcUrl?: string };
   evmPayment?: { network: string; asset: string; payTo: string };
+  evmPayments?: Array<{ network: string; asset: string; payTo: string }>;
 }
 
 interface CreatedApiKey {
@@ -145,10 +176,10 @@ function checkoutError(error: unknown): string {
     return "Wallet request cancelled. No funds were sent.";
   }
   if (lower.includes("deceptive request")) {
-    return "MetaMask blocked this request with a security warning. No funds were sent. Reload this page to use the standard Base USDC checkout.";
+    return "MetaMask blocked this request with a security warning. No funds were sent. Reload this page to use the standard USDC checkout.";
   }
   if (lower.includes("insufficient funds") || lower.includes("intrinsic transaction cost")) {
-    return "This wallet needs a small amount of ETH on Base to pay the network fee. No USDC was sent.";
+    return "This wallet needs ETH on the selected network to pay the transaction fee. No USDC was sent.";
   }
   if (error instanceof TypeError && lower.includes("failed to fetch")) {
     return "The browser could not reach the Corbanu payment service. No payment was requested; reload and try again.";
@@ -179,6 +210,7 @@ async function signedOperation<T>(wallet: ConnectedWallet, operation: WalletOper
       walletAddress: wallet.address,
       operation,
       messageFormat: "siwx",
+      signingChainId: wallet.signingChainId,
     }),
   });
   if (!challenge.message) {
@@ -236,6 +268,7 @@ async function connectPhantom(): Promise<ConnectedWallet> {
   return {
     rail: "solana",
     address: walletAddress,
+    signingChainId: "solana:mainnet",
     async signOwnership(message) {
       const signed = await provider.signMessage(new TextEncoder().encode(message), "utf8");
       return base58.encode(signed.signature);
@@ -244,11 +277,12 @@ async function connectPhantom(): Promise<ConnectedWallet> {
   };
 }
 
-async function ensureBaseNetwork(provider: EthereumProvider): Promise<void> {
+async function ensureEvmNetwork(provider: EthereumProvider, rail: EvmRail): Promise<void> {
+  const selected = EVM_NETWORKS[rail];
   try {
     await provider.request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: BASE_CHAIN_ID }],
+      params: [{ chainId: selected.chainId }],
     });
   } catch (error) {
     const providerError = error as { code?: number };
@@ -256,11 +290,11 @@ async function ensureBaseNetwork(provider: EthereumProvider): Promise<void> {
     await provider.request({
       method: "wallet_addEthereumChain",
       params: [{
-        chainId: BASE_CHAIN_ID,
-        chainName: "Base",
+        chainId: selected.chainId,
+        chainName: selected.name,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-        rpcUrls: ["https://mainnet.base.org"],
-        blockExplorerUrls: ["https://basescan.org"],
+        rpcUrls: [selected.rpcUrl],
+        blockExplorerUrls: [selected.explorerUrl],
       }],
     });
   }
@@ -306,14 +340,19 @@ function wait(milliseconds: number): Promise<void> {
   return new Promise(resolve => window.setTimeout(resolve, milliseconds));
 }
 
-async function settleBasePayment(intentId: string, transaction: string): Promise<void> {
+async function settleEvmPayment(
+  intentId: string,
+  transaction: string,
+  network: string,
+  networkName: string,
+): Promise<void> {
   let lastConnectionError: unknown;
   for (let attempt = 0; attempt < 60; attempt += 1) {
     try {
       const response = await fetch(`${API_ORIGIN}/v1/topups/settle-evm`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ intentId, transaction }),
+        body: JSON.stringify({ intentId, transaction, network }),
       });
       if (response.ok) {
         const payload = await response.json() as { state?: string };
@@ -332,7 +371,7 @@ async function settleBasePayment(intentId: string, transaction: string): Promise
   }
   const suffix = lastConnectionError
     ? "The payment service could not be reached."
-    : "Base confirmations are taking longer than expected.";
+    : `${networkName} confirmations are taking longer than expected.`;
   throw new Error(
     `Your USDC transfer was submitted as ${transaction}. ${suffix} Do not pay again; keep this page open and retry verification.`,
   );
@@ -343,20 +382,25 @@ async function payWithMetaMask(
   topUp: TopUpIntentResponse,
   amountUsd: string,
 ): Promise<void> {
+  if (wallet.rail !== "base" && wallet.rail !== "ethereum") {
+    throw new Error("MetaMask payment requires an EVM network.");
+  }
   const provider = wallet.ethereumProvider;
-  const offer = topUp.evmPayment;
-  if (!provider || !offer) throw new Error("The gateway did not offer a Base payment.");
-  if (offer.network !== BASE_NETWORK) {
-    throw new Error("The gateway did not offer Base mainnet.");
+  const selected = EVM_NETWORKS[wallet.rail];
+  const offers = topUp.evmPayments
+    ?? (topUp.evmPayment ? [topUp.evmPayment] : []);
+  const offer = offers.find(candidate => candidate.network === selected.network);
+  if (!provider || !offer) {
+    throw new Error(`The gateway did not offer ${selected.name} USDC payment.`);
   }
   assertEvmAddress(offer.asset, "Payment asset");
-  if (offer.asset.toLowerCase() !== BASE_USDC) {
-    throw new Error("The gateway did not offer canonical Base USDC.");
+  if (offer.asset.toLowerCase() !== selected.usdc) {
+    throw new Error(`The gateway did not offer canonical ${selected.name} USDC.`);
   }
   assertEvmAddress(offer.payTo, "Payment receiver");
-  await ensureBaseNetwork(provider);
+  await ensureEvmNetwork(provider, wallet.rail);
   status(
-    `Approve a standard ${amountUsd} USDC transfer on Base. MetaMask will also show the Base ETH network fee.`,
+    `Approve a standard ${amountUsd} USDC transfer on ${selected.name}. MetaMask will also show the ETH network fee.`,
     "busy",
   );
   const transaction = await provider.request({
@@ -369,11 +413,16 @@ async function payWithMetaMask(
     }],
   });
   assertTransactionHash(transaction);
-  status("USDC transfer submitted. Waiting for Base confirmations…", "busy");
-  await settleBasePayment(topUp.intent.id, transaction);
+  status(`USDC transfer submitted. Waiting for ${selected.name} confirmations…`, "busy");
+  await settleEvmPayment(
+    topUp.intent.id,
+    transaction,
+    selected.network,
+    selected.name,
+  );
 }
 
-async function connectMetaMask(): Promise<ConnectedWallet> {
+async function connectMetaMask(rail: EvmRail): Promise<ConnectedWallet> {
   const provider = window.ethereum;
   if (!provider) throw new Error("MetaMask was not found. Install MetaMask, then reload this page.");
   const accounts = await provider.request({ method: "eth_requestAccounts" });
@@ -382,10 +431,11 @@ async function connectMetaMask(): Promise<ConnectedWallet> {
   }
   const walletAddress = accounts[0];
   assertEvmAddress(walletAddress, "MetaMask account");
-  await ensureBaseNetwork(provider);
+  await ensureEvmNetwork(provider, rail);
   return {
-    rail: "base",
+    rail,
     address: walletAddress,
+    signingChainId: EVM_NETWORKS[rail].signingChainId,
     ethereumProvider: provider,
     async signOwnership(message) {
       const signature = await provider.request({
@@ -400,11 +450,13 @@ async function connectMetaMask(): Promise<ConnectedWallet> {
 
 async function connect(rail: Rail): Promise<void> {
   setBusy(true);
-  status(`Connecting ${rail === "solana" ? "Phantom" : "MetaMask"}…`, "busy");
+  const walletName = rail === "solana" ? "Phantom" : "MetaMask";
+  const networkName = rail === "solana" ? "Solana" : EVM_NETWORKS[rail].name;
+  status(`Connecting ${walletName} on ${networkName}…`, "busy");
   try {
-    connectedWallet = rail === "solana" ? await connectPhantom() : await connectMetaMask();
+    connectedWallet = rail === "solana" ? await connectPhantom() : await connectMetaMask(rail);
     if (walletLabel) {
-      walletLabel.textContent = `${rail === "solana" ? "Phantom · Solana" : "MetaMask · Base"} · ${shortAddress(connectedWallet.address)}`;
+      walletLabel.textContent = `${walletName} · ${networkName} · ${shortAddress(connectedWallet.address)}`;
     }
     connectButtons.forEach(button => {
       button.setAttribute("aria-pressed", String(button.dataset.connectWallet === rail));
@@ -448,7 +500,7 @@ async function purchase(event: SubmitEvent): Promise<void> {
       kind: "top_up_intent",
       amountUsd,
     });
-    if (wallet.rail === "base") {
+    if (wallet.rail === "base" || wallet.rail === "ethereum") {
       await payWithMetaMask(wallet, topUp, amountUsd);
     } else {
       if (topUp.payment.network !== SOLANA_MAINNET || !wallet.paidFetch) {
@@ -489,7 +541,7 @@ async function copyText(value: string, button?: HTMLButtonElement): Promise<void
 connectButtons.forEach(button => {
   button.addEventListener("click", () => {
     const rail = button.dataset.connectWallet;
-    if (rail === "solana" || rail === "base") void connect(rail);
+    if (rail === "solana" || rail === "base" || rail === "ethereum") void connect(rail);
   });
 });
 form?.addEventListener("submit", event => void purchase(event));
