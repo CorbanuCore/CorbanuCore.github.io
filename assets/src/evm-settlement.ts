@@ -1,6 +1,7 @@
 export const PENDING_EVM_PAYMENTS_STORAGE_KEY = "corbanu.pending-evm-payments.v1";
 
 export type EvmSettlementResponseState = "pending" | "settled" | "retry" | "error";
+export type CheckoutMode = "new_key" | "existing_key";
 
 export function shouldCreateApiKeyWithoutPayment(
   availableMicrousd: string,
@@ -19,6 +20,12 @@ export interface PendingEvmPayment {
   transaction: string;
   network: "eip155:1" | "eip155:8453";
   networkName: "Ethereum" | "Base";
+  /** Missing on records written before existing-key checkout was introduced. */
+  checkoutMode?: CheckoutMode;
+}
+
+export function pendingPaymentCheckoutMode(payment: PendingEvmPayment): CheckoutMode {
+  return payment.checkoutMode ?? "new_key";
 }
 
 interface SettlementPayload {
@@ -30,12 +37,16 @@ function isPendingEvmPayment(value: unknown): value is PendingEvmPayment {
   const candidate = value as Partial<PendingEvmPayment>;
   const validNetwork = candidate.network === "eip155:1" || candidate.network === "eip155:8453";
   const expectedName = candidate.network === "eip155:1" ? "Ethereum" : "Base";
+  const validMode = candidate.checkoutMode === undefined
+    || candidate.checkoutMode === "new_key"
+    || candidate.checkoutMode === "existing_key";
   return (
     typeof candidate.walletAddress === "string"
     && typeof candidate.intentId === "string"
     && typeof candidate.transaction === "string"
     && validNetwork
     && candidate.networkName === expectedName
+    && validMode
   );
 }
 

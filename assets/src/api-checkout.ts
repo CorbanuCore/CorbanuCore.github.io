@@ -17,8 +17,10 @@ import {
   classifyEvmSettlementResponse,
   clearPendingEvmPayment,
   pendingEvmPaymentForWallet,
+  pendingPaymentCheckoutMode,
   savePendingEvmPayment,
   shouldCreateApiKeyWithoutPayment,
+  type CheckoutMode,
   type PendingEvmPayment,
 } from "./evm-settlement";
 import {
@@ -108,6 +110,11 @@ interface WalletAccountResponse {
   keys: Array<{ id: string }>;
 }
 
+interface ExistingKeyTopUpStatus {
+  intent: { id: string; state: "pending" | "settled" };
+  balance: { availableMicrousd: string; availableUsd: string };
+}
+
 interface CreatedApiKey {
   id: string;
   key: string;
@@ -131,6 +138,9 @@ const amountInput = document.querySelector<HTMLInputElement>("[data-amount]");
 const statusBox = document.querySelector<HTMLElement>("[data-checkout-status]");
 const walletLabel = document.querySelector<HTMLElement>("[data-wallet-label]");
 const payButton = document.querySelector<HTMLButtonElement>("[data-pay-button]");
+const modeInputs = document.querySelectorAll<HTMLInputElement>('input[name="checkoutMode"]');
+const existingKeyField = document.querySelector<HTMLElement>("[data-existing-key-field]");
+const existingApiKeyInput = document.querySelector<HTMLInputElement>("[data-existing-api-key]");
 const connectButtons = document.querySelectorAll<HTMLButtonElement>("[data-connect-wallet]");
 const secretDialog = document.querySelector<HTMLDialogElement>("[data-key-dialog]");
 const secretValue = document.querySelector<HTMLElement>("[data-key-value]");
@@ -153,7 +163,38 @@ function setBusy(busy: boolean): void {
   connectButtons.forEach(button => {
     button.disabled = busy;
   });
+  modeInputs.forEach(input => {
+    input.disabled = busy;
+  });
   amountInput?.toggleAttribute("readonly", busy);
+  existingApiKeyInput?.toggleAttribute("readonly", busy);
+}
+
+function selectedCheckoutMode(): CheckoutMode {
+  const selected = Array.from(modeInputs).find(input => input.checked)?.value;
+  return selected === "existing_key" ? "existing_key" : "new_key";
+}
+
+function updateCheckoutMode(): void {
+  const mode = selectedCheckoutMode();
+  if (existingKeyField) existingKeyField.hidden = mode !== "existing_key";
+  if (existingApiKeyInput) {
+    existingApiKeyInput.required = mode === "existing_key";
+    if (mode === "new_key") existingApiKeyInput.value = "";
+  }
+  if (payButton) {
+    payButton.textContent = mode === "existing_key"
+      ? "Approve payment & top up key"
+      : "Approve payment & create key";
+  }
+  if (connectedWallet) {
+    status(
+      mode === "existing_key"
+        ? "Existing-key mode selected. Paste the key to credit, then approve payment."
+        : "New-key mode selected. Payment will fund this wallet account.",
+      "idle",
+    );
+  }
 }
 
 function shortAddress(walletAddress: string): string {
@@ -188,12 +229,27 @@ function requireCanonicalAmount(value: string): string {
 }
 
 async function jsonRequest<T>(path: string, init: RequestInit): Promise<T> {
+  const headers = new Headers(init.headers);
+  if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json");
   const response = await fetch(`${API_ORIGIN}${path}`, {
     ...init,
-    headers: { "Content-Type": "application/json", ...init.headers },
+    headers,
   });
   if (!response.ok) throw await responseError(response);
   return response.json() as Promise<T>;
+}
+
+function requireExistingApiKey(value: string): string {
+  if (!value || value.trim() !== value || value.length > 256) {
+    throw new Error("Paste the complete existing Corbanu API key.");
+  }
+  return value;
+}
+
+function apiKeyRequest<T>(path: string, apiKey: string, init: RequestInit): Promise<T> {
+  const headers = new Headers(init.headers);
+  headers.set("Authorization", `Bearer ${apiKey}`);
+  return jsonRequest<T>(path, { ...init, headers });
 }
 
 function checkoutError(error: unknown, pendingPayment?: PendingEvmPayment): string {
@@ -205,10 +261,12 @@ function checkoutError(error: unknown, pendingPayment?: PendingEvmPayment): stri
     const connectionDetail = error instanceof TypeError && lower.includes("failed to fetch")
       ? "The browser could not reach the Corbanu payment service."
       : message;
+    const action = pendingPaymentCheckoutMode(pendingPayment) === "existing_key"
+      ? "“Top up an existing key” and re-enter the key to resume"
+      : "“Approve payment & create key” to resume";
     return (
       `Your USDC transfer was submitted as ${pendingPayment.transaction}. `
-      + `${connectionDetail} Do not pay again. Reconnect this wallet and choose `
-      + "“Approve payment & create key” to resume verification."
+      + `${connectionDetail} Do not pay again. Reconnect this wallet, choose ${action} verification.`
     );
   }
   if (providerError?.code === 4001 || providerError?.code === "ACTION_REJECTED") {
@@ -431,6 +489,7 @@ async function payWithEvmWallet(
   wallet: ConnectedWallet,
   topUp: TopUpIntentResponse,
   amountUsd: string,
+  checkoutMode: CheckoutMode,
 ): Promise<void> {
   if (!isEvmRail(wallet.rail)) {
     throw new Error("EVM payment requires Base or Ethereum.");
@@ -469,6 +528,7 @@ async function payWithEvmWallet(
     transaction,
     network: selected.network,
     networkName: selected.name,
+    checkoutMode,
   };
   savePendingEvmPayment(window.localStorage, pendingPayment);
   status(`USDC transfer submitted. Waiting for ${selected.name} confirmations…`, "busy");
@@ -531,8 +591,11 @@ async function connect(selection: WalletSelection): Promise<void> {
       ? pendingEvmPaymentForWallet(window.localStorage, connectedWallet.address)
       : undefined;
     if (pendingPayment) {
+      const recovery = pendingPaymentCheckoutMode(pendingPayment) === "existing_key"
+        ? "Choose “Top up an existing key” and re-enter that key to resume."
+        : "Choose “Approve payment & create key” to resume.";
       status(
-        `Transfer ${pendingPayment.transaction} is awaiting verification. Do not pay again; choose “Approve payment & create key” to resume.`,
+        `Transfer ${pendingPayment.transaction} is awaiting verification. Do not pay again. ${recovery}`,
         "busy",
       );
     } else {
@@ -561,6 +624,75 @@ function revealApiKey(created: CreatedApiKey): void {
   secretDialog?.showModal();
 }
 
+function payerNetwork(wallet: ConnectedWallet): string {
+  return wallet.rail === "solana" ? SOLANA_MAINNET : EVM_NETWORKS[wallet.rail].network;
+}
+
+async function createExistingKeyTopUp(
+  apiKey: string,
+  wallet: ConnectedWallet,
+  amountUsd: string,
+): Promise<TopUpIntentResponse> {
+  return apiKeyRequest<TopUpIntentResponse>("/v1/topups/intents/key", apiKey, {
+    method: "POST",
+    body: JSON.stringify({
+      amountUsd,
+      payerAddress: wallet.address,
+      payerNetwork: payerNetwork(wallet),
+    }),
+  });
+}
+
+async function waitForExistingKeyTopUp(
+  apiKey: string,
+  intentId: string,
+): Promise<ExistingKeyTopUpStatus> {
+  let lastConnectionError: unknown;
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    try {
+      const result = await apiKeyRequest<ExistingKeyTopUpStatus>(
+        `/v1/topups/intents/${intentId}`,
+        apiKey,
+        { method: "GET" },
+      );
+      if (result.intent.state === "settled") return result;
+      lastConnectionError = undefined;
+    } catch (error) {
+      if (!(error instanceof TypeError)) throw error;
+      lastConnectionError = error;
+    }
+    await wait(750);
+  }
+  throw new Error(
+    lastConnectionError
+      ? "The payment service could not be reached. Verification can be resumed safely."
+      : "The transfer is still settling. Verification can be resumed safely.",
+  );
+}
+
+async function submitTopUpPayment(
+  wallet: ConnectedWallet,
+  topUp: TopUpIntentResponse,
+  amountUsd: string,
+  checkoutMode: CheckoutMode,
+): Promise<void> {
+  if (isEvmRail(wallet.rail)) {
+    await payWithEvmWallet(wallet, topUp, amountUsd, checkoutMode);
+    return;
+  }
+  if (topUp.payment.network !== SOLANA_MAINNET || !wallet.paidFetch) {
+    throw new Error("The gateway did not offer Solana mainnet x402 payment.");
+  }
+  status(`Approve the ${amountUsd} USDC payment in Phantom…`, "busy");
+  const paid = await wallet.paidFetch(topUp.payment.url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
+  if (!paid.ok) throw await responseError(paid);
+  await paid.json().catch(() => undefined);
+}
+
 async function purchase(event: SubmitEvent): Promise<void> {
   event.preventDefault();
   if (!connectedWallet || !amountInput) {
@@ -568,12 +700,54 @@ async function purchase(event: SubmitEvent): Promise<void> {
     return;
   }
   const wallet = connectedWallet;
-  const isEvmWallet = wallet.rail === "base" || wallet.rail === "ethereum";
+  const checkoutMode = selectedCheckoutMode();
+  const isEvmWallet = isEvmRail(wallet.rail);
   const savedPayment = isEvmWallet
     ? pendingEvmPaymentForWallet(window.localStorage, wallet.address)
     : undefined;
   setBusy(true);
   try {
+    if (savedPayment && pendingPaymentCheckoutMode(savedPayment) !== checkoutMode) {
+      throw new Error(
+        pendingPaymentCheckoutMode(savedPayment) === "existing_key"
+          ? "This submitted transfer belongs to an existing-key top-up."
+          : "This submitted transfer belongs to new-key checkout.",
+      );
+    }
+
+    if (checkoutMode === "existing_key") {
+      const apiKey = requireExistingApiKey(existingApiKeyInput?.value ?? "");
+      let intentId: string;
+      if (savedPayment) {
+        intentId = savedPayment.intentId;
+        status(
+          `Resuming verification for ${savedPayment.transaction} on ${savedPayment.networkName}. Do not pay again…`,
+          "busy",
+        );
+        await settleEvmPayment(
+          savedPayment.intentId,
+          savedPayment.transaction,
+          savedPayment.network,
+          savedPayment.networkName,
+        );
+      } else {
+        const amountUsd = requireCanonicalAmount(amountInput.value);
+        status("Authenticating the existing key and creating its top-up intent…", "busy");
+        const topUp = await createExistingKeyTopUp(apiKey, wallet, amountUsd);
+        intentId = topUp.intent.id;
+        await submitTopUpPayment(wallet, topUp, amountUsd, checkoutMode);
+      }
+      status("Payment accepted. Confirming credit on the existing key…", "busy");
+      const confirmed = await waitForExistingKeyTopUp(apiKey, intentId);
+      if (isEvmWallet) clearPendingEvmPayment(window.localStorage, wallet.address);
+      if (existingApiKeyInput) existingApiKeyInput.value = "";
+      status(
+        `Existing key topped up. Available Corbanu API balance: $${confirmed.balance.availableUsd}.`,
+        "success",
+      );
+      return;
+    }
+
     if (!savedPayment) {
       status("Checking this wallet for an existing funded account…", "busy");
       const account = await signedOperation<WalletAccountResponse>(wallet, { kind: "account" });
@@ -603,21 +777,7 @@ async function purchase(event: SubmitEvent): Promise<void> {
         kind: "top_up_intent",
         amountUsd,
       });
-      if (isEvmWallet) {
-        await payWithEvmWallet(wallet, topUp, amountUsd);
-      } else {
-        if (topUp.payment.network !== SOLANA_MAINNET || !wallet.paidFetch) {
-          throw new Error("The gateway did not offer Solana mainnet x402 payment.");
-        }
-        status(`Approve the ${amountUsd} USDC payment in Phantom…`, "busy");
-        const paid = await wallet.paidFetch(topUp.payment.url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: "{}",
-        });
-        if (!paid.ok) throw await responseError(paid);
-        await paid.json().catch(() => undefined);
-      }
+      await submitTopUpPayment(wallet, topUp, amountUsd, checkoutMode);
     }
     status("Payment accepted. Confirming your funded balance…", "busy");
     await waitForFundedAccount(wallet);
@@ -646,6 +806,9 @@ async function copyText(value: string, button?: HTMLButtonElement): Promise<void
   }, 1400);
 }
 
+modeInputs.forEach(input => {
+  input.addEventListener("change", updateCheckoutMode);
+});
 connectButtons.forEach(button => {
   button.addEventListener("click", () => {
     const selection = parseWalletSelection(
@@ -682,4 +845,5 @@ copyButtons.forEach(button => {
     if (value) void copyText(value, button);
   });
 });
+updateCheckoutMode();
 setBusy(false);
