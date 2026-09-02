@@ -39,6 +39,9 @@ test("API page documents supported wallet/network combinations and Terminal key 
   assert.match(html, /Base/);
   assert.match(html, /Ethereum/);
   assert.match(html, /native USDC/);
+  assert.match(html, /Top up an existing key/);
+  assert.match(html, /type="password"/);
+  assert.match(html, /never saved in browser storage/);
   for (const network of ["solana", "base", "ethereum"]) {
     assert.match(
       html,
@@ -56,7 +59,7 @@ test("API page documents supported wallet/network combinations and Terminal key 
   assert.match(html, /Authorization: Bearer/);
   assert.match(html, /\/v1\/models/);
   assert.match(html, /shown only once|revealed once/);
-  assert.match(html, /api-checkout\.js\?v=20260902-5/);
+  assert.match(html, /api-checkout\.js\?v=20260902-6/);
 });
 
 test("wallet router supports Phantom across all rails and rejects unsupported combinations", async () => {
@@ -118,6 +121,10 @@ test("browser checkout binds sensitive account changes to wallet proofs", async 
   assert.match(source, /window\.phantom\?\.ethereum/);
   assert.match(source, /selectMetaMaskEvmProvider\(window\.ethereum\)/);
   assert.match(source, /payWithEvmWallet/);
+  assert.match(source, /\/v1\/topups\/intents\/key/);
+  assert.match(source, /Existing key topped up/);
+  assert.match(source, /headers\.set\("Authorization"/);
+  assert.doesNotMatch(source, /localStorage\.setItem|sessionStorage/);
   assert.doesNotMatch(source, /registerExactEvmScheme|signTypedData/);
   assert.match(source, /savePendingEvmPayment\(window\.localStorage/);
   assert.doesNotMatch(source, /privateKey|seedPhrase|mnemonic/i);
@@ -152,6 +159,7 @@ test("submitted EVM payment recovery survives reloads without storing API creden
     PENDING_EVM_PAYMENTS_STORAGE_KEY,
     clearPendingEvmPayment,
     pendingEvmPaymentForWallet,
+    pendingPaymentCheckoutMode,
     savePendingEvmPayment,
     shouldCreateApiKeyWithoutPayment,
   } = await importTypeScript("assets/src/evm-settlement.ts");
@@ -166,7 +174,14 @@ test("submitted EVM payment recovery survives reloads without storing API creden
 
   savePendingEvmPayment(storage, payment);
   assert.deepEqual(pendingEvmPaymentForWallet(storage, payment.walletAddress.toUpperCase()), payment);
-  assert.match(storage.getItem(PENDING_EVM_PAYMENTS_STORAGE_KEY), /eip155:1/);
+  assert.equal(pendingPaymentCheckoutMode(payment), "new_key");
+  const existingKeyPayment = { ...payment, checkoutMode: "existing_key" };
+  savePendingEvmPayment(storage, existingKeyPayment);
+  assert.equal(
+    pendingPaymentCheckoutMode(pendingEvmPaymentForWallet(storage, payment.walletAddress)),
+    "existing_key",
+  );
+  assert.match(storage.getItem(PENDING_EVM_PAYMENTS_STORAGE_KEY), /existing_key/);
   clearPendingEvmPayment(storage, payment.walletAddress);
   assert.equal(pendingEvmPaymentForWallet(storage, payment.walletAddress), undefined);
   assert.equal(shouldCreateApiKeyWithoutPayment("10000000", 0), true);

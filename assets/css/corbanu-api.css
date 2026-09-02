@@ -235,7 +235,7 @@ main { overflow: hidden; }
 .checkout-layout { display: grid; grid-template-columns: 1.2fr .8fr; border: 1px solid var(--line); }
 .checkout { padding: 38px; background: var(--paper); color: var(--ink); }
 .checkout fieldset { margin: 0; padding: 0; border: 0; }
-.checkout legend, .amount-field > label {
+.checkout legend, .amount-field > label, .existing-key-field > label {
   margin-bottom: 13px;
   font-family: monospace;
   font-size: .7rem;
@@ -243,6 +243,38 @@ main { overflow: hidden; }
   letter-spacing: .1em;
   text-transform: uppercase;
 }
+.mode-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mode-choice { position: relative; cursor: pointer; }
+.mode-choice input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.mode-choice > span {
+  display: block;
+  min-height: 76px;
+  padding: 14px 15px;
+  border: 1px solid rgba(8, 10, 8, .22);
+}
+.mode-choice strong, .mode-choice small { display: block; }
+.mode-choice small { margin-top: 5px; color: #666b64; font-size: .68rem; line-height: 1.4; }
+.mode-choice input:checked + span {
+  border-color: var(--ink);
+  box-shadow: inset 4px 0 0 var(--lime);
+  background: #fff;
+}
+.mode-choice input:focus-visible + span { outline: 3px solid #5b6f00; outline-offset: 2px; }
+.wallet-fieldset { margin-top: 28px !important; }
+.existing-key-field { margin-top: 22px; }
+.existing-key-field[hidden] { display: none; }
+.existing-key-field > label { display: block; }
+.existing-key-field input {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 14px;
+  color: var(--ink);
+  border: 1px solid rgba(8, 10, 8, .35);
+  background: #fff;
+  font: .8rem/1.3 monospace;
+}
+.existing-key-field input:focus-visible { outline: 3px solid #5b6f00; outline-offset: 2px; }
+.existing-key-field p { margin: 8px 0 0; color: #666b64; font-size: .7rem; line-height: 1.45; }
 .wallet-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .wallet-choice {
   display: grid;
@@ -463,7 +495,7 @@ footer nav a:hover { color: var(--lime); }
   .checkout-section, .terminal-section, .quickstart-section, .details-section { padding: 70px 18px; border-inline: 0; }
   .section-intro { grid-template-columns: 1fr; gap: 8px; margin-bottom: 35px; }
   .section-number { display: none; }
-  .wallet-options { grid-template-columns: 1fr; }
+  .mode-options, .wallet-options { grid-template-columns: 1fr; }
   .checkout, .checkout-notes { padding: 24px 18px; }
   .amount-control input { font-size: 2.5rem; }
   .terminal-window, .terminal-steps { padding: 20px 16px; }

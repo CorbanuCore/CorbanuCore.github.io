@@ -50,15 +50,44 @@
         <span class="section-number">01</span>
         <div>
           <p class="kicker">Browser checkout</p>
-          <h2 id="checkout-title">Pay in USDC. Receive the key directly.</h2>
-          <p>Choose a supported wallet and network. You approve the exact amount in your wallet; Corbanu never receives your seed phrase or private key.</p>
+          <h2 id="checkout-title">Create a key—or reload the one you have.</h2>
+          <p>Fund a new account or top up an existing Corbanu API key from any supported payment wallet. You approve the exact amount; Corbanu never receives your seed phrase or private key.</p>
         </div>
       </div>
 
       <div class="checkout-layout">
         <form class="checkout" data-checkout-form>
-          <fieldset>
-            <legend>Choose wallet and network</legend>
+          <fieldset class="checkout-mode">
+            <legend>What are you funding?</legend>
+            <div class="mode-options">
+              <label class="mode-choice">
+                <input type="radio" name="checkoutMode" value="new_key" checked>
+                <span><strong>Create a new key</strong><small>Fund a wallet account and issue its first key.</small></span>
+              </label>
+              <label class="mode-choice">
+                <input type="radio" name="checkoutMode" value="existing_key">
+                <span><strong>Top up an existing key</strong><small>Reload a <code>cbn_…</code> key created in Terminal or here.</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="existing-key-field" data-existing-key-field hidden>
+            <label for="existing-api-key">Existing Corbanu API key</label>
+            <input
+              id="existing-api-key"
+              data-existing-api-key
+              type="password"
+              placeholder="cbn_…"
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              aria-describedby="existing-key-help"
+            >
+            <p id="existing-key-help">Sent only to Corbanu over HTTPS to identify the account being credited. It is never saved in browser storage.</p>
+          </div>
+
+          <fieldset class="wallet-fieldset">
+            <legend>Choose payment wallet and network</legend>
             <div class="wallet-options">
               <button class="wallet-choice" type="button" data-connect-wallet="phantom" data-connect-network="solana" aria-pressed="false">
                 <span class="wallet-mark phantom-mark" aria-hidden="true">P</span>
@@ -109,10 +138,10 @@
         <aside class="checkout-notes" aria-label="Checkout security">
           <div class="rail-label">What happens</div>
           <ol>
-            <li><span>01</span><div><strong>Connect</strong><p>Your public wallet address identifies the balance.</p></div></li>
-            <li><span>02</span><div><strong>Sign</strong><p>A human-readable, short-lived challenge proves wallet ownership and cannot move funds.</p></div></li>
-            <li><span>03</span><div><strong>Settle</strong><p>Phantom uses x402 on Solana. Phantom or MetaMask sends standard native-USDC transfers on Base or Ethereum; Corbanu verifies the selected chain on-chain.</p></div></li>
-            <li><span>04</span><div><strong>Issue</strong><p>Your new <code>cbn_…</code> key is revealed once.</p></div></li>
+            <li><span>01</span><div><strong>Choose account</strong><p>Create a key or authenticate the existing <code>cbn_…</code> key you want to reload.</p></div></li>
+            <li><span>02</span><div><strong>Connect payer</strong><p>Choose Phantom or MetaMask. The payment wallet can differ from the key owner.</p></div></li>
+            <li><span>03</span><div><strong>Settle</strong><p>Approve exact USDC on Solana, Base, or Ethereum; Corbanu verifies the payer, asset, receiver, amount, and chain.</p></div></li>
+            <li><span>04</span><div><strong>Credit</strong><p>For a new account, the key is revealed once. Existing-key checkout credits that key without replacing it.</p></div></li>
           </ol>
           <p class="security-note"><span aria-hidden="true">◇</span> The checkout does not store your full API key in local or session storage.</p>
         </aside>
@@ -246,6 +275,6 @@
     </nav>
   </footer>
 
-  <script src="/assets/js/api-checkout.js?v=20260902-5" defer></script>
+  <script src="/assets/js/api-checkout.js?v=20260902-6" defer></script>
 </body>
 </html>
