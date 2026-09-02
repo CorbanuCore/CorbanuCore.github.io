@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Corbanu API — Models, keys, and USDC funding</title>
+  <meta name="description" content="Create a Corbanu API key in Terminal or fund one with USDC from Phantom on Solana and MetaMask on Base.">
+  <meta name="theme-color" content="#090b09">
+  <link rel="canonical" href="https://corbanu.com/api/">
+  <link rel="icon" href="/assets/favicon.png">
+  <link rel="stylesheet" href="/assets/css/corbanu-api.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Corbanu home">
+      <img src="/assets/corbanu-logo.webp" width="42" height="42" alt="">
+      <span>Corbanu</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="/markets/">Markets</a>
+      <a href="/posts/">Posts</a>
+      <a href="/terminal/">Terminal</a>
+      <a href="/api/" aria-current="page">API</a>
+    </nav>
+    <a class="header-cta" href="#get-key">Get an API key</a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Corbanu API / Production</div>
+      <h1>One balance.<br><em>Serious models.</em></h1>
+      <p class="hero-copy">Create a private API key, fund its wallet-owned balance with canonical USDC, and call multiple model providers through one endpoint.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#get-key">Fund &amp; create key</a>
+        <a class="button button-quiet" href="#quickstart">Read quickstart <span aria-hidden="true">↘</span></a>
+      </div>
+      <dl class="hero-facts">
+        <div><dt>Protocol</dt><dd>OpenAI + Anthropic compatible</dd></div>
+        <div><dt>Funding</dt><dd>USDC · Solana / Base</dd></div>
+        <div><dt>Billing</dt><dd>At cost · 0% markup</dd></div>
+      </dl>
+      <div class="signal-line" aria-hidden="true">
+        <span>CONNECT</span><i></i><span>SIGN</span><i></i><span>SETTLE</span><i></i><span>ISSUE</span>
+      </div>
+    </section>
+
+    <section class="checkout-section" id="get-key" aria-labelledby="checkout-title">
+      <div class="section-intro">
+        <span class="section-number">01</span>
+        <div>
+          <p class="kicker">Browser checkout</p>
+          <h2 id="checkout-title">Pay in USDC. Receive the key directly.</h2>
+          <p>Choose a supported wallet and network. You approve the exact amount in your wallet; Corbanu never receives your seed phrase or private key.</p>
+        </div>
+      </div>
+
+      <div class="checkout-layout">
+        <form class="checkout" data-checkout-form>
+          <fieldset>
+            <legend>Choose payment rail</legend>
+            <div class="wallet-options">
+              <button class="wallet-choice" type="button" data-connect-wallet="solana" aria-pressed="false">
+                <span class="wallet-mark phantom-mark" aria-hidden="true">P</span>
+                <span><strong>Phantom</strong><small>Solana mainnet · USDC</small></span>
+                <span class="choice-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button class="wallet-choice" type="button" data-connect-wallet="base" aria-pressed="false">
+                <span class="wallet-mark metamask-mark" aria-hidden="true">M</span>
+                <span><strong>MetaMask</strong><small>Base mainnet · USDC</small></span>
+                <span class="choice-arrow" aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </fieldset>
+
+          <div class="amount-field">
+            <label for="api-top-up">Amount to add</label>
+            <div class="amount-control">
+              <span aria-hidden="true">$</span>
+              <input id="api-top-up" data-amount name="amountUsd" value="10" inputmode="decimal" autocomplete="off" aria-describedby="amount-help">
+              <b>USDC</b>
+            </div>
+            <p id="amount-help">Exact amount, up to 6 decimal places. Network fees may also apply.</p>
+          </div>
+
+          <div class="wallet-state">
+            <span>Connected wallet</span>
+            <strong data-wallet-label>Not connected</strong>
+          </div>
+          <button class="button button-primary pay-button" type="submit" data-pay-button disabled>Approve payment &amp; create key</button>
+          <p class="checkout-status" data-checkout-status data-state="idle" aria-live="polite">Connect a wallet to begin.</p>
+        </form>
+
+        <aside class="checkout-notes" aria-label="Checkout security">
+          <div class="rail-label">What happens</div>
+          <ol>
+            <li><span>01</span><div><strong>Connect</strong><p>Your public wallet address identifies the balance.</p></div></li>
+            <li><span>02</span><div><strong>Sign</strong><p>A short-lived challenge proves wallet ownership.</p></div></li>
+            <li><span>03</span><div><strong>Settle</strong><p>x402 settles canonical USDC on the selected network.</p></div></li>
+            <li><span>04</span><div><strong>Issue</strong><p>Your new <code>cbn_…</code> key is revealed once.</p></div></li>
+          </ol>
+          <p class="security-note"><span aria-hidden="true">◇</span> The checkout does not store your full API key in local or session storage.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="terminal-section" id="terminal" aria-labelledby="terminal-title">
+      <div class="section-intro">
+        <span class="section-number">02</span>
+        <div>
+          <p class="kicker">Generate inside Terminal</p>
+          <h2 id="terminal-title">Already using Corbanu Terminal?</h2>
+          <p>The wallet screen owns the complete key lifecycle: top up, create, inspect, and revoke.</p>
+        </div>
+      </div>
+      <div class="terminal-walkthrough">
+        <div class="terminal-window" aria-label="Terminal command walkthrough">
+          <div class="terminal-chrome"><span></span><span></span><span></span><b>CORBanu Terminal</b></div>
+          <div class="terminal-screen">
+            <p><span class="prompt">›</span> <strong>/wallet</strong></p>
+            <p class="muted">Choose <em>Corbanu API</em></p>
+            <p><span class="prompt">›</span> <strong>Top up balance</strong></p>
+            <p class="muted">Enter a positive USDC amount, unlock, and confirm</p>
+            <p><span class="success">✓</span> Payment settled</p>
+            <p><span class="success">✓</span> API key revealed in secure view</p>
+          </div>
+        </div>
+        <div class="terminal-steps">
+          <article><span>1</span><h3>Open Wallet</h3><p>Run <code>/wallet</code>, then select <strong>Corbanu API</strong>.</p></article>
+          <article><span>2</span><h3>Add balance</h3><p>Select <strong>Top up balance</strong>, enter the exact amount, unlock your local wallet, and confirm.</p></article>
+          <article><span>3</span><h3>Save the key</h3><p>The first funded account creates a key. Copy it from the secure reveal; later use <strong>Manage keys</strong> to create or revoke keys.</p></article>
+          <p class="terminal-warning">Your Terminal wallet seed and private key stay local. Never paste either into a website, chat, support ticket, or API request.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="quickstart-section" id="quickstart" aria-labelledby="quickstart-title">
+      <div class="section-intro">
+        <span class="section-number">03</span>
+        <div>
+          <p class="kicker">Quickstart</p>
+          <h2 id="quickstart-title">Make the first request.</h2>
+          <p>Use the key as a Bearer token. Start by querying the live model catalog; it is the source of truth for model IDs, capabilities, and current pricing.</p>
+        </div>
+      </div>
+
+      <div class="endpoint-strip">
+        <span>Base URL</span>
+        <code>https://pfterminal-plan-gateway.fly.dev</code>
+        <button type="button" data-copy-target="#base-url-code" aria-label="Copy API base URL">Copy</button>
+        <span id="base-url-code" class="visually-hidden">https://pfterminal-plan-gateway.fly.dev</span>
+      </div>
+
+      <div class="code-grid">
+        <article class="code-panel">
+          <div class="code-heading"><span>01 / Models</span><button type="button" data-copy-target="#code-models">Copy</button></div>
+          <pre id="code-models"><code>curl https://pfterminal-plan-gateway.fly.dev/v1/models</code></pre>
+        </article>
+        <article class="code-panel">
+          <div class="code-heading"><span>02 / Chat completions</span><button type="button" data-copy-target="#code-chat">Copy</button></div>
+          <pre id="code-chat"><code>curl https://pfterminal-plan-gateway.fly.dev/v1/chat/completions \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "corbanu/glm-5.3-flash",
+    "messages": [
+      {"role": "user", "content": "Explain this market move."}
+    ]
+  }'</code></pre>
+        </article>
+        <article class="code-panel">
+          <div class="code-heading"><span>03 / Account balance</span><button type="button" data-copy-target="#code-account">Copy</button></div>
+          <pre id="code-account"><code>curl https://pfterminal-plan-gateway.fly.dev/v1/account \
+  -H "Authorization: Bearer $CORBANU_API_KEY"</code></pre>
+        </article>
+        <article class="code-panel">
+          <div class="code-heading"><span>04 / Anthropic Messages</span><button type="button" data-copy-target="#code-messages">Copy</button></div>
+          <pre id="code-messages"><code>curl https://pfterminal-plan-gateway.fly.dev/v1/messages \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "corbanu/kimi-k3",
+    "max_tokens": 1024,
+    "messages": [
+      {"role": "user", "content": "Write an investment memo outline."}
+    ]
+  }'</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="details-section" aria-labelledby="details-title">
+      <div class="section-intro">
+        <span class="section-number">04</span>
+        <div>
+          <p class="kicker">Operating notes</p>
+          <h2 id="details-title">Know the boundary.</h2>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <article><h3>Wallet-owned balance</h3><p>Keys created by the same wallet draw from one shared dollar balance. Revoking a key does not move the balance.</p></article>
+        <article><h3>At-cost model calls</h3><p>Model usage is charged against the balance with no Corbanu markup. Query <code>/v1/models</code> for current per-model pricing.</p></article>
+        <article><h3>Keep keys server-side</h3><p>Use environment variables or a secrets manager. Never ship an API key in browser JavaScript or commit it to a repository.</p></article>
+        <article><h3>Deep Research transition</h3><p>The Deep Research endpoint currently requires an eligible legacy Plan key while balance-based job pricing is finalized. Standard model inference works with <code>cbn_…</code> balance keys.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="key-dialog" data-key-dialog>
+    <div class="key-dialog-inner">
+      <p class="kicker">API key created</p>
+      <h2>Copy it now.</h2>
+      <p>The full value cannot be recovered later. If it is lost, create a replacement and revoke the old key.</p>
+      <code data-key-value></code>
+      <div class="dialog-actions">
+        <button class="button button-primary" type="button" data-copy-key>Copy key</button>
+        <button class="button button-quiet" type="button" data-download-key>Download .txt</button>
+      </div>
+      <button class="dialog-close" type="button" data-close-key>I've saved it</button>
+    </div>
+  </dialog>
+
+  <footer>
+    <a class="brand" href="/"><img src="/assets/corbanu-logo.webp" width="34" height="34" alt=""><span>Corbanu</span></a>
+    <p>Financial infrastructure for agentic markets.</p>
+    <nav aria-label="Footer navigation">
+      <a href="/terminal/">Terminal</a>
+      <a href="https://github.com/CorbanuCore/CorbanuTerminal">Terminal source</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </nav>
+  </footer>
+
+  <script src="/assets/js/api-checkout.js" defer></script>
+</body>
+</html>
