@@ -25,20 +25,26 @@ test("browser checkout binds sensitive account changes to wallet proofs", async 
   assert.match(source, /\/v1\/wallet\/challenge/);
   assert.match(source, /\/v1\/wallet\/execute/);
   assert.match(source, /signOwnership/);
+  assert.match(source, /messageFormat: "siwx"/);
   assert.match(source, /registerExactSvmScheme/);
-  assert.match(source, /registerExactEvmScheme/);
+  assert.match(source, /eth_sendTransaction/);
+  assert.match(source, /\/v1\/topups\/settle-evm/);
+  assert.match(source, /canonical Base USDC/);
+  assert.doesNotMatch(source, /registerExactEvmScheme|signTypedData/);
   assert.doesNotMatch(source, /localStorage|sessionStorage/);
   assert.doesNotMatch(source, /privateKey|seedPhrase|mnemonic/i);
 });
 
 test("compiled checkout and site navigation are publishable static assets", async () => {
-  const [bundle, homepage, css] = await Promise.all([
+  const [bundle, homepage, css, packageJson] = await Promise.all([
     read("assets/js/api-checkout.js"),
     read("index.html"),
     read("assets/css/corbanu-api.css"),
+    read("package.json"),
   ]);
   assert.ok(bundle.length > 10_000);
   assert.match(bundle, /pfterminal-plan-gateway\.fly\.dev/);
   assert.match(homepage, /href="\/api\/"/);
+  assert.doesNotMatch(packageJson, /@x402\/evm|viem/);
   assert.doesNotMatch(css, /linear-gradient|radial-gradient/);
 });
