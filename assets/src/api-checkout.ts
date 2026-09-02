@@ -13,6 +13,14 @@ import {
 } from "@solana/kit";
 import { VersionedTransaction } from "@solana/web3.js";
 import { base58 } from "@scure/base";
+import {
+  classifyEvmSettlementResponse,
+  clearPendingEvmPayment,
+  pendingEvmPaymentForWallet,
+  savePendingEvmPayment,
+  shouldCreateApiKeyWithoutPayment,
+  type PendingEvmPayment,
+} from "./evm-settlement";
 const API_ORIGIN = "https://pfterminal-plan-gateway.fly.dev";
 const BASE_NETWORK = "eip155:8453";
 const ETHEREUM_NETWORK = "eip155:1";
@@ -25,8 +33,8 @@ type EvmRail = Exclude<Rail, "solana">;
 const EVM_NETWORKS: Record<EvmRail, {
   chainId: string;
   signingChainId: "1" | "8453";
-  network: string;
-  name: string;
+  network: typeof BASE_NETWORK | typeof ETHEREUM_NETWORK;
+  name: "Base" | "Ethereum";
   rpcUrl: string;
   explorerUrl: string;
   usdc: string;
@@ -81,6 +89,11 @@ interface TopUpIntentResponse {
   payment: { url: string; network: string; rpcUrl?: string };
   evmPayment?: { network: string; asset: string; payTo: string };
   evmPayments?: Array<{ network: string; asset: string; payTo: string }>;
+}
+
+interface WalletAccountResponse {
+  balance: { availableMicrousd: string };
+  keys: Array<{ id: string }>;
 }
 
 interface CreatedApiKey {
@@ -168,10 +181,21 @@ async function jsonRequest<T>(path: string, init: RequestInit): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-function checkoutError(error: unknown): string {
+function checkoutError(error: unknown, pendingPayment?: PendingEvmPayment): string {
   const providerError = error as { code?: number | string; message?: string };
   const message = error instanceof Error ? error.message : providerError?.message ?? "Checkout failed.";
   const lower = message.toLowerCase();
+
+  if (pendingPayment) {
+    const connectionDetail = error instanceof TypeError && lower.includes("failed to fetch")
+      ? "The browser could not reach the Corbanu payment service."
+      : message;
+    return (
+      `Your USDC transfer was submitted as ${pendingPayment.transaction}. `
+      + `${connectionDetail} Do not pay again. Reconnect this wallet and choose `
+      + "“Approve payment & create key” to resume verification."
+    );
+  }
   if (providerError?.code === 4001 || providerError?.code === "ACTION_REJECTED") {
     return "Wallet request cancelled. No funds were sent.";
   }
@@ -354,14 +378,9 @@ async function settleEvmPayment(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ intentId, transaction, network }),
       });
-      if (response.ok) {
-        const payload = await response.json() as { state?: string };
-        if (payload.state === "settled") return;
-        throw new Error("The gateway returned an invalid settlement response.");
-      }
-      if (response.status !== 202 && response.status !== 503) {
-        throw await responseError(response);
-      }
+      const responseState = await classifyEvmSettlementResponse(response);
+      if (responseState === "settled") return;
+      if (responseState === "error") throw await responseError(response);
       lastConnectionError = undefined;
     } catch (error) {
       if (!(error instanceof TypeError)) throw error;
@@ -372,9 +391,7 @@ async function settleEvmPayment(
   const suffix = lastConnectionError
     ? "The payment service could not be reached."
     : `${networkName} confirmations are taking longer than expected.`;
-  throw new Error(
-    `Your USDC transfer was submitted as ${transaction}. ${suffix} Do not pay again; keep this page open and retry verification.`,
-  );
+  throw new Error(`${suffix} Verification can be resumed safely.`);
 }
 
 async function payWithMetaMask(
@@ -413,12 +430,20 @@ async function payWithMetaMask(
     }],
   });
   assertTransactionHash(transaction);
+  const pendingPayment: PendingEvmPayment = {
+    walletAddress: wallet.address,
+    intentId: topUp.intent.id,
+    transaction,
+    network: selected.network,
+    networkName: selected.name,
+  };
+  savePendingEvmPayment(window.localStorage, pendingPayment);
   status(`USDC transfer submitted. Waiting for ${selected.name} confirmations…`, "busy");
   await settleEvmPayment(
-    topUp.intent.id,
-    transaction,
-    selected.network,
-    selected.name,
+    pendingPayment.intentId,
+    pendingPayment.transaction,
+    pendingPayment.network,
+    pendingPayment.networkName,
   );
 }
 
@@ -461,7 +486,17 @@ async function connect(rail: Rail): Promise<void> {
     connectButtons.forEach(button => {
       button.setAttribute("aria-pressed", String(button.dataset.connectWallet === rail));
     });
-    status("Wallet connected. Set the exact amount to add to your Corbanu API balance.", "success");
+    const pendingPayment = connectedWallet.rail === "base" || connectedWallet.rail === "ethereum"
+      ? pendingEvmPaymentForWallet(window.localStorage, connectedWallet.address)
+      : undefined;
+    if (pendingPayment) {
+      status(
+        `Transfer ${pendingPayment.transaction} is awaiting verification. Do not pay again; choose “Approve payment & create key” to resume.`,
+        "busy",
+      );
+    } else {
+      status("Wallet connected. Set the exact amount to add to your Corbanu API balance.", "success");
+    }
   } catch (error) {
     connectedWallet = undefined;
     status(checkoutError(error), "error");
@@ -492,37 +527,69 @@ async function purchase(event: SubmitEvent): Promise<void> {
     return;
   }
   const wallet = connectedWallet;
+  const isEvmWallet = wallet.rail === "base" || wallet.rail === "ethereum";
+  const savedPayment = isEvmWallet
+    ? pendingEvmPaymentForWallet(window.localStorage, wallet.address)
+    : undefined;
   setBusy(true);
   try {
-    const amountUsd = requireCanonicalAmount(amountInput.value);
-    status("Requesting a wallet-bound top-up intent…", "busy");
-    const topUp = await signedOperation<TopUpIntentResponse>(wallet, {
-      kind: "top_up_intent",
-      amountUsd,
-    });
-    if (wallet.rail === "base" || wallet.rail === "ethereum") {
-      await payWithMetaMask(wallet, topUp, amountUsd);
-    } else {
-      if (topUp.payment.network !== SOLANA_MAINNET || !wallet.paidFetch) {
-        throw new Error("The gateway did not offer Solana mainnet x402 payment.");
+    if (!savedPayment) {
+      status("Checking this wallet for an existing funded account…", "busy");
+      const account = await signedOperation<WalletAccountResponse>(wallet, { kind: "account" });
+      if (shouldCreateApiKeyWithoutPayment(account.balance.availableMicrousd, account.keys.length)) {
+        status("Funded balance found. Creating your API key without another payment…", "busy");
+        const created = await signedOperation<CreatedApiKey>(wallet, { kind: "create_key" });
+        revealApiKey(created);
+        status("API key created. No additional payment was requested.", "success");
+        return;
       }
-      status(`Approve the ${amountUsd} USDC payment in Phantom…`, "busy");
-      const paid = await wallet.paidFetch(topUp.payment.url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: "{}",
+    }
+    if (savedPayment) {
+      status(
+        `Resuming verification for ${savedPayment.transaction} on ${savedPayment.networkName}. Do not pay again…`,
+        "busy",
+      );
+      await settleEvmPayment(
+        savedPayment.intentId,
+        savedPayment.transaction,
+        savedPayment.network,
+        savedPayment.networkName,
+      );
+    } else {
+      const amountUsd = requireCanonicalAmount(amountInput.value);
+      status("Requesting a wallet-bound top-up intent…", "busy");
+      const topUp = await signedOperation<TopUpIntentResponse>(wallet, {
+        kind: "top_up_intent",
+        amountUsd,
       });
-      if (!paid.ok) throw await responseError(paid);
-      await paid.json().catch(() => undefined);
+      if (isEvmWallet) {
+        await payWithMetaMask(wallet, topUp, amountUsd);
+      } else {
+        if (topUp.payment.network !== SOLANA_MAINNET || !wallet.paidFetch) {
+          throw new Error("The gateway did not offer Solana mainnet x402 payment.");
+        }
+        status(`Approve the ${amountUsd} USDC payment in Phantom…`, "busy");
+        const paid = await wallet.paidFetch(topUp.payment.url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "{}",
+        });
+        if (!paid.ok) throw await responseError(paid);
+        await paid.json().catch(() => undefined);
+      }
     }
     status("Payment accepted. Confirming your funded balance…", "busy");
     await waitForFundedAccount(wallet);
     status("Creating a new API key…", "busy");
     const created = await signedOperation<CreatedApiKey>(wallet, { kind: "create_key" });
+    if (isEvmWallet) clearPendingEvmPayment(window.localStorage, wallet.address);
     revealApiKey(created);
     status("API key created. Copy it now—the full key is shown only once.", "success");
   } catch (error) {
-    status(checkoutError(error), "error");
+    const pendingPayment = isEvmWallet
+      ? pendingEvmPaymentForWallet(window.localStorage, wallet.address)
+      : undefined;
+    status(checkoutError(error, pendingPayment), "error");
   } finally {
     setBusy(false);
   }
