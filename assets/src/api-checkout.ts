@@ -21,14 +21,21 @@ import {
   shouldCreateApiKeyWithoutPayment,
   type PendingEvmPayment,
 } from "./evm-settlement";
+import {
+  isEvmRail,
+  parseWalletSelection,
+  selectMetaMaskEvmProvider,
+  selectPhantomEvmProvider,
+  type EvmRail,
+  type PaymentRail,
+  type WalletKind,
+  type WalletSelection,
+} from "./wallet-routing";
 const API_ORIGIN = "https://pfterminal-plan-gateway.fly.dev";
 const BASE_NETWORK = "eip155:8453";
 const ETHEREUM_NETWORK = "eip155:1";
 const ERC20_TRANSFER_SELECTOR = "a9059cbb";
 const SOLANA_MAINNET = "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp";
-
-type Rail = "solana" | "base" | "ethereum";
-type EvmRail = Exclude<Rail, "solana">;
 
 const EVM_NETWORKS: Record<EvmRail, {
   chainId: string;
@@ -63,7 +70,7 @@ type WalletOperation =
   | { kind: "top_up_intent"; amountUsd: string }
   | { kind: "create_key" };
 
-interface PhantomProvider {
+interface PhantomSolanaProvider {
   isPhantom?: boolean;
   publicKey?: { toString(): string };
   connect(): Promise<{ publicKey: { toString(): string } }>;
@@ -72,11 +79,16 @@ interface PhantomProvider {
 }
 
 interface EthereumProvider {
+  isMetaMask?: boolean;
+  isPhantom?: boolean;
+  providers?: EthereumProvider[];
   request(args: { method: string; params?: readonly unknown[] }): Promise<unknown>;
 }
 
 interface ConnectedWallet {
-  rail: Rail;
+  rail: PaymentRail;
+  walletKind: WalletKind;
+  walletName: "Phantom" | "MetaMask";
   address: string;
   signingChainId: "1" | "8453" | "solana:mainnet";
   signOwnership(message: string): Promise<string>;
@@ -105,8 +117,11 @@ interface CreatedApiKey {
 
 declare global {
   interface Window {
-    phantom?: { solana?: PhantomProvider };
-    solana?: PhantomProvider;
+    phantom?: {
+      solana?: PhantomSolanaProvider;
+      ethereum?: EthereumProvider;
+    };
+    solana?: PhantomSolanaProvider;
     ethereum?: EthereumProvider;
   }
 }
@@ -200,7 +215,7 @@ function checkoutError(error: unknown, pendingPayment?: PendingEvmPayment): stri
     return "Wallet request cancelled. No funds were sent.";
   }
   if (lower.includes("deceptive request")) {
-    return "MetaMask blocked this request with a security warning. No funds were sent. Reload this page to use the standard USDC checkout.";
+    return "The wallet blocked this request with a security warning. No funds were sent. Reload this page to use the standard USDC checkout.";
   }
   if (lower.includes("insufficient funds") || lower.includes("intrinsic transaction cost")) {
     return "This wallet needs ETH on the selected network to pay the transaction fee. No USDC was sent.";
@@ -252,7 +267,7 @@ async function signedOperation<T>(wallet: ConnectedWallet, operation: WalletOper
   });
 }
 
-function phantomProvider(): PhantomProvider {
+function phantomSolanaProvider(): PhantomSolanaProvider {
   const provider = window.phantom?.solana ?? window.solana;
   if (!provider?.isPhantom) {
     throw new Error("Phantom was not found. Install Phantom, then reload this page.");
@@ -260,8 +275,24 @@ function phantomProvider(): PhantomProvider {
   return provider;
 }
 
-async function connectPhantom(): Promise<ConnectedWallet> {
-  const provider = phantomProvider();
+function phantomEvmProvider(): EthereumProvider {
+  const provider = selectPhantomEvmProvider(window.phantom?.ethereum);
+  if (!provider) {
+    throw new Error("Phantom EVM support was not found. Update Phantom, then reload this page.");
+  }
+  return provider;
+}
+
+function metaMaskProvider(): EthereumProvider {
+  const provider = selectMetaMaskEvmProvider(window.ethereum);
+  if (!provider) {
+    throw new Error("MetaMask was not found. Install MetaMask, then reload this page.");
+  }
+  return provider;
+}
+
+async function connectPhantomSolana(): Promise<ConnectedWallet> {
+  const provider = phantomSolanaProvider();
   const connection = await provider.connect();
   const walletAddress = connection.publicKey.toString();
   const signer = {
@@ -291,6 +322,8 @@ async function connectPhantom(): Promise<ConnectedWallet> {
   });
   return {
     rail: "solana",
+    walletKind: "phantom",
+    walletName: "Phantom",
     address: walletAddress,
     signingChainId: "solana:mainnet",
     async signOwnership(message) {
@@ -356,7 +389,7 @@ function assertTransactionHash(value: unknown): asserts value is string {
     !value.startsWith("0x") ||
     !isHex(value.slice(2))
   ) {
-    throw new Error("MetaMask did not return a valid transaction hash.");
+    throw new Error("The EVM wallet did not return a valid transaction hash.");
   }
 }
 
@@ -394,13 +427,13 @@ async function settleEvmPayment(
   throw new Error(`${suffix} Verification can be resumed safely.`);
 }
 
-async function payWithMetaMask(
+async function payWithEvmWallet(
   wallet: ConnectedWallet,
   topUp: TopUpIntentResponse,
   amountUsd: string,
 ): Promise<void> {
-  if (wallet.rail !== "base" && wallet.rail !== "ethereum") {
-    throw new Error("MetaMask payment requires an EVM network.");
+  if (!isEvmRail(wallet.rail)) {
+    throw new Error("EVM payment requires Base or Ethereum.");
   }
   const provider = wallet.ethereumProvider;
   const selected = EVM_NETWORKS[wallet.rail];
@@ -417,7 +450,7 @@ async function payWithMetaMask(
   assertEvmAddress(offer.payTo, "Payment receiver");
   await ensureEvmNetwork(provider, wallet.rail);
   status(
-    `Approve a standard ${amountUsd} USDC transfer on ${selected.name}. MetaMask will also show the ETH network fee.`,
+    `Approve a standard ${amountUsd} USDC transfer on ${selected.name}. ${wallet.walletName} will also show the ETH network fee.`,
     "busy",
   );
   const transaction = await provider.request({
@@ -447,18 +480,20 @@ async function payWithMetaMask(
   );
 }
 
-async function connectMetaMask(rail: EvmRail): Promise<ConnectedWallet> {
-  const provider = window.ethereum;
-  if (!provider) throw new Error("MetaMask was not found. Install MetaMask, then reload this page.");
+async function connectEvmWallet(walletKind: WalletKind, rail: EvmRail): Promise<ConnectedWallet> {
+  const walletName = walletKind === "phantom" ? "Phantom" : "MetaMask";
+  const provider = walletKind === "phantom" ? phantomEvmProvider() : metaMaskProvider();
   const accounts = await provider.request({ method: "eth_requestAccounts" });
   if (!Array.isArray(accounts) || typeof accounts[0] !== "string") {
-    throw new Error("MetaMask did not return an account.");
+    throw new Error(`${walletName} did not return an EVM account.`);
   }
   const walletAddress = accounts[0];
-  assertEvmAddress(walletAddress, "MetaMask account");
+  assertEvmAddress(walletAddress, `${walletName} account`);
   await ensureEvmNetwork(provider, rail);
   return {
     rail,
+    walletKind,
+    walletName,
     address: walletAddress,
     signingChainId: EVM_NETWORKS[rail].signingChainId,
     ethereumProvider: provider,
@@ -467,24 +502,30 @@ async function connectMetaMask(rail: EvmRail): Promise<ConnectedWallet> {
         method: "personal_sign",
         params: [`0x${Array.from(new TextEncoder().encode(message), byte => byte.toString(16).padStart(2, "0")).join("")}`, walletAddress],
       });
-      if (typeof signature !== "string") throw new Error("MetaMask returned an invalid signature.");
+      if (typeof signature !== "string") {
+        throw new Error(`${walletName} returned an invalid signature.`);
+      }
       return signature;
     },
   };
 }
 
-async function connect(rail: Rail): Promise<void> {
+async function connect(selection: WalletSelection): Promise<void> {
   setBusy(true);
-  const walletName = rail === "solana" ? "Phantom" : "MetaMask";
-  const networkName = rail === "solana" ? "Solana" : EVM_NETWORKS[rail].name;
+  const walletName = selection.wallet === "phantom" ? "Phantom" : "MetaMask";
+  const networkName = selection.rail === "solana" ? "Solana" : EVM_NETWORKS[selection.rail].name;
   status(`Connecting ${walletName} on ${networkName}…`, "busy");
   try {
-    connectedWallet = rail === "solana" ? await connectPhantom() : await connectMetaMask(rail);
+    connectedWallet = selection.rail === "solana"
+      ? await connectPhantomSolana()
+      : await connectEvmWallet(selection.wallet, selection.rail);
     if (walletLabel) {
       walletLabel.textContent = `${walletName} · ${networkName} · ${shortAddress(connectedWallet.address)}`;
     }
     connectButtons.forEach(button => {
-      button.setAttribute("aria-pressed", String(button.dataset.connectWallet === rail));
+      const isSelected = button.dataset.connectWallet === selection.wallet
+        && button.dataset.connectNetwork === selection.rail;
+      button.setAttribute("aria-pressed", String(isSelected));
     });
     const pendingPayment = connectedWallet.rail === "base" || connectedWallet.rail === "ethereum"
       ? pendingEvmPaymentForWallet(window.localStorage, connectedWallet.address)
@@ -563,7 +604,7 @@ async function purchase(event: SubmitEvent): Promise<void> {
         amountUsd,
       });
       if (isEvmWallet) {
-        await payWithMetaMask(wallet, topUp, amountUsd);
+        await payWithEvmWallet(wallet, topUp, amountUsd);
       } else {
         if (topUp.payment.network !== SOLANA_MAINNET || !wallet.paidFetch) {
           throw new Error("The gateway did not offer Solana mainnet x402 payment.");
@@ -607,8 +648,11 @@ async function copyText(value: string, button?: HTMLButtonElement): Promise<void
 
 connectButtons.forEach(button => {
   button.addEventListener("click", () => {
-    const rail = button.dataset.connectWallet;
-    if (rail === "solana" || rail === "base" || rail === "ethereum") void connect(rail);
+    const selection = parseWalletSelection(
+      button.dataset.connectWallet,
+      button.dataset.connectNetwork,
+    );
+    if (selection) void connect(selection);
   });
 });
 form?.addEventListener("submit", event => void purchase(event));

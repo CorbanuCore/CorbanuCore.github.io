@@ -58,20 +58,30 @@
       <div class="checkout-layout">
         <form class="checkout" data-checkout-form>
           <fieldset>
-            <legend>Choose payment rail</legend>
+            <legend>Choose wallet and network</legend>
             <div class="wallet-options">
-              <button class="wallet-choice" type="button" data-connect-wallet="solana" aria-pressed="false">
+              <button class="wallet-choice" type="button" data-connect-wallet="phantom" data-connect-network="solana" aria-pressed="false">
                 <span class="wallet-mark phantom-mark" aria-hidden="true">P</span>
                 <span><strong>Phantom</strong><small>Solana mainnet · USDC</small></span>
                 <span class="choice-arrow" aria-hidden="true">↗</span>
               </button>
-              <button class="wallet-choice" type="button" data-connect-wallet="base" aria-pressed="false">
+              <button class="wallet-choice" type="button" data-connect-wallet="phantom" data-connect-network="base" aria-pressed="false">
+                <span class="wallet-mark phantom-mark" aria-hidden="true">P</span>
+                <span><strong>Phantom</strong><small>Base · native USDC + ETH gas</small></span>
+                <span class="choice-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button class="wallet-choice" type="button" data-connect-wallet="phantom" data-connect-network="ethereum" aria-pressed="false">
+                <span class="wallet-mark phantom-mark" aria-hidden="true">P</span>
+                <span><strong>Phantom</strong><small>Ethereum · native USDC + L1 gas</small></span>
+                <span class="choice-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button class="wallet-choice" type="button" data-connect-wallet="metamask" data-connect-network="base" aria-pressed="false">
                 <span class="wallet-mark metamask-mark" aria-hidden="true">M</span>
                 <span><strong>MetaMask</strong><small>Base · native USDC + ETH gas</small></span>
                 <span class="choice-arrow" aria-hidden="true">↗</span>
               </button>
-              <button class="wallet-choice" type="button" data-connect-wallet="ethereum" aria-pressed="false">
-                <span class="wallet-mark ethereum-mark" aria-hidden="true">Ξ</span>
+              <button class="wallet-choice" type="button" data-connect-wallet="metamask" data-connect-network="ethereum" aria-pressed="false">
+                <span class="wallet-mark metamask-mark" aria-hidden="true">M</span>
                 <span><strong>MetaMask</strong><small>Ethereum · native USDC + L1 gas</small></span>
                 <span class="choice-arrow" aria-hidden="true">↗</span>
               </button>
@@ -101,7 +111,7 @@
           <ol>
             <li><span>01</span><div><strong>Connect</strong><p>Your public wallet address identifies the balance.</p></div></li>
             <li><span>02</span><div><strong>Sign</strong><p>A human-readable, short-lived challenge proves wallet ownership and cannot move funds.</p></div></li>
-            <li><span>03</span><div><strong>Settle</strong><p>Phantom uses x402 on Solana. MetaMask sends standard native-USDC transfers on Base or Ethereum; Corbanu verifies the selected chain on-chain.</p></div></li>
+            <li><span>03</span><div><strong>Settle</strong><p>Phantom uses x402 on Solana. Phantom or MetaMask sends standard native-USDC transfers on Base or Ethereum; Corbanu verifies the selected chain on-chain.</p></div></li>
             <li><span>04</span><div><strong>Issue</strong><p>Your new <code>cbn_…</code> key is revealed once.</p></div></li>
           </ol>
           <p class="security-note"><span aria-hidden="true">◇</span> The checkout does not store your full API key in local or session storage.</p>
@@ -236,6 +246,6 @@
     </nav>
   </footer>
 
-  <script src="/assets/js/api-checkout.js?v=20260902-4" defer></script>
+  <script src="/assets/js/api-checkout.js?v=20260902-5" defer></script>
 </body>
 </html>

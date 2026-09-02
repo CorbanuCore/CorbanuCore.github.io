@@ -31,7 +31,7 @@ function memoryStorage() {
   };
 }
 
-test("API page documents all three qualified USDC rails and Terminal key generation", async () => {
+test("API page documents supported wallet/network combinations and Terminal key generation", async () => {
   const html = await read("api/index.html");
   assert.match(html, /Phantom/);
   assert.match(html, /Solana mainnet/);
@@ -39,12 +39,64 @@ test("API page documents all three qualified USDC rails and Terminal key generat
   assert.match(html, /Base/);
   assert.match(html, /Ethereum/);
   assert.match(html, /native USDC/);
+  for (const network of ["solana", "base", "ethereum"]) {
+    assert.match(
+      html,
+      new RegExp(`data-connect-wallet="phantom" data-connect-network="${network}"`),
+    );
+  }
+  for (const network of ["base", "ethereum"]) {
+    assert.match(
+      html,
+      new RegExp(`data-connect-wallet="metamask" data-connect-network="${network}"`),
+    );
+  }
   assert.match(html, /\/wallet/);
   assert.match(html, /Corbanu API/);
   assert.match(html, /Authorization: Bearer/);
   assert.match(html, /\/v1\/models/);
   assert.match(html, /shown only once|revealed once/);
-  assert.match(html, /api-checkout\.js\?v=20260902-4/);
+  assert.match(html, /api-checkout\.js\?v=20260902-5/);
+});
+
+test("wallet router supports Phantom across all rails and rejects unsupported combinations", async () => {
+  const {
+    parseWalletSelection,
+    selectMetaMaskEvmProvider,
+    selectPhantomEvmProvider,
+  } = await importTypeScript("assets/src/wallet-routing.ts");
+
+  assert.deepEqual(parseWalletSelection("phantom", "solana"), {
+    wallet: "phantom",
+    rail: "solana",
+  });
+  assert.deepEqual(parseWalletSelection("phantom", "base"), {
+    wallet: "phantom",
+    rail: "base",
+  });
+  assert.deepEqual(parseWalletSelection("phantom", "ethereum"), {
+    wallet: "phantom",
+    rail: "ethereum",
+  });
+  assert.deepEqual(parseWalletSelection("metamask", "base"), {
+    wallet: "metamask",
+    rail: "base",
+  });
+  assert.deepEqual(parseWalletSelection("metamask", "ethereum"), {
+    wallet: "metamask",
+    rail: "ethereum",
+  });
+  assert.equal(parseWalletSelection("metamask", "solana"), undefined);
+  assert.equal(parseWalletSelection("phantom", "polygon"), undefined);
+  assert.equal(parseWalletSelection(undefined, "base"), undefined);
+
+  const phantom = { isPhantom: true };
+  const metamask = { isMetaMask: true };
+  const collision = { isPhantom: true, providers: [phantom, metamask] };
+  assert.equal(selectPhantomEvmProvider(phantom), phantom);
+  assert.equal(selectPhantomEvmProvider(metamask), undefined);
+  assert.equal(selectMetaMaskEvmProvider(collision), metamask);
+  assert.equal(selectMetaMaskEvmProvider(phantom), undefined);
 });
 
 test("browser checkout binds sensitive account changes to wallet proofs", async () => {
@@ -63,6 +115,9 @@ test("browser checkout binds sensitive account changes to wallet proofs", async 
   assert.match(source, /ETHEREUM_NETWORK = "eip155:1"/);
   assert.match(source, /a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/);
   assert.match(source, /evmPayments/);
+  assert.match(source, /window\.phantom\?\.ethereum/);
+  assert.match(source, /selectMetaMaskEvmProvider\(window\.ethereum\)/);
+  assert.match(source, /payWithEvmWallet/);
   assert.doesNotMatch(source, /registerExactEvmScheme|signTypedData/);
   assert.match(source, /savePendingEvmPayment\(window\.localStorage/);
   assert.doesNotMatch(source, /privateKey|seedPhrase|mnemonic/i);
