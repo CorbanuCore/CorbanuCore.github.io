@@ -33,7 +33,7 @@ import {
   type WalletKind,
   type WalletSelection,
 } from "./wallet-routing";
-const API_ORIGIN = "https://pfterminal-plan-gateway.fly.dev";
+const API_ORIGIN = "https://api.corbanu.com";
 const BASE_NETWORK = "eip155:8453";
 const ETHEREUM_NETWORK = "eip155:1";
 const ERC20_TRANSFER_SELECTOR = "a9059cbb";

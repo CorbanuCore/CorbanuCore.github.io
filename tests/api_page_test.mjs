@@ -59,7 +59,7 @@ test("API page documents supported wallet/network combinations and Terminal key 
   assert.match(html, /Authorization: Bearer/);
   assert.match(html, /\/v1\/models/);
   assert.match(html, /shown only once|revealed once/);
-  assert.match(html, /api-checkout\.js\?v=20260902-6/);
+  assert.match(html, /api-checkout\.js\?v=20260902-7/);
 });
 
 test("API reference covers inference and the complete Deep Research lifecycle with brand typography", async () => {
@@ -75,6 +75,8 @@ test("API reference covers inference and the complete Deep Research lifecycle wi
   assert.doesNotMatch(css, /Georgia|Times New Roman|Helvetica|font-style:\s*italic/i);
   assert.match(css, /--sans: "Inter Tight"/);
   assert.match(css, /--mono: "IBM Plex Mono"/);
+  assert.match(html, /https:\/\/api\.corbanu\.com/);
+  assert.doesNotMatch(html, /pfterminal-plan-gateway\.fly\.dev/);
 
   for (const contract of [
     "/v1/models",
@@ -244,7 +246,8 @@ test("compiled checkout and site navigation are publishable static assets", asyn
     read("package.json"),
   ]);
   assert.ok(bundle.length > 10_000);
-  assert.match(bundle, /pfterminal-plan-gateway\.fly\.dev/);
+  assert.match(bundle, /https:\/\/api\.corbanu\.com/);
+  assert.doesNotMatch(bundle, /pfterminal-plan-gateway\.fly\.dev/);
   assert.match(homepage, /href="\/api\/"/);
   assert.doesNotMatch(packageJson, /@x402\/evm|viem/);
   assert.doesNotMatch(css, /linear-gradient|radial-gradient/);

@@ -193,9 +193,9 @@
 
       <div class="endpoint-strip">
         <span>Base URL</span>
-        <code>https://pfterminal-plan-gateway.fly.dev</code>
+        <code>https://api.corbanu.com</code>
         <button type="button" data-copy-target="#base-url-code" aria-label="Copy API base URL">Copy</button>
-        <span id="base-url-code" class="visually-hidden">https://pfterminal-plan-gateway.fly.dev</span>
+        <span id="base-url-code" class="visually-hidden">https://api.corbanu.com</span>
       </div>
 
       <nav class="docs-nav" aria-label="API reference sections">
@@ -235,11 +235,11 @@
           <div class="code-grid code-grid-compact">
             <article class="code-panel">
               <div class="code-heading"><span>Model catalog</span><button type="button" data-copy-target="#code-models">Copy</button></div>
-              <pre id="code-models"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/models | jq .</code></pre>
+              <pre id="code-models"><code>curl -sS https://api.corbanu.com/v1/models | jq .</code></pre>
             </article>
             <article class="code-panel">
               <div class="code-heading"><span>Authenticated account</span><button type="button" data-copy-target="#code-account">Copy</button></div>
-              <pre id="code-account"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/account \
+              <pre id="code-account"><code>curl -sS https://api.corbanu.com/v1/account \
   -H "Authorization: Bearer $CORBANU_API_KEY" | jq .</code></pre>
             </article>
           </div>
@@ -265,7 +265,7 @@
           <div class="code-grid">
             <article class="code-panel">
               <div class="code-heading"><span>OpenAI / Request</span><button type="button" data-copy-target="#code-chat">Copy</button></div>
-              <pre id="code-chat"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/chat/completions \
+              <pre id="code-chat"><code>curl -sS https://api.corbanu.com/v1/chat/completions \
   -H "Authorization: Bearer $CORBANU_API_KEY" \
   -H "X-Corbanu-Request-Id: inference-001" \
   -H "Content-Type: application/json" \
@@ -297,7 +297,7 @@
             </article>
             <article class="code-panel">
               <div class="code-heading"><span>Anthropic / Request</span><button type="button" data-copy-target="#code-messages">Copy</button></div>
-              <pre id="code-messages"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/messages \
+              <pre id="code-messages"><code>curl -sS https://api.corbanu.com/v1/messages \
   -H "Authorization: Bearer $CORBANU_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -H "X-Corbanu-Request-Id: messages-001" \
@@ -312,7 +312,7 @@
             </article>
             <article class="code-panel">
               <div class="code-heading"><span>Streaming</span><button type="button" data-copy-target="#code-stream">Copy</button></div>
-              <pre id="code-stream"><code>curl -N https://pfterminal-plan-gateway.fly.dev/v1/chat/completions \
+              <pre id="code-stream"><code>curl -N https://api.corbanu.com/v1/chat/completions \
   -H "Authorization: Bearer $CORBANU_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -353,7 +353,7 @@
           <div class="code-grid">
             <article class="code-panel">
               <div class="code-heading"><span>1 / Start job</span><button type="button" data-copy-target="#code-research-start">Copy</button></div>
-              <pre id="code-research-start"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/deep-research \
+              <pre id="code-research-start"><code>curl -sS https://api.corbanu.com/v1/deep-research \
   -H "Authorization: Bearer $CORBANU_API_KEY" \
   -H "X-Corbanu-Request-Id: research-market-structure-001" \
   -H "Content-Type: application/json" \
@@ -380,13 +380,13 @@
               <pre id="code-research-status"><code>export CORBANU_RESEARCH_JOB_ID="936d…"
 
 curl -sS \
-  "https://pfterminal-plan-gateway.fly.dev/v1/deep-research/$CORBANU_RESEARCH_JOB_ID" \
+  "https://api.corbanu.com/v1/deep-research/$CORBANU_RESEARCH_JOB_ID" \
   -H "Authorization: Bearer $CORBANU_API_KEY" | jq .</code></pre>
             </article>
             <article class="code-panel">
               <div class="code-heading"><span>3 / Retrieve result</span><button type="button" data-copy-target="#code-research-result">Copy</button></div>
               <pre id="code-research-result"><code>curl -sS \
-  "https://pfterminal-plan-gateway.fly.dev/v1/deep-research/$CORBANU_RESEARCH_JOB_ID/result" \
+  "https://api.corbanu.com/v1/deep-research/$CORBANU_RESEARCH_JOB_ID/result" \
   -H "Authorization: Bearer $CORBANU_API_KEY" | jq -r '.result.markdown'</code></pre>
             </article>
           </div>
@@ -471,6 +471,6 @@ curl -sS \
     </nav>
   </footer>
 
-  <script src="/assets/js/api-checkout.js?v=20260902-6" defer></script>
+  <script src="/assets/js/api-checkout.js?v=20260902-7" defer></script>
 </body>
 </html>
