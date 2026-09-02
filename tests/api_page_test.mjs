@@ -56,6 +56,8 @@ test("API page documents supported wallet/network combinations and Terminal key 
   }
   assert.match(html, /\/wallet/);
   assert.match(html, /Corbanu API/);
+  assert.ok(html.includes("The API for<br><span class=\"accent\">On Chain AI Trading Agents</span>"));
+  assert.ok(html.includes("Get market data, inference, and an ontology for the complex world of swaps, perp and spot assets all in one place"));
   assert.match(html, /Authorization: Bearer/);
   assert.match(html, /\/v1\/models/);
   assert.match(html, /shown only once|revealed once/);
