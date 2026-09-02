@@ -1,6 +1,5 @@
 import { x402Client } from "@x402/core/client";
 import type { Network } from "@x402/core/types";
-import { registerExactEvmScheme } from "@x402/evm/exact/client";
 import { wrapFetchWithPayment } from "@x402/fetch";
 import { registerExactSvmScheme } from "@x402/svm/exact/client";
 import {
@@ -14,13 +13,11 @@ import {
 } from "@solana/kit";
 import { VersionedTransaction } from "@solana/web3.js";
 import { base58 } from "@scure/base";
-import { createWalletClient, custom } from "viem";
-import { base } from "viem/chains";
-
 const API_ORIGIN = "https://pfterminal-plan-gateway.fly.dev";
-const OWNERSHIP_PREFIX = "pfterminal-plan-ownership-v1";
 const BASE_CHAIN_ID = "0x2105";
 const BASE_NETWORK = "eip155:8453";
+const BASE_USDC = "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913";
+const ERC20_TRANSFER_SELECTOR = "a9059cbb";
 const SOLANA_MAINNET = "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp";
 
 type Rail = "solana" | "base";
@@ -45,7 +42,8 @@ interface ConnectedWallet {
   rail: Rail;
   address: string;
   signOwnership(message: string): Promise<string>;
-  paidFetch(url: string, init: RequestInit): Promise<Response>;
+  paidFetch?: (url: string, init: RequestInit) => Promise<Response>;
+  ethereumProvider?: EthereumProvider;
 }
 
 interface TopUpIntentResponse {
@@ -139,6 +137,25 @@ async function jsonRequest<T>(path: string, init: RequestInit): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+function checkoutError(error: unknown): string {
+  const providerError = error as { code?: number | string; message?: string };
+  const message = error instanceof Error ? error.message : providerError?.message ?? "Checkout failed.";
+  const lower = message.toLowerCase();
+  if (providerError?.code === 4001 || providerError?.code === "ACTION_REJECTED") {
+    return "Wallet request cancelled. No funds were sent.";
+  }
+  if (lower.includes("deceptive request")) {
+    return "MetaMask blocked this request with a security warning. No funds were sent. Reload this page to use the standard Base USDC checkout.";
+  }
+  if (lower.includes("insufficient funds") || lower.includes("intrinsic transaction cost")) {
+    return "This wallet needs a small amount of ETH on Base to pay the network fee. No USDC was sent.";
+  }
+  if (error instanceof TypeError && lower.includes("failed to fetch")) {
+    return "The browser could not reach the Corbanu payment service. No payment was requested; reload and try again.";
+  }
+  return message;
+}
+
 async function responseError(response: Response): Promise<Error> {
   let detail = `Request failed (HTTP ${response.status}).`;
   try {
@@ -156,12 +173,18 @@ async function responseError(response: Response): Promise<Error> {
 }
 
 async function signedOperation<T>(wallet: ConnectedWallet, operation: WalletOperation): Promise<T> {
-  const challenge = await jsonRequest<{ challenge: string }>("/v1/wallet/challenge", {
+  const challenge = await jsonRequest<{ challenge: string; message?: string }>("/v1/wallet/challenge", {
     method: "POST",
-    body: JSON.stringify({ walletAddress: wallet.address, operation }),
+    body: JSON.stringify({
+      walletAddress: wallet.address,
+      operation,
+      messageFormat: "siwx",
+    }),
   });
-  const message = `${OWNERSHIP_PREFIX}\n${API_ORIGIN}\n${challenge.challenge}`;
-  const signature = await wallet.signOwnership(message);
+  if (!challenge.message) {
+    throw new Error("The gateway did not return a human-readable wallet challenge.");
+  }
+  const signature = await wallet.signOwnership(challenge.message);
   return jsonRequest<T>("/v1/wallet/execute", {
     method: "POST",
     body: JSON.stringify({
@@ -243,6 +266,113 @@ async function ensureBaseNetwork(provider: EthereumProvider): Promise<void> {
   }
 }
 
+function isHex(value: string): boolean {
+  for (const character of value.toLowerCase()) {
+    if (!"0123456789abcdef".includes(character)) return false;
+  }
+  return true;
+}
+
+function assertEvmAddress(value: string, label: string): void {
+  if (value.length !== 42 || !value.startsWith("0x") || !isHex(value.slice(2))) {
+    throw new Error(`${label} is not a valid EVM address.`);
+  }
+}
+
+function amountAtomic(amountUsd: string): bigint {
+  const [whole, fraction = ""] = amountUsd.split(".");
+  return BigInt(whole) * 1_000_000n + BigInt(fraction.padEnd(6, "0") || "0");
+}
+
+function encodeUsdcTransfer(payTo: string, amount: bigint): string {
+  assertEvmAddress(payTo, "Payment receiver");
+  const receiverWord = payTo.slice(2).toLowerCase().padStart(64, "0");
+  const amountWord = amount.toString(16).padStart(64, "0");
+  return `0x${ERC20_TRANSFER_SELECTOR}${receiverWord}${amountWord}`;
+}
+
+function assertTransactionHash(value: unknown): asserts value is string {
+  if (
+    typeof value !== "string" ||
+    value.length !== 66 ||
+    !value.startsWith("0x") ||
+    !isHex(value.slice(2))
+  ) {
+    throw new Error("MetaMask did not return a valid transaction hash.");
+  }
+}
+
+function wait(milliseconds: number): Promise<void> {
+  return new Promise(resolve => window.setTimeout(resolve, milliseconds));
+}
+
+async function settleBasePayment(intentId: string, transaction: string): Promise<void> {
+  let lastConnectionError: unknown;
+  for (let attempt = 0; attempt < 60; attempt += 1) {
+    try {
+      const response = await fetch(`${API_ORIGIN}/v1/topups/settle-evm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ intentId, transaction }),
+      });
+      if (response.ok) {
+        const payload = await response.json() as { state?: string };
+        if (payload.state === "settled") return;
+        throw new Error("The gateway returned an invalid settlement response.");
+      }
+      if (response.status !== 202 && response.status !== 503) {
+        throw await responseError(response);
+      }
+      lastConnectionError = undefined;
+    } catch (error) {
+      if (!(error instanceof TypeError)) throw error;
+      lastConnectionError = error;
+    }
+    await wait(1_500);
+  }
+  const suffix = lastConnectionError
+    ? "The payment service could not be reached."
+    : "Base confirmations are taking longer than expected.";
+  throw new Error(
+    `Your USDC transfer was submitted as ${transaction}. ${suffix} Do not pay again; keep this page open and retry verification.`,
+  );
+}
+
+async function payWithMetaMask(
+  wallet: ConnectedWallet,
+  topUp: TopUpIntentResponse,
+  amountUsd: string,
+): Promise<void> {
+  const provider = wallet.ethereumProvider;
+  const offer = topUp.evmPayment;
+  if (!provider || !offer) throw new Error("The gateway did not offer a Base payment.");
+  if (offer.network !== BASE_NETWORK) {
+    throw new Error("The gateway did not offer Base mainnet.");
+  }
+  assertEvmAddress(offer.asset, "Payment asset");
+  if (offer.asset.toLowerCase() !== BASE_USDC) {
+    throw new Error("The gateway did not offer canonical Base USDC.");
+  }
+  assertEvmAddress(offer.payTo, "Payment receiver");
+  await ensureBaseNetwork(provider);
+  status(
+    `Approve a standard ${amountUsd} USDC transfer on Base. MetaMask will also show the Base ETH network fee.`,
+    "busy",
+  );
+  const transaction = await provider.request({
+    method: "eth_sendTransaction",
+    params: [{
+      from: wallet.address,
+      to: offer.asset,
+      data: encodeUsdcTransfer(offer.payTo, amountAtomic(amountUsd)),
+      value: "0x0",
+    }],
+  });
+  assertTransactionHash(transaction);
+  status("USDC transfer submitted. Waiting for Base confirmations…", "busy");
+  await settleBasePayment(topUp.intent.id, transaction);
+}
+
 async function connectMetaMask(): Promise<ConnectedWallet> {
   const provider = window.ethereum;
   if (!provider) throw new Error("MetaMask was not found. Install MetaMask, then reload this page.");
@@ -250,37 +380,13 @@ async function connectMetaMask(): Promise<ConnectedWallet> {
   if (!Array.isArray(accounts) || typeof accounts[0] !== "string") {
     throw new Error("MetaMask did not return an account.");
   }
-  const walletAddress = accounts[0] as `0x${string}`;
+  const walletAddress = accounts[0];
+  assertEvmAddress(walletAddress, "MetaMask account");
   await ensureBaseNetwork(provider);
-  const walletClient = createWalletClient({
-    account: walletAddress,
-    chain: base,
-    transport: custom(provider),
-  });
-  const signer = {
-    address: walletAddress,
-    signTypedData: async (payload: {
-      domain: Record<string, unknown>;
-      types: Record<string, unknown>;
-      primaryType: string;
-      message: Record<string, unknown>;
-    }) => walletClient.signTypedData({
-      account: walletAddress,
-      domain: payload.domain,
-      types: payload.types,
-      primaryType: payload.primaryType,
-      message: payload.message,
-    } as Parameters<typeof walletClient.signTypedData>[0]),
-  };
-  const client = new x402Client();
-  registerExactEvmScheme(client, {
-    signer,
-    networks: [BASE_NETWORK as Network],
-    schemeOptions: { rpcUrl: "https://mainnet.base.org" },
-  });
   return {
     rail: "base",
     address: walletAddress,
+    ethereumProvider: provider,
     async signOwnership(message) {
       const signature = await provider.request({
         method: "personal_sign",
@@ -289,7 +395,6 @@ async function connectMetaMask(): Promise<ConnectedWallet> {
       if (typeof signature !== "string") throw new Error("MetaMask returned an invalid signature.");
       return signature;
     },
-    paidFetch: wrapFetchWithPayment(fetch, client),
   };
 }
 
@@ -307,7 +412,7 @@ async function connect(rail: Rail): Promise<void> {
     status("Wallet connected. Set the exact amount to add to your Corbanu API balance.", "success");
   } catch (error) {
     connectedWallet = undefined;
-    status(error instanceof Error ? error.message : "Wallet connection failed.", "error");
+    status(checkoutError(error), "error");
   } finally {
     setBusy(false);
   }
@@ -343,20 +448,21 @@ async function purchase(event: SubmitEvent): Promise<void> {
       kind: "top_up_intent",
       amountUsd,
     });
-    const requiredNetwork = wallet.rail === "solana" ? topUp.payment.network : topUp.evmPayment?.network;
-    const expectedNetwork = wallet.rail === "solana" ? SOLANA_MAINNET : BASE_NETWORK;
-    if (requiredNetwork !== expectedNetwork) {
-      throw new Error("The gateway did not offer the selected payment network.");
+    if (wallet.rail === "base") {
+      await payWithMetaMask(wallet, topUp, amountUsd);
+    } else {
+      if (topUp.payment.network !== SOLANA_MAINNET || !wallet.paidFetch) {
+        throw new Error("The gateway did not offer Solana mainnet x402 payment.");
+      }
+      status(`Approve the ${amountUsd} USDC payment in Phantom…`, "busy");
+      const paid = await wallet.paidFetch(topUp.payment.url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}",
+      });
+      if (!paid.ok) throw await responseError(paid);
+      await paid.json().catch(() => undefined);
     }
-    if (wallet.rail === "base") await ensureBaseNetwork(window.ethereum!);
-    status(`Approve the ${amountUsd} USDC payment in your wallet…`, "busy");
-    const paid = await wallet.paidFetch(topUp.payment.url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: "{}",
-    });
-    if (!paid.ok) throw await responseError(paid);
-    await paid.json().catch(() => undefined);
     status("Payment accepted. Confirming your funded balance…", "busy");
     await waitForFundedAccount(wallet);
     status("Creating a new API key…", "busy");
@@ -364,7 +470,7 @@ async function purchase(event: SubmitEvent): Promise<void> {
     revealApiKey(created);
     status("API key created. Copy it now—the full key is shown only once.", "success");
   } catch (error) {
-    status(error instanceof Error ? error.message : "Checkout failed.", "error");
+    status(checkoutError(error), "error");
   } finally {
     setBusy(false);
   }

@@ -67,7 +67,7 @@
               </button>
               <button class="wallet-choice" type="button" data-connect-wallet="base" aria-pressed="false">
                 <span class="wallet-mark metamask-mark" aria-hidden="true">M</span>
-                <span><strong>MetaMask</strong><small>Base mainnet · USDC</small></span>
+                <span><strong>MetaMask</strong><small>Base mainnet · USDC + ETH gas</small></span>
                 <span class="choice-arrow" aria-hidden="true">↗</span>
               </button>
             </div>
@@ -95,8 +95,8 @@
           <div class="rail-label">What happens</div>
           <ol>
             <li><span>01</span><div><strong>Connect</strong><p>Your public wallet address identifies the balance.</p></div></li>
-            <li><span>02</span><div><strong>Sign</strong><p>A short-lived challenge proves wallet ownership.</p></div></li>
-            <li><span>03</span><div><strong>Settle</strong><p>x402 settles canonical USDC on the selected network.</p></div></li>
+            <li><span>02</span><div><strong>Sign</strong><p>A human-readable, short-lived challenge proves wallet ownership and cannot move funds.</p></div></li>
+            <li><span>03</span><div><strong>Settle</strong><p>Phantom uses x402 on Solana. MetaMask sends a standard Base USDC transfer that Corbanu verifies on-chain.</p></div></li>
             <li><span>04</span><div><strong>Issue</strong><p>Your new <code>cbn_…</code> key is revealed once.</p></div></li>
           </ol>
           <p class="security-note"><span aria-hidden="true">◇</span> The checkout does not store your full API key in local or session storage.</p>
