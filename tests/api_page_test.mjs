@@ -15,6 +15,7 @@ test("API page documents both qualified USDC rails and Terminal key generation",
   assert.match(html, /Authorization: Bearer/);
   assert.match(html, /\/v1\/models/);
   assert.match(html, /shown only once|revealed once/);
+  assert.match(html, /api-checkout\.js\?v=20260902-2/);
 });
 
 test("browser checkout binds sensitive account changes to wallet proofs", async () => {
