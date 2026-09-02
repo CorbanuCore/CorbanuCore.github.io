@@ -3,12 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Corbanu API — Models, keys, and USDC funding</title>
-  <meta name="description" content="Create a Corbanu API key in Terminal or fund one with native USDC on Solana, Base, or Ethereum mainnet.">
+  <title>Corbanu API — Inference, Deep Research, keys, and USDC funding</title>
+  <meta name="description" content="Fund a Corbanu API key, request model inference through OpenAI- and Anthropic-compatible endpoints, and run durable Deep Research jobs.">
   <meta name="theme-color" content="#090b09">
   <link rel="canonical" href="https://corbanu.com/api/">
   <link rel="icon" href="/assets/favicon.png">
-  <link rel="stylesheet" href="/assets/css/corbanu-api.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/corbanu-api.css?v=20260902-2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -29,7 +32,7 @@
   <main id="main">
     <section class="hero">
       <div class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Corbanu API / Production</div>
-      <h1>One balance.<br><em>Serious models.</em></h1>
+      <h1>One balance.<br><span class="accent">Serious models.</span></h1>
       <p class="hero-copy">Create a private API key, fund its wallet-owned balance with canonical USDC, and call multiple model providers through one endpoint.</p>
       <div class="hero-actions">
         <a class="button button-primary" href="#get-key">Fund &amp; create key</a>
@@ -162,7 +165,7 @@
           <div class="terminal-chrome"><span></span><span></span><span></span><b>CORBanu Terminal</b></div>
           <div class="terminal-screen">
             <p><span class="prompt">›</span> <strong>/wallet</strong></p>
-            <p class="muted">Choose <em>Corbanu API</em></p>
+            <p class="muted">Choose <strong>Corbanu API</strong></p>
             <p><span class="prompt">›</span> <strong>Top up balance</strong></p>
             <p class="muted">Enter a positive USDC amount, unlock, and confirm</p>
             <p><span class="success">✓</span> Payment settled</p>
@@ -182,9 +185,9 @@
       <div class="section-intro">
         <span class="section-number">03</span>
         <div>
-          <p class="kicker">Quickstart</p>
-          <h2 id="quickstart-title">Make the first request.</h2>
-          <p>Use the key as a Bearer token. Start by querying the live model catalog; it is the source of truth for model IDs, capabilities, and current pricing.</p>
+          <p class="kicker">API reference</p>
+          <h2 id="quickstart-title">Request inference and research.</h2>
+          <p>Corbanu exposes OpenAI-compatible Chat Completions, Anthropic-compatible Messages, account telemetry, and durable Deep Research jobs. The live model catalog is authoritative for model IDs, capabilities, privacy, and pricing.</p>
         </div>
       </div>
 
@@ -195,33 +198,109 @@
         <span id="base-url-code" class="visually-hidden">https://pfterminal-plan-gateway.fly.dev</span>
       </div>
 
-      <div class="code-grid">
-        <article class="code-panel">
-          <div class="code-heading"><span>01 / Models</span><button type="button" data-copy-target="#code-models">Copy</button></div>
-          <pre id="code-models"><code>curl https://pfterminal-plan-gateway.fly.dev/v1/models</code></pre>
-        </article>
-        <article class="code-panel">
-          <div class="code-heading"><span>02 / Chat completions</span><button type="button" data-copy-target="#code-chat">Copy</button></div>
-          <pre id="code-chat"><code>curl https://pfterminal-plan-gateway.fly.dev/v1/chat/completions \
+      <nav class="docs-nav" aria-label="API reference sections">
+        <a href="#authentication">Authentication</a>
+        <a href="#inference">Inference</a>
+        <a href="#deep-research">Deep Research</a>
+        <a href="#errors">Errors</a>
+      </nav>
+
+      <div class="api-reference">
+        <section class="reference-block" id="authentication" aria-labelledby="authentication-title">
+          <div class="reference-head">
+            <div>
+              <span class="reference-index">01 / Access</span>
+              <h3 id="authentication-title">Authentication and discovery</h3>
+            </div>
+            <p>Send the full key in the <code>Authorization</code> header from trusted server-side code. Never expose it in browser JavaScript, logs, source control, or a client bundle.</p>
+          </div>
+
+          <p class="docs-note docs-note-first"><strong>Before running the examples:</strong> store the complete key in a server-side environment variable named <code>CORBANU_API_KEY</code>. The examples assume that variable is already present; use your shell, deployment platform, or secrets manager to set it without committing the value.</p>
+
+          <div class="table-scroll" role="region" aria-label="Corbanu API endpoint index" tabindex="0">
+            <table class="endpoint-table">
+              <thead><tr><th>Method</th><th>Path</th><th>Authentication</th><th>Purpose</th></tr></thead>
+              <tbody>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/models</code></td><td>Public; optional key</td><td>Live model IDs, streaming support, privacy, and at-cost rates.</td></tr>
+                <tr><td><span class="method method-post">POST</span></td><td><code>/v1/chat/completions</code></td><td>Bearer key</td><td>OpenAI-compatible inference.</td></tr>
+                <tr><td><span class="method method-post">POST</span></td><td><code>/v1/messages</code></td><td>Bearer key</td><td>Anthropic-compatible inference.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/account</code></td><td>Bearer key</td><td>Balance, reservations, and legacy Plan status.</td></tr>
+                <tr><td><span class="method method-post">POST</span></td><td><code>/v1/deep-research</code></td><td>Eligible Plan key</td><td>Start a durable research job.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/deep-research/:id</code></td><td>Owning Plan key</td><td>Read job status, stage, progress, and usage.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/deep-research/:id/result</code></td><td>Owning Plan key</td><td>Retrieve completed Markdown and source metadata.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="code-grid code-grid-compact">
+            <article class="code-panel">
+              <div class="code-heading"><span>Model catalog</span><button type="button" data-copy-target="#code-models">Copy</button></div>
+              <pre id="code-models"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/models | jq .</code></pre>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>Authenticated account</span><button type="button" data-copy-target="#code-account">Copy</button></div>
+              <pre id="code-account"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/account \
+  -H "Authorization: Bearer $CORBANU_API_KEY" | jq .</code></pre>
+            </article>
+          </div>
+          <p class="docs-note"><strong>Model selection:</strong> query <code>/v1/models</code> at runtime. Send the returned <code>id</code> unchanged and use the endpoint appropriate to that model.</p>
+        </section>
+
+        <section class="reference-block" id="inference" aria-labelledby="inference-title">
+          <div class="reference-head">
+            <div>
+              <span class="reference-index">02 / Inference</span>
+              <h3 id="inference-title">Generate with either wire format</h3>
+            </div>
+            <p>Requests and successful responses follow the selected compatibility format. Corbanu authenticates the key, reserves the maximum possible cost, forwards the request, and settles against authoritative usage when available.</p>
+          </div>
+
+          <div class="field-grid" aria-label="Inference request fields">
+            <article><strong><code>model</code> · required</strong><p>An exact model ID from <code>/v1/models</code>.</p></article>
+            <article><strong><code>messages</code> · required</strong><p>The provider-compatible conversation array.</p></article>
+            <article><strong><code>max_tokens</code></strong><p>Maximum output budget. The catalog reports each model’s ceiling.</p></article>
+            <article><strong><code>stream</code></strong><p>Use <code>true</code> only when the catalog reports <code>supportsStreaming: true</code>.</p></article>
+          </div>
+
+          <div class="code-grid">
+            <article class="code-panel">
+              <div class="code-heading"><span>OpenAI / Request</span><button type="button" data-copy-target="#code-chat">Copy</button></div>
+              <pre id="code-chat"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/chat/completions \
   -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "X-Corbanu-Request-Id: inference-001" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "corbanu/glm-5.3-flash",
+    "max_tokens": 1024,
+    "stream": false,
     "messages": [
       {"role": "user", "content": "Explain this market move."}
     ]
   }'</code></pre>
-        </article>
-        <article class="code-panel">
-          <div class="code-heading"><span>03 / Account balance</span><button type="button" data-copy-target="#code-account">Copy</button></div>
-          <pre id="code-account"><code>curl https://pfterminal-plan-gateway.fly.dev/v1/account \
-  -H "Authorization: Bearer $CORBANU_API_KEY"</code></pre>
-        </article>
-        <article class="code-panel">
-          <div class="code-heading"><span>04 / Anthropic Messages</span><button type="button" data-copy-target="#code-messages">Copy</button></div>
-          <pre id="code-messages"><code>curl https://pfterminal-plan-gateway.fly.dev/v1/messages \
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>OpenAI / Response shape</span><button type="button" data-copy-target="#code-chat-response">Copy</button></div>
+              <pre id="code-chat-response"><code>{
+  "id": "chatcmpl_…",
+  "model": "corbanu/glm-5.3-flash",
+  "choices": [{
+    "index": 0,
+    "message": {"role": "assistant", "content": "…"},
+    "finish_reason": "stop"
+  }],
+  "usage": {
+    "prompt_tokens": 120,
+    "completion_tokens": 240,
+    "total_tokens": 360
+  }
+}</code></pre>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>Anthropic / Request</span><button type="button" data-copy-target="#code-messages">Copy</button></div>
+              <pre id="code-messages"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/messages \
   -H "Authorization: Bearer $CORBANU_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
+  -H "X-Corbanu-Request-Id: messages-001" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "corbanu/kimi-k3",
@@ -230,7 +309,124 @@
       {"role": "user", "content": "Write an investment memo outline."}
     ]
   }'</code></pre>
-        </article>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>Streaming</span><button type="button" data-copy-target="#code-stream">Copy</button></div>
+              <pre id="code-stream"><code>curl -N https://pfterminal-plan-gateway.fly.dev/v1/chat/completions \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "corbanu/glm-5.3-flash",
+    "max_tokens": 1024,
+    "stream": true,
+    "messages": [
+      {"role": "user", "content": "Summarize the thesis."}
+    ]
+  }'</code></pre>
+            </article>
+          </div>
+          <p class="docs-note"><strong>Safe retries:</strong> provide a unique <code>X-Corbanu-Request-Id</code> of at most 128 letters, digits, dots, colons, underscores, or hyphens. Reusing an inference request ID returns <code>409</code> instead of spending twice.</p>
+          <p class="docs-note"><strong>Billing headers:</strong> responses include <code>X-Corbanu-Request-Id</code>, <code>X-Corbanu-Price-Version</code>, and the initial reservation in <code>X-Corbanu-Reserved-Microusd</code>.</p>
+        </section>
+
+        <section class="reference-block" id="deep-research" aria-labelledby="deep-research-title">
+          <div class="reference-head">
+            <div>
+              <span class="reference-index">03 / Deep Research</span>
+              <h3 id="deep-research-title">Start once. Poll safely. Retrieve Markdown.</h3>
+            </div>
+            <p>Deep Research is asynchronous and provider-backed. It performs web research, reports coarse progress, and returns a durable report with source metadata and an authoritative usage and cost summary.</p>
+          </div>
+
+          <div class="docs-callout" role="note">
+            <strong>Current access boundary</strong>
+            <p>Deep Research currently requires an eligible legacy Corbanu Plan API key. A balance-only <code>cbn_…</code> key receives <code>403 deep_research_requires_plan</code>. Research prompts and source material leave Corbanu infrastructure; responses are marked <code>X-Corbanu-Privacy: non-private</code>.</p>
+          </div>
+
+          <div class="field-grid" aria-label="Deep Research request fields">
+            <article><strong><code>question</code> · required</strong><p>The research prompt, from 1 through 50,000 characters.</p></article>
+            <article><strong><code>title</code> · optional</strong><p>A report title, from 1 through 500 characters.</p></article>
+            <article><strong><code>token_budget</code> · required</strong><p>A positive safe integer reserved against eligible Plan capacity.</p></article>
+            <article><strong><code>X-Corbanu-Request-Id</code></strong><p>A stable idempotency key. Retry the same body with the same value.</p></article>
+          </div>
+
+          <div class="code-grid">
+            <article class="code-panel">
+              <div class="code-heading"><span>1 / Start job</span><button type="button" data-copy-target="#code-research-start">Copy</button></div>
+              <pre id="code-research-start"><code>curl -sS https://pfterminal-plan-gateway.fly.dev/v1/deep-research \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "X-Corbanu-Request-Id: research-market-structure-001" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "How did US equity market structure change after decimalization?",
+    "title": "US market structure after decimalization",
+    "token_budget": 25000
+  }' | jq .</code></pre>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>202 / Accepted</span><button type="button" data-copy-target="#code-research-accepted">Copy</button></div>
+              <pre id="code-research-accepted"><code>{
+  "id": "936d…",
+  "status": "QUEUED",
+  "token_budget": 25000,
+  "corbanu": {
+    "private": false,
+    "backend": "deep-research-service"
+  }
+}</code></pre>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>2 / Poll status</span><button type="button" data-copy-target="#code-research-status">Copy</button></div>
+              <pre id="code-research-status"><code>export CORBANU_RESEARCH_JOB_ID="936d…"
+
+curl -sS \
+  "https://pfterminal-plan-gateway.fly.dev/v1/deep-research/$CORBANU_RESEARCH_JOB_ID" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" | jq .</code></pre>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>3 / Retrieve result</span><button type="button" data-copy-target="#code-research-result">Copy</button></div>
+              <pre id="code-research-result"><code>curl -sS \
+  "https://pfterminal-plan-gateway.fly.dev/v1/deep-research/$CORBANU_RESEARCH_JOB_ID/result" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" | jq -r '.result.markdown'</code></pre>
+            </article>
+          </div>
+
+          <div class="response-schema">
+            <article><span>Status response</span><p><code>id</code>, <code>status</code>, <code>stage</code>, safe task progress, usage, and the non-private backend disclosure. Active jobs return <code>202</code>; terminal jobs return <code>200</code>.</p></article>
+            <article><span>Result response</span><p><code>result.markdown</code>, title, status, source manifest, timestamps, token usage, xAPI search cost, generation cost, and total provider cost.</p></article>
+          </div>
+          <p class="docs-note"><strong>Idempotency:</strong> retrying the same start body with the same request ID returns the same job. Reusing that ID with a different token budget returns <code>409 request_id_conflict</code>.</p>
+        </section>
+
+        <section class="reference-block" id="errors" aria-labelledby="errors-title">
+          <div class="reference-head">
+            <div>
+              <span class="reference-index">04 / Operations</span>
+              <h3 id="errors-title">Balances, errors, and privacy</h3>
+            </div>
+            <p>Read <code>/v1/account</code> to reconcile the wallet-owned balance before and after inference. Treat the response body’s structured <code>error.type</code> as the machine-readable failure reason when present.</p>
+          </div>
+
+          <div class="table-scroll" role="region" aria-label="Common API responses" tabindex="0">
+            <table class="endpoint-table error-table">
+              <thead><tr><th>Status</th><th>Meaning</th><th>Client action</th></tr></thead>
+              <tbody>
+                <tr><td><code>400</code></td><td>Invalid JSON, model, endpoint, budget, or unsupported streaming.</td><td>Correct the request; do not retry unchanged.</td></tr>
+                <tr><td><code>401</code></td><td>Missing, invalid, revoked, or expired key.</td><td>Replace the credential.</td></tr>
+                <tr><td><code>402</code></td><td>Insufficient Corbanu API balance.</td><td>Top up the same key account, then send a new request ID.</td></tr>
+                <tr><td><code>403</code></td><td>Deep Research requires an eligible legacy Plan key.</td><td>Use an eligible key; balance-only access is not active yet.</td></tr>
+                <tr><td><code>409</code></td><td>Duplicate/conflicting request ID or research result not ready.</td><td>Inspect status; preserve the original request identity.</td></tr>
+                <tr><td><code>429</code></td><td>Eligible Plan quota reached.</td><td>Honor <code>Retry-After</code> and limit-reset headers.</td></tr>
+                <tr><td><code>503</code></td><td>The requested model or research backend is unavailable.</td><td>Retry with backoff or choose another listed model.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="response-schema">
+            <article><span>API balance</span><p><code>corbanuApi.balanceUsd</code>, <code>reservedUsd</code>, and <code>availableUsd</code> distinguish total funds from active reservations.</p></article>
+            <article><span>Privacy</span><p>Inspect each catalog entry’s <code>privacy</code> value. Deep Research is explicitly non-private and identifies its backend in every job response.</p></article>
+          </div>
+        </section>
       </div>
     </section>
 
