@@ -62,6 +62,51 @@ test("API page documents supported wallet/network combinations and Terminal key 
   assert.match(html, /api-checkout\.js\?v=20260902-6/);
 });
 
+test("API reference covers inference and the complete Deep Research lifecycle with brand typography", async () => {
+  const [html, css] = await Promise.all([
+    read("api/index.html"),
+    read("assets/css/corbanu-api.css"),
+  ]);
+
+  assert.match(html, /family=IBM\+Plex\+Mono/);
+  assert.match(html, /family=Inter\+Tight/);
+  assert.match(html, /corbanu-api\.css\?v=20260902-2/);
+  assert.doesNotMatch(html, /<\/?em(?:\s|>)/i);
+  assert.doesNotMatch(css, /Georgia|Times New Roman|Helvetica|font-style:\s*italic/i);
+  assert.match(css, /--sans: "Inter Tight"/);
+  assert.match(css, /--mono: "IBM Plex Mono"/);
+
+  for (const contract of [
+    "/v1/models",
+    "/v1/account",
+    "/v1/chat/completions",
+    "/v1/messages",
+    "/v1/deep-research",
+    "/v1/deep-research/:id",
+    "/v1/deep-research/:id/result",
+    "X-Corbanu-Request-Id",
+    "X-Corbanu-Price-Version",
+    "X-Corbanu-Reserved-Microusd",
+    "token_budget",
+    "supportsStreaming",
+    "result.markdown",
+    "source manifest",
+    "total provider cost",
+    "deep_research_requires_plan",
+    "X-Corbanu-Privacy: non-private",
+  ]) {
+    assert.match(html, new RegExp(contract.replaceAll("/", "\\/")));
+  }
+  for (const status of ["400", "401", "402", "403", "409", "429", "503"]) {
+    assert.match(html, new RegExp(`<code>${status}<\\/code>`));
+  }
+
+  const copyTargets = [...html.matchAll(/data-copy-target="#([^"]+)"/g)].map(match => match[1]);
+  assert.ok(copyTargets.length >= 10);
+  assert.equal(new Set(copyTargets).size, copyTargets.length);
+  for (const target of copyTargets) assert.match(html, new RegExp(`id="${target}"`));
+});
+
 test("wallet router supports Phantom across all rails and rejects unsupported combinations", async () => {
   const {
     parseWalletSelection,
