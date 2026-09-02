@@ -1,8 +1,35 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { transform } from "esbuild";
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), "utf8");
+
+async function importTypeScript(path) {
+  const source = await read(path);
+  const transformed = await transform(source, {
+    loader: "ts",
+    format: "esm",
+    target: "node20",
+  });
+  const encoded = Buffer.from(transformed.code).toString("base64");
+  return import(`data:text/javascript;base64,${encoded}`);
+}
+
+function memoryStorage() {
+  const values = new Map();
+  return {
+    getItem(key) {
+      return values.has(key) ? values.get(key) : null;
+    },
+    setItem(key, value) {
+      values.set(key, value);
+    },
+    removeItem(key) {
+      values.delete(key);
+    },
+  };
+}
 
 test("API page documents all three qualified USDC rails and Terminal key generation", async () => {
   const html = await read("api/index.html");
@@ -17,7 +44,7 @@ test("API page documents all three qualified USDC rails and Terminal key generat
   assert.match(html, /Authorization: Bearer/);
   assert.match(html, /\/v1\/models/);
   assert.match(html, /shown only once|revealed once/);
-  assert.match(html, /api-checkout\.js\?v=20260902-3/);
+  assert.match(html, /api-checkout\.js\?v=20260902-4/);
 });
 
 test("browser checkout binds sensitive account changes to wallet proofs", async () => {
@@ -37,8 +64,61 @@ test("browser checkout binds sensitive account changes to wallet proofs", async 
   assert.match(source, /a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/);
   assert.match(source, /evmPayments/);
   assert.doesNotMatch(source, /registerExactEvmScheme|signTypedData/);
-  assert.doesNotMatch(source, /localStorage|sessionStorage/);
+  assert.match(source, /savePendingEvmPayment\(window\.localStorage/);
   assert.doesNotMatch(source, /privateKey|seedPhrase|mnemonic/i);
+});
+
+test("EVM settlement polling distinguishes pending, settled, retry, and invalid responses", async () => {
+  const { classifyEvmSettlementResponse } = await importTypeScript("assets/src/evm-settlement.ts");
+  const response = (status, state) => ({
+    status,
+    async json() {
+      return { state };
+    },
+  });
+
+  assert.equal(await classifyEvmSettlementResponse(response(202, "pending")), "pending");
+  assert.equal(await classifyEvmSettlementResponse(response(200, "settled")), "settled");
+  assert.equal(await classifyEvmSettlementResponse(response(503)), "retry");
+  assert.equal(await classifyEvmSettlementResponse(response(400)), "error");
+  await assert.rejects(
+    classifyEvmSettlementResponse(response(202, "settled")),
+    /inconsistent settlement data \(HTTP 202\)/,
+  );
+  await assert.rejects(
+    classifyEvmSettlementResponse(response(200, "pending")),
+    /inconsistent settlement data \(HTTP 200\)/,
+  );
+});
+
+test("submitted EVM payment recovery survives reloads without storing API credentials", async () => {
+  const recoverySource = await read("assets/src/evm-settlement.ts");
+  const {
+    PENDING_EVM_PAYMENTS_STORAGE_KEY,
+    clearPendingEvmPayment,
+    pendingEvmPaymentForWallet,
+    savePendingEvmPayment,
+    shouldCreateApiKeyWithoutPayment,
+  } = await importTypeScript("assets/src/evm-settlement.ts");
+  const storage = memoryStorage();
+  const payment = {
+    walletAddress: "0x1111111111111111111111111111111111111111",
+    intentId: "9f86df99-b6fb-4ab4-a109-7f46ec4ed7f6",
+    transaction: `0x${"2".repeat(64)}`,
+    network: "eip155:1",
+    networkName: "Ethereum",
+  };
+
+  savePendingEvmPayment(storage, payment);
+  assert.deepEqual(pendingEvmPaymentForWallet(storage, payment.walletAddress.toUpperCase()), payment);
+  assert.match(storage.getItem(PENDING_EVM_PAYMENTS_STORAGE_KEY), /eip155:1/);
+  clearPendingEvmPayment(storage, payment.walletAddress);
+  assert.equal(pendingEvmPaymentForWallet(storage, payment.walletAddress), undefined);
+  assert.equal(shouldCreateApiKeyWithoutPayment("10000000", 0), true);
+  assert.equal(shouldCreateApiKeyWithoutPayment("10000000", 1), false);
+  assert.equal(shouldCreateApiKeyWithoutPayment("0", 0), false);
+  assert.equal(shouldCreateApiKeyWithoutPayment("not-a-balance", 0), false);
+  assert.doesNotMatch(recoverySource, /CreatedApiKey|revealedKey|privateKey|seedPhrase|mnemonic/i);
 });
 
 test("compiled checkout and site navigation are publishable static assets", async () => {
