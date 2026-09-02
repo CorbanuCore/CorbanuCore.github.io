@@ -225,9 +225,9 @@
                 <tr><td><span class="method method-post">POST</span></td><td><code>/v1/chat/completions</code></td><td>Bearer key</td><td>OpenAI-compatible inference.</td></tr>
                 <tr><td><span class="method method-post">POST</span></td><td><code>/v1/messages</code></td><td>Bearer key</td><td>Anthropic-compatible inference.</td></tr>
                 <tr><td><span class="method method-get">GET</span></td><td><code>/v1/account</code></td><td>Bearer key</td><td>Balance, reservations, and legacy Plan status.</td></tr>
-                <tr><td><span class="method method-post">POST</span></td><td><code>/v1/deep-research</code></td><td>Eligible Plan key</td><td>Start a durable research job.</td></tr>
-                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/deep-research/:id</code></td><td>Owning Plan key</td><td>Read job status, stage, progress, and usage.</td></tr>
-                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/deep-research/:id/result</code></td><td>Owning Plan key</td><td>Retrieve completed Markdown and source metadata.</td></tr>
+                <tr><td><span class="method method-post">POST</span></td><td><code>/v1/deep-research</code></td><td>Bearer key</td><td>Start a durable research job using Plan capacity or prepaid balance.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/deep-research/:id</code></td><td>Owning bearer key</td><td>Read job status, stage, progress, and usage.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/deep-research/:id/result</code></td><td>Owning bearer key</td><td>Retrieve completed Markdown and source metadata.</td></tr>
               </tbody>
             </table>
           </div>
@@ -339,14 +339,14 @@
           </div>
 
           <div class="docs-callout" role="note">
-            <strong>Current access boundary</strong>
-            <p>Deep Research currently requires an eligible legacy Corbanu Plan API key. A balance-only <code>cbn_…</code> key receives <code>403 deep_research_requires_plan</code>. Research prompts and source material leave Corbanu infrastructure; responses are marked <code>X-Corbanu-Privacy: non-private</code>.</p>
+            <strong>Prepaid balance or legacy Plan</strong>
+            <p>Every valid <code>cbn_…</code> key can use Deep Research. An active legacy Plan allowance is used first. If no Plan is active or its allowance cannot cover the request, Corbanu places a $2.00 hold on the key account’s prepaid balance and settles it to the worker’s authoritative total provider cost with no markup. Research prompts and source material leave Corbanu infrastructure; responses are marked <code>X-Corbanu-Privacy: non-private</code>.</p>
           </div>
 
           <div class="field-grid" aria-label="Deep Research request fields">
             <article><strong><code>question</code> · required</strong><p>The research prompt, from 1 through 50,000 characters.</p></article>
             <article><strong><code>title</code> · optional</strong><p>A report title, from 1 through 500 characters.</p></article>
-            <article><strong><code>token_budget</code> · required</strong><p>A positive safe integer reserved against eligible Plan capacity.</p></article>
+            <article><strong><code>token_budget</code> · required</strong><p>A positive safe integer used for legacy Plan reservation and request identity. Prepaid jobs settle in USD from actual provider cost.</p></article>
             <article><strong><code>X-Corbanu-Request-Id</code></strong><p>A stable idempotency key. Retry the same body with the same value.</p></article>
           </div>
 
@@ -369,6 +369,7 @@
   "id": "936d…",
   "status": "QUEUED",
   "token_budget": 25000,
+  "billing": "api_balance",
   "corbanu": {
     "private": false,
     "backend": "deep-research-service"
@@ -395,7 +396,7 @@ curl -sS \
             <article><span>Status response</span><p><code>id</code>, <code>status</code>, <code>stage</code>, safe task progress, usage, and the non-private backend disclosure. Active jobs return <code>202</code>; terminal jobs return <code>200</code>.</p></article>
             <article><span>Result response</span><p><code>result.markdown</code>, title, status, source manifest, timestamps, token usage, xAPI search cost, generation cost, and total provider cost.</p></article>
           </div>
-          <p class="docs-note"><strong>Idempotency:</strong> retrying the same start body with the same request ID returns the same job. Reusing that ID with a different token budget returns <code>409 request_id_conflict</code>.</p>
+          <p class="docs-note"><strong>Billing and idempotency:</strong> a prepaid start returns <code>X-Corbanu-Price-Version</code> and <code>X-Corbanu-Reserved-Microusd</code>; the hold is released on an explicit rejection. Retrying the same body with the same request ID returns the same job. Reusing that ID with different research content or a different token budget returns <code>409 request_id_conflict</code>.</p>
         </section>
 
         <section class="reference-block" id="errors" aria-labelledby="errors-title">
@@ -414,9 +415,8 @@ curl -sS \
                 <tr><td><code>400</code></td><td>Invalid JSON, model, endpoint, budget, or unsupported streaming.</td><td>Correct the request; do not retry unchanged.</td></tr>
                 <tr><td><code>401</code></td><td>Missing, invalid, revoked, or expired key.</td><td>Replace the credential.</td></tr>
                 <tr><td><code>402</code></td><td>Insufficient Corbanu API balance.</td><td>Top up the same key account, then send a new request ID.</td></tr>
-                <tr><td><code>403</code></td><td>Deep Research requires an eligible legacy Plan key.</td><td>Use an eligible key; balance-only access is not active yet.</td></tr>
                 <tr><td><code>409</code></td><td>Duplicate/conflicting request ID or research result not ready.</td><td>Inspect status; preserve the original request identity.</td></tr>
-                <tr><td><code>429</code></td><td>Eligible Plan quota reached.</td><td>Honor <code>Retry-After</code> and limit-reset headers.</td></tr>
+                <tr><td><code>429</code></td><td>Plan quota reached and prepaid balance cannot cover the research hold.</td><td>Top up the key account or honor <code>Retry-After</code> and the Plan reset headers.</td></tr>
                 <tr><td><code>503</code></td><td>The requested model or research backend is unavailable.</td><td>Retry with backoff or choose another listed model.</td></tr>
               </tbody>
             </table>
@@ -442,7 +442,7 @@ curl -sS \
         <article><h3>Wallet-owned balance</h3><p>Keys created by the same wallet draw from one shared dollar balance. Revoking a key does not move the balance.</p></article>
         <article><h3>At-cost model calls</h3><p>Model usage is charged against the balance with no Corbanu markup. Query <code>/v1/models</code> for current per-model pricing.</p></article>
         <article><h3>Keep keys server-side</h3><p>Use environment variables or a secrets manager. Never ship an API key in browser JavaScript or commit it to a repository.</p></article>
-        <article><h3>Deep Research transition</h3><p>The Deep Research endpoint currently requires an eligible legacy Plan key while balance-based job pricing is finalized. Standard model inference works with <code>cbn_…</code> balance keys.</p></article>
+        <article><h3>Deep Research billing</h3><p>Deep Research works with the same <code>cbn_…</code> key as standard inference. Prepaid jobs use a temporary $2.00 hold and settle at the authoritative provider cost with no markup.</p></article>
       </div>
     </section>
   </main>

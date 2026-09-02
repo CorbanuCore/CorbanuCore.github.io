@@ -94,12 +94,14 @@ test("API reference covers inference and the complete Deep Research lifecycle wi
     "result.markdown",
     "source manifest",
     "total provider cost",
-    "deep_research_requires_plan",
+    "api_balance",
+    "Prepaid balance or legacy Plan",
     "X-Corbanu-Privacy: non-private",
   ]) {
     assert.match(html, new RegExp(contract.replaceAll("/", "\\/")));
   }
-  for (const status of ["400", "401", "402", "403", "409", "429", "503"]) {
+  assert.doesNotMatch(html, /deep_research_requires_plan|balance-only access is not active/i);
+  for (const status of ["400", "401", "402", "409", "429", "503"]) {
     assert.match(html, new RegExp(`<code>${status}<\\/code>`));
   }
 
