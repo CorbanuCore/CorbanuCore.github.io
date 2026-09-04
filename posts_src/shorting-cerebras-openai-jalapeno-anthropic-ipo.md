@@ -3,7 +3,7 @@ title: Shorting Cerebras on OpenAI Jalapeño Chip Narrative Acceleration and Liq
 date: 2026-09-04
 slug: shorting-cerebras-openai-jalapeno-anthropic-ipo
 summary: Short CBRS into OpenAI's competing inference silicon, analyst estimate cuts and the Anthropic IPO liquidity draw.
-author: Corbanu Research
+author: Corbanu
 layout: standalone
 ---
 
