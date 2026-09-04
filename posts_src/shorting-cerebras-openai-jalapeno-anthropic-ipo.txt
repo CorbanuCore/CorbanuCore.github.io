@@ -1,0 +1,376 @@
+# Shorting Cerebras on OpenAI Jalapeño Chip Narrative Acceleration and Liquidity Draw of Anthropic IPO
+<style>
+.fm{border-collapse:collapse;width:100%;margin:1rem 0 .5rem;font:14px/1.35 "Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums}
+.fm caption{caption-side:top;text-align:left;font-weight:600;font-size:15px;padding:0 0 .5rem}
+.fm th,.fm td{padding:6px 10px;text-align:right;border-bottom:1px solid #e4e4e4;white-space:nowrap}
+.fm th:first-child,.fm td:first-child{text-align:left;font-weight:500;color:#222}
+.fm thead th{border-bottom:2px solid #222;font-weight:600}
+.fm thead th.a{background:#f4f4f4}.fm thead th.e{background:#eef3fb}
+.fm td.e{background:#f7f9fd}
+.fm .div{border-left:3px double #222}
+.fm tr.sub td{font-size:12.5px;color:#555;font-style:italic}
+.fm tr.sub td:first-child{padding-left:22px}
+.fm tr.rev td{font-style:italic;font-weight:600;color:#000}
+.fm tr.tot td{font-weight:600;border-top:1px solid #999}
+.fm td.neg{color:#8b0000}
+.fm tfoot td{text-align:left;font-size:12px;color:#555;border:none;white-space:normal;padding-top:8px}
+.fm b{font-weight:700}
+</style>
+<style>.fm tr.grp td{background:#222;color:#fff;font-weight:600;text-align:left;letter-spacing:.02em;padding:5px 10px}</style>
+<style>.fm thead th.i{background:#f3efe6}.fm td.i{background:#faf8f3}.fm thead th.i:first-of-type,.fm td.i:first-of-type{border-left:3px double #222}</style>
+<style>.cal tbody td:first-child{white-space:nowrap;font-weight:600}.cal td{white-space:normal;text-align:left}.cal th{text-align:left}</style>
+<style>
+.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:1rem 0 1.25rem}
+.product-grid figure{margin:0;border:1px solid #ddd;background:#f6f6f4;overflow:hidden}
+.product-grid img{display:block;width:100%;height:230px;object-fit:cover}
+.product-grid figure:nth-child(2) img{object-fit:contain;background:#111}
+.product-grid figcaption{padding:8px 10px;font:12px/1.35 "Helvetica Neue",Arial,sans-serif;color:#555}
+@media(max-width:760px){.product-grid{grid-template-columns:1fr}.product-grid img{height:auto;max-height:420px;object-fit:contain}}
+</style>
+
+## The Trade
+
+Corbanu is putting on a short in the Cerebras Systems ([CBRS](https://corbanu.com/cbrs/); Nasdaq-listed) perpetual through [Hyperliquid](https://app.hyperliquid.xyz/join/CORBANU), sized at 1.75% of capital against a 3.5% CXMT ([CXMT](https://corbanu.com/cxmt/)) long, re-struck weekly to keep the pair beta-neutral. [CBRS](https://corbanu.com/cbrs/) closed at $184.52 on 2 September. Our base target is $118, 36% lower; the bear case is $77. We budget 2% annualized funding on the perpetual and carry the position through OpenAI DevDay on 29 September, Anthropic's expected October listing, the final Cerebras ([CBRS](https://corbanu.com/cbrs/)) lock-up release by 10 November and the Q3 print on 13 November.
+
+The market pays 157x the first positive earnings year and 29x the Street's 2028 EPS of $6.47. That 2028 number requires $7.83bn of revenue, 56% gross margin, an AWS ([AMZN](https://corbanu.com/amzn/)) ramp from a standing start and full Cerebras ([CBRS](https://corbanu.com/cbrs/)) delivery while OpenAI's own silicon ships at scale. Cerebras ([CBRS](https://corbanu.com/cbrs/)) has printed no gross margin above 47%. A third off 2028 EPS, valued at 27.5x, produces $118.
+
+Broadcom (AVGO) moved the catalyst forward on 2 September: Jalapeño shipped in fiscal Q3, continues shipping in Q4, reaches 1.3 GW in 2027 and exceeds 5 GW with its successor in 2028. Cerebras ([CBRS](https://corbanu.com/cbrs/)) recognizes most of its $25.4bn RPO after 2027. The price should move when analysts mark down 2028–30, months before a revenue miss can appear.
+
+## Company Backdrop
+
+Cerebras ([CBRS](https://corbanu.com/cbrs/)) builds a 46,225 mm² processor from almost an entire 300 mm wafer. WSE-3 carries four trillion transistors, 900,000 cores and 44 GB of on-wafer SRAM at 21 PB/s. The CS-4 rack, launched in August 2026, connects three overclocked WSE-3T wafers through the new Nexus fabric. Activations stay in SRAM while weights stream layer by layer from MemoryX, eliminating the package-to-package traffic that slows GPU decode. Cerebras ([CBRS](https://corbanu.com/cbrs/)) sells the system on premises, as dedicated cloud capacity and through a pay-per-token API.
+
+## Product Set
+
+The wafer sits inside a complete system. One liquid-cooled Wafer-Scale Backpack carries each WSE-3T; three backpacks form CS-4. Customers can buy the rack, reserve Cerebras ([CBRS](https://corbanu.com/cbrs/))-operated capacity or call supported models through an OpenAI-compatible API.³⁴
+
+<div class="product-grid">
+<figure><img src="assets/cbrs/cerebras_wse3t_wafer.jpg" alt="Cerebras WSE-3T wafer-scale processor showing the square 46,225 square millimeter silicon wafer" loading="lazy"><figcaption><b>One chip is almost a wafer.</b> WSE-3T is 46,225 mm²: four trillion transistors and 900,000 cores on TSMC (TSM) 5 nm. Image: Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>).</figcaption></figure>
+<figure><img src="assets/cbrs/cerebras_cs4_system.jpg" alt="Cerebras CS-4 rack-scale system with front and open-back views" loading="lazy"><figcaption><b>The sellable box.</b> CS-4 holds three WSE-3T processors, with the power and liquid-cooling hardware visible at right. Image: Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>).</figcaption></figure>
+<figure><img src="assets/cbrs/cerebras_wafer_module.jpg" alt="Exploded view of a Cerebras wafer module with wafer, cold plate, power assembly and I/O boards" loading="lazy"><figcaption><b>The wafer module.</b> The processor sits between its cold plate, power assembly and I/O boards; this integration is the engineering moat. Image: Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>).</figcaption></figure>
+</div>
+
+<table class="fm cal"><caption>What Cerebras sells and what the customer pays</caption>
+<thead><tr><th>Product</th><th>What it is</th><th>How it is sold</th><th>Price or operating cost</th></tr></thead>
+<tbody>
+<tr class="tot"><td>WSE-3T</td><td>46,225 mm²; 4tn transistors; 900,000 cores; 44 GB SRAM; 250 PFLOPS; 43.2 PB/s memory bandwidth</td><td>Integrated only in CS-4; three per system</td><td>Embedded in the quote-only CS-4 price</td></tr>
+<tr><td>CS-3</td><td>One WSE-3; 125 PFLOPS; 16RU; 27 kW maximum</td><td>On-premise system or Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)-operated cluster; two systems per 54 kW rack</td><td>Quote only. Maximum processor-system power is about $24,000 a year at $0.10/kWh, before cooling and data-center overhead</td></tr>
+<tr class="tot"><td>CS-4 / Nexus</td><td>Three WSE-3T processors; 750 PFLOPS; 129.6 PB/s; 2 μs wafer-to-wafer link</td><td>Rack-scale inference and training; supports disaggregated prefill with AMD (<a href="https://corbanu.com/amd/">AMD</a>) or AWS (<a href="https://corbanu.com/amzn/">AMZN</a>)</td><td>Commercial terms are negotiated; list price and system power remain undisclosed</td></tr>
+<tr><td>Inference API</td><td>Hosted open-weight models through an OpenAI-compatible endpoint</td><td>Self-serve pay per token; enterprise tier adds custom weights and guaranteed service</td><td>$5 trial; funding starts at $10. GPT-OSS 120B: $0.35 input / $0.75 output per million tokens</td></tr>
+<tr><td>Dedicated capacity and AI services</td><td>Reserved clusters, custom training, fine-tuning and model deployment</td><td>Take-or-pay capacity, monthly or annual reservations, and bespoke projects</td><td>Negotiated; no public rate card</td></tr>
+</tbody>
+<tfoot><tr><td colspan="4">System specifications and public prices at 3 September 2026. PFLOPS are Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)'s sparse FP16 figures. The $24,000 power figure is 27 kW × 8,760 hours × $0.10/kWh and excludes cooling, networking and PUE.</td></tr></tfoot>
+</table>
+
+<table class="fm"><caption>Public API price check: GPT-OSS 120B</caption>
+<thead><tr><th>Provider</th><th>Advertised output speed</th><th>Input / 1m tokens</th><th>Output / 1m tokens</th></tr></thead>
+<tbody>
+<tr class="tot"><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)</td><td>~3,000 tok/s</td><td>$0.35</td><td>$0.75</td></tr>
+<tr><td>Groq</td><td>500 tok/s</td><td>$0.15</td><td>$0.60</td></tr>
+<tr><td>Together AI</td><td>Unpublished</td><td>$0.15</td><td>$0.60</td></tr>
+</tbody>
+<tfoot><tr><td colspan="4">Public developer rate cards, 3 September 2026. Before volume discounts, caching or reserved-capacity terms; listed speeds come from separate provider claims and test conditions.</td></tr></tfoot>
+</table>
+
+The API provides the cleanest public price comparison. On GPT-OSS 120B, Cerebras ([CBRS](https://corbanu.com/cbrs/)) advertises roughly 3,000 output tokens a second at $0.35/$0.75 per million input/output tokens. Groq lists 500 tokens a second at $0.15/$0.60. Cerebras ([CBRS](https://corbanu.com/cbrs/)) charges 2.3x on input and 25% more on output for six times the advertised generation speed. The system wins when latency carries economic value; NVIDIA ([NVDA](https://corbanu.com/nvda/)) and AMD ([AMD](https://corbanu.com/amd/)) win through software breadth and installed base, while captive chips from OpenAI, Google ([GOOGL](https://corbanu.com/googl/)), AWS ([AMZN](https://corbanu.com/amzn/)) and Microsoft ([MSFT](https://corbanu.com/msft/)) remove the merchant margin entirely.³⁵
+
+## Simplified Financial Model
+
+Core revenue reaches $880–890m in 2026, the Street puts 2027 at $3.02bn, and consensus reaches $7.83bn in 2028. Management's 2027 floor sits 14% below the Street. Core gross margin fell from 46.5% in Q1 to 40.6% in Q2 and reaches a guided trough of 38–40% in Q3.⁴⁵⁶
+
+<table class="fm"><caption>Table 1: Annual, US$ millions</caption>
+<thead><tr><th></th><th class="a">FY22A</th><th class="a">FY23A</th><th class="a">FY24A</th><th class="a">FY25A</th><th class="a div">LTM Jun-26 (GAAP)</th><th class="a">1H26A (core)</th><th class="e div">FY26E</th><th class="e">FY27E</th><th class="e">FY28E</th></tr></thead>
+<tbody>
+<tr><td>Revenue</td><td>24.6</td><td>78.7</td><td>290.3</td><td>510.0</td><td class="div">680.7</td><td>401.2</td><td class="e div">884.2</td><td class="e">3,019.6</td><td class="e">7,827.1</td></tr>
+<tr class="rev"><td>Revenue growth y/y</td><td>n.a.</td><td>220%</td><td>269%</td><td>76%</td><td class="div">74%</td><td>98%</td><td class="e div">73%</td><td class="e">242%</td><td class="e">159%</td></tr>
+<tr class="sub"><td>Hardware</td><td>n.a.</td><td>n.a.</td><td>212.0</td><td>358.4</td><td class="div">n.a.</td><td>193.7</td><td class="e div">317.3</td><td class="e">336.4</td><td class="e"></td></tr>
+<tr class="sub"><td>Cloud &amp; other services</td><td>n.a.</td><td>n.a.</td><td>78.3</td><td>151.6</td><td class="div">n.a.</td><td>207.5</td><td class="e div">575.5</td><td class="e">2,700.1</td><td class="e"></td></tr>
+<tr><td>Gross margin</td><td>n.a.</td><td>n.a.</td><td>42.3%</td><td>39.0%⁶</td><td class="div">34.8%</td><td>43.4%</td><td class="e div">41.9%</td><td class="e">49.0%</td><td class="e">56.0%</td></tr>
+<tr class="sub"><td>Hardware</td><td></td><td></td><td>35.2%</td><td>42.9%</td><td class="div"></td><td>40.7%</td><td class="e div">39.7%</td><td class="e">45.0%</td><td class="e"></td></tr>
+<tr class="sub"><td>Cloud &amp; other services</td><td></td><td></td><td>61.4%</td><td>29.9%</td><td class="div"></td><td>46.1%</td><td class="e div">43.3%</td><td class="e">52.4%</td><td class="e"></td></tr>
+<tr><td>Operating margin</td><td>n.a.</td><td>n.a.</td><td class="neg">(34.9%)</td><td class="neg">(28.6%)</td><td class="div neg">(81.2%)</td><td class="neg">(9.2%)</td><td class="e div neg">(17.8%)</td><td class="e">11.7%</td><td class="e"></td></tr>
+<tr><td>EBITDA</td><td></td><td></td><td class="neg">(79.4)</td><td class="neg">(79.6)</td><td class="div"></td><td></td><td class="e div neg">(14.2)</td><td class="e">1,044.0</td><td class="e">3,676.8</td></tr>
+<tr><td>Net income, GAAP</td><td></td><td></td><td class="neg">(481.6)</td><td>237.8⁷</td><td class="div neg">(512.4)</td><td class="neg">(450.5) Q2 alone</td><td class="e div neg">(812.6)</td><td class="e">110.4</td><td class="e"></td></tr>
+<tr><td>Net income, adjusted</td><td></td><td></td><td class="neg">(42.9)</td><td class="neg">(96.1)⁸</td><td class="div"></td><td class="neg">(2.5) Q1</td><td class="e div neg">(109.0)</td><td class="e">378.4</td><td class="e">2,002.2</td></tr>
+<tr class="tot"><td>EPS, adjusted</td><td>n.a.</td><td>n.a.</td><td>n.a.</td><td class="neg">(4.59) GAAP</td><td class="div"></td><td class="neg">(0.14) Q1 / (0.05) Q2</td><td class="e div neg">(0.47)</td><td class="e">1.18</td><td class="e">6.47</td></tr>
+<tr><td>Capital expenditure</td><td></td><td></td><td class="neg">(23.4)</td><td class="neg">(382.7)</td><td class="div neg">(548.9)</td><td></td><td class="e div neg">(1,594.0)</td><td class="e neg">(3,987.2)</td><td class="e"></td></tr>
+<tr><td>Free cash flow</td><td></td><td></td><td>428.5⁹</td><td class="neg">(392.8)</td><td class="div"></td><td></td><td class="e div neg">(1,679.9)</td><td class="e neg">(1,847.6)</td><td class="e"></td></tr>
+<tr><td>RPO, period end</td><td></td><td></td><td></td><td>24,600</td><td class="div">25,400</td><td></td><td class="e div"></td><td class="e"></td><td class="e"></td></tr>
+<tr><td>Cash &amp; equivalents</td><td></td><td></td><td>337.2</td><td>1,108.2</td><td class="div">7,921.5</td><td></td><td class="e div"></td><td class="e"></td><td class="e"></td></tr>
+</tbody><tfoot><tr><td colspan="10">Reported columns are standardized SEC data; the 1H26 column is the company's core basis, with segment margins revenue-weighted from the two quarterly calls. FY26E–FY28E are mean consensus at 2 September (10–11 contributing estimates per line); consensus operating margin is consensus operating income over consensus revenue. ⁶ Reported; core ran 42.1% in Q1'25 and 41.0% in Q4'25. ⁷ Includes $390.7m of net non-operating gains, almost all the non-cash gain on restructuring the G42 forward contract; after $150m of other adjustments, net income to common was $87.9m, which is the figure some secondary sources carry. ⁸ Comparable net income per the data source; the company's own non-GAAP net loss for FY25 is $75.7m. ⁹ FY24 operating cash flow of $452m came from customer prepayments (other short-term liabilities rose to $1.15bn) and unwound in FY25. FY29E is $12.4bn of revenue on three estimates and $17.27 of adjusted EPS on two.</td></tr></tfoot></table>
+
+<table class="fm"><caption>Table 2: Quarterly run-rate, core basis, US$ millions</caption>
+<thead><tr><th></th><th class="a">Q1'25</th><th class="a">Q2'25</th><th class="a">Q4'25</th><th class="a">Q1'26A</th><th class="a">Q2'26A</th><th class="e div">Q3'26E (guide)</th><th class="e">Q4'26E (implied)</th></tr></thead>
+<tbody>
+<tr><td>Core revenue</td><td>~99.6</td><td>~103.4</td><td>n.a.</td><td>191.3</td><td>209.9</td><td class="e div">214–216</td><td class="e">264–275</td></tr>
+<tr class="rev"><td>Revenue growth y/y</td><td></td><td></td><td></td><td>92%</td><td>103%</td><td class="e div"></td><td class="e"></td></tr>
+<tr class="sub"><td>Cloud &amp; services</td><td>~29.9</td><td>~33.0</td><td></td><td>79.8</td><td>127.7</td><td class="e div"></td><td class="e"></td></tr>
+<tr class="sub"><td>Hardware</td><td>~69.7</td><td>~70.2</td><td></td><td>111.6</td><td>82.1</td><td class="e div"></td><td class="e"></td></tr>
+<tr><td>Core gross margin</td><td>42.1%</td><td>31.2%</td><td>41.0%</td><td>46.5%</td><td>40.6%</td><td class="e div">38–40%</td><td class="e">"improves significantly"</td></tr>
+<tr class="sub"><td>Cloud &amp; services</td><td>n.a.</td><td>25.8%</td><td></td><td>52.9%</td><td>41.8%</td><td class="e div"></td><td class="e"></td></tr>
+<tr class="sub"><td>Hardware</td><td>30.6%</td><td>33.7%</td><td></td><td>42.0%</td><td>38.8%</td><td class="e div"></td><td class="e"></td></tr>
+<tr><td>Core operating margin</td><td class="neg">(19%)</td><td class="neg">(42%)</td><td class="neg">(10%)</td><td class="neg">(2%)</td><td class="neg">(16%)</td><td class="e div neg">(25%)–(23%)</td><td class="e"></td></tr>
+<tr class="tot"><td>Core operating loss</td><td class="neg">(19.3)</td><td>n.a.</td><td>n.a.</td><td class="neg">(3.5)</td><td class="neg">(33.6)</td><td class="e div neg">~(54)–(50)</td><td class="e"></td></tr>
+</tbody><tfoot><tr><td colspan="8">Q1'25 and Q2'25 revenue and margins are backed out of the growth rates and basis-point deltas management gave on the two calls. Q4'26 is the FY26 guide range less 1H26 actuals and the Q3 guide range.</td></tr></tfoot></table>
+
+Renting systems back from G42 cost about 500 bp in Q2. Removing that cost lifts the 40.6% core margin to roughly 45.6%; the remaining path to 56% in 2028 depends on owned capacity, utilization, pricing and throughput.
+
+<table class="fm"><caption>Gross-margin bridge</caption>
+<thead><tr><th>Checkpoint</th><th>Core gross margin</th><th>Increment</th><th>What has to happen</th></tr></thead>
+<tbody>
+<tr><td>Q2 2026 actual</td><td>40.6%</td><td>n.a.</td><td>Cloud 41.8%; hardware 38.8%</td></tr>
+<tr><td>Remove rented-system penalty</td><td>~45.6%</td><td>+5.0 pts</td><td>The only lever management quantified</td></tr>
+<tr><td>FY27 consensus</td><td>49.0%</td><td>+3.4 pts</td><td>Owned capacity, pricing, utilization and scale</td></tr>
+<tr><td>FY28 consensus</td><td>56.0%</td><td>+7.0 pts</td><td>Another step-up while captive silicon scales</td></tr>
+<tr class="tot"><td>Management target</td><td>60.0%</td><td>+4.0 pts</td><td>Medium to long term; no date</td></tr>
+</tbody>
+</table>
+
+At the FY27 consensus mix of 89% cloud and 11% hardware, a 60% blended margin requires cloud margin of 62% if hardware reaches 45%, or 64% if hardware normalizes in the low 30s. That sits 20–22 points above Q2 cloud margin. OpenAI's hardware election shifts revenue toward the lower-margin product, and Cerebras ([CBRS](https://corbanu.com/cbrs/))-owned Helios racks add AMD ([AMD](https://corbanu.com/amd/)) equipment to the cost base.
+
+The $25.4bn RPO controls the timing. The >$20bn OpenAI MRA and GAAP RPO use different measures, so public filings support 750 MW of committed OpenAI capacity and a significant, unallocated share of RPO rather than an exact customer bridge. Twenty-two percent of RPO converts by June 2028; the other 78% arrives later.¹⁰¹¹
+
+<table class="fm">
+<caption>Table 3: What the RPO disclosure actually supports</caption>
+<thead><tr><th>Item</th><th>US$ bn</th><th>Disclosure</th></tr></thead>
+<tbody>
+<tr><td>RPO, 31 Dec 2025</td><td>24.6</td><td>15% by Dec-27; 43% in 2028–29; 42% thereafter</td></tr>
+<tr><td>RPO, 30 Jun 2026</td><td>25.4</td><td>22% (~5.6) by Jun-28; 43% (~10.9) in Jul-28–Jun-30; 35% (~8.9) thereafter</td></tr>
+<tr class="tot"><td>OpenAI MRA headline value</td><td>&gt;20.0</td><td>750 MW contractually committed; a significant amount of RPO, but no exact allocation</td></tr>
+<tr><td>Non-OpenAI RPO</td><td>Undisclosed</td><td>No upper bound can be derived because headline contract value and GAAP RPO are different measures</td></tr>
+<tr><td>OpenAI option</td><td>Undisclosed</td><td>1.25 GW is optional, with deployment beginning in 2029; the filing leaves its RPO treatment unspecified</td></tr>
+</tbody>
+</table>
+
+Payments are generally non-cancelable. Delivery delay can shorten or terminate an affected segment, OpenAI controls a 1.25 GW option beginning in 2029, and the customer chooses cloud delivery or hardware in its own data centers. The first choice carries cloud economics; the second carries hardware economics.
+
+<table class="fm">
+<caption>Table 4: Share count and award overhang</caption>
+<thead><tr><th>Component</th><th>Shares (m)</th><th>Treatment</th></tr></thead>
+<tbody>
+<tr><td>Class A, 5 Aug</td><td>112.247</td><td>Listed; 102.4m float at 2 Sep</td></tr>
+<tr><td>Class B, 5 Aug</td><td>111.601</td><td>Unlisted; 20 votes per share; converts to Class A on transfer</td></tr>
+<tr><td>Class N, 5 Aug</td><td>13.716</td><td>Non-voting; includes OpenAI's July exercise of 10.034m shares</td></tr>
+<tr class="tot"><td>Basic, all classes</td><td>237.564</td><td>The count behind the quoted market capitalization</td></tr>
+<tr><td>Potential shares excluded from Q2 diluted EPS</td><td>76.011</td><td>Warrants 26.108; early-exercised 0.574; options 23.797; unvested RSUs 16.532; PRSUs 9.000</td></tr>
+<tr class="tot"><td>Fully diluted, consensus-implied</td><td>~321</td><td>FY27E adjusted net income $378.4m ÷ adjusted EPS $1.18</td></tr>
+</tbody>
+<tfoot><tr><td colspan="3">The June potential-share table and 5 August outstanding count are different dates and require separate treatment. Gross outstanding awards were 27.222m options and 27.629m RSUs; the EPS table already captures overlapping portions.</td></tr></tfoot>
+</table>
+
+The Street's 321m diluted count exceeds the 237.6m basic count by 35%. OpenAI has exercised 10.034m of a 33.445m nominal-strike warrant and AWS ([AMZN](https://corbanu.com/amzn/)) holds 2.697m warrants at $100. Q2 stock compensation was $377.0m; $386.6m covered the first half. The customer driving the thesis also owns the cheapest equity in the structure.³⁶
+
+## Valuation
+
+At $184.52, basic market capitalization is $43.8bn and diluted market capitalization is $59.2bn; enterprise value is $37.4bn and $52.8bn, respectively. The diluted shares trade at 22.9x blended forward sales, 157x FY27 EPS and 29x FY28 EPS while consensus burns $3.5bn of free cash flow across 2026–27.
+
+<table class="fm"><caption>Table 5: valuation and 2028 scenario bridge</caption>
+<thead><tr><th>Case</th><th>Probability</th><th>Operating path</th><th>FY28 revenue</th><th>Gross margin</th><th>Adjusted EPS</th><th>Multiple</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Street / bull</td><td>15%</td><td>750 MW delivered mainly as cloud; AWS (<a href="https://corbanu.com/amzn/">AMZN</a>) ramps; renewal visibility improves</td><td>$7.83bn</td><td>56%</td><td>$6.47</td><td>30.0x</td><td>$194</td></tr>
+<tr class="tot"><td>Base</td><td>60%</td><td>750 MW converts; hardware mix rises; AWS (<a href="https://corbanu.com/amzn/">AMZN</a>) ramps slowly; option and extension stay absent</td><td>$7.0bn</td><td>52%</td><td>$4.31</td><td>27.5x</td><td>$118</td></tr>
+<tr><td>Bear</td><td>25%</td><td>Hardware election dominates; AWS (<a href="https://corbanu.com/amzn/">AMZN</a>) and non-OpenAI demand stay thin; base term runs down</td><td>$6.0bn</td><td>47%</td><td>$2.57</td><td>30.0x</td><td>$77</td></tr>
+<tr class="tot"><td>Probability-weighted</td><td>100%</td><td colspan="5">15% × $194 + 60% × $118 + 25% × $77</td><td>$119</td></tr>
+</tbody>
+<tfoot><tr><td colspan="8">Corbanu scenarios. The Street case uses ten FY28 EPS estimates and eleven sales estimates. Base EPS is one-third below consensus; bear EPS is 60% below consensus. Anthropic changes the multiple and marginal bid rather than these operating inputs.</td></tr></tfoot>
+</table>
+
+The scenario weights put fair value at $119; we use $118. Two independent checks land in the same place: 100x FY27 consensus EPS of $1.18 and 18.2x the untouched FY28 consensus EPS of $6.47. The bear case values $2.57 of FY28 EPS at 30x. NVIDIA ([NVDA](https://corbanu.com/nvda/)) trades at 15x FY2 while growing 65%; AMD ([AMD](https://corbanu.com/amd/)) trades at 30x and Astera Labs at 43x. The Cerebras ([CBRS](https://corbanu.com/cbrs/)) target already grants a premium multiple.
+
+## Catalyst Calendar
+
+Broadcom (AVGO) dated the silicon ramp on 2 September, and Anthropic's bankers have told potential investors that the October IPO could raise more than $100bn. At roughly $2tn, the proposed book represents a 5% float and a larger offering than any completed IPO. The book exceeds twice Cerebras ([CBRS](https://corbanu.com/cbrs/))'s basic market capitalization and equals roughly 83 days of [CBRS](https://corbanu.com/cbrs/) turnover at the recent $1.2bn daily rate. That is the measurable liquidity draw: $100bn of frontier-AI demand goes into the new stock while [CBRS](https://corbanu.com/cbrs/) asks the same investors to keep paying an OpenAI-proxy premium.³³
+
+<table class="fm cal">
+<thead><tr><th>Date</th><th>Event</th><th>Trade implication</th></tr></thead>
+<tbody>
+<tr class="grp"><td colspan="3">September</td></tr>
+<tr><td>2 Sep</td><td>Broadcom (AVGO) FQ3 call</td><td>Jalapeño shipped in Q3; Q4 shipments continue; 1.3 GW arrives in 2027.</td></tr>
+<tr><td>16 Sep; 30 Sep</td><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) lock-up releases</td><td>Up to 14.6m, then 19.4m securities become eligible.</td></tr>
+<tr><td>29 Sep</td><td>OpenAI DevDay</td><td>APIs, tools and demos create the next opening for Jalapeño deployment or workload detail.</td></tr>
+<tr><td>September</td><td>Anthropic prospectus and roadshow</td><td>The audited numbers and a $100bn-plus book compete directly for US growth and AI allocations.</td></tr>
+<tr class="grp"><td colspan="3">October–November</td></tr>
+<tr><td>14 Oct; 28 Oct</td><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) lock-up releases</td><td>Up to 19.4m securities on each date.</td></tr>
+<tr><td>By 31 Oct</td><td>Anthropic IPO</td><td>Polymarket prices 91% odds of trading by this date and 79% odds of a $2tn valuation by year-end.</td></tr>
+<tr><td>Q4</td><td>AMD (<a href="https://corbanu.com/amd/">AMD</a>) Helios + Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) cloud launch; Taalas closes</td><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)'s 5x throughput claim meets customers as AMD (<a href="https://corbanu.com/amd/">AMD</a>) brings a rival decode chip in-house.</td></tr>
+<tr><td>By 10 Nov</td><td>Final Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) lock-up release</td><td>Every remaining eligible security clears the contractual lock-up.</td></tr>
+<tr><td>13 Nov</td><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) Q3 results</td><td>Q4 must deliver $264–275m; Q3 gross margin reaches its 38–40% trough; first FY27 color meets a Street 14% above the floor.</td></tr>
+<tr class="grp"><td colspan="3">2027–28</td></tr>
+<tr><td>Q1 2027</td><td>AWS (<a href="https://corbanu.com/amzn/">AMZN</a>) Bedrock GA</td><td>First hyperscaler revenue and the first test of the $1bn assumptions embedded by bullish analysts.</td></tr>
+<tr><td>2027</td><td>Jalapeño 1.3 GW; Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) tranche two; CS-5</td><td>The roadmaps meet.</td></tr>
+<tr><td>2028</td><td>Jalapeño and successor exceed 5 GW</td><td>The captive fleet reaches scale during the period carrying most Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) RPO and equity value.</td></tr>
+</tbody>
+</table>
+
+Anthropic also changes the pair's narrative. Its roadshow will sell scientific progress, enterprise AI and national-security relevance. That directs US capital toward the frontier lab itself and strengthens the strategic value of domestic compute capacity. CXMT ([CXMT](https://corbanu.com/cxmt/)) draws from mainland capital and expresses the Chinese side of the same sovereign-compute race.
+
+Consensus remained unchanged at 14:24 UTC on 3 September: FY28 at $6.47 of adjusted EPS on $7.83bn of sales, FY29 at $17.27 on $12.42bn, and an average price target of $286.50. Broadcom (AVGO) has shipped; the estimates still describe the world before shipment.³⁰
+
+## The Jalapeño Catalyst
+
+Jalapeño is OpenAI's first custom inference accelerator. A reticle-sized TSMC (TSM) N3P compute die sits beside six HBM4 stacks holding 216 GB and delivering 15.4 TB/s. The 700 W package reaches 13.4 PFLOPS at MXFP4; PCIe Gen5 connects it to an AMD ([AMD](https://corbanu.com/amd/)) Turin host and Tomahawk 6 connects the rack. OpenAI deploys 128 accelerators per rack and 2,048 across a sixteen-rack pod. Richard Ho, who ran Google ([GOOGL](https://corbanu.com/googl/))'s TPU program, built the team; Broadcom (AVGO) implements the silicon and fabric, and Celestica builds the boards and racks.¹⁴
+
+The matrix engine combines a weight-stationary systolic array with out-of-order cores and L1 cache. OpenAI uses one fungible processor for prefill and decode, allowing traffic to move across the fleet. Cerebras ([CBRS](https://corbanu.com/cbrs/)) assigns decode to the WSE and, in its AMD ([AMD](https://corbanu.com/amd/)) and AWS ([AMZN](https://corbanu.com/amzn/)) configurations, assigns prefill to another processor.
+
+<table class="fm cal"><caption>OpenAI's compute portfolio, September 2026</caption>
+<thead><tr><th>Supplier</th><th>Commitment</th><th>What it is for</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>NVIDIA (<a href="https://corbanu.com/nvda/">NVDA</a>)</td><td>≥10 GW, NVIDIA (<a href="https://corbanu.com/nvda/">NVDA</a>) investing up to $100bn as each GW deploys (LOI, Sep 2025)</td><td>Training and bulk inference; Vera Rubin from 2H26</td><td>Definitive agreement still pending at last disclosure</td></tr>
+<tr><td>AMD (<a href="https://corbanu.com/amd/">AMD</a>)</td><td>Up to 6 GW Instinct, $90bn potential; warrant on 160m AMD (<a href="https://corbanu.com/amd/">AMD</a>) shares at $0.01</td><td>Bulk inference; 1 GW of MI450 from 2H26</td><td>On track</td></tr>
+<tr class="tot"><td>Broadcom (AVGO) (Jalapeño)</td><td>1.3 GW in 2027; &gt;5 GW of Gen 1 plus its successor in 2028; 10 GW program through 2029</td><td>OpenAI's own inference fleet</td><td>Shipping since FQ3; FQ4 shipments continue; Gen 2 nearing tape-out; Gen 3 in development</td></tr>
+<tr class="tot"><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)</td><td>750 MW, &gt;$20bn, take-or-pay, 2026–28; option to 2.0 GW by 2030</td><td>Ultra-low-latency tier (GPT-5.6 Sol Ultrafast)</td><td>First 250 MW due end-2026</td></tr>
+<tr><td>Oracle (ORCL) / Stargate</td><td>≈$300bn over five years from 2027, ≈4.5 GW</td><td>Data-center capacity</td><td>Abilene live</td></tr>
+<tr><td>AWS (<a href="https://corbanu.com/amzn/">AMZN</a>)</td><td>$38bn, seven years</td><td>NVIDIA (<a href="https://corbanu.com/nvda/">NVDA</a>) GB200/GB300 capacity, clusters over 500k chips</td><td>Deploying to end-2026</td></tr>
+<tr><td>Microsoft Azure (<a href="https://corbanu.com/msft/">MSFT</a>)</td><td>Non-exclusive; ≈27% equity holder</td><td>Hosts Jalapeño at gigawatt scale from 2026; Maia 200 serving GPT-5.2</td><td>Live</td></tr>
+</tbody><tfoot><tr><td colspan="4">Company announcements, Sep 2025 – Sep 2026, including Broadcom (AVGO)'s FQ3 call on 2 September; the 26 GW total is as characterized by Reuters in October 2025. Headline values describe maximum program size; recognized revenue follows the underlying contracts.</td></tr></tfoot></table>
+
+OpenAI has roughly 26 GW of contracted compute. Cerebras ([CBRS](https://corbanu.com/cbrs/))'s 750 MW represents about 3% of that portfolio, while Jalapeño is a captive asset that Broadcom (AVGO) says runs OpenAI workloads at roughly half the cost of a GPU. The 10 GW multi-generation program runs through 2029. Every gigawatt moved onto owned silicon shifts supplier margin back to OpenAI and its implementation partner.¹⁵
+
+**The contract.**
+
+<table class="fm cal">
+<thead><tr><th>Term</th><th>Detail</th></tr></thead>
+<tbody>
+<tr><td>Committed capacity</td><td>750 MW of inference compute, deployed in three 250 MW tranches through 2026, 2027 and 2028</td></tr>
+<tr><td>Value</td><td>&quot;&gt;$20 billion&quot; (S-1); Reuters had reported &gt;$10bn at signing</td></tr>
+<tr><td>Term</td><td>Three or four years, extendable by OpenAI to five in total</td></tr>
+<tr><td>Option</td><td>OpenAI-controlled option for a further 1.25 GW in tranches to end-2030, for 2.0 GW in total</td></tr>
+<tr><td>Financing</td><td>~$1.0bn secured working-capital loan funded by OpenAI in January 2026</td></tr>
+<tr><td>Equity</td><td>Warrant for 33,445,026 Class N shares at $0.00001, vesting against purchases</td></tr>
+<tr><td>Delivery election</td><td>OpenAI chooses whether to take committed capacity in Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)&#x27;s cloud or as hardware in its own data centers; the hardware election removes the pass-through and cloud margin</td></tr>
+<tr><td>Pass-through</td><td>Data-center costs billed to OpenAI at a 3% markup, reported gross, excluded from core</td></tr>
+<tr><td>Termination</td><td>Material-breach rights; prolonged delivery delay can terminate an affected segment; other thresholds and SLA remedies are redacted</td></tr>
+<tr><td>Hardware-election status</td><td>The MRA required good-faith negotiation by 15 Feb 2026; no resulting agreement or election has been disclosed</td></tr>
+<tr><td>Model co-design</td><td>Parties to co-design future models for future Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) hardware; GPT-5.4, then GPT-5.6 Sol, brought up on CS-3</td></tr>
+</tbody>
+</table>
+
+The MRA was signed on 24 December 2025, five weeks after Jalapeño taped out. First silicon arrived in May 2026; Broadcom (AVGO) reported production shipments in fiscal Q3 and further shipments in Q4. OpenAI bought bridge capacity with full knowledge of its internal ramp. The 750 MW base commitment supports Cerebras ([CBRS](https://corbanu.com/cbrs/)) through 2028; OpenAI controls the 1.25 GW option, the delivery form and the extension.
+
+Jalapeño has produced 1.5–1.9x the work per watt and 1.7–3.6x lower end-to-end latency than selected GB200/GB300 systems in OpenAI's lab. Cerebras ([CBRS](https://corbanu.com/cbrs/)) remains fastest at low batch in the available independent work, then falls off the throughput frontier as batching rises. Those facts put utilization and cost per token at the center of the competitive decision.²¹²²²⁴
+
+<table class="fm cal"><caption>Benchmark ledger</caption>
+<thead><tr><th>Hardware</th><th>Test</th><th>Result</th><th>What is still missing</th></tr></thead>
+<tbody>
+<tr><td>Jalapeño vs GB200/GB300</td><td>Same InferenceX prompts and models; OpenAI lab, reviewed with SemiAnalysis</td><td>1.5–1.9x peak work/W; 1.7–3.6x lower latency</td><td>Independent reproduction, price, utilization and production TCO</td></tr>
+<tr><td>CS-3, older Groq rack, H100/MI300 and others</td><td>Independent ISPASS 2026 study; Llama 3.1 and microbenchmarks</td><td>CS-3 low-batch latency 22.89% of H100; Groq 30.03%</td><td>Predates CS-4, Groq 3 LPX, GB300 and Jalapeño</td></tr>
+<tr><td>Groq 3 LPX</td><td>Artificial Analysis; Gemma 4 31B at 100k context</td><td>3,431 output tok/s</td><td>Different model and system boundary from Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) and Jalapeño</td></tr>
+<tr class="tot"><td>CS-4 four-way test</td><td>None published</td><td>n.a.</td><td>Cost/token, tokens/MW, latency curve, concurrency and utilization on one configuration</td></tr>
+</tbody>
+</table>
+
+<table class="fm">
+<thead><tr><th>Dimension</th><th>Cerebras CS-3 / WSE-3</th><th>OpenAI Jalapeño</th></tr></thead>
+<tbody>
+<tr><td>Fast memory / weight path</td><td>44 GB SRAM on-wafer, 21 PB/s; weights stream from external MemoryX</td><td>216 GB HBM4 per chip, 15.4 TB/s</td></tr>
+<tr><td>Process and memory</td><td>TSMC (TSM) N5; on-wafer SRAM plus external MemoryX</td><td>TSMC (TSM) N3P; HBM4, advanced packaging</td></tr>
+<tr><td>Power</td><td>~23 kW per CS-3</td><td>700 W per chip; ~11 kW for an eight-chip node</td></tr>
+<tr><td>FP4 copy of a ~1.6T-parameter model (~800 GB)</td><td>~20 wafers, &gt;$20m of systems, ~1 MW</td><td>one eight-chip node, ~1.7 TB of memory, ~11 kW</td></tr>
+<tr><td>Strength</td><td>Tokens per second per user</td><td>Tokens per megawatt, at any batch size</td></tr>
+</tbody>
+<tfoot><tr><td colspan="3">Memory-economics comparison from a third-party reproduction of SemiAnalysis&#x27;s paywalled Jalapeño note; used as high-confidence secondary evidence.²³</td></tr></tfoot>
+</table>
+
+Sparse mixture-of-experts models add pressure. HBM reads only the active experts per token, while the number of Cerebras ([CBRS](https://corbanu.com/cbrs/)) wafers still scales with total parameters. CS-3 also drew 80% of TDP at idle and reached energy-per-token parity with a 32-GPU H100 cluster at a 34% duty cycle. The architecture retains its latency edge and pays for it through utilization.
+
+Cerebras ([CBRS](https://corbanu.com/cbrs/)) and AMD ([AMD](https://corbanu.com/amd/)) plan a Q4 cloud configuration with Helios on prefill and WSE on decode, promising 5x more throughput per CS system. Cerebras ([CBRS](https://corbanu.com/cbrs/)) buys the Helios racks and keeps the revenue. The design also returns HBM, advanced packaging and a second vendor to the bill of materials, while a fixed prefill/decode split can strand compute as traffic changes. AWS ([AMZN](https://corbanu.com/amzn/)) follows the same design with Trainium 3 and CS-3 on Bedrock in Q1 2027.²⁸
+
+AMD ([AMD](https://corbanu.com/amd/)) then agreed to acquire Taalas, whose 6 nm chip hardwires weights into silicon and reports roughly 17,000 tokens a second on Llama 3.1 8B. AMD ([AMD](https://corbanu.com/amd/)) plans to place it beside Instinct GPUs in Helios. Cerebras ([CBRS](https://corbanu.com/cbrs/))'s prefill partner is bringing a rival decode engine in-house.²⁹
+
+<table class="fm cal">
+<thead><tr><th>Chip</th><th>Owner</th><th>Node / memory</th><th>Status</th><th>Relationship to Cerebras</th></tr></thead>
+<tbody>
+<tr class="tot"><td>Jalapeño</td><td>OpenAI / Broadcom (AVGO)</td><td>N3P, 216 GB HBM4</td><td>Shipping; 1.3 GW deployment planned for 2027</td><td>Largest customer&#x27;s captive chip</td></tr>
+<tr><td>Groq 3 LPX</td><td>NVIDIA (<a href="https://corbanu.com/nvda/">NVDA</a>) (~$20bn, Dec 2025)</td><td>Samsung (<a href="https://corbanu.com/smsn/">SMSN</a>) 4 nm, SRAM decode co-processor</td><td>Shipping Q3 2026</td><td>Same niche, inside CUDA</td></tr>
+<tr><td>Taalas HC1</td><td>AMD (<a href="https://corbanu.com/amd/">AMD</a>) (Aug 2026, closes Q4)</td><td>TSMC (TSM) N6, weights in mask ROM</td><td>Test silicon; two-month retarget</td><td>Prefill partner&#x27;s decode chip</td></tr>
+<tr><td>Maia 200 / 300</td><td>Microsoft (<a href="https://corbanu.com/msft/">MSFT</a>)</td><td>TSMC (TSM) N3, HBM3e, large SRAM</td><td>200 in production (Iowa, Arizona); 300 in design for 2027</td><td>Hosts Jalapeño; runs OpenAI models</td></tr>
+<tr><td>TPU (Ironwood+)</td><td>Google (<a href="https://corbanu.com/googl/">GOOGL</a>) / Broadcom (AVGO)</td><td>n.a.</td><td>3.5 GW contracted to Anthropic from 2027</td><td>Removes the #2 lab as a prospect</td></tr>
+<tr><td>Trainium 3</td><td>AWS (<a href="https://corbanu.com/amzn/">AMZN</a>)</td><td>n.a.</td><td>&quot;Nearly fully subscribed&quot;; exploring external sales</td><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)&#x27;s prefill partner and Bedrock host</td></tr>
+<tr><td>Sohu</td><td>Etched</td><td>n.a.</td><td>Shipping; ~$21bn valuation</td><td>Same niche, merchant</td></tr>
+<tr><td>MatX, d-Matrix</td><td>Private</td><td>n.a.</td><td>Development / early ship</td><td>Same niche, merchant</td></tr>
+<tr><td>WSE-3T / CS-4</td><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)</td><td>TSMC (TSM) N5, 44 GB SRAM per wafer</td><td>Shipping Q3 2026</td><td>n.a.</td></tr>
+</tbody>
+<tfoot><tr><td colspan="5">Sources in the appendix. Groq 3 LPX and Etched status per company statements; Maia 300 volume target per trade reporting, unconfirmed.</td></tr></tfoot>
+</table>
+
+Cerebras ([CBRS](https://corbanu.com/cbrs/)) still owns a real engineering advantage: one wafer removes the network that smaller SRAM chips need, while Taalas freezes a model into silicon. OpenAI, AWS ([AMZN](https://corbanu.com/amzn/)), Microsoft ([MSFT](https://corbanu.com/msft/)), Google ([GOOGL](https://corbanu.com/googl/)), NVIDIA ([NVDA](https://corbanu.com/nvda/)) and AMD ([AMD](https://corbanu.com/amd/)) increasingly own the customer, the rack and the utilization.
+
+Acquisition creates little support at $44bn basic and $59bn diluted. A control premium implies a $60–80bn transaction under a 99% insider vote. AMD ([AMD](https://corbanu.com/amd/)) has the clearest strategic motive after a material re-rating; every other plausible buyer already owns an inference architecture or the contractual capacity it needs.
+
+**Stops.** Cover half above $253 and all above $300. Fundamental exits are a material Jalapeño delay, exercise of the 1.25 GW OpenAI option, an OpenAI term extension, a $1bn-plus customer outside OpenAI and the UAE, independent CS-4 cost-per-token leadership, or core gross margin above 50% before rented capacity rolls off.
+
+## Positioning
+
+Use [CBRS](https://corbanu.com/cbrs/) for the core short and budget 2% annualized funding. The 3 September public cash-loan snapshot showed 0.53% with 2.3m shares available; a later locate showed no special-borrow fee and 491,410 shares. Through 20 November, those rates cost roughly 0.43% on the perpetual and 0.11% on cash stock.
+
+The 20 November $185/$150 put spread cost $15.40 at mids and $17.80 crossing the screen when [CBRS](https://corbanu.com/cbrs/) traded at $186.98. Breakeven was $169.60 or $167.20, with maximum profit below $150 of $1,960 or $1,720 per contract. The screen charged $2.40 a share to cross and the spread began at 0.217 short delta. Use limits for defined-risk event exposure; use the perpetual for the full thesis.³⁹
+
+## Risk Management
+
+[CBRS](https://corbanu.com/cbrs/) has realized 140% annualized volatility since listing and 100% over the last thirty days; the cash equity's sixty-day figure is 127%. The Q3 options imply a 10.6% one-day earnings move. We size the position at 125% volatility.
+
+<table class="fm"><caption>Cerebras lock-up release schedule</caption>
+<thead><tr><th>Release</th><th>Up to shares (m)</th><th>Cumulative (m)</th></tr></thead>
+<tbody>
+<tr><td>First and second trading days</td><td>5.0</td><td>5.0</td></tr>
+<tr><td>After Q1 earnings</td><td>27.7</td><td>32.7</td></tr>
+<tr><td>After Q2 earnings</td><td>36.4</td><td>69.1</td></tr>
+<tr><td>18–19 Aug sell-to-cover / scheduled release</td><td>1.2 + 14.6</td><td>84.9</td></tr>
+<tr><td>2 Sep</td><td>14.6</td><td>99.5</td></tr>
+<tr><td>16 Sep</td><td>14.6</td><td>114.1</td></tr>
+<tr><td>30 Sep; 14 Oct; 28 Oct</td><td>19.4 each</td><td>172.3</td></tr>
+<tr class="tot"><td>By 10 Nov</td><td>All remaining</td><td>Undisclosed</td></tr>
+</tbody>
+<tfoot><tr><td colspan="3">The prospectus's scheduled early-release total is 171.1m; the separate 1.2m August sell-to-cover estimate produces 172.3m in this table. An additional 21.5m options were vested at 30 April and can generate tax-cover sales. Eligibility precedes any sale.</td></tr></tfoot>
+</table>
+
+The five disclosed pre-IPO funds owned 78.9m Class B shares at 31 March: Fidelity 20.4m, Benchmark 17.6m, Foundation 15.3m, Eclipse 13.5m and Alpha Wave 12.1m. Recent financing prices were $14.66, $36.2324 and $89.0156 against the $185 offer. The scheduled release creates supply; the holder concentration determines how violently it reaches the market.³⁶
+
+<table class="fm"><caption>Post-IPO AI-infrastructure analogs: the pop, the retracement, and the lock-up window (daily closes, public exchange data via Tiingo)</caption>
+<thead><tr><th>Name</th><th>IPO</th><th>Offer</th><th>Peak close vs offer, first 63 sessions</th><th>Retracement from that peak within six months</th><th>Lock-up expiry</th><th>Return, (5) to +20 sessions around expiry</th></tr></thead>
+<tbody>
+<tr class="tot"><td>Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)</td><td>May 2026</td><td>$185</td><td>+68% (day one, $311; intraday $386)</td><td class="neg">(46%) to 25 Jun</td><td>10 Nov 2026</td><td>n.a.</td></tr>
+<tr><td>CoreWeave (CRWV)</td><td>Mar 2025</td><td>$40</td><td>+359%</td><td class="neg">(65%)</td><td>14 Aug 2025</td><td class="neg">(7.5%)</td></tr>
+<tr><td>Circle (<a href="https://corbanu.com/crcl/">CRCL</a>)</td><td>Jun 2025</td><td>$31</td><td>+750%</td><td class="neg">(75%)</td><td>2 Dec 2025</td><td>+9.0%</td></tr>
+<tr><td>Figma (FIG)</td><td>Jul 2025</td><td>$33</td><td>+270%</td><td class="neg">(79%)</td><td>27 Jan 2026</td><td>+12.5%</td></tr>
+<tr><td>Astera Labs (ALAB)</td><td>Mar 2024</td><td>$36</td><td>+138%</td><td class="neg">(58%)</td><td>16 Sep 2024</td><td>+70.8%</td></tr>
+<tr><td>Arm</td><td>Sep 2023</td><td>$51</td><td>+32%</td><td class="neg">(4%)</td><td>12 Mar 2024</td><td class="neg">(6.6%)</td></tr>
+</tbody><tfoot><tr><td colspan="7">Peak is the highest close in the first 63 sessions; retracement is the lowest close in the 182 days after that peak. Lock-up expiry is 180 days from pricing. Astera's +71% window reflected its September 2024 AI re-rating alongside the expiry. Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>)'s retracement is from the day-one close to the 25 June low.</td></tr></tfoot></table>
+
+The analogs make November a supply window rather than a magic down date. Their five expiry windows produced a median gain of 9%, while their peak-to-trough declines unfolded across months. The short needs the analyst revision as its down event.
+
+At 13:15 ET on 3 September, the top twenty [CBRS](https://corbanu.com/cbrs/) levels held $69,000 of bids and $272,000 of offers against $5.5m of daily volume. The next 14.6m and 19.4m eligible tranches equal 2.3 and 3.1 times ten-day cash volume. A 10% sale from the five large funds equals 7.9m shares, 1.25 trading days and half the reported short interest.³⁹
+
+Against a 3.5% CXMT ([CXMT](https://corbanu.com/cxmt/)) long carrying 1.6–1.7 beta, a 1.75% [CBRS](https://corbanu.com/cbrs/) short carrying 2.75 full-history beta and 3.8 recent beta keeps the pair close to neutral. A 50–100% [CBRS](https://corbanu.com/cbrs/) squeeze costs 0.9–1.75% of capital; a simultaneous 50% CXMT ([CXMT](https://corbanu.com/cxmt/)) drawdown takes the pair to 2.6%. Re-strike weekly. Reassess after 13 November and before the Nasdaq-100 ([XYZ100](https://corbanu.com/xyz100/)) announcement. Failed selling through the staged releases signals a squeeze.
+
+## Who Cuts First
+
+The sell-side holds ten positive ratings, three Holds and zero Sells, with a $286.50 average target. Citi and Mizuho already cut targets after Q2 while UBS, Wedbush and Morgan Stanley raised theirs. The questions behind those calls identify the first revision candidates.⁴¹
+
+<table class="fm cal"><caption>Positive analysts ranked by downgrade risk</caption>
+<thead><tr><th>Rank</th><th>Analyst</th><th>Firm</th><th>Rating / target</th><th>Q&amp;A signal</th></tr></thead>
+<tbody>
+<tr class="tot"><td>1</td><td>Atif Malik</td><td>Citi</td><td>Buy / $320</td><td>Asked how OpenAI chooses cloud versus hardware and how much guidance depends on rented G42 capacity; then cut $340 to $320.</td></tr>
+<tr class="tot"><td>2</td><td>Joshua Buchalter</td><td>TD Cowen</td><td>Buy / $275</td><td>Pressed on uncertain AWS (<a href="https://corbanu.com/amzn/">AMZN</a>) demand, benchmark configuration, OpenAI's guide contribution and AMD (<a href="https://corbanu.com/amd/">AMD</a>)'s Taalas acquisition; lowest positive target.</td></tr>
+<tr><td>3</td><td>Vijay Rakesh</td><td>Mizuho</td><td>Outperform / $300</td><td>Asked whether signed power converts into 2027 revenue and whether customers beyond OpenAI and AWS (<a href="https://corbanu.com/amzn/">AMZN</a>) appear; cut $310 to $300.</td></tr>
+<tr><td>4</td><td>N. Quinn Bolton</td><td>Needham</td><td>Buy / $300</td><td>Tested whether AMD (<a href="https://corbanu.com/amd/">AMD</a>) disaggregation adds OpenAI revenue or simply fulfills the contract more efficiently, and whether WSE's own roadmap makes it redundant.</td></tr>
+<tr><td>5</td><td>Timothy Arcuri</td><td>UBS</td><td>Buy / $330</td><td>Modeled OpenAI and AWS (<a href="https://corbanu.com/amzn/">AMZN</a>) at roughly two-thirds of 2027 revenue and floated $1bn from AWS (<a href="https://corbanu.com/amzn/">AMZN</a>); highest target and largest estimate exposure.</td></tr>
+<tr><td>6</td><td>Matthew Bryson</td><td>Wedbush</td><td>Outperform / $290</td><td>Forced management to acknowledge that disaggregated value split remains uncertain and true deployment had yet to occur; raised $280 to $290.</td></tr>
+<tr><td>7</td><td>Joseph Moore</td><td>Morgan Stanley</td><td>Overweight / $279</td><td>Asked when disaggregation becomes commercial and established that wider GPU-base testing remained undone; raised $273 to $279.</td></tr>
+<tr><td>8</td><td>Tom O'Malley</td><td>Barclays</td><td>Overweight / $280</td><td>Kyle Bleustein, appearing for O'Malley, established that Cerebras (<a href="https://corbanu.com/cbrs/">CBRS</a>) buys Helios and retains the cloud revenue.</td></tr>
+<tr><td>9</td><td>Richard Shannon</td><td>Craig-Hallum</td><td>Buy / $325</td><td>Invited management to describe OpenAI as a software advantage and external Trainium sales as an opportunity.</td></tr>
+<tr><td>Unranked</td><td>Kevin Cassidy</td><td>Rosenblatt</td><td>Buy / $300</td><td>No question on either available 2026 earnings call.</td></tr>
+</tbody>
+</table>
+
+Malik owns the cleanest route to a rating downgrade because his questions already isolate the OpenAI delivery election and rental-margin burden, and Citi has started cutting. Buchalter has the lowest target and the sharpest questions on demand and competing silicon. Rakesh looks next for another target cut. Arcuri carries the largest eventual damage: his $330 target and $1bn AWS ([AMZN](https://corbanu.com/amzn/)) premise leave the furthest distance to fall.
+
+The ownership base magnifies the move. ARK bought roughly $41m in the second half of August, institutions own 83% of Class A, Robinhood (HOOD) holders vote 83% Buy, and the IPO book cleared around twenty times covered. Anthropic now offers the same capital a direct frontier-lab security through a book more than twice the size of Cerebras ([CBRS](https://corbanu.com/cbrs/)) itself.
+
+## Appendix: 2% perp-cost estimate
+
+The 24-hour forecast comes from a per-contract ridge regression on 1- to 30-day trailing funding means. The seven-day forecast blends the 7- and 30-day signals, and its sign accuracy across the 22-contract panel is 80.6%. At 3 September 12:00 UTC, the model forecast a 1.9% annualized funding cost for the next day and 2.2% for the next week; the short pays both, and we round each figure to 2%.
+
+## Appendix: sources for these sections
+
+¹ Robinhood (HOOD), Investing.com, TradingView, CNBC quote pages, 1–2 Sep 2026; IPO pricing per CNBC, 14 May 2026, and the Q1 call (24 Jun 2026) for the $6.4bn gross figure. ² Cerebras ([CBRS](https://corbanu.com/cbrs/)) S-1, 17 Apr 2026, "Description of Capital Stock"; Mostly Metrics S-1 breakdown. ³ consensus via stockanalysis.com, 2 Sep 2026; 18-analyst count per ChartMill. ⁴ Cerebras ([CBRS](https://corbanu.com/cbrs/)) Form S-1 (17 Apr 2026); Form 10-Q for the quarter ended 31 Mar 2026 (filed 24 Jun 2026); Form 8-K and Q2 2026 earnings call transcript (12 Aug 2026). ⁵ Q1 2026 earnings call, CFO remarks on the core framework (24 Jun 2026). ⁶ Q1 2026 and Q2 2026 calls; FY25 margin per S-1. ⁷ S-1, consolidated statements; MarketWise, 28 May 2026. ⁸ the data source, "Net Income, Comparable"; the company's own non-GAAP net loss per the S-1. ⁹ standardized cash-flow and balance-sheet data; S-1 (customer deposits). ¹⁰ Q2 2026 call, Feldman: RPO excludes AWS ([AMZN](https://corbanu.com/amzn/)) and hyperscaler backlog. ¹¹ S-1, "Remaining Performance Obligation." ¹² Q2 2026 call; Cerebras ([CBRS](https://corbanu.com/cbrs/)) press release on the Mikkeli, Finland data center, 1 Sep 2026. ¹³ S-1 risk factors on procurement; Q2 2026 call on TSMC (TSM) supply. ¹⁴ OpenAI, "OpenAI and Broadcom (AVGO) unveil LLM-optimized inference chip," 24 Jun 2026; Tom's Hardware, Hot Chips 2026 coverage, 27 Aug 2026; The Register, 25 Aug 2026. ¹⁵ Broadcom (AVGO) IR release, 24 Jun 2026; Broadcom (AVGO)–OpenAI 10 GW program, Oct 2025; Broadcom (AVGO) FQ3 FY26 earnings call, 2 Sep 2026. ¹⁶ S-1, customer concentration disclosures. ¹⁷ S-1, risk factors. ¹⁸ S-1 and Exhibit 10.11 (Master Relationship Agreement, redacted); Q1 2026 call. ¹⁹ OpenAI Ultrafast preview, 13 Aug 2026; MLQ, Tech Times, 14–19 Aug 2026; Q1 2026 call. ²⁰ Tom's Hardware, 27 Aug 2026; SemiAnalysis, 25 Aug 2026; Axios, 25 Aug 2026; TechCrunch via NxCode, Aug 2026. ²¹ OpenAI, "Jalapeño's first results," 25 Aug 2026; Tom's Hardware, 27 Aug 2026. ²² SemiAnalysis, "OpenAI Jalapeño: Better Than NVIDIA ([NVDA](https://corbanu.com/nvda/)) Blackwell," 25 Aug 2026. ²³ SemiAnalysis (paywalled section) as quoted on X by @bookwormengr, Aug 2026. ²⁴ arXiv 2503.11698, "Comparison of Cerebras ([CBRS](https://corbanu.com/cbrs/)) WSI Technology with NVIDIA ([NVDA](https://corbanu.com/nvda/)) GPU-based Systems," Mar 2025. ²⁵ Yahoo Finance, "OpenAI Claims Its New Chips Can Outperform NVIDIA ([NVDA](https://corbanu.com/nvda/)) Processors in Tests," 24 Aug 2026. ²⁶ Axios, "OpenAI says its Jalapeño chip offers spicy performance," 25 Aug 2026. ²⁷ The Deep View, "How OpenAI's Jalapeño chip just surprised the AI industry," Aug 2026. ²⁸ AMD ([AMD](https://corbanu.com/amd/)) IR, 23 Jul 2026; Q2 2026 call. ²⁹ CNBC, The Register, Futurum, 6–7 Aug 2026; Taalas company claims from Feb 2026. ³⁰ Data-source reference pages for [CBRS](https://corbanu.com/cbrs/), 2–3 Sep 2026: share classes, float and short interest; IPO terms (13 May 2026, 34.5m shares at $185, lock-up expiry 10 Nov 2026) and top holders; best-fit comp set; standardized financials; consensus estimates (FY28 EPS 10 contributors and sales 11; FY29 EPS two and sales three; analyst coverage 10/3/0, target $286.50; next announcement 13 Nov 2026 (E)); exchange-reported short interest 15.84m, 15.5% of float, 2.3 days to cover. CXMT ([CXMT](https://corbanu.com/cxmt/)), memory-peer and index rows in Table 7 are from the Corbanu CXMT ([CXMT](https://corbanu.com/cxmt/)) note, Table 4, same date. ³¹ ARK Invest daily trade disclosures via TipRanks, 18–26 Aug 2026; Robinhood (HOOD) holder ratings, 2 Sep 2026; IPO book and range per CNBC and the data source, 13–14 May 2026. Post-IPO analog price paths (CoreWeave (CRWV), Circle ([CRCL](https://corbanu.com/crcl/)), Astera Labs, Arm, Figma): daily closes, public exchange data via Tiingo. ³² Public stock-loan feed for [CBRS](https://corbanu.com/cbrs/), 3 Sep 2026 at 09:55 ET. ³³ Polymarket, ‘Anthropic IPO by __?’ and ‘Will Anthropic’s valuation hit __ by December 31?’, 3 Sep 2026; [New York Times, ‘Anthropic Could Aim to Raise $100 Billion in Blockbuster I.P.O.,’ 21 Aug 2026](https://www.nytimes.com/2026/08/21/technology/anthropic-ipo-100-billion.html); Anthropic Science, AI Policy and Series H announcements; Cerebras ([CBRS](https://corbanu.com/cbrs/)) Scientific Computing and ‘What Is Sovereign AI?’, accessed 3 Sep 2026. ³⁴ Cerebras ([CBRS](https://corbanu.com/cbrs/)) WSE-3T, CS-3 and CS-4 product pages and datasheets; Cerebras ([CBRS](https://corbanu.com/cbrs/)) S-1, 17 Apr 2026; accessed 3 Sep 2026. ³⁵ Cerebras ([CBRS](https://corbanu.com/cbrs/)) developer pricing, Groq production-model pricing and Together AI pricing, accessed 3 Sep 2026. ³⁶ [Cerebras final prospectus, “Shares Eligible for Future Sale”](https://www.sec.gov/Archives/edgar/data/2021728/000162828026035214/cerebras-424b4.htm) and [Q2 2026 Form 10-Q](https://www.sec.gov/Archives/edgar/data/2021728/000162828026056357/cbrs-20260630.htm), including RPO, MRA, share count and stock compensation. ³⁷ [Nasdaq-100 Index Methodology, effective 1 May 2026](https://indexes.nasdaq.com/docs/Methodology_NDX.pdf) and Nasdaq's methodology update; linked AUM per Nasdaq. ³⁸ [OpenAI DevDay 2026 program](https://devday.openai.com/), accessed 3 Sep 2026; Broadcom (AVGO) FQ3 FY26 call. ³⁹ Consolidated listed-options chain and live equity quote, 3 Sep 2026 at 13:10–13:15 ET; [Hyperliquid](https://app.hyperliquid.xyz/join/CORBANU) public meta, context and l2Book endpoints at 17:14 UTC. ⁴⁰ [Golden et al., “The xPU-athalon,” ISPASS 2026](https://arxiv.org/abs/2604.10852); Artificial Analysis Groq provider page and Groq 3 LPX result, accessed 3 Sep 2026.  ⁴¹ Cerebras ([CBRS](https://corbanu.com/cbrs/)) Q1 and Q2 2026 earnings-call transcripts; positive-rating and target history through 3 Sep 2026, including Citi $340→$320, Mizuho $310→$300, UBS $320→$330, Wedbush $280→$290 and Morgan Stanley $273→$279.
