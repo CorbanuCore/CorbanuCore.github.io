@@ -17,7 +17,7 @@ await new Promise(r => server.listen(0, "127.0.0.1", r));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({headless:true});
 const context = await browser.newContext();
-const errors = [], creates = [], locks = [];
+const errors = [], creates = [], locks = [], handoffs = [];
 let reads = 0, needsData = false, catalogUnavailable = false;
 const hash = "a".repeat(64), key = "synthetic-test-key-not-a-real-credential";
 const catalog = {schema:"corbanu.index-workflow.v1", models:["corbanu/deepseek-v4.1-flash","corbanu/glm-5.3"],
@@ -47,7 +47,16 @@ await context.route("https://api.corbanu.com/**", async route => {
   }
   if (path === "/v2/indexes/fixture-preview") {
     assert.equal(req.headers().authorization,`Bearer ${key}`);
-    return send({id:"fixture-preview",state:"locked",public:false,artifact:{payload:{...payload,definition:payload.request,disclosure:catalog.disclosure}}});
+    return send({id:"fixture-preview",state:"locked",public:false,index_sha256:hash,artifact:{payload:{...payload,definition:payload.request,disclosure:catalog.disclosure}}});
+  }
+  if (path.endsWith("/felix-handoff")) {
+    assert.equal(req.headers().authorization,`Bearer ${key}`);
+    handoffs.push(req.postDataJSON());
+    return send({schema:"corbanu.felix-handoff.v1",kind:"external_manual",executable:false,index_id:"fixture-preview",index_sha256:hash,
+      amount_usdc_atomic:"100000001",instructions:"Review each order on Felix before signing.",legs:[{
+        amount_usdc:"100.000001",amount_usdc_atomic:"100000001",trade_url:"https://trade.usefelix.xyz/equities/TEST",
+        representation:{...payload.construction.weights[0].representation,underlying:{ticker:"TEST"}}
+      }]});
   }
   throw new Error("Unexpected request: " + path);
 });
@@ -115,6 +124,27 @@ try {
   assert.equal(await page.evaluate(() => window.CorbanuIndexSession),undefined);
   assert.equal(creates.length,2);
   assert.equal(await page.getByRole("button",{name:"Connected: 0x"+"1".repeat(40),exact:true}).count(),1);
+  await page.locator("#basket-amount").fill("100.000001");
+  await page.locator("#prepare-felix-trades").click();
+  await page.getByRole("link",{name:"Trade TEST on Felix ↗",exact:true}).waitFor();
+  assert.deepEqual(handoffs,[{amount_usdc_atomic:"100000001"}]);
+  assert.equal(await page.getByRole("link",{name:"Trade TEST on Felix ↗",exact:true}).getAttribute("href"),"https://trade.usefelix.xyz/equities/TEST");
+  assert.equal(await page.getByRole("link",{name:"Trade TEST on Felix ↗",exact:true}).getAttribute("rel"),"noopener noreferrer");
+  assert.equal(await page.getByRole("textbox",{name:"TESTon USDC allocation"}).inputValue(),"100.000001");
+  assert.match(await page.locator("#felix-trades").innerText(),/not transferred automatically/);
+  const downloadPromise=page.waitForEvent("download");
+  await page.getByRole("button",{name:"Download basket allocations"}).click();
+  const download=await downloadPromise;
+  const exported=JSON.parse(await readFile(await download.path(),"utf8"));
+  assert.equal(exported.index_sha256,hash);
+  assert.equal(JSON.stringify(exported).includes(key),false);
+  await page.setViewportSize({width:390,height:844});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,"basket must fit mobile viewport");
+  await page.locator("#basket-amount").fill("200");
+  assert.equal(await page.locator("#felix-trades").innerText(),"");
+  await page.locator("#basket-amount").fill("0");
+  await page.locator("#prepare-felix-trades").click();
+  assert.equal(handoffs.length,1,"invalid amounts must not prepare orders");
   await page.evaluate(()=>window.walletListeners.accountsChanged([]));
   assert.equal(await page.getByRole("button",{name:"Connect MetaMask",exact:true}).count(),1);
   assert.equal(await page.getByRole("button",{name:"Claim creator ownership",exact:true}).isDisabled(),true);
