@@ -1,5 +1,6 @@
 (function () {
   "use strict";
+  function mount() {
   const id = new URLSearchParams(window.location.search).get("index");
   if (!id) return;
   const api = "https://api.corbanu.com";
@@ -21,6 +22,8 @@
   const keyLabel = node("label", "Corbanu API key (for a private index or creator actions)", "field-label");
   const key = node("input");
   key.type = "password";
+  key.value = window.CorbanuIndexSession?.key || "";
+  delete window.CorbanuIndexSession;
   key.autocomplete = "off";
   key.id = "basket-api-key";
   keyLabel.htmlFor = key.id;
@@ -130,4 +133,7 @@
     status.textContent = `Estimate expires ${value.expires_at}. No trade was submitted.`;
   });
   void open();
+  }
+  window.addEventListener("corbanu:index-locked", mount);
+  mount();
 })();

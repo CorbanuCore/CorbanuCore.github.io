@@ -21,3 +21,18 @@ node --check assets/js/market-lens.js
 node tests/live_perp_client_test.mjs
 node tests/corbanu_index_contract_test.mjs
 ```
+
+The `/indexes/` builder uses `https://api.corbanu.com/v2/indexes`: load catalog,
+submit an authenticated preview, poll its durable job, review holdings and
+exclusions, then confirm the exact preview hash before locking. A preview link
+can be reopened with the owner's API key. Keys and pending request bodies stay
+in memory; retries in the same tab reuse the request ID. The basket view receives
+the key in memory when opened from the builder. No frontend action places a trade.
+
+Browser regression checks use synthetic API responses and never accept terms,
+spend model credits or place orders on a real account:
+
+```sh
+corepack pnpm exec playwright install chromium
+corepack pnpm test:index-browser
+```

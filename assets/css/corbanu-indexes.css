@@ -329,3 +329,17 @@ footer { display: grid; grid-template-columns: 1fr auto; gap: 2rem; padding: 2re
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .001ms !important; }
 }
+
+/* API builder controls share the existing index page typography and spacing. */
+#builder-settings { margin: 0; padding: 0; border: 0; min-width: 0; }
+#builder-api-key, #relevance-cutoff { width: 100%; padding: .8rem; background: var(--panel, #0c100d); color: inherit; border: 1px solid var(--line); font: inherit; }
+.check-label { display: flex; align-items: flex-start; gap: .7rem; margin: 1rem 0; line-height: 1.55; }
+.check-label input { flex: none; margin-top: .3rem; }
+#creator-disclosure p { margin-bottom: .9rem; }
+#catalog-status { margin-bottom: 1.25rem; }
+#result-exclusions { font-size: .85rem; }
+#open-basket { margin-top: 1rem; }
+.builder-shell button:not(.build-button) { min-height: 44px; padding: .7rem 1rem; margin: .4rem 0; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--ink); cursor: pointer; }
+.builder-shell button:not(.build-button):hover { border-color: var(--lime); }
+.builder-shell button:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+button:disabled { opacity: .5; cursor: not-allowed; }

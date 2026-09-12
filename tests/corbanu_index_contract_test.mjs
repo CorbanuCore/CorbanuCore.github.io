@@ -74,21 +74,4 @@ assert.throws(
   /whole number/,
 );
 
-const page = fs.readFileSync(new URL("../indexes/index.html", import.meta.url), "utf8");
-assert.match(page, /id="index-title"/);
-assert.match(page, /id="index-phrase"/);
-assert.match(page, /id="summary-title"/);
-assert.match(page, /placeholder="Enter an index name"/);
-assert.match(page, /placeholder="Describe the economic exposure this index should capture, including what qualifies a company and what should be excluded\."/);
-assert.doesNotMatch(page, /placeholder="[^"]*AI data center/i);
-assert.match(page, /value="fundamental" checked/);
-assert.match(page, /value="quarterly" selected/);
-assert.match(page, /value="70"/);
-assert.match(page, /Qwen 3\.8 27B — recommended and admitted/);
-assert.match(page, /Replay required before validity/);
-assert.match(page, /id="run-index"/);
-assert.match(page, /id="index-result"/);
-assert.match(page, /Top 1,000 SEC registrants by TTM revenue/);
-assert.doesNotMatch(page, /108-company|public demo/i);
-
 JSON.parse(fs.readFileSync(new URL("../assets/indexes/corbanu-index-request-v1.schema.json", import.meta.url), "utf8"));
