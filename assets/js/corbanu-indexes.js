@@ -1,5 +1,6 @@
 (function () {
   "use strict";
+  if (new URLSearchParams(window.location.search).has("index")) return;
 
   const contract = window.CorbanuIndexContract;
   const config = window.CorbanuIndexConfig || {};
