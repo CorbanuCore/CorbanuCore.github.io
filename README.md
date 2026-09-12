@@ -36,3 +36,5 @@ spend model credits or place orders on a real account:
 corepack pnpm exec playwright install chromium
 corepack pnpm test:index-browser
 ```
+
+MetaMask can connect from the initial index builder using EIP-6963 discovery. The selected account stays in memory across the preview-to-basket handoff; account changes invalidate ownership signing. Connecting alone does not authorize a transaction. Felix brokerage authentication, firm quotes and execution are still required for buying.

@@ -5,6 +5,18 @@
   if (!form) return;
   const el = id => document.getElementById(id);
   const api = "https://api.corbanu.com";
+  function walletStatus() {
+    const account = window.CorbanuWallet.account;
+    el("builder-connect-wallet").textContent = account ? "Change or reconnect MetaMask" : "Connect MetaMask";
+    el("builder-wallet-status").textContent = account ? `Connected: ${account}` : "MetaMask is not connected.";
+  }
+  window.addEventListener("corbanu:wallet-changed", () => { if (document.getElementById("builder-wallet-status")) walletStatus(); });
+  el("builder-connect-wallet").addEventListener("click", async () => {
+    el("builder-connect-wallet").disabled = true;
+    try { await window.CorbanuWallet.connect(); walletStatus(); }
+    catch (e) { el("builder-wallet-status").textContent = e.code === 4001 ? "Wallet connection was declined. You can try again." : e.message; }
+    finally { el("builder-connect-wallet").disabled = false; }
+  });
   let catalog = null, pending = null, busy = false, timer = null, preview = null, locked = null;
   let activeId = new URLSearchParams(window.location.search).get("preview");
   const names = {"corbanu/deepseek-v4.1-flash":"DeepSeek V4.1 Flash", "corbanu/glm-5.3":"GLM 5.3", "corbanu/glm-5.3-flash":"GLM 5.3 Flash"};

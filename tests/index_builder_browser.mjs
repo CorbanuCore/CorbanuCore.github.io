@@ -59,6 +59,24 @@ try {
   assert.equal(await page.locator("#deterministic").isDisabled(),true);
   assert.equal(await page.locator("#external-funds").isDisabled(),true);
   assert.equal(await page.locator("#model-choice").inputValue(),"corbanu/deepseek-v4.1-flash");
+  await page.locator("#builder-connect-wallet").click();
+  await page.waitForFunction(() => document.querySelector("#builder-wallet-status").textContent.includes("MetaMask browser"));
+  await page.evaluate(() => {
+    window.walletCalls=[]; window.walletListeners={}; window.walletDecline=true;
+    const provider={request:async args=>{
+      window.walletCalls.push(args);
+      if(args.method==="eth_requestAccounts" && window.walletDecline) {window.walletDecline=false;throw Object.assign(new Error("Declined"),{code:4001});}
+      if(args.method==="eth_requestAccounts" || args.method==="eth_accounts") return ["0x"+"1".repeat(40)];
+      if(args.method==="personal_sign") return "synthetic-signature";
+      throw new Error("Unexpected wallet action");
+    },on:(name,fn)=>{window.walletListeners[name]=fn;}};
+    window.dispatchEvent(new CustomEvent("eip6963:announceProvider",{detail:{info:{rdns:"io.metamask"},provider}}));
+  });
+  await page.locator("#builder-connect-wallet").click();
+  await page.waitForFunction(() => document.querySelector("#builder-wallet-status").textContent.includes("declined"));
+  await page.locator("#builder-connect-wallet").click();
+  await page.waitForFunction(() => document.querySelector("#builder-wallet-status").textContent.includes("Connected: 0x"));
+  assert.deepEqual(await page.evaluate(()=>window.walletCalls.map(c=>c.method)),["eth_requestAccounts","eth_requestAccounts"]);
   await page.locator("#builder-api-key").fill(key);
   await page.locator("#index-title").fill("Synthetic theme");
   await page.locator("#index-phrase").fill(payload.request.mandate.phrase);
@@ -96,6 +114,11 @@ try {
   assert.equal(await page.evaluate(() => localStorage.length + sessionStorage.length),0);
   assert.equal(await page.evaluate(() => window.CorbanuIndexSession),undefined);
   assert.equal(creates.length,2);
+  assert.equal(await page.getByRole("button",{name:"Connected: 0x"+"1".repeat(40),exact:true}).count(),1);
+  await page.evaluate(()=>window.walletListeners.accountsChanged([]));
+  assert.equal(await page.getByRole("button",{name:"Connect MetaMask",exact:true}).count(),1);
+  assert.equal(await page.getByRole("button",{name:"Claim creator ownership",exact:true}).isDisabled(),true);
+  assert.equal(await page.evaluate(()=>window.walletCalls.some(c=>c.method==="personal_sign"||c.method==="eth_sendTransaction")),false);
 
   // Reloaded preview asks for a key and retrieves the job without creating it again.
   const resumed = await context.newPage(); resumed.on("pageerror",e=>errors.push(e.message));

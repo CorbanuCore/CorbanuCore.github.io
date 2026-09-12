@@ -6,7 +6,7 @@
   const api = "https://api.corbanu.com";
   const main = document.querySelector("main");
   if (!main) return;
-  let wallet = null;
+  let wallet = window.CorbanuWallet.account;
   let current = null;
   function node(tag, text, className) {
     const el = document.createElement(tag);
@@ -29,6 +29,7 @@
   keyLabel.htmlFor = key.id;
   const load = node("button", "Open index");
   const connect = node("button", "Connect MetaMask");
+  if (wallet) connect.textContent = `Connected: ${wallet}`;
   const claim = node("button", "Claim creator ownership");
   claim.disabled = true;
   const amountLabel = node("label", "Basket amount in USDC", "field-label");
@@ -103,22 +104,19 @@
   }
   handle(load, open);
   handle(connect, async () => {
-    if (!window.ethereum) throw new Error("MetaMask is not available in this browser.");
-    const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
-    wallet = accounts[0] || null;
+    wallet = await window.CorbanuWallet.connect();
     connect.textContent = wallet ? `Connected: ${wallet}` : "Connect MetaMask";
     claim.disabled = !wallet || !!current?.claim;
   });
-  window.ethereum?.on?.("accountsChanged", (accounts) => {
-    wallet = accounts[0] || null;
+  window.addEventListener("corbanu:wallet-changed", () => {
+    wallet = window.CorbanuWallet.account;
     connect.textContent = wallet ? `Connected: ${wallet}` : "Connect MetaMask";
     claim.disabled = !wallet || !!current?.claim;
   });
   handle(claim, async () => {
     if (!wallet) throw new Error("Connect MetaMask first.");
     const challenge = await request(`/v2/indexes/${encodeURIComponent(id)}/claim-challenge`, {wallet});
-    const message = "0x" + Array.from(new TextEncoder().encode(challenge.message), b => b.toString(16).padStart(2, "0")).join("");
-    const signature = await window.ethereum.request({method: "personal_sign", params: [message, wallet]});
+    const signature = await window.CorbanuWallet.signMessage(challenge.message, wallet);
     await request(`/v2/indexes/${encodeURIComponent(id)}/claim`, {nonce: challenge.nonce, signature});
     await open();
   });

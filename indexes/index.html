@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://corbanu.com/indexes/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=6">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=7">
   <title>Corbanu Indexes — Make your own index</title>
 </head>
 <body>
@@ -35,6 +35,12 @@
       <button id="reload-catalog" type="button" hidden>Retry loading options</button>
       <div class="builder-grid">
         <form class="builder-form" id="index-builder">
+          <section class="form-step" aria-label="Wallet connection">
+            <h2>Your wallet</h2>
+            <button id="builder-connect-wallet" type="button">Connect MetaMask</button>
+            <p id="builder-wallet-status" role="status">Connect now to carry your wallet into the basket. Connecting does not sign a transaction.</p>
+            <p class="field-note">Execution on Corbanu is not available yet. Felix requires a funded spot-equity account and a signed firm quote. <a href="https://trade.usefelix.xyz/equities" target="_blank" rel="noopener noreferrer">Open Felix spot equities →</a></p>
+          </section>
           <fieldset class="form-step">
             <legend class="step-head"><span class="step-number">01</span><span><h2>Your Corbanu account</h2></span></legend>
             <label class="field-label" for="builder-api-key">Corbanu API key</label>
@@ -116,7 +122,8 @@
     <div class="footnote">Creator-defined market opinions. Token representations provide economic exposure to underlying securities. Returns are not guaranteed.</div>
   </footer>
 
-  <script src="/assets/js/corbanu-index-builder.js?v=1"></script>
-  <script src="/assets/js/corbanu-index-basket.js?v=2"></script>
+  <script src="/assets/js/corbanu-index-wallet.js?v=1"></script>
+  <script src="/assets/js/corbanu-index-builder.js?v=2"></script>
+  <script src="/assets/js/corbanu-index-basket.js?v=3"></script>
 </body>
 </html>
