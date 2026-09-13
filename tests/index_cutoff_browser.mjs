@@ -12,10 +12,6 @@ await context.route('https://api.corbanu.com/**',async route=>{
  const r=route.request(),path=new URL(r.url()).pathname,send=json=>route.fulfill({json});
  if(path.endsWith('/session'))return send({authenticated:true});
  if(path.endsWith('/catalog'))return send(catalog);
- if(path==='/v2/indexes/previews/source/reweight'){
-  const body=r.postDataJSON();assert.deepEqual(body,{preview_sha256:hash,relevance_cutoff:70});requests.push({body,id:r.headers()['x-corbanu-request-id']});
-  if(requests.length===1)return route.abort('failed');return send({id:'revised',status:'queued',progress:{scored:2,total:2}});
- }
  if(path==='/v2/indexes/previews/source'||path==='/v2/indexes/previews/revised'){
   const revised=path.endsWith('/revised');return send({id:revised?'revised':'source',status:'completed',progress:{scored:2,total:2},preview_sha256:revised?newHash:hash,preview:{payload:payload(revised?70:20)}});
  }
@@ -24,14 +20,12 @@ await context.route('https://api.corbanu.com/**',async route=>{
 try {
  await page.goto('https://corbanu.com/indexes/?preview=source');await page.locator('#index-result').waitFor({state:'visible'});
  assert.match(await page.locator('#result-construction').innerText(),/Minimum relevance: 20\/100/);assert.equal(await page.locator('.holding-detail').count(),2);
- await page.locator('#adjust-cutoff summary').click();await page.locator('#reweight-cutoff').fill('70');await page.locator('#reweight-preview').click();
- await page.waitForFunction(()=>document.querySelector('#form-error').textContent.includes('Retry to apply'));
- assert.equal(await page.locator('#lock-index').isDisabled(),true);await page.locator('#reweight-preview').click();
- await page.waitForURL('**/?preview=revised');await page.locator('#index-result').waitFor({state:'visible'});
- assert.deepEqual(requests[0],requests[1]);assert.match(await page.locator('#result-construction').innerText(),/Minimum relevance: 70\/100/);
+ assert.equal(await page.locator('#relevance-cutoff, #reweight-cutoff, #adjust-cutoff').count(),0);
+ await page.goto('https://corbanu.com/indexes/?preview=revised');await page.locator('#index-result').waitFor({state:'visible'});
+ assert.match(await page.locator('#result-construction').innerText(),/Minimum relevance: 70\/100/);
  assert.equal(await page.locator('.holding-detail').count(),1);assert.match(await page.locator('.holding-detail summary').innerText(),/HIGH/);assert.match(await page.locator('.holding-detail summary').innerText(),/100.00%/);
  assert.equal(await page.locator('#lock-index').isEnabled(),true);
  await page.reload();await page.locator('#index-result').waitFor({state:'visible'});assert.match(await page.locator('#result-construction').innerText(),/70\/100/);
  await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);assert.deepEqual(errors,[]);
- console.log('Passed: saved cutoff is visible; 25-score/88-confidence holding disappears at 70; idempotent recovery reuses the same request; revised preview survives reload and fits mobile.');
+ console.log('Passed: no website cutoff controls; historical API cutoffs remain accurate; 25-score/88-confidence holding excluded at 70; saved previews reload and fit mobile.');
 }finally{await browser.close();}

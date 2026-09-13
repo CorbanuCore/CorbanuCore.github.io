@@ -155,3 +155,5 @@ Index errors use `{"error":"message"}`. Other Corbanu products may use a structu
 - **429 / transport / transient 5xx**: back off; honor `Retry-After` when present. Retry a POST with its persisted ID and identical body, or continue polling the saved preview ID. A capability-specific 503 such as unavailable deterministic replay requires that capability to become available.
 
 Only send the Corbanu credential to https://api.corbanu.com. Keep keys out of URLs, committed request files, logs and model prompts. Keep user inputs and index artifacts private until the user authorizes publication.
+
+Website-created previews always use a minimum relevance of 70/100. Custom cutoffs are available only through the API: specify `relevance_cutoff` in a preview request, or use the reweight endpoint to apply a different cutoff to saved scores. Existing previews retain their original cutoff.

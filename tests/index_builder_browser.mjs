@@ -137,13 +137,31 @@ try {
   await page.locator("#index-title").fill("Synthetic theme");
   await page.locator("#index-phrase").fill(payload.request.mandate.phrase);
   await page.locator("#weighting-choice").selectOption("market_cap_rank");
-  await page.locator("#relevance-cutoff").fill("68");
+  assert.equal(await page.locator("#relevance-cutoff, #reweight-cutoff").count(),0);
   await page.locator("#reasoning-effort").selectOption("max");
   await page.locator("#prompt-choice").selectOption("custom");
   await page.locator("#custom-prompt").fill("Use this synthetic scoring instruction.");
   await page.locator("#creator-conflicts").fill("None; synthetic test.");
   await page.locator("#accept-disclosure").check();
+  // Submission must freeze before a slow sign-in, including duplicate submissions.
+  await page.evaluate(() => {
+    const original = window.CorbanuIndexUI.signIn;
+    window.CorbanuIndexUI.signIn = async key => {
+      window.signInStarted = true;
+      await new Promise(resolve => { window.releaseSignIn = resolve; });
+      window.CorbanuIndexUI.signIn = original;
+      return original(key);
+    };
+  });
   await page.locator("#run-index").click();
+  await page.waitForFunction(() => window.signInStarted);
+  assert.equal(await page.locator("#index-title").isDisabled(),true);
+  assert.equal(await page.locator("#run-index").isDisabled(),true);
+  await page.evaluate(() => {
+    document.querySelector("#index-title").value = "Changed after submit";
+    document.querySelector("#index-builder").dispatchEvent(new Event("submit", {cancelable:true}));
+    window.releaseSignIn();
+  });
   await page.waitForFunction(() => document.querySelector("#run-index").textContent === "Retry same preview");
   assert.equal(await page.locator("#index-title").isDisabled(),true);
   await page.locator("#run-index").click();
@@ -156,8 +174,9 @@ try {
   await page.locator("#job-retry-detail summary").click();
   assert.match(await page.locator("#job-retry-error").innerText(),/HTTP 429/);
   assert.deepEqual(creates[0],creates[1]);
+  assert.equal(creates[1].body.mandate.title,"Synthetic theme");
   assert.equal(creates[1].body.weighting,"market_cap_rank");
-  assert.equal(creates[1].body.relevance_cutoff,68);
+  assert.equal(creates[1].body.relevance_cutoff,70);
   assert.equal(creates[1].body.reasoning_effort,"max");
   assert.equal(creates[1].body.prompt,"Use this synthetic scoring instruction.");
   assert.equal(creates[1].body.disclosure.sha256,hash);
