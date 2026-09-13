@@ -186,8 +186,8 @@
         <span class="section-number">03</span>
         <div>
           <p class="kicker">API reference</p>
-          <h2 id="quickstart-title">Request inference and research.</h2>
-          <p>Corbanu exposes OpenAI-compatible Chat Completions, Anthropic-compatible Messages, account telemetry, and durable Deep Research jobs. The live model catalog is authoritative for model IDs, capabilities, privacy, and pricing.</p>
+          <h2 id="quickstart-title">Request inference, research and indexes.</h2>
+          <p>Corbanu exposes OpenAI-compatible Chat Completions, Anthropic-compatible Messages, account telemetry, durable Deep Research jobs, and thematic index creation. The live model catalog is authoritative for model IDs, capabilities, privacy, and pricing.</p>
         </div>
       </div>
 
@@ -203,6 +203,7 @@
         <a href="#inference">Inference</a>
         <a href="#deep-research">Deep Research</a>
         <a href="#indexes">Index creation</a>
+        <a href="/api/indexes.md">Agent guide (Markdown)</a>
         <a href="#errors">Errors</a>
       </nav>
 
@@ -402,6 +403,10 @@ curl -sS \
 
         <section class="reference-block" id="indexes" aria-labelledby="indexes-api-title">
           <div class="reference-head"><div><span class="reference-index">04 / Index creation</span><h3 id="indexes-api-title">Create once. Review weights. Retrieve the index.</h3></div><p>Create a thematic basket from frozen transcripts and fundamentals using the Corbanu API. The website uses these same calls. <a href="https://api.corbanu.com/v2/indexes/openapi.json">Download OpenAPI →</a></p></div>
+          <div class="docs-callout" id="index-agents"><strong>Agents: use your existing Corbanu balance and API key</strong><p>Send <code>Authorization: Bearer $CORBANU_API_KEY</code> to <code>https://api.corbanu.com</code>. The same key works for account balance, preview creation, status, results and cutoff revisions. These calls need no MetaMask connection, browser cookie, <code>Origin</code> header or separate DeepSeek key.</p><p><a href="/api/indexes.md">Agent quickstart (Markdown) →</a> · <a href="https://api.corbanu.com/v2/indexes/openapi.json">OpenAPI schema →</a> · <a href="/api/examples/index_agent.py" download>Download Python start/resume example →</a> · <a href="/llms.txt">Agent discovery →</a></p></div>
+          <article class="code-panel"><div class="code-heading"><span>0 / Check your existing API account</span><button type="button" data-copy-target="#code-index-account">Copy</button></div><pre id="code-index-account"><code>curl --fail-with-body -sS https://api.corbanu.com/v1/account \
+  -H "Authorization: Bearer $CORBANU_API_KEY" &gt; account.json
+jq '{walletAddress, balance: .corbanuApi}' account.json</code></pre><p class="docs-note"><code>availableMicrousd</code> is the spendable balance after reservations; 1,000,000 microusd = $1. Read index <code>pricing</code> from the catalog. Preview, reweight and lock currently charge $0, so no minimum deposit or legacy Plan subscription is required. Corbanu API credit does not fund stock purchases.</p></article>
           <div class="docs-callout"><strong>Durable previews and explicit confirmation</strong><p>Choose the model, prompt, reasoning, weighting and relevance cutoff. DeepSeek V4.1 Flash runs with up to 200 concurrent company requests. Completed company scores survive retries. Preview and lock currently charge $0. Inputs stay private until you explicitly publish.</p></div>
           <div class="docs-callout"><strong>Change the cutoff using saved scores</strong><p>The review page shows the effective minimum relevance. To change it without another model run, send <code>POST /v2/indexes/previews/{id}/reweight</code> with your Corbanu key, a new <code>X-Corbanu-Request-Id</code>, and <code>{"preview_sha256":"&lt;current hash&gt;","relevance_cutoff":70}</code>. Poll the returned <code>status_url</code> for a separate revised preview. Its weights use relevance scores at or above the cutoff; confidence is a separate value. The original preview stays saved.</p></div>
           <div class="code-grid">
@@ -457,6 +462,7 @@ curl --fail-with-body -sS \
           </div>
           <div class="response-schema"><article><span>Signed output</span><p><code>payload.request</code>, <code>scores</code> with confidence and explanations, exact <code>construction.weights</code>, exclusions, token contracts, source provenance and verification status. Weight units sum to 10<sup>12</sup>. Locking signs and pins an encrypted copy on IPFS.</p></article><article><span>Request behavior</span><p>The same request ID and body resume the same job. A changed body returns 409. Retrieve a result before completion and the API returns 409. Deterministic external-fund requests return 503 while qualified replay is unavailable.</p></article></div>
           <div class="table-wrap"><table><thead><tr><th>Method</th><th>Endpoint</th><th>Purpose</th></tr></thead><tbody>
+            <tr><td>POST</td><td><code>/v2/indexes/previews/{id}/reweight</code></td><td>Build a new preview from all saved scores with an explicit cutoff and source hash; no new inference.</td></tr>
             <tr><td>GET</td><td><code>/v2/indexes</code></td><td>Your saved previews and locked baskets; owner authentication required.</td></tr>
             <tr><td>GET</td><td><code>/v2/indexes/published</code></td><td>Public index leaderboard; newest published records first.</td></tr>
             <tr><td>GET</td><td><code>/v2/indexes/published/{id}</code></td><td>Full published artifact, weights and scoring explanations.</td></tr>
