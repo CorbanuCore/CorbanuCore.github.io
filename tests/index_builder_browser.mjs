@@ -29,6 +29,17 @@ const payload = {request:{mandate:{title:"Synthetic theme",phrase:"A synthetic t
 await context.route("https://api.corbanu.com/**", async route => {
   const req = route.request(), path = new URL(req.url()).pathname;
   const send = (value, status=200) => route.fulfill({status,contentType:"application/json",body:JSON.stringify(value)});
+  if (path === "/v2/indexes") {
+    if (req.headers().authorization !== `Bearer ${key}`) return send({error:"Invalid API key"},401);
+    return send({limit:100,indexes:[{id:"fixture-preview",title:"Saved preview <test>",mandate:"Saved private mandate",state:"completed",public:false,
+      progress:{scored:452,total:452},created_at:"2026-09-13T00:00:00Z",page_url:"https://corbanu.com/indexes/?preview=fixture-preview",result_available:true},
+      {id:"fixture-locked",title:"Locked basket",mandate:"Another private mandate",state:"locked",public:false,
+      progress:{scored:452,total:452},created_at:"2026-09-13T00:00:00Z",page_url:"https://corbanu.com/indexes/?index=fixture-locked",result_available:true}]});
+  }
+  if (path === "/v1/indexes/fixture-preview/result") {
+    assert.equal(req.headers().authorization,`Bearer ${key}`);
+    return send({payload});
+  }
   if (path.endsWith("/catalog")) return catalogUnavailable ? send({error:"catalog unavailable"},503) : send(catalog);
   if (path === "/v2/indexes/previews") {
     creates.push({body:req.postDataJSON(),id:req.headers()["x-corbanu-request-id"],key:req.headers().authorization});
@@ -63,6 +74,30 @@ await context.route("https://api.corbanu.com/**", async route => {
   throw new Error("Unexpected request: " + path);
 });
 try {
+  const mine=await context.newPage(); mine.on("pageerror",e=>errors.push(e.message));
+  await mine.goto(origin+"/indexes/mine/");
+  await mine.locator("#my-indexes-key").fill("invalid");
+  await mine.locator("#load-my-indexes").click();
+  await mine.waitForFunction(()=>document.querySelector("#my-indexes-status").textContent==="Invalid API key");
+  await mine.locator("#my-indexes-key").fill(key);
+  await mine.locator("#load-my-indexes").click();
+  await mine.getByRole("link",{name:"Open basket →",exact:true}).waitFor();
+  assert.equal(await mine.getByRole("link",{name:"Open preview →",exact:true}).getAttribute("href"),"https://corbanu.com/indexes/?preview=fixture-preview");
+  assert.equal(await mine.getByRole("link",{name:"Open basket →",exact:true}).getAttribute("href"),"https://corbanu.com/indexes/?index=fixture-locked");
+  assert.equal(await mine.locator(".saved-index-card").count(),2);
+  assert.equal(await mine.getByRole("heading",{name:"Saved preview <test>",exact:true}).count(),1);
+  assert.equal(await mine.evaluate(()=>localStorage.length+sessionStorage.length),0);
+  const savedDownload=mine.waitForEvent("download");
+  await mine.getByRole("button",{name:"Download saved result",exact:true}).first().click();
+  const savedResult=JSON.parse(await readFile(await (await savedDownload).path(),"utf8"));
+  assert.deepEqual(savedResult.payload,payload);
+  assert.equal(JSON.stringify(savedResult).includes(key),false);
+  await mine.setViewportSize({width:390,height:844});
+  assert.equal(await mine.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false);
+  if (process.env.CORBANU_MY_INDEXES_SCREENSHOT) await mine.screenshot({path:process.env.CORBANU_MY_INDEXES_SCREENSHOT,fullPage:true});
+  await mine.locator("#clear-my-indexes").click();
+  assert.equal(await mine.locator("#my-indexes-key").inputValue(),"");
+  assert.equal(await mine.locator(".saved-index-card").count(),0);
   const page = await context.newPage();
   page.on("pageerror", e => errors.push(e.message));
   await page.goto(origin + "/indexes/");

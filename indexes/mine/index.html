@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#030403">
+  <title>My indexes — Corbanu</title>
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=9">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/"><img src="/assets/corbanu-logo.webp" alt="" width="45" height="45">Corbanu</a>
+    <nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/indexes/">Create index</a><a href="/indexes/mine/" aria-current="page">My indexes</a><a href="/indexes/library/">Public library</a></nav>
+  </header>
+  <main class="builder-shell">
+    <h1>My indexes</h1>
+    <p>Reopen your saved previews and locked baskets. They stay private unless you publish them.</p>
+    <form id="my-indexes-form" class="builder-form">
+      <label class="field-label" for="my-indexes-key">Corbanu API key</label>
+      <input id="my-indexes-key" type="password" required autocomplete="off" spellcheck="false" placeholder="Use the account that created your indexes">
+      <p class="field-note">Your key stays in memory for this visit. Wallet connection alone does not unlock private indexes.</p>
+      <div><button type="submit" id="load-my-indexes">Load my indexes</button> <button type="button" id="clear-my-indexes">Clear session</button></div>
+    </form>
+    <p id="my-indexes-status" role="status">Enter your API key to see your saved indexes.</p>
+    <section id="my-indexes-list" aria-label="Saved indexes"></section>
+    <p class="field-note">Previews are saved in your account. Locking pins an encrypted copy on IPFS and creates the basket page. Public publication is a separate step.</p>
+    <p><a href="/indexes/">Create another index →</a></p>
+  </main>
+  <script src="/assets/js/corbanu-my-indexes.js?v=1"></script>
+</body>
+</html>
