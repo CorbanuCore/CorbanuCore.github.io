@@ -4,7 +4,6 @@
   const node = (tag, text = "", className = "") => {
     const el = document.createElement(tag); el.textContent = text; el.className = className; return el;
   };
-  let signedKey = null;
   async function request(path, body, key, requestId) {
     const headers = {};
     if (key) headers.Authorization = `Bearer ${key}`;
@@ -18,13 +17,15 @@
     return value;
   }
   async function signIn(key) {
-    if (!key || key === signedKey) return;
-    await request("/v2/indexes/session", {}, key); signedKey = key;
+    if (!key) return;
+    // Always refresh the durable session when a key is supplied. A page-local
+    // cache cannot tell whether the cookie expired or another tab signed out.
+    await request("/v2/indexes/session", {}, key);
   }
   async function session() { try { return (await request("/v2/indexes/session")).authenticated === true; } catch { return false; } }
   async function signOut() {
     const response = await fetch(api+"/v2/indexes/session", {method:"DELETE",credentials:"include",cache:"no-store"});
-    if (!response.ok) throw new Error("Sign out failed. Try again."); signedKey = null;
+    if (!response.ok) throw new Error("Sign out failed. Try again.");
   }
   function download(value, filename = "corbanu-index.json") {
     const url = URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:"application/json"}));

@@ -21,6 +21,17 @@
   let activeId = new URLSearchParams(window.location.search).get("preview");
   const names = {"corbanu/deepseek-v4.1-flash":"DeepSeek V4.1 Flash", "corbanu/glm-5.3":"GLM 5.3", "corbanu/glm-5.3-flash":"GLM 5.3 Flash"};
   function error(message = "") { el("form-error").textContent = message; }
+  function signedIn(active) {
+    document.body.classList.toggle("index-signed-in",active);
+    el("builder-api-key").required=!active;
+    el("builder-sign-out").hidden=!active;
+    if(active) el("catalog-status").textContent="Signed in to Corbanu. Your sign-in is remembered on this browser.";
+  }
+  el("builder-sign-out").addEventListener("click",async()=>{
+    try {await window.CorbanuIndexUI.signOut();clearTimeout(timer);el("builder-api-key").value="";signedIn(false);
+      el("catalog-status").textContent="Signed out. Your saved indexes remain in your account.";
+    } catch(e) {error(e.message);}
+  });
   function controls() {
     el("builder-settings").disabled = !catalog || busy || !!activeId || !!pending;
     el("run-index").disabled = !catalog || busy || !!preview;
@@ -92,8 +103,7 @@
     } catch (e) { el("catalog-status").textContent = e.message; el("reload-catalog").hidden = false; }
     controls();
     if (await window.CorbanuIndexUI.session()) {
-      el("builder-api-key").required=false;document.body.classList.add("index-signed-in");
-      el("catalog-status").textContent="Signed in to Corbanu.";
+      signedIn(true);
       if(activeId) await poll();
     } else if(activeId) {
       el("builder-api-key").focus();
@@ -132,8 +142,8 @@
     const messages = [`${value.progress?.scored || 0} / ${value.progress?.total || 0} companies scored.`];
     const run = value.execution_runs?.at(-1);
     if (value.status === "running") {
-      messages.push(Number.isInteger(run?.concurrency) ? `Scoring with up to ${run.concurrency} parallel requests.` : "Scoring is running.");
-      if (value.error) messages.push("Scoring resumed after an earlier error. Saved scores are being reused.");
+      messages.push(value.phase === "preparing_rubric" ? "Preparing the scoring rubric before company scoring starts." : value.phase === "loading_inputs" ? "Loading the saved source packet." : Number.isInteger(run?.concurrency) ? `Scoring with up to ${run.concurrency} parallel requests.` : "Scoring is running.");
+      if (value.error) messages.push(value.progress?.scored > 0 ? "Scoring resumed after an earlier error. Saved scores are being reused." : "Retrying after an earlier error. No company scores have completed yet.");
     } else if (value.status === "queued") {
       messages.push(value.error ? "Paused before an automatic retry. Completed scores are saved." : "Waiting for a scoring worker.");
     }
@@ -173,9 +183,9 @@
     try {
       const value = await request(`/v2/indexes/previews/${encodeURIComponent(id)}`);
       if (id !== activeId) return;
-      error(); render(value);document.body.classList.add("index-signed-in");
+      error(); render(value);signedIn(true);
       if (["queued", "running"].includes(value.status)) timer = setTimeout(() => void poll(), 5000);
-    } catch (e) { if (id === activeId) error(`${e.message} Use Refresh status to resume; no new preview will be created.`); }
+    } catch (e) { if (id === activeId) {if(e.status===401)signedIn(false);error(`${e.message} Use Refresh status to resume; no new preview will be created.`);} }
     controls();
   }
   form.addEventListener("input", event => {

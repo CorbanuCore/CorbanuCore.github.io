@@ -81,7 +81,10 @@
     const response = await fetch(api + path, {method: body === undefined ? "GET" : "POST", headers,
       ...(body !== undefined ? {body: JSON.stringify(body)} : {}), credentials:"include",cache: "no-store"});
     const result = await response.json();
-    if (!response.ok) { const e=new Error(result.error || `Request failed (${response.status})`);e.status=response.status;throw e; }
+    if (!response.ok) {
+      if(response.status===401 && authenticated){keyLabel.hidden=false;key.hidden=false;load.hidden=false;}
+      const e=new Error(result.error || `Request failed (${response.status})`);e.status=response.status;throw e;
+    }
     return result;
   }
   function render(value, published) {

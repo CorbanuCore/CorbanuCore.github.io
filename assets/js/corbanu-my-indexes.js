@@ -15,10 +15,11 @@
     await window.CorbanuIndexUI.signIn(credential);
     const response = await fetch(api + path, {headers:credential ? {Authorization:`Bearer ${credential}`} : {},credentials:"include",cache:"no-store"});
     const value = await response.json();
-    if (!response.ok) throw new Error(value.error || `Request failed (${response.status})`);
+    if (!response.ok) {if(response.status===401)signedIn(false);throw new Error(value.error || `Request failed (${response.status})`);}
     return value;
   }
-  function reset() { generation++; list.replaceChildren(); status.textContent = "Enter your API key to see your saved indexes."; load.disabled = false; }
+  function signedIn(active) {key.required=!active;document.getElementById("my-indexes-sign-in").hidden=active;document.getElementById("clear-my-indexes").hidden=!active;}
+  function reset() { generation++; signedIn(false); list.replaceChildren(); status.textContent = "Enter your API key to see your saved indexes."; load.disabled = false; }
   key.addEventListener("input", reset);
   document.getElementById("clear-my-indexes").addEventListener("click", async () => { try { await window.CorbanuIndexUI.signOut(); key.value = ""; reset(); } catch(e) { status.textContent=e.message; } });
   form.addEventListener("submit", async event => {
@@ -30,6 +31,7 @@
       const data = await request("/v2/indexes", credential);
       if (current !== generation) return;
       if (!Array.isArray(data.indexes)) throw new Error("Invalid saved-index response.");
+      signedIn(true);
       for (const index of data.indexes) {
         const card = node("article", "", "saved-index-card");
         card.append(node("h2", index.title), node("p", index.mandate));
@@ -73,5 +75,5 @@
     } catch (e) { if (current === generation) { list.replaceChildren(); status.textContent = e.message || "Could not load your indexes."; } }
     finally { if (current === generation) load.disabled = false; }
   });
-  void window.CorbanuIndexUI.session().then(active => { if(active) { key.required=false; form.requestSubmit(); } });
+  void window.CorbanuIndexUI.session().then(active => { signedIn(active);if(active) form.requestSubmit(); });
 })();

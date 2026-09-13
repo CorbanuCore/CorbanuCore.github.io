@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://corbanu.com/indexes/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=10">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=11">
   <title>Corbanu Indexes — Make your own index</title>
 </head>
 <body>
@@ -32,6 +32,7 @@
     </div></section>
     <div class="builder-shell" id="builder">
       <p id="catalog-status" role="status">Loading available models and prompts…</p>
+      <button id="builder-sign-out" type="button" hidden>Sign out</button>
       <button id="reload-catalog" type="button" hidden>Retry loading options</button>
       <div class="builder-grid">
         <form class="builder-form" id="index-builder">
@@ -45,7 +46,7 @@
             <legend class="step-head"><span class="step-number">01</span><span><h2>Your Corbanu account</h2></span></legend>
             <label class="field-label" for="builder-api-key">Corbanu API key</label>
             <input id="builder-api-key" type="password" autocomplete="off" spellcheck="false" required placeholder="Enter your Corbanu API key">
-            <p class="field-note">Your key stays in memory. Sign-in uses a secure one-hour session so you can navigate between indexes. <a href="/api/">Get a key or top up your account →</a></p>
+            <p class="field-note">Sign in once on this browser. Your secure session lasts 30 days and renews as you use indexes; your API key is never saved in browser storage. <a href="/api/">Get a key or top up your account →</a></p>
           </fieldset>
           <fieldset id="builder-settings" disabled>
             <fieldset class="form-step">
@@ -125,10 +126,10 @@
     <div class="footnote">Creator-defined market opinions. Token representations provide economic exposure to underlying securities. Returns are not guaranteed.</div>
   </footer>
 
-  <script src="/assets/js/corbanu-index-ui.js?v=1"></script>
+  <script src="/assets/js/corbanu-index-ui.js?v=2"></script>
   <script src="/assets/js/corbanu-index-wallet.js?v=2"></script>
   <script src="/assets/js/corbanu-index-felix.js?v=1"></script>
-  <script src="/assets/js/corbanu-index-builder.js?v=4"></script>
-  <script src="/assets/js/corbanu-index-basket.js?v=6"></script>
+  <script src="/assets/js/corbanu-index-builder.js?v=5"></script>
+  <script src="/assets/js/corbanu-index-basket.js?v=7"></script>
 </body>
 </html>

@@ -30,9 +30,21 @@ await context.route('https://api.corbanu.com/**',async route=>{
 await page.addInitScript(wallet=>{window.ethereum={isMetaMask:true,on(){},request:async({method})=>{if(method==='personal_sign')return 'fixture-signature';return [wallet];}};},wallet);
 try{
  await page.goto('https://corbanu.com/indexes/mine/');await page.locator('#my-indexes-key').fill(key);await page.locator('#load-my-indexes').click();
+ await page.locator('.saved-index-card').waitFor();
+ assert.equal(await page.locator('#my-indexes-key').isVisible(),false);
+ // Supplying the same key again restores a session lost outside this page.
+ session=false;await page.evaluate(key=>window.CorbanuIndexUI.signIn(key),key);assert.equal(session,true);
+ await page.reload();await page.locator('.saved-index-card').waitFor();
+ assert.equal(await page.locator('#my-indexes-key').inputValue(),'');
  await page.getByRole('link',{name:'Open preview →',exact:true}).click();
  await page.getByRole('button',{name:'Confirm holdings and lock index',exact:true}).waitFor();
  assert.equal(await page.locator('#builder-api-key').inputValue(),'');assert.equal(creates,0);
+ // Expiry on a loaded preview reveals recovery without creating a new job.
+ session=false;await page.locator('#refresh-preview').click();await page.locator('#builder-api-key').waitFor({state:'visible'});
+ await page.locator('#builder-api-key').fill(key);await page.locator('#refresh-preview').click();
+ await page.waitForFunction(()=>document.body.classList.contains('index-signed-in'));
+ await page.reload();await page.locator('#index-result').waitFor({state:'visible'});
+ assert.equal(await page.locator('#builder-api-key').inputValue(),'');
  await page.locator('.holding-detail summary').click();await page.getByText('A saved scoring explanation.',{exact:true}).waitFor();
  await page.locator('#lock-index').click();await page.locator('#open-basket').click();
  await page.getByRole('button',{name:'Connect MetaMask',exact:true}).click();
