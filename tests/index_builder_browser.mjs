@@ -136,7 +136,7 @@ try {
   await page.locator("#builder-api-key").fill(key);
   await page.locator("#index-title").fill("Synthetic theme");
   await page.locator("#index-phrase").fill(payload.request.mandate.phrase);
-  await page.locator("#weighting-choice").selectOption("market_cap_rank");
+  assert.equal(await page.locator("#weighting-choice").inputValue(),"market_cap_rank");
   assert.equal(await page.locator("#relevance-cutoff, #reweight-cutoff").count(),0);
   await page.locator("#reasoning-effort").selectOption("max");
   await page.locator("#prompt-choice").selectOption("custom");

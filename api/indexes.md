@@ -157,3 +157,5 @@ Index errors use `{"error":"message"}`. Other Corbanu products may use a structu
 Only send the Corbanu credential to https://api.corbanu.com. Keep keys out of URLs, committed request files, logs and model prompts. Keep user inputs and index artifacts private until the user authorizes publication.
 
 Website-created previews always use a minimum relevance of 70/100. Custom cutoffs are available only through the API: specify `relevance_cutoff` in a preview request, or use the reweight endpoint to apply a different cutoff to saved scores. Existing previews retain their original cutoff.
+
+Website creation defaults to `market_cap_rank`, the approved linear rank method. To revise an existing preview without inference, include `"weighting":"market_cap_rank"` alongside `preview_sha256` and `relevance_cutoff` in `POST /v2/indexes/previews/{id}/reweight`. Omitted weighting preserves the source method. Raw `market_cap` remains available explicitly.

@@ -70,11 +70,11 @@
               <legend class="step-head"><span class="step-number">03</span><span><h2>Choose the construction rules</h2></span></legend>
               <div class="two-fields">
                 <div><label class="field-label" for="weighting-choice">Weighting</label><select id="weighting-choice" required>
-                  <option value="">Select a weighting rule</option><option value="market_cap">Market capitalization</option><option value="market_cap_rank">Market capitalization rank</option>
+                  <option value="market_cap_rank" selected>Market-cap rank · balanced by company size</option><option value="market_cap">Raw market cap · concentrated in the largest companies</option>
                 </select></div>
                 <p class="field-note" id="website-relevance">Minimum relevance: <strong>70/100</strong>. Only companies scoring at least 70 qualify. Confidence is separate.</p>
               </div>
-              <p class="field-note">Market-cap weights use company capitalization; rank weights give the largest company N units, then N−1 down to 1. Qualifying names with missing capitalization are disclosed as exclusions. This creates a fixed snapshot; automatic rebalancing is not available.</p>
+              <p class="field-note">The default rank weights give the largest company N units, then N−1 down to 1. For 47 holdings, the largest weight is 4.17%. Raw market-cap weighting instead allocates in proportion to capitalization and can be highly concentrated. Qualifying names with missing capitalization are disclosed as exclusions. This creates a fixed snapshot; automatic rebalancing is not available.</p>
               <label class="check-label"><input id="deterministic" type="checkbox"> Require deterministic replay</label>
               <label class="check-label"><input id="external-funds" type="checkbox"> Allow other users to put on this index</label>
               <p class="field-note" id="replay-availability"></p>
