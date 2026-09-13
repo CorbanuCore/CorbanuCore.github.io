@@ -91,6 +91,7 @@
           <p class="form-error" id="form-error" role="alert" tabindex="-1"></p>
           <section class="request-result" id="request-result" hidden aria-live="polite">
             <header><div><h3 id="job-heading">Preview progress</h3><p id="job-message"></p></div><span class="status-pill" id="job-status"></span></header>
+            <details id="job-retry-detail" hidden><summary>Previous error before scoring resumed</summary><p id="job-retry-error"></p></details>
             <p><a id="resume-link">Link to this preview</a></p>
             <button id="refresh-preview" type="button">Refresh status</button>
           </section>
@@ -110,7 +111,7 @@
           <p class="contract-phrase" id="summary-phrase">Your index mandate will appear here.</p>
           <dl class="contract-rows"><div><dt>Venue</dt><dd>Felix · Ethereum</dd></div><div><dt>Inputs</dt><dd>Frozen transcripts and fundamentals</dd></div><div><dt>Preview and lock</dt><dd>$0 current charge</dd></div></dl>
           <div class="replay-gate"><strong>Preview → Review → Lock</strong><p class="gate-note">After locking, connect MetaMask to claim creator ownership and estimate your basket.</p></div>
-          <p class="field-note">Trading is available through individual Felix orders. In-page basket execution and creator PNL collection are not yet available. Public sharing requires a qualified replay service.</p>
+          <p class="field-note">Trading is available through individual Felix orders. In-page basket execution and creator commission or affiliate payouts are not yet available. Public sharing requires a qualified replay service.</p>
         </aside>
       </div>
     </div>
@@ -123,7 +124,7 @@
   </footer>
 
   <script src="/assets/js/corbanu-index-wallet.js?v=1"></script>
-  <script src="/assets/js/corbanu-index-builder.js?v=2"></script>
-  <script src="/assets/js/corbanu-index-basket.js?v=4"></script>
+  <script src="/assets/js/corbanu-index-builder.js?v=3"></script>
+  <script src="/assets/js/corbanu-index-basket.js?v=5"></script>
 </body>
 </html>

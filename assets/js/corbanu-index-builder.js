@@ -122,7 +122,22 @@
   }
   function render(value) {
     el("job-status").textContent = value.status;
-    el("job-message").textContent = `${value.progress?.scored || 0} / ${value.progress?.total || 0} companies scored. ${value.error || ""}`;
+    const messages = [`${value.progress?.scored || 0} / ${value.progress?.total || 0} companies scored.`];
+    const run = value.execution_runs?.at(-1);
+    if (value.status === "running") {
+      messages.push(Number.isInteger(run?.concurrency) ? `Scoring with up to ${run.concurrency} parallel requests.` : "Scoring is running.");
+      if (value.error) messages.push("Scoring resumed after an earlier error. Saved scores are being reused.");
+    } else if (value.status === "queued") {
+      messages.push(value.error ? "Paused before an automatic retry. Completed scores are saved." : "Waiting for a scoring worker.");
+    }
+    if (value.reasoning_effort) messages.push(`Reasoning: ${value.reasoning_effort}.`);
+    const started = Date.parse(value.created_at);
+    if (["queued", "running"].includes(value.status) && Number.isFinite(started) && started <= Date.now())
+      messages.push(`Elapsed: ${Math.floor((Date.now() - started) / 60000)} min.`);
+    if (value.error && value.status !== "running") messages.push(value.error);
+    el("job-message").textContent = messages.join(" ");
+    el("job-retry-detail").hidden = !value.error || value.status !== "running";
+    el("job-retry-error").textContent = value.error || "";
     if (["queued", "running"].includes(value.status)) return;
     preview = value;
     if (value.status === "failed") { error(value.error || "Preview failed. You can start a new preview."); return; }

@@ -96,7 +96,7 @@
     const wrap = node("div", "", "holdings-table-wrap");
     wrap.append(table);
     detail.append(wrap, node("p", payload.disclosure.token_exposure));
-    status.textContent = value.claim ? `Creator wallet: ${value.claim.wallet}. PNL collection awaits configured fee terms and settlement.` : "Index locked. The creator can connect MetaMask to claim ownership.";
+    status.textContent = value.claim ? `Creator wallet: ${value.claim.wallet}. Commission and affiliate revenue payouts await configured revenue-sharing terms and settlement.` : "Index locked. The creator can connect MetaMask to claim ownership.";
     claim.disabled = !wallet || !!value.claim;
   }
   async function open() {

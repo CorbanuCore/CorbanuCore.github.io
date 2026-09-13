@@ -37,7 +37,9 @@ await context.route("https://api.corbanu.com/**", async route => {
   }
   if (path === "/v2/indexes/previews/fixture-preview") {
     reads++;
-    if (reads === 1) return send({id:"fixture-preview",status:"running",progress:{scored:1,total:2}});
+    if (reads === 1) return send({id:"fixture-preview",status:"running",progress:{scored:1,total:2},
+      execution_runs:[{concurrency:8}],reasoning_effort:"high",created_at:new Date(Date.now()-120000).toISOString(),
+      error:"Index model HTTP 429; 4 attempt(s). Completed company scores are saved."});
     return send({id:"fixture-preview",status:needsData?"needs_data":"completed",progress:{scored:2,total:2},preview_sha256:needsData?null:hash,preview:{payload}});
   }
   if (path.endsWith("/lock")) {
@@ -101,6 +103,13 @@ try {
   assert.equal(await page.locator("#index-title").isDisabled(),true);
   await page.locator("#run-index").click();
   await page.waitForFunction(() => document.querySelector("#job-status").textContent === "running");
+  assert.match(await page.locator("#job-message").innerText(),/8 parallel requests/);
+  assert.match(await page.locator("#job-message").innerText(),/Scoring resumed/);
+  assert.match(await page.locator("#job-message").innerText(),/Elapsed: 2 min/);
+  assert.equal((await page.locator("#job-message").innerText()).includes("HTTP 429"),false);
+  assert.equal(await page.locator("#job-retry-detail").isVisible(),true);
+  await page.locator("#job-retry-detail summary").click();
+  assert.match(await page.locator("#job-retry-error").innerText(),/HTTP 429/);
   assert.deepEqual(creates[0],creates[1]);
   assert.equal(creates[1].body.weighting,"market_cap_rank");
   assert.equal(creates[1].body.relevance_cutoff,68);
