@@ -11,6 +11,7 @@
   main.id="builder";
   let wallet = window.CorbanuWallet.account;
   let current = null;
+  const pendingActions = new Set();
   function node(tag, text, className) {
     const el = document.createElement(tag);
     if (text) el.textContent = text;
@@ -55,7 +56,7 @@
   slippage.max = "10000";
   slippage.id = "basket-slippage";
   slippageLabel.htmlFor = slippage.id;
-  const estimate = node("button", "Estimate basket");
+  const estimate = node("button", "Estimate basket");estimate.disabled=true;
   const buyWallet = node("button", "Buy basket with MetaMask");buyWallet.id="buy-index-wallet";buyWallet.disabled=true;
   const execution = node("section");execution.id="wallet-execution";
   const buy = node("button", "Open trades on Felix instead");
@@ -67,11 +68,33 @@
   const tradeNote = node("p", "Trade each holding directly on Felix. Corbanu prepares the allocations; connect your wallet and review each order on Felix before signing. Orders are separate and fills are not tracked here.", "field-note");
   const estimates = node("section");
   const actions = node("section", "", "builder-form");
-  actions.append(node("h2","Put on this index"),keyLabel, key, load, connect, amountLabel, amount, slippageLabel, slippage, buyWallet, execution, estimate, estimates, buy, tradeNote, trades,creatorTools);
+  actions.append(node("h2","Put on this index"),node("p","Trading runs through Felix using your MetaMask wallet on Ethereum. Enter a USDC amount and slippage limit, sign in to your existing Felix account, then review each firm quote. Approve USDC if required and sign each stock purchase separately. Keep Ethereum USDC for purchases and ETH for gas.","field-note"),keyLabel, key, load, connect, amountLabel, amount, slippageLabel, slippage, buyWallet, execution, estimate, estimates, buy, tradeNote, trades,creatorTools);
   shell.append(title, status, detail, actions);
   main.replaceChildren(shell);
   document.title = "Corbanu — Index basket";
 
+  function canTrade() {
+    return !!current && ["locked","published"].includes(current.state) && (owner || ui.payload(current)?.definition?.workflow?.external_funds===true);
+  }
+  function syncActions() {
+    for(const button of [buyWallet,buy,estimate])button.disabled=!canTrade() || walletOperation || pendingActions.has(button);
+    claim.disabled=!current || !owner || !wallet || !!current.claim || walletOperation || pendingActions.has(claim);
+    publish.disabled=!current || !owner || !consent.checked || walletOperation || pendingActions.has(publish);
+    connect.disabled=walletOperation || pendingActions.has(connect);
+    load.disabled=walletOperation || pendingActions.has(load);
+    key.disabled=walletOperation;
+  }
+  function invalidateIndex() {
+    generation++;current=null;owner=false;
+    detail.replaceChildren();trades.replaceChildren();estimates.replaceChildren();execution.replaceChildren();syncActions();
+  }
+  function indexContext() {
+    if(!canTrade() || typeof current.index_sha256!=="string")throw new Error("Open your index before preparing a trade.");
+    return {value:current,generation};
+  }
+  function assertContext(context) {
+    if(context.generation!==generation || context.value!==current || !canTrade())throw new Error("Your index or Corbanu sign-in changed. Open the index and prepare the basket again.");
+  }
   async function request(path, body, authenticated = true) {
     const headers = {};
     if (authenticated) {
@@ -88,11 +111,13 @@
     return result;
   }
   function render(value, published) {
+    if(!value || typeof value.index_sha256!=="string" || value.index_sha256.length!==64 || !["locked","published"].includes(value.state))throw new Error("The index is not ready to trade. Reload it before continuing.");
+    const payload = published ? value.artifact?.payload?.index?.payload : value.artifact?.payload;
+    if(!payload?.definition?.workflow || !payload.definition.mandate || !Array.isArray(payload.construction?.weights) || !payload.validity || !payload.disclosure)throw new Error("The saved index data is incomplete. Reload it before trading.");
     current = value;
     trades.replaceChildren();
     estimates.replaceChildren();
     buy.disabled = !["locked", "published"].includes(value.state);
-    const payload = published ? value.artifact.payload.index.payload : value.artifact.payload;
     title.textContent = payload.definition.mandate.title;
     detail.replaceChildren(node("p", payload.definition.mandate.phrase), node("p", `Status: ${value.state} · ${payload.validity.independent_inference_replay ? "Replay verified" : "Model-scored snapshot"}`));
     detail.append(node("p",`Minimum relevance: ${payload.definition.relevance_cutoff}/100 · ${payload.definition.weighting==="market_cap_rank"?"Market-cap rank weighting":"Market-cap weighting"}`));
@@ -111,30 +136,32 @@
     buy.disabled=!canTrade;buyWallet.disabled=!canTrade;estimate.disabled=!canTrade;
     tradeNote.textContent=canTrade?"Review allocations and sign each order on Felix with your wallet. Orders execute separately.":"The creator has published this index for inspection. Trading by other investors requires verified deterministic replay and the creator enabling external funds.";
     status.textContent = value.claim ? `Creator wallet: ${value.claim.wallet}. Commission and affiliate revenue payouts await configured revenue-sharing terms and settlement.` : "Index ready. The creator can connect MetaMask to claim ownership for commission or affiliate revenue.";
-    claim.disabled = !owner || !wallet || !!value.claim;
+    syncActions();
   }
   async function open() {
-    const currentGeneration=++generation;
+    invalidateIndex();
+    const currentGeneration=generation;
     status.textContent="Loading index…";
     try {
       await ui.signIn(key.value.trim());
-      let value;
-      try {value=await request(`/v2/indexes/${encodeURIComponent(id)}`);owner=true;}
+      let value,isOwner;
+      try {value=await request(`/v2/indexes/${encodeURIComponent(id)}`);isOwner=true;}
       catch(e) {
         if(![401,404].includes(e.status)) throw e;
-        value=await request(`/v2/indexes/published/${encodeURIComponent(id)}`,undefined,false);owner=false;
+        value=await request(`/v2/indexes/published/${encodeURIComponent(id)}`,undefined,false);isOwner=false;
       }
       if(currentGeneration!==generation)return;
-      render(value, !!value.public_cid);
+      owner=isOwner;render(value, !!value.public_cid);
     } catch (e) { if(currentGeneration===generation)status.textContent=e.status===404?"This private index needs its creator’s Corbanu session. Sign in above to open it.":e.message; }
   }
-  key.addEventListener("input",()=>{generation++;current=null;owner=false;detail.replaceChildren();trades.replaceChildren();estimates.replaceChildren();buy.disabled=true;claim.disabled=true;publish.disabled=true;});
+  key.addEventListener("input",()=>{invalidateIndex();consent.checked=false;keyLabel.hidden=false;key.hidden=false;load.hidden=false;status.textContent="Corbanu sign-in changed. Open the index to continue.";syncActions();});
   consent.addEventListener("change",()=>{publish.disabled=!owner||!current||!consent.checked;});
   function handle(button, fn) {
     button.addEventListener("click", async () => {
-      button.disabled = true;
+      if(button.disabled || pendingActions.has(button))return;
+      pendingActions.add(button);button.disabled = true;syncActions();
       try { await fn(); } catch (e) { status.textContent = e.message || "Operation failed"; }
-      finally { button.disabled = button === claim ? !owner || !wallet || !!current?.claim : button === buy ? !current || !(owner || ui.payload(current).definition.workflow.external_funds) : button === publish ? !owner || !current || !consent.checked : false; }
+      finally { pendingActions.delete(button);button.disabled=false;syncActions(); }
     });
   }
   handle(load, open);
@@ -150,13 +177,13 @@
   handle(connect, async () => {
     wallet = await window.CorbanuWallet.connect();
     connect.textContent = wallet ? `MetaMask: ${wallet.slice(0,6)}…${wallet.slice(-4)}` : "Connect MetaMask";
-    claim.disabled = !owner || !wallet || !!current?.claim;
+    syncActions();
   });
   window.addEventListener("corbanu:wallet-changed", () => {
     wallet = window.CorbanuWallet.account;
     trades.replaceChildren();execution.replaceChildren();
     connect.textContent = wallet ? `MetaMask: ${wallet.slice(0,6)}…${wallet.slice(-4)}` : "Connect MetaMask";
-    claim.disabled = !owner || !wallet || !!current?.claim;
+    syncActions();
   });
   handle(claim, async () => {
     if (!wallet) throw new Error("Connect MetaMask first.");
@@ -176,12 +203,16 @@
   slippage.addEventListener("input",()=>execution.replaceChildren());
   handle(buyWallet, async()=>{
     if(walletOperation)throw new Error("Finish the pending wallet transaction first.");
+    const context=indexContext();
     const requestedAmount=atomicAmount();
     if(!slippage.value || !Number.isInteger(Number(slippage.value)) || Number(slippage.value)<0 || Number(slippage.value)>10000)throw new Error("Set maximum slippage between 0 and 10,000 basis points.");
-    const tolerance=Number(slippage.value),signedIndex=current.index_sha256;
+    const tolerance=Number(slippage.value),signedIndex=context.value.index_sha256;
     status.textContent="Connect MetaMask, then sign in to your existing Felix account.";
     const account=await window.CorbanuFelix.login();
+    assertContext(context);
+    if(atomicAmount()!==requestedAmount || Number(slippage.value)!==tolerance)throw new Error("Basket amount or slippage changed. Prepare it again.");
     const plan=await request(`/v2/indexes/${encodeURIComponent(id)}/felix-handoff`,{amount_usdc_atomic:requestedAmount});
+    assertContext(context);
     if(plan.index_id!==id || plan.index_sha256!==signedIndex || atomicAmount()!==requestedAmount)throw new Error("Basket changed. Start again.");
     execution.replaceChildren(node("h2","Buy with MetaMask"),node("p","Each holding is a separate Ethereum transaction. Review the firm quote, approve USDC when needed, then sign the purchase. Completed transactions remain completed if a later order fails."));
     const progress=node("p",`0 of ${plan.legs.length} purchases confirmed`,"field-note");execution.append(progress);
@@ -197,6 +228,7 @@
       let saved=null;try{saved=JSON.parse(localStorage.getItem(stateKey)||"null");}catch{}
       if(saved?.tx_hash){tradeHash=saved.tx_hash;quoteButton.disabled=true;retryReport.hidden=false;message.textContent=`Previously submitted: ${tradeHash}. Check its receipt before placing another order.`;}
       function unchanged(){
+        assertContext(context);
         if(!row.isConnected||atomicAmount()!==requestedAmount||Number(slippage.value)!==tolerance||!wallet||wallet.toLowerCase()!==account.toLowerCase())throw new Error("Wallet, amount or slippage changed. Start again.");
       }
       async function getQuote(){
@@ -216,10 +248,10 @@
         if(inFlight)return;
         const signs=button===approveButton||button===signButton;
         if(walletOperation){message.textContent="Finish the pending wallet transaction before starting another step.";return;}
-        inFlight=true;if(signs){walletOperation=true;for(const control of [amount,slippage,buyWallet,connect])control.disabled=true;}button.disabled=true;quoteButton.disabled=true;
+        inFlight=true;if(signs){walletOperation=true;syncActions();for(const control of [amount,slippage,buyWallet,connect])control.disabled=true;}button.disabled=true;quoteButton.disabled=true;
         try{await fn();}
         catch(e){message.textContent=e.code===4001?"Signature declined. No new transaction was submitted.":e.message;}
-        finally{inFlight=false;if(signs){walletOperation=false;for(const control of [amount,slippage,buyWallet,connect])control.disabled=false;}quoteButton.disabled=!!tradeHash;
+        finally{inFlight=false;if(signs){walletOperation=false;for(const control of [amount,slippage])control.disabled=false;syncActions();}quoteButton.disabled=!!tradeHash;
           if(button===approveButton||button===retryReport)button.disabled=false;}
       });}
       action(quoteButton,getQuote);
@@ -262,11 +294,13 @@
     status.textContent="Felix wallet session connected. Review and sign purchases below.";
   });
   handle(buy, async () => {
+    const context=indexContext();
     const requestedAmount = atomicAmount();
     trades.replaceChildren();
     const plan = await request(`/v2/indexes/${encodeURIComponent(id)}/felix-handoff`, {amount_usdc_atomic:requestedAmount});
+    assertContext(context);
     if (atomicAmount() !== requestedAmount) throw new Error("The basket amount changed. Prepare the trades again.");
-    if (plan.index_id !== id || plan.index_sha256 !== current.index_sha256 || plan.kind !== "external_manual" || plan.amount_usdc_atomic !== requestedAmount) throw new Error("The trade plan does not match this locked index.");
+    if (plan.index_id !== id || plan.index_sha256 !== context.value.index_sha256 || plan.kind !== "external_manual" || plan.amount_usdc_atomic !== requestedAmount) throw new Error("The trade plan does not match this locked index.");
     const links = plan.legs.map(leg => {
       const expected = `https://trade.usefelix.xyz/equities/${encodeURIComponent(leg.representation.underlying.ticker)}`;
       if (leg.trade_url !== expected) throw new Error("Unexpected Felix destination.");
@@ -303,13 +337,16 @@
     status.textContent = "Allocations ready. Open each holding on Felix to trade. Corbanu has not submitted any orders.";
   });
   handle(estimate, async () => {
+    const context=indexContext();
     const atomic = atomicAmount();
     if (!slippage.value) throw new Error("Set your slippage tolerance.");
     const value = await request(`/v2/indexes/${encodeURIComponent(id)}/estimate`, {amount_usdc_atomic: atomic.toString(), slippage_bps: Number(slippage.value)});
+    assertContext(context);
     estimates.replaceChildren(node("h2", "Indicative estimate"), node("p", "Felix venue fees, gas and actual slippage require a firm quote. This estimate cannot be signed or executed."));
     for (const leg of value.legs) estimates.append(node("p", `${leg.representation.venue_symbol}: ${(Number(leg.amount_usdc_atomic) / 1e6).toFixed(6)} USDC · token reference price $${leg.reference_token_price_usd}`));
     status.textContent = `Estimate expires ${value.expires_at}. No trade was submitted.`;
   });
+  syncActions();
   void open();
   }
   window.addEventListener("corbanu:index-locked", mount);
