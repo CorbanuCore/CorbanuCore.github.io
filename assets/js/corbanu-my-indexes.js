@@ -12,18 +12,19 @@
     return el;
   }
   async function request(path, credential) {
-    const response = await fetch(api + path, {headers:{Authorization:`Bearer ${credential}`},cache:"no-store"});
+    await window.CorbanuIndexUI.signIn(credential);
+    const response = await fetch(api + path, {headers:credential ? {Authorization:`Bearer ${credential}`} : {},credentials:"include",cache:"no-store"});
     const value = await response.json();
     if (!response.ok) throw new Error(value.error || `Request failed (${response.status})`);
     return value;
   }
   function reset() { generation++; list.replaceChildren(); status.textContent = "Enter your API key to see your saved indexes."; load.disabled = false; }
   key.addEventListener("input", reset);
-  document.getElementById("clear-my-indexes").addEventListener("click", () => { key.value = ""; reset(); });
+  document.getElementById("clear-my-indexes").addEventListener("click", async () => { try { await window.CorbanuIndexUI.signOut(); key.value = ""; reset(); } catch(e) { status.textContent=e.message; } });
   form.addEventListener("submit", async event => {
     event.preventDefault();
     const credential = key.value.trim(), current = ++generation;
-    if (!credential) return;
+
     load.disabled = true; list.replaceChildren(); status.textContent = "Loading saved indexes…";
     try {
       const data = await request("/v2/indexes", credential);
@@ -55,12 +56,22 @@
             } catch (e) { if (current === generation) status.textContent = e.message || "Could not download the result."; }
             finally { download.disabled = false; }
           });
-          card.append(download);
+          const details=node("details"),summary=node("summary","Expand weights and reasoning"),content=node("section");
+          let expanded=false;
+          details.append(summary,content);
+          details.addEventListener("toggle",async()=>{
+            if(!details.open||expanded||current!==generation)return;expanded=true;content.textContent="Loading holdings…";
+            try {const result=await request(`/v1/indexes/${encodeURIComponent(index.id)}/result`,credential);
+              if(current!==generation)return;content.replaceChildren(window.CorbanuIndexUI.renderHoldings(result));
+            }catch(e){expanded=false;content.textContent=e.message+" Close and expand to retry.";}
+          });
+          card.append(download,details);
         }
         list.append(card);
       }
-      status.textContent = data.indexes.length ? `${data.indexes.length} saved indexes. Showing the most recent ${data.limit}.` : "No indexes found for this account. Create your first index below.";
+      status.textContent = data.indexes.length ? `${data.indexes.length} saved indexes.` : "No indexes found for this account. Create your first index below.";
     } catch (e) { if (current === generation) { list.replaceChildren(); status.textContent = e.message || "Could not load your indexes."; } }
     finally { if (current === generation) load.disabled = false; }
   });
+  void window.CorbanuIndexUI.session().then(active => { if(active) { key.required=false; form.requestSubmit(); } });
 })();

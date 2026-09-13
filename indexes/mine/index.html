@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#030403">
   <title>My indexes — Corbanu</title>
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=9">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=10">
 </head>
 <body>
   <header class="site-header">
@@ -20,7 +20,7 @@
     <form id="my-indexes-form" class="builder-form">
       <label class="field-label" for="my-indexes-key">Corbanu API key</label>
       <input id="my-indexes-key" type="password" required autocomplete="off" spellcheck="false" placeholder="Use the account that created your indexes">
-      <p class="field-note">Your key stays in memory for this visit. Wallet connection alone does not unlock private indexes.</p>
+      <p class="field-note">Your key stays in memory. Sign-in uses a secure one-hour session so you can navigate between indexes. Wallet connection alone does not unlock private indexes.</p>
       <div><button type="submit" id="load-my-indexes">Load my indexes</button> <button type="button" id="clear-my-indexes">Clear session</button></div>
     </form>
     <p id="my-indexes-status" role="status">Enter your API key to see your saved indexes.</p>
@@ -28,6 +28,7 @@
     <p class="field-note">Previews are saved in your account. Locking pins an encrypted copy on IPFS and creates the basket page. Public publication is a separate step.</p>
     <p><a href="/indexes/">Create another index →</a></p>
   </main>
-  <script src="/assets/js/corbanu-my-indexes.js?v=1"></script>
+  <script src="/assets/js/corbanu-index-ui.js?v=1"></script>
+  <script src="/assets/js/corbanu-my-indexes.js?v=2"></script>
 </body>
 </html>

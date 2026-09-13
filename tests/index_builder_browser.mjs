@@ -18,26 +18,35 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({headless:true});
 const context = await browser.newContext();
 const errors = [], creates = [], locks = [], handoffs = [];
+let authenticated=false;
 let reads = 0, needsData = false, catalogUnavailable = false;
 const hash = "a".repeat(64), key = "synthetic-test-key-not-a-real-credential";
 const catalog = {schema:"corbanu.index-workflow.v1", models:["corbanu/deepseek-v4.1-flash","corbanu/glm-5.3"],
   deterministic_default_model:"corbanu/deepseek-v4.1-flash", deterministic_available:false,
   reasoning_efforts:["low","high","max"], prompts:[{id:"thematic_v1",label:"Thematic relevance"},{id:"custom",label:"Custom"}],
   disclosure:{version:"fixture-v1",market_opinion:"Synthetic market opinion disclosure",indemnity:"Synthetic indemnity",token_exposure:"Synthetic token disclosure",publication:"Synthetic public consent"}, disclosure_sha256:hash};
-const payload = {request:{mandate:{title:"Synthetic theme",phrase:"A synthetic theme used only for browser verification."}},
-  validity:{independent_inference_replay:false},construction:{weights:[{ticker:"TEST",company_name:"Test Company",score:80,weight_units:1000000000000,representation:{venue_symbol:"TESTon",contract_address:"0x"+"1".repeat(40)}}],excluded:[{ticker:"MISSING",error:"capitalization_unavailable"}]}};
+const payload = {scores:[{security_id:"felix:TESTon",reasoning_block:["Test thematic exposure.","Evidence from frozen inputs.","Counterevidence retained."],confidence:"high"}],request:{workflow:{external_funds:false,prompt:null,disclosure:{conflicts:"None"}},mandate:{title:"Synthetic theme",phrase:"A synthetic theme used only for browser verification."}},
+  validity:{independent_inference_replay:false},construction:{weights:[{security_id:"felix:TESTon",ticker:"TEST",company_name:"Test Company",score:80,weight_units:1000000000000,representation:{venue_symbol:"TESTon",contract_address:"0x"+"1".repeat(40)}}],excluded:[{ticker:"MISSING",error:"capitalization_unavailable"}]}};
 await context.route("https://api.corbanu.com/**", async route => {
   const req = route.request(), path = new URL(req.url()).pathname;
   const send = (value, status=200) => route.fulfill({status,contentType:"application/json",body:JSON.stringify(value)});
+  if(path==="/v2/indexes/session") {
+    if(req.method()==="DELETE"){authenticated=false;return send({authenticated:false});}
+    if(req.method()==="POST"){
+      if(req.headers().authorization!==`Bearer ${key}`)return send({error:"Invalid API key"},401);
+      authenticated=true;return send({authenticated:true});
+    }
+    return authenticated?send({authenticated:true}):send({error:"Sign in"},401);
+  }
   if (path === "/v2/indexes") {
-    if (req.headers().authorization !== `Bearer ${key}`) return send({error:"Invalid API key"},401);
+    if (!authenticated && req.headers().authorization !== `Bearer ${key}`) return send({error:"Invalid API key"},401);
     return send({limit:100,indexes:[{id:"fixture-preview",title:"Saved preview <test>",mandate:"Saved private mandate",state:"completed",public:false,
       progress:{scored:452,total:452},created_at:"2026-09-13T00:00:00Z",page_url:"https://corbanu.com/indexes/?preview=fixture-preview",result_available:true},
       {id:"fixture-locked",title:"Locked basket",mandate:"Another private mandate",state:"locked",public:false,
       progress:{scored:452,total:452},created_at:"2026-09-13T00:00:00Z",page_url:"https://corbanu.com/indexes/?index=fixture-locked",result_available:true}]});
   }
   if (path === "/v1/indexes/fixture-preview/result") {
-    assert.equal(req.headers().authorization,`Bearer ${key}`);
+    assert.ok(authenticated || req.headers().authorization===`Bearer ${key}`);
     return send({payload});
   }
   if (path.endsWith("/catalog")) return catalogUnavailable ? send({error:"catalog unavailable"},503) : send(catalog);
@@ -59,11 +68,11 @@ await context.route("https://api.corbanu.com/**", async route => {
     return send({id:"fixture-preview",state:"locked",cache_cid:"test-cid"});
   }
   if (path === "/v2/indexes/fixture-preview") {
-    assert.equal(req.headers().authorization,`Bearer ${key}`);
+    assert.ok(authenticated || req.headers().authorization===`Bearer ${key}`);
     return send({id:"fixture-preview",state:"locked",public:false,index_sha256:hash,artifact:{payload:{...payload,definition:payload.request,disclosure:catalog.disclosure}}});
   }
   if (path.endsWith("/felix-handoff")) {
-    assert.equal(req.headers().authorization,`Bearer ${key}`);
+    assert.ok(authenticated || req.headers().authorization===`Bearer ${key}`);
     handoffs.push(req.postDataJSON());
     return send({schema:"corbanu.felix-handoff.v1",kind:"external_manual",executable:false,index_id:"fixture-preview",index_sha256:hash,
       amount_usdc_atomic:"100000001",instructions:"Review each order on Felix before signing.",legs:[{
@@ -96,6 +105,7 @@ try {
   assert.equal(await mine.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false);
   if (process.env.CORBANU_MY_INDEXES_SCREENSHOT) await mine.screenshot({path:process.env.CORBANU_MY_INDEXES_SCREENSHOT,fullPage:true});
   await mine.locator("#clear-my-indexes").click();
+  await mine.waitForFunction(()=>document.querySelector("#my-indexes-key").value==="");
   assert.equal(await mine.locator("#my-indexes-key").inputValue(),"");
   assert.equal(await mine.locator(".saved-index-card").count(),0);
   const page = await context.newPage();
@@ -167,7 +177,7 @@ try {
   assert.equal(await page.evaluate(() => localStorage.length + sessionStorage.length),0);
   assert.equal(await page.evaluate(() => window.CorbanuIndexSession),undefined);
   assert.equal(creates.length,2);
-  assert.equal(await page.getByRole("button",{name:"Connected: 0x"+"1".repeat(40),exact:true}).count(),1);
+  assert.equal(await page.getByRole("button",{name:"MetaMask: 0x1111…1111",exact:true}).count(),1);
   await page.locator("#basket-amount").fill("100.000001");
   await page.locator("#prepare-felix-trades").click();
   await page.getByRole("link",{name:"Trade TEST on Felix ↗",exact:true}).waitFor();
@@ -191,17 +201,16 @@ try {
   assert.equal(handoffs.length,1,"invalid amounts must not prepare orders");
   await page.evaluate(()=>window.walletListeners.accountsChanged([]));
   assert.equal(await page.getByRole("button",{name:"Connect MetaMask",exact:true}).count(),1);
-  assert.equal(await page.getByRole("button",{name:"Claim creator ownership",exact:true}).isDisabled(),true);
+  assert.equal(await page.locator("#claim-index").isDisabled(),true);
   assert.equal(await page.evaluate(()=>window.walletCalls.some(c=>c.method==="personal_sign"||c.method==="eth_sendTransaction")),false);
 
-  // Reloaded preview asks for a key and retrieves the job without creating it again.
+  // A saved-preview navigation uses the index session and loads without re-entering a key or submitting the creation form.
   const resumed = await context.newPage(); resumed.on("pageerror",e=>errors.push(e.message));
   await resumed.goto(origin+"/indexes/?preview=fixture-preview");
-  await resumed.waitForFunction(() => !document.querySelector("#run-index").disabled);
-  assert.equal(await resumed.locator("#builder-api-key").inputValue(),"");
-  await resumed.locator("#builder-api-key").fill(key);
-  await resumed.locator("#run-index").click();
   await resumed.waitForFunction(() => !document.querySelector("#lock-index").disabled);
+  assert.equal(await resumed.locator("#builder-api-key").inputValue(),"");
+  await resumed.locator(".holding-detail summary").click();
+  assert.match(await resumed.locator(".holding-content").innerText(),/Test thematic exposure/);
   assert.equal(creates.length,2);
   await resumed.setViewportSize({width:390,height:844});
   const overflow=await resumed.evaluate(()=>document.documentElement.scrollWidth > window.innerWidth);

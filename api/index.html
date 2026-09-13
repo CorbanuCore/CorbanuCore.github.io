@@ -202,6 +202,7 @@
         <a href="#authentication">Authentication</a>
         <a href="#inference">Inference</a>
         <a href="#deep-research">Deep Research</a>
+        <a href="#indexes">Index creation</a>
         <a href="#errors">Errors</a>
       </nav>
 
@@ -397,6 +398,74 @@ curl -sS \
             <article><span>Result response</span><p><code>result.markdown</code>, title, status, source manifest, timestamps, token usage, xAPI search cost, generation cost, and total provider cost.</p></article>
           </div>
           <p class="docs-note"><strong>Billing and idempotency:</strong> a prepaid start returns <code>X-Corbanu-Price-Version</code> and <code>X-Corbanu-Reserved-Microusd</code>; the hold is released on an explicit rejection. Retrying the same body with the same request ID returns the same job. Reusing that ID with different research content or a different token budget returns <code>409 request_id_conflict</code>.</p>
+        </section>
+
+        <section class="reference-block" id="indexes" aria-labelledby="indexes-api-title">
+          <div class="reference-head"><div><span class="reference-index">04 / Index creation</span><h3 id="indexes-api-title">Create once. Review weights. Retrieve the index.</h3></div><p>Create a thematic basket from frozen transcripts and fundamentals using the Corbanu API. The website uses these same calls. <a href="https://api.corbanu.com/v2/indexes/openapi.json">Download OpenAPI →</a></p></div>
+          <div class="docs-callout"><strong>Durable previews and explicit confirmation</strong><p>Choose the model, prompt, reasoning, weighting and relevance cutoff. DeepSeek V4.1 Flash runs with up to 200 concurrent company requests. Completed company scores survive retries. Preview and lock currently charge $0. Inputs stay private until you explicitly publish.</p></div>
+          <div class="code-grid">
+            <article class="code-panel"><div class="code-heading"><span>1 / Read options and disclosure</span><button type="button" data-copy-target="#code-index-catalog">Copy</button></div><pre id="code-index-catalog"><code>curl --fail-with-body -sS \
+  https://api.corbanu.com/v2/indexes/catalog \
+  &gt; catalog.json</code></pre></article>
+            <article class="code-panel"><div class="code-heading"><span>2 / Define your index</span><button type="button" data-copy-target="#code-index-request">Copy</button></div><pre id="code-index-request"><code># Read the disclosure before accepting it.
+# These are illustrative choices; specify your own methodology and conflicts.
+jq -n --slurpfile c catalog.json '{
+  mandate: {
+    title: "Semiconductor equipment",
+    phrase: "Companies making semiconductor production equipment."
+  },
+  model: "corbanu/deepseek-v4.1-flash",
+  prompt_id: "thematic_v1", reasoning_effort: "high",
+  deterministic: false, external_funds: false,
+  weighting: "market_cap", relevance_cutoff: 70,
+  disclosure: {
+    version: $c[0].disclosure.version,
+    sha256: $c[0].disclosure_sha256,
+    accepted: true, conflicts: "None"
+  }
+}' &gt; index-request.json</code></pre></article>
+            <article class="code-panel"><div class="code-heading"><span>3 / Start once</span><button type="button" data-copy-target="#code-index-start">Copy</button></div><pre id="code-index-start"><code>curl --fail-with-body -sS \
+  https://api.corbanu.com/v2/indexes/previews \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "X-Corbanu-Request-Id: semiconductor-example-001" \
+  -H "Content-Type: application/json" \
+  --data-binary @index-request.json &gt; started.json
+
+INDEX_ID=$(jq -r .id started.json)</code></pre></article>
+            <article class="code-panel"><div class="code-heading"><span>4 / Poll progress</span><button type="button" data-copy-target="#code-index-status">Copy</button></div><pre id="code-index-status"><code>curl --fail-with-body -sS \
+  "https://api.corbanu.com/v2/indexes/previews/$INDEX_ID" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  &gt; status.json
+
+jq '{id,status,progress,preview_sha256}' status.json
+# Repeat this GET while queued or running.</code></pre></article>
+            <article class="code-panel"><div class="code-heading"><span>5 / Download index JSON</span><button type="button" data-copy-target="#code-index-result">Copy</button></div><pre id="code-index-result"><code># Once status is completed:
+curl --fail-with-body -sS \
+  "https://api.corbanu.com/v2/indexes/previews/$INDEX_ID/result" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  &gt; index.json
+
+jq '.payload.construction.weights' index.json
+jq '.payload.scores[] | {ticker,score,confidence,reasoning_block}' index.json</code></pre></article>
+            <article class="code-panel"><div class="code-heading"><span>6 / Confirm the inspected result</span><button type="button" data-copy-target="#code-index-lock">Copy</button></div><pre id="code-index-lock"><code>jq '{preview_sha256}' status.json &gt; lock-request.json
+curl --fail-with-body -sS \
+  "https://api.corbanu.com/v2/indexes/$INDEX_ID/lock" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "Content-Type: application/json" \
+  --data-binary @lock-request.json | jq .</code></pre></article>
+          </div>
+          <div class="response-schema"><article><span>Signed output</span><p><code>payload.request</code>, <code>scores</code> with confidence and explanations, exact <code>construction.weights</code>, exclusions, token contracts, source provenance and verification status. Weight units sum to 10<sup>12</sup>. Locking signs and pins an encrypted copy on IPFS.</p></article><article><span>Request behavior</span><p>The same request ID and body resume the same job. A changed body returns 409. Retrieve a result before completion and the API returns 409. Deterministic external-fund requests return 503 while qualified replay is unavailable.</p></article></div>
+          <div class="table-wrap"><table><thead><tr><th>Method</th><th>Endpoint</th><th>Purpose</th></tr></thead><tbody>
+            <tr><td>GET</td><td><code>/v2/indexes</code></td><td>Your saved previews and locked baskets; owner authentication required.</td></tr>
+            <tr><td>GET</td><td><code>/v2/indexes/published</code></td><td>Public index leaderboard; newest published records first.</td></tr>
+            <tr><td>GET</td><td><code>/v2/indexes/published/{id}</code></td><td>Full published artifact, weights and scoring explanations.</td></tr>
+            <tr><td>POST</td><td><code>/v2/indexes/{id}/claim-challenge</code>, <code>/claim</code></td><td>Prove the creator payout wallet using MetaMask.</td></tr>
+            <tr><td>POST</td><td><code>/v2/indexes/{id}/publish</code></td><td>Explicitly publish a claimed index with the current disclosure acceptance.</td></tr>
+            <tr><td>POST</td><td><code>/v2/indexes/{id}/felix-quotes</code></td><td>One firm holding quote; provide total basket <code>amount_usdc_atomic</code>, <code>security_id</code>, <code>wallet</code>, and a <code>X-Felix-Session</code> header.</td></tr>
+            <tr><td>POST</td><td><code>/v2/indexes/{id}/felix-orders/report</code></td><td>Report a user-broadcast transaction using its <code>report_token</code> and <code>tx_hash</code>. A reporting retry does not send another purchase.</td></tr>
+          </tbody></table></div>
+          <p class="docs-note">Publishing makes the supplied inputs and index public. Other investors require creator-enabled external funds and verified deterministic replay. Personal MetaMask purchases use an existing Felix wallet login, Ethereum USDC and ETH; every holding is signed separately. Contract and simulated-wallet tests pass; a live funded purchase has not been verified. Creator compensation is based on commissions or affiliate revenue; payout terms and settlement are not configured.</p>
+          <p><a href="/indexes/">Create an index →</a> · <a href="/indexes/mine/">My indexes →</a> · <a href="/indexes/library/">Browse published indexes →</a></p>
         </section>
 
         <section class="reference-block" id="errors" aria-labelledby="errors-title">

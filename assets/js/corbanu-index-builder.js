@@ -24,7 +24,7 @@
   function controls() {
     el("builder-settings").disabled = !catalog || busy || !!activeId || !!pending;
     el("run-index").disabled = !catalog || busy || !!preview;
-    el("run-index").textContent = busy ? "Working…" : activeId ? "Resume preview" : pending ? "Retry same preview" : "Run preview";
+    el("run-index").textContent = busy ? "Working…" : activeId ? "Open saved preview" : pending ? "Retry same preview" : "Run preview";
     el("lock-index").disabled = busy || !preview?.preview_sha256 || preview.status !== "completed" || !!locked;
     el("refresh-preview").disabled = busy;
     el("new-preview").hidden = busy || !(preview || locked);
@@ -53,8 +53,7 @@
     const headers = {};
     if (authenticated) {
       const key = el("builder-api-key").value.trim();
-      if (!key) throw new Error("Enter your Corbanu API key to continue.");
-      headers.Authorization = `Bearer ${key}`;
+      if (key) headers.Authorization = `Bearer ${key}`;
     }
     if (body !== undefined) headers["Content-Type"] = "application/json";
     if (requestId) headers["X-Corbanu-Request-Id"] = requestId;
@@ -62,7 +61,7 @@
     const timeout = setTimeout(() => controller.abort(), body !== undefined && !requestId ? 90000 : 30000);
     try {
       const response = await fetch(api + path, {method: body === undefined ? "GET" : "POST", headers,
-        ...(body !== undefined ? {body: JSON.stringify(body)} : {}), signal: controller.signal, cache: "no-store"});
+        ...(body !== undefined ? {body: JSON.stringify(body)} : {}), signal: controller.signal, credentials:"include", cache: "no-store"});
       let value;
       try { value = await response.json(); } catch { value = {}; }
       if (!response.ok) {
@@ -87,11 +86,19 @@
       el("accept-disclosure").checked = false;
       el("deterministic").disabled = !c.deterministic_available;
       el("external-funds").disabled = !c.deterministic_available;
-      el("replay-availability").textContent = c.deterministic_available ? "Sharing and external funds require verified replay using DeepSeek V4.1 Flash." : "Deterministic replay is currently unavailable. Personal previews are available; public sharing and external funds are disabled.";
+      el("replay-availability").textContent = c.deterministic_available ? "Sharing and external funds require verified replay using DeepSeek V4.1 Flash." : "Personal previews and public publication are available. Allowing other investors requires verified deterministic replay, which is currently unavailable.";
       el("catalog-status").textContent = activeId ? "Enter your API key to resume this preview." : "Connected to Corbanu. Choose your settings to preview a Felix basket.";
       settings();
     } catch (e) { el("catalog-status").textContent = e.message; el("reload-catalog").hidden = false; }
     controls();
+    if (await window.CorbanuIndexUI.session()) {
+      el("builder-api-key").required=false;document.body.classList.add("index-signed-in");
+      el("catalog-status").textContent="Signed in to Corbanu.";
+      if(activeId) await poll();
+    } else if(activeId) {
+      el("builder-api-key").focus();
+      el("job-message").textContent="Sign in with the API key used to create this index, then click Open saved preview.";
+    }
   }
   function buildRequest() {
     const body = {mandate:{title:el("index-title").value.trim(),phrase:el("index-phrase").value.trim()},
@@ -114,7 +121,7 @@
     return body;
   }
   function rememberId(id) {
-    activeId = id;
+    activeId = id;document.body.classList.add("viewing-preview");
     const url = new URL(window.location.href); url.searchParams.set("preview", id); url.searchParams.delete("index");
     window.history.replaceState({}, "", url);
     el("resume-link").href = url.toString();
@@ -150,14 +157,8 @@
     const weights = payload.construction.weights || [];
     el("result-count").textContent = `${weights.length} holdings`;
     el("result-assurance").textContent = payload.validity.independent_inference_replay ? "Independent replay verified." : "Provider-backed result. Deterministic inference has not been verified.";
-    el("result-holdings").replaceChildren();
-    for (const row of weights) {
-      const tr = document.createElement("tr");
-      for (const text of [row.company_name || row.ticker, row.representation?.venue_symbol || row.security_id, String(row.score), `${(row.weight_units / 1e10).toFixed(2)}%`]) {
-        const td = document.createElement("td"); td.textContent = text; tr.append(td);
-      }
-      el("result-holdings").append(tr);
-    }
+    const holder = el("result-holdings");
+    holder.replaceChildren(window.CorbanuIndexUI.renderHoldings(value.preview));
     el("result-exclusions").replaceChildren();
     for (const row of [...(payload.construction.excluded || []), ...(payload.construction.issues || [])]) {
       const p = document.createElement("p"); p.textContent = `${row.ticker || row.security_id || "Construction issue"}: ${row.error}`; el("result-exclusions").append(p);
@@ -172,7 +173,7 @@
     try {
       const value = await request(`/v2/indexes/previews/${encodeURIComponent(id)}`);
       if (id !== activeId) return;
-      error(); render(value);
+      error(); render(value);document.body.classList.add("index-signed-in");
       if (["queued", "running"].includes(value.status)) timer = setTimeout(() => void poll(), 5000);
     } catch (e) { if (id === activeId) error(`${e.message} Use Refresh status to resume; no new preview will be created.`); }
     controls();
@@ -184,9 +185,10 @@
   el("deterministic").addEventListener("change", () => { if (!el("deterministic").checked) el("external-funds").checked = false; settings(); });
   form.addEventListener("submit", async event => {
     event.preventDefault(); if (busy || !catalog) return;
-    if (!form.reportValidity()) return;
     error();
+    try { await window.CorbanuIndexUI.signIn(el("builder-api-key").value.trim()); } catch(e) { error(e.message); return; }
     if (activeId) { rememberId(activeId); await poll(); return; }
+    if (!form.reportValidity()) return;
     try {
       if (!pending) pending = {id:crypto.randomUUID(),body:buildRequest()};
       busy = true; controls();
@@ -199,13 +201,17 @@
       error(`${e.message}${pending ? " Keep this page open and retry; the same request ID prevents a duplicate job." : ""}`);
     } finally { busy = false; controls(); }
   });
-  el("refresh-preview").addEventListener("click", () => void poll());
+  el("refresh-preview").addEventListener("click", async () => {
+    try { await window.CorbanuIndexUI.signIn(el("builder-api-key").value.trim()); await poll(); } catch(e) { error(e.message); }
+  });
   el("reload-catalog").addEventListener("click", () => void loadCatalog());
   el("new-preview").addEventListener("click", () => {
     clearTimeout(timer); activeId = null; preview = null; pending = null; locked = null;
+    document.body.classList.remove("viewing-preview");form.noValidate=false;document.querySelector(".hero").hidden=false;
     const url = new URL(window.location.href); url.searchParams.delete("preview"); window.history.replaceState({}, "", url);
     el("request-result").hidden = true; el("index-result").hidden = true; error(); controls(); settings();
   });
+  el("download-preview").addEventListener("click",()=>{ if(preview?.preview)window.CorbanuIndexUI.download(preview.preview); });
   el("lock-index").addEventListener("click", async () => {
     if (busy || !preview?.preview_sha256 || preview.status !== "completed") return;
     busy = true; error(); controls();
@@ -226,6 +232,6 @@
     window.dispatchEvent(new Event("corbanu:index-locked"));
   });
   window.addEventListener("pagehide", () => clearTimeout(timer));
-  if (activeId) rememberId(activeId);
+  if (activeId) { rememberId(activeId); document.querySelector(".hero").hidden=true; form.noValidate=true; }
   void loadCatalog();
 })();

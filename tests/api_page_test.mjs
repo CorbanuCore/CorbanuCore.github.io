@@ -253,6 +253,6 @@ test("compiled checkout and site navigation are publishable static assets", asyn
   assert.match(bundle, /https:\/\/api\.corbanu\.com/);
   assert.doesNotMatch(bundle, /pfterminal-plan-gateway\.fly\.dev/);
   assert.match(homepage, /href="\/api\/"/);
-  assert.doesNotMatch(packageJson, /@x402\/evm|viem/);
+  assert.doesNotMatch(packageJson, /@x402\/evm/);
   assert.doesNotMatch(css, /linear-gradient|radial-gradient/);
 });

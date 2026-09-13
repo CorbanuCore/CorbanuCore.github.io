@@ -357,3 +357,42 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .saved-index-card { padding: 1.3rem 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
 .saved-index-card h2 { margin-top: 0; }
 .saved-index-card a { display: inline-block; margin-right: 1rem; }
+
+/* Shared saved, preview and public index inspection. */
+.index-holdings { margin: 28px 0; min-width: 0; }
+.index-holdings input, .library-controls input, .library-controls select { width: 100%; padding: 12px; background: #101510; color: inherit; border: 1px solid #334333; border-radius: 6px; }
+.holding-detail { border-bottom: 1px solid #283528; }
+.holding-detail > summary { display: grid; grid-template-columns: 70px minmax(0,1fr) 70px; gap: 12px; padding: 16px 4px; cursor: pointer; align-items: center; }
+.holding-detail > summary > span { color: #b4c4b4; overflow-wrap: anywhere; }
+.holding-detail > summary > b { text-align: right; }
+.holding-detail > summary::after { content: none; }
+.holding-content { padding: 4px 12px 20px; line-height: 1.65; }
+.holding-content a { overflow-wrap: anywhere; }
+.index-holdings .weight-row { grid-template-columns: 70px minmax(0,1fr) 70px; }
+.library-controls { display: flex; align-items: end; gap: 18px; flex-wrap: wrap; margin: 24px 0; }
+.library-controls label { flex: 1; min-width: 180px; display: grid; gap: 8px; }
+.library-row summary { cursor: pointer; }
+.library-row-detail { overflow-wrap: anywhere; }
+.saved-index-card { min-width: 0; }
+.builder-summary { min-width: 0; }
+#result-holdings { width: 100%; }
+@media(max-width: 760px) { .builder-grid:has(#index-result:not([hidden])) { grid-template-columns: 1fr; } .library-controls { align-items: stretch; } .holding-detail > summary { gap: 8px; grid-template-columns: 60px minmax(0,1fr) 66px; font-size: 13px; } }
+.viewing-preview .hero, .viewing-preview .contract-card, .viewing-preview #builder-settings, .viewing-preview #index-builder > section[aria-label="Wallet connection"] { display: none; }
+.viewing-preview .builder-grid { grid-template-columns: minmax(0,1fr); }
+.viewing-preview.index-signed-in #index-account-fields, .viewing-preview.index-signed-in #run-index { display: none; }
+.result-actions { display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:16px 0; }
+.result-actions .field-note { width:100%; margin:0; }
+.result-actions .build-button { width:auto; }
+#new-preview { margin-right: 12px; }
+#wallet-execution { min-width:0; }
+#wallet-execution p { overflow-wrap:anywhere; }
+.felix-trade-leg { grid-template-columns:minmax(0,1fr);min-width:0;overflow-wrap:anywhere; }
+.builder-shell p { overflow-wrap:anywhere; }
+.skip { clip-path:inset(100%); }
+.skip:focus { clip-path:none; }
+#basket-amount, #basket-slippage, #basket-api-key { display:block;width:100%;padding:14px;margin-bottom:18px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink); }
+#buy-index-wallet { display:block;width:100%;background:var(--lime);color:#101500;font-weight:700;border-color:var(--lime); }
+.basket-weights > summary, #creator-tools > summary { padding:16px 0;cursor:pointer;font-weight:600; }
+#creator-tools { margin-top:22px;border-top:1px solid var(--line); }
+#creator-tools .check-label { font-size:14px;color:var(--muted); }
+#wallet-execution > h2 { margin-top:24px; }

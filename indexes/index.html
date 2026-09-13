@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://corbanu.com/indexes/">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=9">
+  <link rel="stylesheet" href="/assets/css/corbanu-indexes.css?v=10">
   <title>Corbanu Indexes — Make your own index</title>
 </head>
 <body>
@@ -28,7 +28,7 @@
       <h1>Describe a market.<br>Make an index.</h1>
       <p class="hero-copy">Choose a model and a theme. Preview a basket of Felix stock tokens, review the holdings, then lock your index and connect your wallet.</p>
       <div class="replay-promise">Preview first. Confirm before locking.</div>
-      <div class="hero-actions"><a href="/indexes/mine/">My saved indexes →</a><a href="/indexes/library/">Browse earlier replay-verified indexes →</a></div>
+      <div class="hero-actions"><a href="/indexes/mine/">My saved indexes →</a><a href="/indexes/library/">Browse all published indexes →</a></div>
     </div></section>
     <div class="builder-shell" id="builder">
       <p id="catalog-status" role="status">Loading available models and prompts…</p>
@@ -39,13 +39,13 @@
             <h2>Your wallet</h2>
             <button id="builder-connect-wallet" type="button">Connect MetaMask</button>
             <p id="builder-wallet-status" role="status">Connect now to carry your wallet into the basket. Connecting does not sign a transaction.</p>
-            <p class="field-note">After locking, prepare the allocations and trade each holding on Felix. Connect your wallet on Felix and fund your spot-equity account if needed. <a href="https://trade.usefelix.xyz/equities" target="_blank" rel="noopener noreferrer">Open Felix spot equities →</a></p>
+            <p class="field-note">After locking, sign in to Felix with MetaMask and review each stock purchase here. Your connected wallet needs Ethereum USDC and ETH for gas. <a href="https://trade.usefelix.xyz/equities" target="_blank" rel="noopener noreferrer">Open Felix spot equities →</a></p>
           </section>
-          <fieldset class="form-step">
+          <fieldset class="form-step" id="index-account-fields">
             <legend class="step-head"><span class="step-number">01</span><span><h2>Your Corbanu account</h2></span></legend>
             <label class="field-label" for="builder-api-key">Corbanu API key</label>
             <input id="builder-api-key" type="password" autocomplete="off" spellcheck="false" required placeholder="Enter your Corbanu API key">
-            <p class="field-note">Your key stays in memory for this visit. <a href="/api/">Get a key or top up your account →</a></p>
+            <p class="field-note">Your key stays in memory. Sign-in uses a secure one-hour session so you can navigate between indexes. <a href="/api/">Get a key or top up your account →</a></p>
           </fieldset>
           <fieldset id="builder-settings" disabled>
             <fieldset class="form-step">
@@ -98,12 +98,14 @@
           <section class="index-result" id="index-result" hidden aria-live="polite">
             <header class="index-result-head"><div><span>Review before locking</span><h3 id="result-title"></h3></div><strong id="result-count"></strong></header>
             <p id="result-assurance"></p>
-            <div class="holdings-table-wrap"><table class="holdings-table"><thead><tr><th>Company</th><th>Felix token</th><th>Score</th><th>Weight</th></tr></thead><tbody id="result-holdings"></tbody></table></div>
-            <div id="result-exclusions"></div>
-            <details class="request-details"><summary>Full signed preview</summary><pre id="preview-json"></pre></details>
+            <div class="result-actions">
             <p class="field-note">Locking confirms this exact preview and pins a signed, encrypted index on IPFS. It does not publish it publicly or place a trade.</p>
             <button class="build-button" id="lock-index" type="button" disabled>Confirm holdings and lock index</button>
             <button id="open-basket" type="button" hidden>Open basket and connect wallet</button>
+<button type="button" id="download-preview">Download index JSON</button></div>
+            <div id="result-holdings"></div>
+            <div id="result-exclusions"></div>
+            <details class="request-details"><summary>Full signed preview</summary><pre id="preview-json"></pre></details>
           </section>
         </form>
         <aside class="contract-card" aria-label="Index workflow">
@@ -111,7 +113,7 @@
           <p class="contract-phrase" id="summary-phrase">Your index mandate will appear here.</p>
           <dl class="contract-rows"><div><dt>Venue</dt><dd>Felix · Ethereum</dd></div><div><dt>Inputs</dt><dd>Frozen transcripts and fundamentals</dd></div><div><dt>Preview and lock</dt><dd>$0 current charge</dd></div></dl>
           <div class="replay-gate"><strong>Preview → Review → Lock</strong><p class="gate-note">After locking, connect MetaMask to claim creator ownership and estimate your basket.</p></div>
-          <p class="field-note">Trading is available through individual Felix orders. In-page basket execution and creator commission or affiliate payouts are not yet available. Public sharing requires a qualified replay service.</p>
+          <p class="field-note">Trading is available through individual Felix orders. Direct MetaMask purchases use Ethereum USDC and ETH for gas. Creator commission or affiliate payouts are not yet configured. Other investors require a qualified replay service.</p>
         </aside>
       </div>
     </div>
@@ -123,8 +125,10 @@
     <div class="footnote">Creator-defined market opinions. Token representations provide economic exposure to underlying securities. Returns are not guaranteed.</div>
   </footer>
 
-  <script src="/assets/js/corbanu-index-wallet.js?v=1"></script>
-  <script src="/assets/js/corbanu-index-builder.js?v=3"></script>
-  <script src="/assets/js/corbanu-index-basket.js?v=5"></script>
+  <script src="/assets/js/corbanu-index-ui.js?v=1"></script>
+  <script src="/assets/js/corbanu-index-wallet.js?v=2"></script>
+  <script src="/assets/js/corbanu-index-felix.js?v=1"></script>
+  <script src="/assets/js/corbanu-index-builder.js?v=4"></script>
+  <script src="/assets/js/corbanu-index-basket.js?v=6"></script>
 </body>
 </html>

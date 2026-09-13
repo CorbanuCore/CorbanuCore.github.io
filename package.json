@@ -7,22 +7,25 @@
     "build:api": "esbuild assets/src/api-checkout.ts --bundle --format=iife --platform=browser --target=es2022 --minify --supported:template-literal=false --alias:crypto=./assets/src/crypto-browser.ts --inject:assets/src/browser-shims.ts --outfile=assets/js/api-checkout.js",
     "typecheck:api": "tsc -p tsconfig.api.json --noEmit",
     "test": "node --test tests/*test.mjs",
-    "test:index-browser": "node tests/index_builder_browser.mjs"
+    "test:index-browser": "node tests/index_builder_browser.mjs",
+    "build:index-felix": "esbuild assets/src/index-felix.ts --bundle --format=iife --platform=browser --target=es2022 --minify --inject:assets/src/browser-shims.ts --outfile=assets/js/corbanu-index-felix.js"
   },
   "dependencies": {
     "@noble/hashes": "1.8.0",
     "@scure/base": "1.2.6",
     "@solana/kit": "5.5.1",
     "@solana/web3.js": "1.98.4",
+    "@turnkey/wallet-stamper": "1.1.26",
     "@x402/core": "2.18.0",
     "@x402/fetch": "2.18.0",
     "@x402/svm": "2.18.0",
     "buffer": "6.0.3",
-    "process": "0.11.10"
+    "process": "0.11.10",
+    "viem": "2.55.16"
   },
   "devDependencies": {
     "esbuild": "0.25.10",
-    "typescript": "5.9.2",
-    "playwright": "1.63.0"
+    "playwright": "1.63.0",
+    "typescript": "5.9.2"
   }
 }
