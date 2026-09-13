@@ -60,7 +60,7 @@ jq -n --slurpfile c catalog.json '{
 }' > index-request.json
 ```
 
-`weighting` is `market_cap` or `market_cap_rank`; `relevance_cutoff` is an integer from 0 through 100. A company qualifies on **relevance score >= cutoff**, independently of confidence. For example, relevance 25 and confidence 88 does not qualify at cutoff 70. Existing capitalization-data requirements still apply to qualifying holdings.
+The title must contain 3–80 characters and the mandate phrase 12–600 characters after whitespace normalization. `weighting` is `market_cap` or `market_cap_rank`; `relevance_cutoff` is an integer from 0 through 100. A company qualifies on **relevance score >= cutoff**, independently of confidence. For example, relevance 25 and confidence 88 does not qualify at cutoff 70. Existing capitalization-data requirements still apply to qualifying holdings.
 
 For a custom prompt, use `prompt_id:"custom"` and include `prompt`. Optional `user_inputs` maps frozen security IDs, such as `felix:AAPLon`, to supplied text. The output includes underlying stocks and their explicit Felix Ethereum token representations. `external_funds:true` requires `deterministic:true` and qualified replay. Check `deterministic_available`; unavailable replay returns 503 before creation. Do not silently downgrade a requested deterministic index.
 
