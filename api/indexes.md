@@ -7,6 +7,10 @@ Python reference runner: https://corbanu.com/api/examples/index_agent.py
 
 An agent with an existing Corbanu account key can create an index, poll it, retrieve its signed weights and reasoning, and change its cutoff entirely through HTTP. Use the same `cbn_…` key that authenticates the account's Corbanu prepaid balance. No separate DeepSeek key, Plan subscription, MetaMask connection, browser cookie, `Origin` header or `/v2/indexes/session` call is required for these operations.
 
+**Publication defaults:** indexes created on Corbanu.com automatically lock and publish when generation completes. Website creation explicitly sends `publish_on_completion:true` with the creator disclosure acceptance. API requests are **private by default**: omit this field or send `false`. API clients may opt in with `true` only when the user authorizes public publication of the index, supplied inputs, holdings and explanations, including permanent IPFS storage. A wallet claim is not required to publish; claiming creator revenue ownership remains a separate wallet-signed action.
+
+When opted in, poll the preview's `publication.status` until `published`; `status:completed` means scoring is complete and publication may still be underway. `publication.page_url` is the public index URL. Publication continues server-side after the browser/client disconnects, and pin failures retry without new inference. Failed or `needs_data` jobs are not published. Reweight API requests also default to private, even when their source is public; opt in explicitly for each new revision.
+
 ## 1. Authenticate and check the account
 
 Load `CORBANU_API_KEY` from your secret store. Every private request uses:
@@ -128,9 +132,9 @@ Choose the new cutoff from the user's instructions; 70 above is illustrative. Po
 
 After the user has authorized confirming the inspected weights, `POST /v2/indexes/{id}/lock` with `{"preview_sha256":"<current inspected hash>"}` pins a signed encrypted IPFS snapshot. It does not publish or trade. This operation accepts the same Corbanu bearer key; a wallet signature is not needed for locking.
 
-Creator claim requires a payout-wallet signature over `/claim-challenge`, submitted to `/claim`. Public publication is a separate `/publish` call with current disclosure acceptance and an existing creator claim. Publicly readable snapshots do not automatically enable other investors. Creator revenue is commission/affiliate based, with payout terms and settlement not yet configured.
+Creator claim requires a payout-wallet signature over `/claim-challenge`, submitted to `/claim`. Public publication is a separate `/publish` call with current disclosure acceptance ; no creator claim is required. Publicly readable snapshots do not automatically enable other investors. Creator revenue is commission/affiliate based, with payout terms and settlement not yet configured.
 
-Buying requires separate Felix authentication, wallet funds, quotes and signed orders. A funded Corbanu API key alone cannot place a stock trade. See https://corbanu.com/api/#indexes for those endpoints. The reference runner below creates/retrieves a private preview; it does not claim, publish, lock or trade it.
+Buying requires separate Felix authentication, wallet funds, quotes and signed orders. A funded Corbanu API key alone cannot place a stock trade. See https://corbanu.com/api/#indexes for those endpoints. The reference runner sends the exact supplied request. It stays private by default; `publish_on_completion:true` authorizes server-side lock/publication. It never claims a wallet or trades.
 
 ## Runnable Python example
 

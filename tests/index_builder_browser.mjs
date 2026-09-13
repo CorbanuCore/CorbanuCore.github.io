@@ -177,6 +177,7 @@ try {
   assert.equal(creates[1].body.mandate.title,"Synthetic theme");
   assert.equal(creates[1].body.weighting,"market_cap_rank");
   assert.equal(creates[1].body.relevance_cutoff,70);
+  assert.equal(creates[1].body.publish_on_completion,true);
   assert.equal(creates[1].body.reasoning_effort,"max");
   assert.equal(creates[1].body.prompt,"Use this synthetic scoring instruction.");
   assert.equal(creates[1].body.disclosure.sha256,hash);

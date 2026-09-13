@@ -105,12 +105,12 @@
     const download=node("button","Download index JSON"); download.addEventListener("click",()=>ui.download(value.artifact));
     detail.append(methods,download);
     publication.hidden=!owner || value.public;publish.hidden=!owner || value.public;
-    publish.disabled=!value.claim || !consent.checked;
+    publish.disabled=!consent.checked;
     creatorTools.hidden=!owner;claim.hidden=!owner; keyLabel.hidden=owner;key.hidden=owner;load.hidden=owner;
     const canTrade=owner || payload.definition.workflow.external_funds===true;
     buy.disabled=!canTrade;buyWallet.disabled=!canTrade;estimate.disabled=!canTrade;
     tradeNote.textContent=canTrade?"Review allocations and sign each order on Felix with your wallet. Orders execute separately.":"The creator has published this index for inspection. Trading by other investors requires verified deterministic replay and the creator enabling external funds.";
-    status.textContent = value.claim ? `Creator wallet: ${value.claim.wallet}. Commission and affiliate revenue payouts await configured revenue-sharing terms and settlement.` : "Index locked. The creator can connect MetaMask to claim ownership.";
+    status.textContent = value.claim ? `Creator wallet: ${value.claim.wallet}. Commission and affiliate revenue payouts await configured revenue-sharing terms and settlement.` : "Index ready. The creator can connect MetaMask to claim ownership for commission or affiliate revenue.";
     claim.disabled = !owner || !wallet || !!value.claim;
   }
   async function open() {
@@ -129,12 +129,12 @@
     } catch (e) { if(currentGeneration===generation)status.textContent=e.status===404?"This private index needs its creator’s Corbanu session. Sign in above to open it.":e.message; }
   }
   key.addEventListener("input",()=>{generation++;current=null;owner=false;detail.replaceChildren();trades.replaceChildren();estimates.replaceChildren();buy.disabled=true;claim.disabled=true;publish.disabled=true;});
-  consent.addEventListener("change",()=>{publish.disabled=!owner||!current?.claim||!consent.checked;});
+  consent.addEventListener("change",()=>{publish.disabled=!owner||!current||!consent.checked;});
   function handle(button, fn) {
     button.addEventListener("click", async () => {
       button.disabled = true;
       try { await fn(); } catch (e) { status.textContent = e.message || "Operation failed"; }
-      finally { button.disabled = button === claim ? !owner || !wallet || !!current?.claim : button === buy ? !current || !(owner || ui.payload(current).definition.workflow.external_funds) : button === publish ? !owner || !current?.claim || !consent.checked : false; }
+      finally { button.disabled = button === claim ? !owner || !wallet || !!current?.claim : button === buy ? !current || !(owner || ui.payload(current).definition.workflow.external_funds) : button === publish ? !owner || !current || !consent.checked : false; }
     });
   }
   handle(load, open);

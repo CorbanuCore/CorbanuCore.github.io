@@ -3,6 +3,7 @@ import {readFile} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
 const {chromium}=await import(process.env.CORBANU_PLAYWRIGHT_MODULE||'playwright');
 const root=resolve(new URL('..',import.meta.url).pathname),browser=await chromium.launch({headless:true}),context=await browser.newContext(),page=await context.newPage();
+let autoPublished=false;
 const hash='a'.repeat(64),newHash='b'.repeat(64),errors=[],requests=[];page.on('pageerror',e=>errors.push(e.message));
 const scores=[{security_id:'low',ticker:'LOW',score:25,confidence:88,reasoning_block:['Incidental exposure.']},{security_id:'high',ticker:'HIGH',score:80,confidence:70,reasoning_block:['Direct thematic exposure.']}];
 const payload=cutoff=>({request:{mandate:{title:'Saved thematic basket',phrase:'Use the saved company scores'},relevance_cutoff:cutoff,weighting:'market_cap'},validity:{independent_inference_replay:false},scores,construction:{weights:scores.filter(s=>s.score>=cutoff).map(s=>({...s,company_name:s.ticker,weight_units:cutoff===70?1e12:s.score===25?86e10:14e10})),excluded:[]},...(cutoff===70?{derivation:{source_preview_id:'source'}}:{})});
@@ -13,7 +14,7 @@ await context.route('https://api.corbanu.com/**',async route=>{
  if(path.endsWith('/session'))return send({authenticated:true});
  if(path.endsWith('/catalog'))return send(catalog);
  if(path==='/v2/indexes/previews/source'||path==='/v2/indexes/previews/revised'){
-  const revised=path.endsWith('/revised');return send({id:revised?'revised':'source',status:'completed',progress:{scored:2,total:2},preview_sha256:revised?newHash:hash,preview:{payload:payload(revised?70:20)}});
+  const revised=path.endsWith('/revised');return send({id:revised?'revised':'source',status:'completed',progress:{scored:2,total:2},preview_sha256:revised?newHash:hash,preview:{payload:payload(revised?70:20)},...(autoPublished?{publication:{requested:true,status:"published",page_url:"https://corbanu.com/indexes/?index=revised"}}:{})});
  }
  throw Error('Unexpected endpoint '+path);
 });
@@ -26,6 +27,9 @@ try {
  assert.equal(await page.locator('.holding-detail').count(),1);assert.match(await page.locator('.holding-detail summary').innerText(),/HIGH/);assert.match(await page.locator('.holding-detail summary').innerText(),/100.00%/);
  assert.equal(await page.locator('#lock-index').isEnabled(),true);
  await page.reload();await page.locator('#index-result').waitFor({state:'visible'});assert.match(await page.locator('#result-construction').innerText(),/70\/100/);
+ autoPublished=true;await page.reload();await page.locator('#published-library-link').waitFor({state:'visible'});
+ assert.equal(await page.locator('#lock-index').isVisible(),false);assert.equal(await page.locator('#open-basket').isVisible(),true);
+ assert.equal(await page.locator('#result-heading').textContent(),'Published index');
  await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);assert.deepEqual(errors,[]);
  console.log('Passed: no website cutoff controls; historical API cutoffs remain accurate; 25-score/88-confidence holding excluded at 70; saved previews reload and fit mobile.');
 }finally{await browser.close();}

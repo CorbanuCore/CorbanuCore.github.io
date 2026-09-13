@@ -36,7 +36,7 @@
   function controls() {
     el("builder-settings").disabled = !catalog || busy || !!activeId || !!pending;
     el("run-index").disabled = !catalog || busy || !!preview;
-    el("run-index").textContent = busy ? "Working…" : activeId ? "Open saved preview" : pending ? "Retry same preview" : "Run preview";
+    el("run-index").textContent = busy ? "Working…" : activeId ? "Open saved preview" : pending ? "Retry same preview" : "Create and publish index";
     el("lock-index").disabled = busy || !preview?.preview_sha256 || preview.status !== "completed" || !!locked;
     el("refresh-preview").disabled = busy;
     el("new-preview").hidden = busy || !(preview || locked);
@@ -118,7 +118,7 @@
     const body = {mandate:{title:el("index-title").value.trim(),phrase:el("index-phrase").value.trim()},
       model:el("model-choice").value,prompt_id:el("prompt-choice").value,reasoning_effort:el("reasoning-effort").value,
       deterministic:el("deterministic").checked,external_funds:el("external-funds").checked,
-      weighting:el("weighting-choice").value,relevance_cutoff:websiteRelevanceCutoff,
+      weighting:el("weighting-choice").value,relevance_cutoff:websiteRelevanceCutoff,publish_on_completion:true,
       disclosure:{version:catalog.disclosure.version,sha256:catalog.disclosure_sha256,accepted:el("accept-disclosure").checked,conflicts:el("creator-conflicts").value.trim()}};
     if (!body.disclosure.accepted || !body.disclosure.conflicts) throw new Error("Accept the disclosure and state your material conflicts, or explicitly none.");
     if (!body.weighting) throw new Error("Select a weighting method.");
@@ -173,6 +173,17 @@
     const cutoff=payload.request.relevance_cutoff,method=payload.request.weighting;
     el("result-construction").textContent=`Minimum relevance: ${cutoff}/100 · ${method==="market_cap_rank"?"Market-cap rank weighting":"Market-cap weighting"}. Only relevance scores at or above ${cutoff} qualify; confidence is separate.`;
     if(payload.derivation)el("result-construction").append(document.createTextNode(` Reuses all ${payload.scores.length} saved company scores.`));
+    const publication=value.publication;
+    el("result-heading").textContent=publication?.status==="published"?"Published index":publication?.requested?"Publishing index":"Review before locking";
+    el("lock-note").hidden=!!publication?.requested || publication?.status==="published";
+    el("lock-index").hidden=!!publication?.requested || publication?.status==="published";
+    el("published-library-link").hidden=publication?.status!=="published";
+    if(publication?.status==="published") {
+      locked={id:value.id,state:"published"};el("job-status").textContent="published";
+      el("job-message").textContent="Your index is published in the community. Open the basket to connect MetaMask; claim creator ownership whenever you are ready.";
+    } else if(publication?.status==="publishing") {
+      el("job-status").textContent="publishing";el("job-message").textContent="All company scores are saved. Locking and publishing to IPFS; this continues if you close the page and retries automatically.";
+    }
     el("result-assurance").textContent = payload.validity.independent_inference_replay ? "Independent replay verified." : "Provider-backed result. Deterministic inference has not been verified.";
     const holder = el("result-holdings");
     holder.replaceChildren(window.CorbanuIndexUI.renderHoldings(value.preview));
@@ -191,7 +202,7 @@
       const value = await request(`/v2/indexes/previews/${encodeURIComponent(id)}`);
       if (id !== activeId) return;
       error(); render(value);signedIn(true);
-      if (["queued", "running"].includes(value.status)) timer = setTimeout(() => void poll(), 5000);
+      if (["queued", "running"].includes(value.status) || value.publication?.status==="publishing") timer = setTimeout(() => void poll(), 5000);
     } catch (e) { if (id === activeId) {if(e.status===401)signedIn(false);error(`${e.message} Use Refresh status to resume; no new preview will be created.`);} }
     controls();
   }

@@ -24,7 +24,7 @@
       });
       details.append(summary,body);article.append(details);list.append(article);
     }
-    status.textContent=rows.length?`${visible.length} of ${rows.length} published indexes. Sorted by ${sort.selectedOptions[0].textContent.toLowerCase()}. Performance ranking is not yet tracked.`:"No user indexes have been published yet. Open a saved preview, lock it, claim it, and publish it here.";
+    status.textContent=rows.length?`${visible.length} of ${rows.length} published indexes. Sorted by ${sort.selectedOptions[0].textContent.toLowerCase()}. Performance ranking is not yet tracked.`:"No user indexes have been published yet. Website-created indexes appear automatically when scoring and publication finish. API-created previews stay private unless publication is requested.";
   }
   async function load(){status.textContent="Loading published indexes…";try{const value=await ui.request("/v2/indexes/published");rows=value.indexes;render();}catch(e){status.textContent=e.message;}}
   search.addEventListener("input",render);sort.addEventListener("change",render);document.getElementById("library-retry").addEventListener("click",load);void load();
