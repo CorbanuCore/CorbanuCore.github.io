@@ -99,6 +99,13 @@
           <section class="index-result" id="index-result" hidden aria-live="polite">
             <header class="index-result-head"><div><span>Review before locking</span><h3 id="result-title"></h3></div><strong id="result-count"></strong></header>
             <p id="result-assurance"></p>
+            <p id="result-construction"></p>
+            <details id="adjust-cutoff"><summary>Change cutoff using saved scores</summary>
+              <p>No model rerun. This creates a separate preview from the same company scores and source packet.</p>
+              <label for="reweight-cutoff">Minimum relevance (0–100)</label>
+              <input id="reweight-cutoff" type="number" min="0" max="100" step="1">
+              <button id="reweight-preview" type="button">Apply cutoff using saved scores</button>
+            </details>
             <div class="result-actions">
             <p class="field-note">Locking confirms this exact preview and pins a signed, encrypted index on IPFS. It does not publish it publicly or place a trade.</p>
             <button class="build-button" id="lock-index" type="button" disabled>Confirm holdings and lock index</button>
@@ -112,6 +119,7 @@
         <aside class="contract-card" aria-label="Index workflow">
           <div class="contract-head"><span class="contract-label">Your index</span><h2 id="summary-title">Untitled index</h2></div>
           <p class="contract-phrase" id="summary-phrase">Your index mandate will appear here.</p>
+          <p id="summary-construction">Choose a minimum relevance and weighting method.</p>
           <dl class="contract-rows"><div><dt>Venue</dt><dd>Felix · Ethereum</dd></div><div><dt>Inputs</dt><dd>Frozen transcripts and fundamentals</dd></div><div><dt>Preview and lock</dt><dd>$0 current charge</dd></div></dl>
           <div class="replay-gate"><strong>Preview → Review → Lock</strong><p class="gate-note">After locking, connect MetaMask to claim creator ownership and estimate your basket.</p></div>
           <p class="field-note">Trading is available through individual Felix orders. Direct MetaMask purchases use Ethereum USDC and ETH for gas. Creator commission or affiliate payouts are not yet configured. Other investors require a qualified replay service.</p>
@@ -129,7 +137,7 @@
   <script src="/assets/js/corbanu-index-ui.js?v=2"></script>
   <script src="/assets/js/corbanu-index-wallet.js?v=2"></script>
   <script src="/assets/js/corbanu-index-felix.js?v=1"></script>
-  <script src="/assets/js/corbanu-index-builder.js?v=5"></script>
-  <script src="/assets/js/corbanu-index-basket.js?v=7"></script>
+  <script src="/assets/js/corbanu-index-builder.js?v=6"></script>
+  <script src="/assets/js/corbanu-index-basket.js?v=8"></script>
 </body>
 </html>

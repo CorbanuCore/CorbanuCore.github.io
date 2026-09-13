@@ -35,6 +35,7 @@
       for (const index of data.indexes) {
         const card = node("article", "", "saved-index-card");
         card.append(node("h2", index.title), node("p", index.mandate));
+        if(Number.isInteger(index.relevance_cutoff))card.append(node("p",`Minimum relevance: ${index.relevance_cutoff}/100${index.derivation?" · Reweighted from saved scores":""}`,"field-note"));
         const created = new Date(index.created_at);
         const date = Number.isFinite(created.getTime()) ? created.toLocaleString() : "Unknown creation date";
         card.append(node("p", `${states[index.state] || index.state} · ${index.public ? "Public" : "Private"} · ${index.progress.scored}/${index.progress.total} scored`, "field-note"), node("p", `Created ${date}`, "field-note"));

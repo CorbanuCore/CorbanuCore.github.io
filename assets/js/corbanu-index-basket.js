@@ -95,6 +95,7 @@
     const payload = published ? value.artifact.payload.index.payload : value.artifact.payload;
     title.textContent = payload.definition.mandate.title;
     detail.replaceChildren(node("p", payload.definition.mandate.phrase), node("p", `Status: ${value.state} · ${payload.validity.independent_inference_replay ? "Replay verified" : "Model-scored snapshot"}`));
+    detail.append(node("p",`Minimum relevance: ${payload.definition.relevance_cutoff}/100 · ${payload.definition.weighting==="market_cap_rank"?"Market-cap rank weighting":"Market-cap weighting"}`));
     const weights=node("details");weights.className="basket-weights";weights.append(node("summary",`Weights and reasoning · ${payload.construction.weights.length} holdings`),ui.renderHoldings(value));
     detail.append(weights, node("p", payload.disclosure.token_exposure));
     const methods=node("details");methods.append(node("summary","Methodology, prompt and exclusions"));

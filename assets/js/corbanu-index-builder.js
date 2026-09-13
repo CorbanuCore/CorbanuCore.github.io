@@ -17,7 +17,7 @@
     catch (e) { el("builder-wallet-status").textContent = e.code === 4001 ? "Wallet connection was declined. You can try again." : e.message; }
     finally { el("builder-connect-wallet").disabled = false; }
   });
-  let catalog = null, pending = null, busy = false, timer = null, preview = null, locked = null;
+  let catalog = null, pending = null, pendingReweight = null, busy = false, timer = null, preview = null, locked = null;
   let activeId = new URLSearchParams(window.location.search).get("preview");
   const names = {"corbanu/deepseek-v4.1-flash":"DeepSeek V4.1 Flash", "corbanu/glm-5.3":"GLM 5.3", "corbanu/glm-5.3-flash":"GLM 5.3 Flash"};
   function error(message = "") { el("form-error").textContent = message; }
@@ -40,6 +40,9 @@
     el("refresh-preview").disabled = busy;
     el("new-preview").hidden = busy || !(preview || locked);
     el("open-basket").hidden = !locked;
+    el("reweight-preview").disabled=busy || !preview?.preview_sha256;
+    el("reweight-cutoff").disabled=busy || !!pendingReweight;
+    el("lock-index").disabled ||= !!pendingReweight;
   }
   function options(id, values, selected) {
     const select = el(id); select.replaceChildren();
@@ -59,6 +62,9 @@
     el("model-choice").disabled = el("deterministic").checked;
     el("summary-title").textContent = el("index-title").value.trim() || "Untitled index";
     el("summary-phrase").textContent = el("index-phrase").value.trim() || "Your index mandate will appear here.";
+    el("summary-construction").textContent=el("relevance-cutoff").value!=="" && el("weighting-choice").value
+      ? `Minimum relevance: ${el("relevance-cutoff").value}/100 · ${el("weighting-choice").selectedOptions[0].textContent}`
+      : "Choose a minimum relevance and weighting method.";
   }
   async function request(path, body, requestId, authenticated = true) {
     const headers = {};
@@ -166,6 +172,10 @@
     el("summary-phrase").textContent = payload.request.mandate.phrase;
     const weights = payload.construction.weights || [];
     el("result-count").textContent = `${weights.length} holdings`;
+    const cutoff=payload.request.relevance_cutoff,method=payload.request.weighting;
+    el("result-construction").textContent=`Minimum relevance: ${cutoff}/100 · ${method==="market_cap_rank"?"Market-cap rank weighting":"Market-cap weighting"}. Only relevance scores at or above ${cutoff} qualify; confidence is separate.`;
+    if(!pendingReweight)el("reweight-cutoff").value=String(cutoff);
+    if(payload.derivation)el("result-construction").append(document.createTextNode(` Reuses all ${payload.scores.length} saved company scores.`));
     el("result-assurance").textContent = payload.validity.independent_inference_replay ? "Independent replay verified." : "Provider-backed result. Deterministic inference has not been verified.";
     const holder = el("result-holdings");
     holder.replaceChildren(window.CorbanuIndexUI.renderHoldings(value.preview));
@@ -216,12 +226,26 @@
   });
   el("reload-catalog").addEventListener("click", () => void loadCatalog());
   el("new-preview").addEventListener("click", () => {
-    clearTimeout(timer); activeId = null; preview = null; pending = null; locked = null;
+    clearTimeout(timer); activeId = null; preview = null; pending = null; pendingReweight = null; locked = null;
     document.body.classList.remove("viewing-preview");form.noValidate=false;document.querySelector(".hero").hidden=false;
     const url = new URL(window.location.href); url.searchParams.delete("preview"); window.history.replaceState({}, "", url);
     el("request-result").hidden = true; el("index-result").hidden = true; error(); controls(); settings();
   });
   el("download-preview").addEventListener("click",()=>{ if(preview?.preview)window.CorbanuIndexUI.download(preview.preview); });
+  el("reweight-preview").addEventListener("click",async()=>{
+    if(busy || !preview?.preview_sha256)return;
+    const cutoff=Number(el("reweight-cutoff").value);
+    if(el("reweight-cutoff").value==="" || !Number.isInteger(cutoff) || cutoff<0 || cutoff>100){error("Enter an integer cutoff from 0 to 100.");return;}
+    if(!pendingReweight)pendingReweight={id:crypto.randomUUID(),source:activeId,body:{preview_sha256:preview.preview_sha256,relevance_cutoff:cutoff}};
+    busy=true;error();controls();
+    try {
+      const value=await request(`/v2/indexes/previews/${encodeURIComponent(pendingReweight.source)}/reweight`,pendingReweight.body,pendingReweight.id);
+      if(typeof value.id!=="string" || !value.id)throw new Error("The service did not return a revised preview ID.");
+      pendingReweight=null;preview=null;locked=null;el("index-result").hidden=true;
+      rememberId(value.id);render(value);await poll();
+    } catch(e){if([400,409,422].includes(e.status))pendingReweight=null;error(`${e.message} Retry to apply the cutoff using saved scores.`);}
+    finally{busy=false;controls();}
+  });
   el("lock-index").addEventListener("click", async () => {
     if (busy || !preview?.preview_sha256 || preview.status !== "completed") return;
     busy = true; error(); controls();
