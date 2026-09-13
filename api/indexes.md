@@ -109,7 +109,7 @@ The response is a `corbanu.signed-index.v1` envelope with `payload`, `public_key
 
 The corresponding review URL is `https://corbanu.com/indexes/?preview=<id>`. Previews stay in the account: `GET /v2/indexes` lists the latest 100 saved previews and locked baskets. Old rows with `workflow:false` use `GET /v1/indexes/{id}/result`; modern previews use the v2 result path above.
 
-## 5. Change the cutoff without new inference
+## 5. Change cutoff or weighting without new inference
 
 ```sh
 jq '{preview_sha256,relevance_cutoff:70}' status.json > reweight-request.json
@@ -122,7 +122,7 @@ curl --fail-with-body -sS "https://api.corbanu.com/v2/indexes/previews/$INDEX_ID
   --data-binary @reweight-request.json > revised.json
 ```
 
-Choose the new cutoff from the user's instructions; 70 above is illustrative. Poll the **new** ID in `revised.json`, then download its result. This copies all scores, rubric and receipts atomically, uses the same frozen packet, and changes only the cutoff. The source preview and existing locked baskets remain unchanged. The signed output records `derivation.source_preview_id` and `source_preview_sha256`. Lock a revision using its new `preview_sha256`, never its source's hash.
+Choose the new cutoff from the user's instructions; 70 above is illustrative. Poll the **new** ID in `revised.json`, then download its result. This copies all scores, rubric and receipts atomically, uses the same frozen packet, and changes the cutoff plus the optional `weighting` method. Add `"weighting":"market_cap_rank"` to the request body to use linear rank weights; omission preserves the source method. The source preview and existing locked baskets remain unchanged. The signed output records `derivation.source_preview_id` and `source_preview_sha256`. Lock a revision using its new `preview_sha256`, never its source's hash.
 
 ## 6. Optional lock, ownership, publication and trading
 
