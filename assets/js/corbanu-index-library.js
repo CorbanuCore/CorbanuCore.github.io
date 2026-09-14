@@ -12,6 +12,8 @@
       const details=ui.node("details"),summary=ui.node("summary","","library-row-toggle");
       summary.append(ui.node("span",String(i+1).padStart(2,"0"),"library-row-rank"));
       const identity=ui.node("span","","library-row-identity");identity.append(ui.node("strong",row.title),ui.node("small",row.mandate));
+      identity.append(ui.node("small",row.generation_origin==="user_generated"?"User generated · User-defined holdings":"AI generated · User-created theme","generation-tag"));
+      if(row.x_claim?.username)identity.append(ui.node("small",`Creator: @${row.x_claim.username} on X`));
       summary.append(identity,ui.node("span",`${row.constituent_count ?? "—"} holdings`,"library-row-stat"),ui.node("span",row.deterministic?"Replay verified":"Model-scored snapshot","library-row-replay"),ui.node("span","Expand holdings","library-row-affordance"));
       const body=ui.node("div","","library-row-detail"),open=ui.node("a",row.external_funds?"Open basket & connect MetaMask →":"Open index →");
       open.href=`/indexes/?index=${encodeURIComponent(row.id)}`;

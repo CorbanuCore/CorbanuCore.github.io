@@ -163,3 +163,13 @@ Only send the Corbanu credential to https://api.corbanu.com. Keep keys out of UR
 Website-created previews always use a minimum relevance of 70/100. Custom cutoffs are available only through the API: specify `relevance_cutoff` in a preview request, or use the reweight endpoint to apply a different cutoff to saved scores. Existing previews retain their original cutoff.
 
 Website creation defaults to `market_cap_rank`, the approved linear rank method. To revise an existing preview without inference, include `"weighting":"market_cap_rank"` alongside `preview_sha256` and `relevance_cutoff` in `POST /v2/indexes/previews/{id}/reweight`. Omitted weighting preserves the source method. Raw `market_cap` remains available explicitly.
+
+## Creator identity and provenance
+
+`POST /v2/indexes/{id}/claim-x` requires the creator's Corbanu bearer key or remembered browser session. It returns `redirect_url` and sets a ten-minute HttpOnly OAuth state cookie. Open that URL in the same browser, authorize X, and return to the index. An API agent can initiate the flow but cannot authorize the creator's X account without their browser interaction. No MetaMask signature is required for the X claim.
+
+Corbanu verifies X OAuth2 with PKCE using Task Node's registered callback and a signed, fixed-destination relay. The callback consumes the browser-bound state once and binds X's stable user ID to `index_sha256`. Read `x_claim` and `x_claim_receipt` from the index response. The receipt is signed; claiming does not rewrite an already pinned index artifact. Handles can change; `provider_user_id` identifies the authenticated account at claim time.
+
+Use the existing wallet claim challenge/signature endpoints separately to attach a payout wallet. Creator revenue is based on commissions or affiliate revenue; percentages and settlement remain unconfigured. X claiming does not transfer funds or enable payouts.
+
+Published index responses include `generation_origin`: `ai_generated` for model-generated holdings, or `user_generated` for an explicitly supported manual construction source. The current creation API always generates holdings with AI, even when a user supplies the theme, prompt or context. It does not accept a caller override for this label. Existing model-scored indexes are labeled AI generated; the library also identifies their user-created themes. Provenance is distinct from verified deterministic replay.

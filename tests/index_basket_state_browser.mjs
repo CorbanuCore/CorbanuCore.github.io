@@ -19,7 +19,7 @@ try {
  await page.locator('#basket-amount').fill('100');await page.locator('#basket-slippage').fill('100');
  await page.evaluate(()=>{window.fixtureLogins=0;window.CorbanuFelix.login=async()=>{window.fixtureLogins++;return '0x'+'1'.repeat(40);};});
  await changeKey();
- assert.equal(await page.locator('#buy-index-wallet').isDisabled(),true);assert.equal(await page.getByRole('button',{name:'Estimate basket',exact:true}).isDisabled(),true);
+ assert.equal(await page.locator('#claim-index-x').isDisabled(),true);assert.equal(await page.locator('#buy-index-wallet').isDisabled(),true);assert.equal(await page.getByRole('button',{name:'Estimate basket',exact:true}).isDisabled(),true);
  // Even a synthetic click cannot reach login or dereference an absent index.
  await page.locator('#buy-index-wallet').dispatchEvent('click');assert.equal(await page.evaluate(()=>window.fixtureLogins),0);
  assert.equal(await page.locator('#buy-index-wallet').isDisabled(),true);assert.ok(!(await page.locator('[role=status]').innerText()).includes('Cannot read'));

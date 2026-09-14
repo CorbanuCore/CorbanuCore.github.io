@@ -53,7 +53,7 @@ try{
  assert.equal(await page.locator('#publish-index').isDisabled(),true);
  await page.locator('#publish-consent').check();await page.locator('#publish-index').click();
  await page.getByRole('link',{name:'View index leaderboard →',exact:true}).click();
- await page.locator('.library-row-toggle').click();await page.locator('.holding-detail summary').click();await page.getByText('A saved scoring explanation.',{exact:true}).waitFor();
+ await page.locator('.generation-tag').filter({hasText:'AI generated'}).waitFor();await page.locator('.library-row-toggle').click();await page.locator('.holding-detail summary').click();await page.getByText('A saved scoring explanation.',{exact:true}).waitFor();
  await page.locator('#library-search').fill('absent');assert.equal(await page.locator('.library-row').count(),0);await page.locator('#library-search').fill('');
  // Another browser session can inspect a published artifact without creator privileges.
  session=false;await page.locator('.library-row-toggle').click();await page.getByRole('link',{name:'Open index →',exact:true}).click();await page.getByRole('heading',{name:'Saved <theme>',exact:true}).waitFor();

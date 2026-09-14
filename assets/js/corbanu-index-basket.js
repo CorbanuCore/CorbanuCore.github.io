@@ -39,8 +39,9 @@
   const publication = node("label", "", "check-label");
   const consent = node("input");consent.type="checkbox";consent.id="publish-consent";
   publication.append(consent,document.createTextNode("Make this index, supplied inputs, disclosures, holdings and scoring explanations public, including permanent IPFS publication."));
-  const claim = node("button", "Claim creator ownership");claim.id="claim-index";
-  const creatorTools=node("details");creatorTools.id="creator-tools";creatorTools.append(node("summary","Creator ownership & publication"),claim,publication,publish);
+  const claimX=node("button","Claim with X");claimX.id="claim-index-x";claimX.disabled=true;
+  const claim = node("button", "Attach creator payout wallet");claim.id="claim-index";
+  const creatorTools=node("details");creatorTools.id="creator-tools";creatorTools.append(node("summary","Creator ownership & publication"),claim,claimX,publication,publish);
   claim.disabled = true;
   const amountLabel = node("label", "Basket amount in USDC", "field-label");
   const amount = node("input");
@@ -78,6 +79,7 @@
   }
   function syncActions() {
     for(const button of [buyWallet,buy,estimate])button.disabled=!canTrade() || walletOperation || pendingActions.has(button);
+    claimX.disabled=!current || !owner || !!current.x_claim || walletOperation || pendingActions.has(claimX);
     claim.disabled=!current || !owner || !wallet || !!current.claim || walletOperation || pendingActions.has(claim);
     publish.disabled=!current || !owner || !consent.checked || walletOperation || pendingActions.has(publish);
     connect.disabled=walletOperation || pendingActions.has(connect);
@@ -135,7 +137,7 @@
     const canTrade=owner || payload.definition.workflow.external_funds===true;
     buy.disabled=!canTrade;buyWallet.disabled=!canTrade;estimate.disabled=!canTrade;
     tradeNote.textContent=canTrade?"Review allocations and sign each order on Felix with your wallet. Orders execute separately.":"The creator has published this index for inspection. Trading by other investors requires verified deterministic replay and the creator enabling external funds.";
-    status.textContent = value.claim ? `Creator wallet: ${value.claim.wallet}. Commission and affiliate revenue payouts await configured revenue-sharing terms and settlement.` : "Index ready. The creator can connect MetaMask to claim ownership for commission or affiliate revenue.";
+    status.textContent = value.x_claim ? `Creator: @${value.x_claim.username} on X.${value.claim ? " Payout wallet: "+value.claim.wallet+"." : " Attach a payout wallet under Creator ownership & publication."} Commission and affiliate revenue settlement awaits configured terms.` : value.claim ? `Creator wallet: ${value.claim.wallet}. Commission and affiliate revenue payouts await configured revenue-sharing terms and settlement.` : "Index ready. Claim your index with X, then attach a payout wallet for commission or affiliate revenue.";
     syncActions();
   }
   async function open() {
@@ -184,6 +186,13 @@
     trades.replaceChildren();execution.replaceChildren();
     connect.textContent = wallet ? `MetaMask: ${wallet.slice(0,6)}…${wallet.slice(-4)}` : "Connect MetaMask";
     syncActions();
+  });
+  handle(claimX, async () => {
+    if(!current || !owner)throw new Error("Open your index to claim it.");
+    const context={value:current,generation};
+    const result=await request(`/v2/indexes/${encodeURIComponent(id)}/claim-x`,{});
+    assertContext(context);
+    window.location.assign(result.redirect_url);
   });
   handle(claim, async () => {
     if (!wallet) throw new Error("Connect MetaMask first.");
