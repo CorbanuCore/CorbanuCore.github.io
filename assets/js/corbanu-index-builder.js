@@ -3,6 +3,10 @@
   if (new URLSearchParams(window.location.search).has("index")) return;
   const form = document.getElementById("index-builder");
   if (!form) return;
+  if(new URLSearchParams(window.location.search).get("x_claim")==="failed") {
+    const note=document.createElement("p");note.setAttribute("role","alert");
+    note.textContent="X claiming could not be completed. Open your saved index from My indexes and try Claim with X again.";form.before(note);
+  }
   const el = id => document.getElementById(id);
   const api = "https://api.corbanu.com";
   const websiteRelevanceCutoff = 70;

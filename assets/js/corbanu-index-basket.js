@@ -138,6 +138,12 @@
     buy.disabled=!canTrade;buyWallet.disabled=!canTrade;estimate.disabled=!canTrade;
     tradeNote.textContent=canTrade?"Review allocations and sign each order on Felix with your wallet. Orders execute separately.":"The creator has published this index for inspection. Trading by other investors requires verified deterministic replay and the creator enabling external funds.";
     status.textContent = value.x_claim ? `Creator: @${value.x_claim.username} on X.${value.claim ? " Payout wallet: "+value.claim.wallet+"." : " Attach a payout wallet under Creator ownership & publication."} Commission and affiliate revenue settlement awaits configured terms.` : value.claim ? `Creator wallet: ${value.claim.wallet}. Commission and affiliate revenue payouts await configured revenue-sharing terms and settlement.` : "Index ready. Claim your index with X, then attach a payout wallet for commission or affiliate revenue.";
+    const returned=new URL(window.location.href),xResult=returned.searchParams.get("x_claim");
+    if(!value.x_claim && ["failed","denied"].includes(xResult)) {
+      status.textContent=(xResult==="denied"?"X authorization was canceled. ":"X claiming could not be completed. ")+"Try Claim with X again under Creator ownership & publication.";
+      creatorTools.open=owner;
+    }
+    if(xResult){returned.searchParams.delete("x_claim");window.history.replaceState(null,"",returned);}
     syncActions();
   }
   async function open() {
