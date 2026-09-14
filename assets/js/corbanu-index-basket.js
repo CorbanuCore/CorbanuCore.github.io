@@ -41,7 +41,7 @@
   publication.append(consent,document.createTextNode("Make this index, supplied inputs, disclosures, holdings and scoring explanations public, including permanent IPFS publication."));
   const claimX=node("button","Claim with X");claimX.id="claim-index-x";claimX.disabled=true;
   const claim = node("button", "Attach creator payout wallet");claim.id="claim-index";
-  const creatorTools=node("details");creatorTools.id="creator-tools";creatorTools.append(node("summary","Creator ownership & publication"),claim,claimX,publication,publish);
+  const creatorTools=node("details");creatorTools.id="creator-tools";creatorTools.append(node("summary","Creator ownership & publication"),claim,claimX,node("p","X authorization uses Task Node, Corbanu’s connected authentication app. Your X claim identifies the creator; attach a payout wallet separately.","field-note"),publication,publish);
   claim.disabled = true;
   const amountLabel = node("label", "Basket amount in USDC", "field-label");
   const amount = node("input");
