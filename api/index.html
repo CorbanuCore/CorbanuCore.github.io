@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Corbanu API — Inference, Deep Research, keys, and USDC funding</title>
-  <meta name="description" content="Fund a Corbanu API key, request model inference through OpenAI- and Anthropic-compatible endpoints, and run durable Deep Research jobs.">
+  <title>Corbanu API — Inference, Deep Research, Decisions, and indexes</title>
+  <meta name="description" content="Use one Corbanu API key for model inference, Deep Research, Decisions, and indexes. Turn text into researched options, model votes, and a clear decision report.">
   <meta name="theme-color" content="#090b09">
   <link rel="canonical" href="https://corbanu.com/api/">
   <link rel="icon" href="/assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/corbanu-api.css?v=20260902-2">
+  <link rel="stylesheet" href="/assets/css/corbanu-api.css?v=20260919-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -186,8 +186,8 @@
         <span class="section-number">03</span>
         <div>
           <p class="kicker">API reference</p>
-          <h2 id="quickstart-title">Request inference, research and indexes.</h2>
-          <p>Corbanu exposes OpenAI-compatible Chat Completions, Anthropic-compatible Messages, account telemetry, durable Deep Research jobs, and thematic index creation. The live model catalog is authoritative for model IDs, capabilities, privacy, and pricing.</p>
+          <h2 id="quickstart-title">Request inference, research, decisions and indexes.</h2>
+          <p>Corbanu exposes OpenAI-compatible Chat Completions, Anthropic-compatible Messages, account telemetry, durable Deep Research jobs, researched decision reports, and thematic index creation. The live model catalog is authoritative for model IDs, capabilities, privacy, and pricing.</p>
         </div>
       </div>
 
@@ -202,6 +202,7 @@
         <a href="#authentication">Authentication</a>
         <a href="#inference">Inference</a>
         <a href="#deep-research">Deep Research</a>
+        <a href="#decisions">Decisions</a>
         <a href="#indexes">Index creation</a>
         <a href="/api/indexes.md">Agent guide (Markdown)</a>
         <a href="#errors">Errors</a>
@@ -230,6 +231,12 @@
                 <tr><td><span class="method method-post">POST</span></td><td><code>/v1/deep-research</code></td><td>Bearer key</td><td>Start a durable research job using Plan capacity or prepaid balance.</td></tr>
                 <tr><td><span class="method method-get">GET</span></td><td><code>/v1/deep-research/:id</code></td><td>Owning bearer key</td><td>Read job status, stage, progress, and usage.</td></tr>
                 <tr><td><span class="method method-get">GET</span></td><td><code>/v1/deep-research/:id/result</code></td><td>Owning bearer key</td><td>Retrieve completed Markdown and source metadata.</td></tr>
+                <tr><td><span class="method method-post">POST</span></td><td><code>/v1/decisions</code></td><td>Bearer key</td><td>Turn text into five options, research, votes, and a decision report.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/decisions/models</code></td><td>Bearer key</td><td>Discover available voting models and standard/budget settings.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/decisions/:id</code></td><td>Owning account key</td><td>Read decision status, progress, vote counts, and usage.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/decisions/:id/report</code></td><td>Owning account key</td><td>Download the completed Markdown or PDF report.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/decisions/:id/packet</code></td><td>Owning account key</td><td>Retrieve research, individual reasoning, critiques, and operation records.</td></tr>
+                <tr><td><span class="method method-get">GET</span></td><td><code>/v1/decisions/openapi.json</code></td><td>Public</td><td>Machine-readable Decisions API contract.</td></tr>
               </tbody>
             </table>
           </div>
@@ -401,8 +408,106 @@ curl -sS \
           <p class="docs-note"><strong>Billing and idempotency:</strong> a prepaid start returns <code>X-Corbanu-Price-Version</code> and <code>X-Corbanu-Reserved-Microusd</code>; the hold is released on an explicit rejection. Retrying the same body with the same request ID returns the same job. Reusing that ID with different research content or a different token budget returns <code>409 request_id_conflict</code>.</p>
         </section>
 
+        <section class="reference-block" id="decisions" aria-labelledby="decisions-title">
+          <div class="reference-head">
+            <div>
+              <span class="reference-index">04 / Decisions</span>
+              <h3 id="decisions-title">From your context to a decision you can act on.</h3>
+            </div>
+            <p>Send a question and its context as Markdown or plain text. Corbanu develops five useful options A–E, researches the choice, collects independent model votes, and delivers a report explaining what to choose and why.</p>
+          </div>
+
+          <div class="docs-callout">
+            <strong>One request starts the complete workflow</strong>
+            <p>Use your existing Corbanu API key and funded balance. The API runs asynchronously: save the returned job ID, poll its status, then download the report. It recommends a decision; it does not execute the selected action.</p>
+            <p><a href="/api/decisions.md">Decisions guide (Markdown) →</a> · <a href="https://api.corbanu.com/v1/decisions/openapi.json">OpenAPI schema →</a></p>
+          </div>
+
+          <div class="table-scroll" role="region" aria-label="Decisions API modes" tabindex="0">
+            <table class="endpoint-table decisions-modes">
+              <thead><tr><th>Workflow</th><th>Standard · default</th><th>Budget</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Research</th><td>Three diversified reports: outcomes, feasibility and economics, and counterarguments and risks.</td><td>One full report combining those perspectives.</td></tr>
+                <tr><th scope="row">Voting</th><td>Astra Pro, GLM 5.3, and Kimi K3 by default. Three runs per model; nine votes total. The panel is configurable.</td><td>DeepSeek V4.1 Flash, three independent runs; three votes total.</td></tr>
+                <tr><th scope="row">Draft review</th><td>One Astra Pro review and one Kimi K3 review, each scored 0–100.</td><td>Two independent Flash reviews, each scored 0–100.</td></tr>
+                <tr><th scope="row">Final report</th><td>Kimi K3 rewrites the full draft using both reviews.</td><td>Kimi K3 rewrites the full draft using both reviews. All earlier generation, including research, uses Flash.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="docs-note">Budget mode changes the report count and models; it keeps the full research workflow. Independent research jobs, ballots, and reviews run concurrently within their stage as available balance permits. Completion time depends on research, queues, and model responses.</p>
+
+          <div class="field-grid" aria-label="Decisions request fields">
+            <article><strong><code>input</code> · required</strong><p>Your decision and context, up to 60,000 characters. If no question is stated, Corbanu identifies the decision from the context.</p></article>
+            <article><strong><code>mode</code> · optional</strong><p><code>standard</code> by default. Set <code>budget</code> for one research report and three Flash votes.</p></article>
+            <article><strong><code>models</code> · optional</strong><p>Standard: three distinct IDs from <code>/v1/decisions/models</code>. Budget: omit, or supply only <code>corbanu/deepseek-v4.1-flash</code>.</p></article>
+            <article><strong><code>format</code> · optional</strong><p><code>markdown</code> by default, or <code>pdf</code>. Override this when downloading without another model run.</p></article>
+          </div>
+
+          <div class="code-grid">
+            <article class="code-panel">
+              <div class="code-heading"><span>1 / Start a standard decision</span><button type="button" data-copy-target="#code-decision-start">Copy</button></div>
+              <pre id="code-decision-start"><code>curl --fail-with-body -sS https://api.corbanu.com/v1/decisions \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "X-Corbanu-Request-Id: product-launch-001" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": "Should we launch our analytics tool publicly or start with a private pilot? We have a working prototype, two engineers, ten interested customers, and six months of runway. We want paying customers without overwhelming support.",
+    "mode": "standard",
+    "format": "markdown"
+  }' &gt; decision-job.json</code></pre>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>Budget / Use your Markdown file</span><button type="button" data-copy-target="#code-decision-budget">Copy</button></div>
+              <pre id="code-decision-budget"><code># Put your question and context in context.md.
+jq -n --rawfile context context.md \
+  '{input: $context, mode: "budget", format: "markdown"}' \
+  &gt; decision-request.json
+
+curl --fail-with-body -sS https://api.corbanu.com/v1/decisions \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  -H "X-Corbanu-Request-Id: product-launch-budget-001" \
+  -H "Content-Type: application/json" \
+  --data-binary @decision-request.json &gt; decision-job.json</code></pre>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>2 / Check progress</span><button type="button" data-copy-target="#code-decision-status">Copy</button></div>
+              <pre id="code-decision-status"><code>CORBANU_DECISION_ID=$(jq -er '.id' decision-job.json)
+
+curl --fail-with-body -sS \
+  "https://api.corbanu.com/v1/decisions/$CORBANU_DECISION_ID" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" \
+  | jq '{id,status,stage,completed_calls,total_calls,
+         research_progress,selected,vote_counts,error}'</code></pre>
+            </article>
+            <article class="code-panel">
+              <div class="code-heading"><span>3 / Download when completed</span><button type="button" data-copy-target="#code-decision-report">Copy</button></div>
+              <pre id="code-decision-report"><code>curl --fail-with-body -sS \
+  "https://api.corbanu.com/v1/decisions/$CORBANU_DECISION_ID/report?format=markdown" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" -o decision.md
+
+curl --fail-with-body -sS \
+  "https://api.corbanu.com/v1/decisions/$CORBANU_DECISION_ID/report?format=pdf" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" -o decision.pdf
+
+curl --fail-with-body -sS \
+  "https://api.corbanu.com/v1/decisions/$CORBANU_DECISION_ID/packet" \
+  -H "Authorization: Bearer $CORBANU_API_KEY" -o decision-packet.json</code></pre>
+            </article>
+          </div>
+
+          <p class="docs-note"><strong>Start one mode:</strong> the standard and budget examples create separate, billed jobs. Use your own stable request ID for each decision. Retrying an identical request with the same ID returns the existing job; changing the body under that ID returns <code>409</code>. A new ID starts new work.</p>
+          <p class="docs-note"><strong>Progress:</strong> creation returns <code>202</code> with <code>id</code>, <code>status</code>, <code>stage</code>, <code>report_url</code>, and <code>packet_url</code>. Poll every 5–15 seconds while status is <code>queued</code> or <code>running</code>. Stop on <code>completed</code> or <code>failed</code>. Failed jobs retain a downloadable packet; the report returns <code>409</code> until completion. Reposting the same request does not restart a failed job.</p>
+
+          <div class="response-schema">
+            <article><span>The report</span><p>Six sections: User Proposed Decision; Summary of User Context; Machine Generated Options; The Decision Recommended and Its Votes; A Summary in Plain English of the Reasoning; The Vote Tally for Each Option. Includes source links and a comparison of the alternatives. Markdown is the default; PDF is at most five pages.</p></article>
+            <article><span>The full packet</span><p>Original input, prompts, research reports and sources, each vote and its one-page reasoning, rankings, draft, review scores and feedback, final report, usage, and available error diagnostics. Retrieve it for detailed review or to inspect partial work.</p></article>
+          </div>
+          <p class="docs-note"><strong>How the choice wins:</strong> most first-choice votes wins. Ties use all rankings, awarding 4, 3, 2, 1, and 0 points; remaining ties use A–E order. The report shows every option’s actual votes. Repeated votes are not probabilities of correctness; budget mode uses one voting model.</p>
+          <p class="docs-note"><strong>Cost and access:</strong> model and research usage draw from the account’s prepaid balance, with no extra Decisions fee. There is no fixed job quote or hard spending cap. Up to three decisions can be active per account. Inputs and reports are account-restricted, but processing uses third-party model and research providers. See the <a href="/api/decisions.md#billing-and-failure-handling">guide’s billing and failure handling</a> for reservation and retry details.</p>
+        </section>
+
         <section class="reference-block" id="indexes" aria-labelledby="indexes-api-title">
-          <div class="reference-head"><div><span class="reference-index">04 / Index creation</span><h3 id="indexes-api-title">Create once. Review weights. Retrieve the index.</h3></div><p>Create a thematic basket from frozen transcripts and fundamentals using the Corbanu API. The website uses these same calls. <a href="https://api.corbanu.com/v2/indexes/openapi.json">Download OpenAPI →</a></p>
+          <div class="reference-head"><div><span class="reference-index">05 / Index creation</span><h3 id="indexes-api-title">Create once. Review weights. Retrieve the index.</h3></div><p>Create a thematic basket from frozen transcripts and fundamentals using the Corbanu API. The website uses these same calls. <a href="https://api.corbanu.com/v2/indexes/openapi.json">Download OpenAPI →</a></p>
 <p>Index pages support <strong>Claim with X</strong> using Task Node’s X authentication callback. API clients start the creator-authorized flow with <code>POST /v2/indexes/{id}/claim-x</code>; the creator completes authorization in the same browser. Public responses expose <code>x_claim</code>, a signed claim receipt, and <code>generation_origin</code>. Current model-scored indexes are labeled AI generated, including those with user-written themes. <a href="/api/indexes.md#creator-identity-and-provenance">Creator identity and provenance reference →</a></p></div>
           <div class="docs-callout" id="index-agents"><strong>Agents: use your existing Corbanu balance and API key</strong><p>Send <code>Authorization: Bearer $CORBANU_API_KEY</code> to <code>https://api.corbanu.com</code>. The same key works for account balance, preview creation, status, results and cutoff revisions. These calls need no MetaMask connection, browser cookie, <code>Origin</code> header or separate DeepSeek key.</p><p><a href="/api/indexes.md">Agent quickstart (Markdown) →</a> · <a href="https://api.corbanu.com/v2/indexes/openapi.json">OpenAPI schema →</a> · <a href="/api/examples/index_agent.py" download>Download Python start/resume example →</a> · <a href="/llms.txt">Agent discovery →</a></p></div>
           <article class="code-panel"><div class="code-heading"><span>0 / Check your existing API account</span><button type="button" data-copy-target="#code-index-account">Copy</button></div><pre id="code-index-account"><code>curl --fail-with-body -sS https://api.corbanu.com/v1/account \
@@ -479,7 +584,7 @@ curl --fail-with-body -sS \
         <section class="reference-block" id="errors" aria-labelledby="errors-title">
           <div class="reference-head">
             <div>
-              <span class="reference-index">04 / Operations</span>
+              <span class="reference-index">06 / Operations</span>
               <h3 id="errors-title">Balances, errors, and privacy</h3>
             </div>
             <p>Read <code>/v1/account</code> to reconcile the wallet-owned balance before and after inference. Treat the response body’s structured <code>error.type</code> as the machine-readable failure reason when present.</p>

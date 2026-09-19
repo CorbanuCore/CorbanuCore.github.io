@@ -1,10 +1,13 @@
 # Corbanu
 
-> Corbanu provides account-funded model inference, asynchronous Deep Research and thematic indexes of tokenized equities. API base: https://api.corbanu.com. Private calls authenticate with Authorization: Bearer <Corbanu account API key>.
+> Corbanu provides account-funded model inference, asynchronous Deep Research, decision reports, and thematic indexes of tokenized equities. API base: https://api.corbanu.com. Private calls authenticate with Authorization: Bearer <Corbanu account API key>.
 
 ## API documentation
 
-- [API reference](https://corbanu.com/api/): Authentication, account balance, inference, Deep Research, indexes and lifecycle operations.
+- [API reference](https://corbanu.com/api/): Authentication, account balance, inference, Deep Research, Decisions, indexes and lifecycle operations.
+- [Decisions API](https://corbanu.com/api/#decisions): Turn Markdown or text into five options, research, model votes, and a Markdown or PDF recommendation. Standard and budget modes.
+- [Decisions guide](https://corbanu.com/api/decisions.md): Create, poll, download reports and inspect the full packet using an existing Corbanu key. Includes model selection, billing and retry behavior.
+- [Decisions OpenAPI](https://api.corbanu.com/v1/decisions/openapi.json): Public request and response schemas for the asynchronous Decisions API.
 - [Agent index guide](https://corbanu.com/api/indexes.md): Create, poll, retrieve and revise an index with an existing Corbanu key, without a browser or wallet login.
 - [Index OpenAPI](https://api.corbanu.com/v2/indexes/openapi.json): Machine-readable operations, bearer security, request and response schemas.
 - [Index Python example](https://corbanu.com/api/examples/index_agent.py): Runnable standard-library start/resume/poll/download example; uses CORBANU_API_KEY from the environment.

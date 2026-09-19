@@ -72,7 +72,7 @@ test("API reference covers inference and the complete Deep Research lifecycle wi
 
   assert.match(html, /family=IBM\+Plex\+Mono/);
   assert.match(html, /family=Inter\+Tight/);
-  assert.match(html, /corbanu-api\.css\?v=20260902-2/);
+  assert.match(html, /corbanu-api\.css\?v=20260919-1/);
   assert.doesNotMatch(html, /<\/?em(?:\s|>)/i);
   assert.doesNotMatch(css, /Georgia|Times New Roman|Helvetica|font-style:\s*italic/i);
   assert.match(css, /--sans: "Inter Tight"/);
