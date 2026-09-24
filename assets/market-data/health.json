@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-23T21:39:06.360692Z",
+ "generatedAt": "2026-09-24T21:39:02.699104Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-09-23T21:39:06.360692Z"
+     "detail": "health snapshot generated 2026-09-24T21:39:02.699104Z"
     }
    ],
    "status": "ok"
@@ -20,25 +20,55 @@
   {
    "id": "coverage",
    "label": "Spot / Perp Coverage",
-   "summary": "42/42 instruments current",
+   "summary": "39/42 instruments current",
    "items": [
     {
      "name": "index build",
      "status": "ok",
      "detail": "coverage indices finished 0.1h ago"
+    },
+    {
+     "name": "CXMT",
+     "status": "critical",
+     "detail": "spot series missing entirely; page retains last published data"
+    },
+    {
+     "name": "SKHX",
+     "status": "critical",
+     "detail": "spot series missing entirely; page retains last published data"
+    },
+    {
+     "name": "SMSN",
+     "status": "critical",
+     "detail": "spot series missing entirely; page retains last published data"
     }
    ],
-   "status": "ok"
+   "status": "critical"
   },
   {
    "id": "options",
    "label": "Listed Options",
-   "summary": "33/34 chains fresh \u00b7 8 instruments without listed options",
+   "summary": "21/25 chains fresh \u00b7 6 instruments without listed options",
    "items": [
+    {
+     "name": "AMD",
+     "status": "warn",
+     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: RuntimeError: No liquid ATM straddle survived for AMD"
+    },
     {
      "name": "COIN",
      "status": "warn",
-     "detail": "retained last-good payload (336.0h old); refresh attempted 0.0h ago: RuntimeError: No liquid ATM straddle survived for COIN"
+     "detail": "retained last-good payload (360.0h old); refresh attempted 0.0h ago: RuntimeError: No liquid ATM straddle survived for COIN"
+    },
+    {
+     "name": "NATGAS",
+     "status": "warn",
+     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: RuntimeError: No liquid paired strike survived for the 90-day UNG target"
+    },
+    {
+     "name": "PLTR",
+     "status": "warn",
+     "detail": "retained last-good payload (24.0h old); refresh attempted 0.0h ago: RuntimeError: No volume-screened historical option structures survived for PLTR"
     }
    ],
    "status": "warn"
@@ -46,7 +76,7 @@
   {
    "id": "transcripts",
    "label": "Transcript Briefings",
-   "summary": "21 equities current at 18-quarter target",
+   "summary": "14 equities current at 18-quarter target",
    "items": [
     {
      "name": "packet build",
