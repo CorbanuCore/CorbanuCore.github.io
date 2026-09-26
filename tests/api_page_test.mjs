@@ -61,7 +61,7 @@ test("API page documents supported wallet/network combinations and Terminal key 
   assert.match(html, /Authorization: Bearer/);
   assert.match(html, /\/v1\/models/);
   assert.match(html, /shown only once|revealed once/);
-  assert.match(html, /api-checkout\.js\?v=20260902-7/);
+  assert.match(html, /api-checkout\.js\?v=20260926-1/);
 });
 
 test("API reference covers inference and the complete Deep Research lifecycle with brand typography", async () => {
@@ -240,6 +240,52 @@ test("submitted EVM payment recovery survives reloads without storing API creden
   assert.equal(shouldCreateApiKeyWithoutPayment("0", 0), false);
   assert.equal(shouldCreateApiKeyWithoutPayment("not-a-balance", 0), false);
   assert.doesNotMatch(recoverySource, /CreatedApiKey|revealedKey|privateKey|seedPhrase|mnemonic/i);
+});
+
+test("a saved Base transfer never blocks or hijacks an Ethereum payment", async () => {
+  const {
+    clearPendingEvmPayment,
+    otherNetworkPendingEvmPayments,
+    pendingEvmPaymentForWallet,
+    savePendingEvmPayment,
+    isDefinitiveSettlementRejection,
+  } = await importTypeScript("assets/src/evm-settlement.ts");
+  const storage = memoryStorage();
+  const wallet = "0x3333333333333333333333333333333333333333";
+  const basePayment = {
+    walletAddress: wallet,
+    intentId: "0b6b1a4e-9d9e-4f53-9c3e-1d6e4b9f2a10",
+    transaction: `0x${"b".repeat(64)}`,
+    network: "eip155:8453",
+    networkName: "Base",
+    checkoutMode: "existing_key",
+  };
+  savePendingEvmPayment(storage, basePayment);
+
+  // Choosing Ethereum finds nothing to resume, so a fresh Ethereum payment proceeds.
+  assert.equal(pendingEvmPaymentForWallet(storage, wallet, "eip155:1"), undefined);
+  assert.deepEqual(pendingEvmPaymentForWallet(storage, wallet, "eip155:8453"), basePayment);
+  assert.deepEqual(otherNetworkPendingEvmPayments(storage, wallet, "eip155:1"), [basePayment]);
+
+  // Saving an Ethereum transfer keeps the Base record, and clearing one network keeps the other.
+  const ethPayment = { ...basePayment, network: "eip155:1", networkName: "Ethereum", transaction: `0x${"e".repeat(64)}` };
+  savePendingEvmPayment(storage, ethPayment);
+  assert.deepEqual(pendingEvmPaymentForWallet(storage, wallet, "eip155:1"), ethPayment);
+  assert.deepEqual(pendingEvmPaymentForWallet(storage, wallet, "eip155:8453"), basePayment);
+  clearPendingEvmPayment(storage, wallet, "eip155:1");
+  assert.equal(pendingEvmPaymentForWallet(storage, wallet, "eip155:1"), undefined);
+  assert.deepEqual(pendingEvmPaymentForWallet(storage, wallet, "eip155:8453"), basePayment);
+
+  // Only definitive gateway refusals release a saved transfer; pending or unreachable never do.
+  for (const status of [400, 404, 409, 410]) assert.equal(isDefinitiveSettlementRejection(status), true);
+  for (const status of [202, 429, 500, 502, 503]) assert.equal(isDefinitiveSettlementRejection(status), false);
+});
+
+test("checkout scopes saved transfers to the selected network", async () => {
+  const source = await read("assets/src/api-checkout.ts");
+  assert.doesNotMatch(source, /pendingEvmPaymentForWallet\(window\.localStorage, (?:connectedWallet|wallet)\.address\)/);
+  assert.doesNotMatch(source, /clearPendingEvmPayment\(window\.localStorage, wallet\.address\)/);
+  assert.match(source, /EvmSettlementRejectedError/);
 });
 
 test("compiled checkout and site navigation are publishable static assets", async () => {

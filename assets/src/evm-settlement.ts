@@ -81,19 +81,46 @@ function readPendingPayments(storage: Storage): PendingEvmPayment[] {
   }
 }
 
+export type EvmPaymentNetwork = PendingEvmPayment["network"];
+
+function matchesRecord(
+  payment: PendingEvmPayment,
+  normalizedWallet: string,
+  network?: EvmPaymentNetwork,
+): boolean {
+  return payment.walletAddress.toLowerCase() === normalizedWallet
+    && (network === undefined || payment.network === network);
+}
+
+/**
+ * Saved transfers are scoped to wallet *and* network. A transfer submitted on
+ * Base must never block or hijack a payment the user starts on Ethereum.
+ */
 export function pendingEvmPaymentForWallet(
   storage: Storage,
   walletAddress: string,
+  network?: EvmPaymentNetwork,
 ): PendingEvmPayment | undefined {
   const normalizedWallet = walletAddress.toLowerCase();
   return readPendingPayments(storage)
-    .find(payment => payment.walletAddress.toLowerCase() === normalizedWallet);
+    .find(payment => matchesRecord(payment, normalizedWallet, network));
+}
+
+/** Saved transfers for this wallet on networks other than the selected one. */
+export function otherNetworkPendingEvmPayments(
+  storage: Storage,
+  walletAddress: string,
+  network: EvmPaymentNetwork,
+): PendingEvmPayment[] {
+  const normalizedWallet = walletAddress.toLowerCase();
+  return readPendingPayments(storage)
+    .filter(payment => payment.walletAddress.toLowerCase() === normalizedWallet && payment.network !== network);
 }
 
 export function savePendingEvmPayment(storage: Storage, payment: PendingEvmPayment): void {
   const normalizedWallet = payment.walletAddress.toLowerCase();
   const retained = readPendingPayments(storage)
-    .filter(candidate => candidate.walletAddress.toLowerCase() !== normalizedWallet);
+    .filter(candidate => !matchesRecord(candidate, normalizedWallet, payment.network));
   try {
     storage.setItem(PENDING_EVM_PAYMENTS_STORAGE_KEY, JSON.stringify([...retained, payment]));
   } catch {
@@ -101,14 +128,29 @@ export function savePendingEvmPayment(storage: Storage, payment: PendingEvmPayme
   }
 }
 
-export function clearPendingEvmPayment(storage: Storage, walletAddress: string): void {
+export function clearPendingEvmPayment(
+  storage: Storage,
+  walletAddress: string,
+  network?: EvmPaymentNetwork,
+): void {
   const normalizedWallet = walletAddress.toLowerCase();
   const retained = readPendingPayments(storage)
-    .filter(payment => payment.walletAddress.toLowerCase() !== normalizedWallet);
+    .filter(payment => !matchesRecord(payment, normalizedWallet, network));
   try {
     if (retained.length === 0) storage.removeItem(PENDING_EVM_PAYMENTS_STORAGE_KEY);
     else storage.setItem(PENDING_EVM_PAYMENTS_STORAGE_KEY, JSON.stringify(retained));
   } catch {
     // A stale public transaction reference is harmless when storage is unavailable.
   }
+}
+
+/**
+ * The gateway definitively refused this transfer (invalid payment or an intent
+ * that no longer exists). Unlike a pending or unreachable settlement, retrying
+ * cannot succeed, so the saved record must not keep blocking new payments.
+ */
+export class EvmSettlementRejectedError extends Error {}
+
+export function isDefinitiveSettlementRejection(status: number): boolean {
+  return status === 400 || status === 404 || status === 409 || status === 410;
 }

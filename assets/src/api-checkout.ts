@@ -16,6 +16,9 @@ import { base58 } from "@scure/base";
 import {
   classifyEvmSettlementResponse,
   clearPendingEvmPayment,
+  EvmSettlementRejectedError,
+  isDefinitiveSettlementRejection,
+  otherNetworkPendingEvmPayments,
   pendingEvmPaymentForWallet,
   pendingPaymentCheckoutMode,
   savePendingEvmPayment,
@@ -471,7 +474,12 @@ async function settleEvmPayment(
       });
       const responseState = await classifyEvmSettlementResponse(response);
       if (responseState === "settled") return;
-      if (responseState === "error") throw await responseError(response);
+      if (responseState === "error") {
+        const rejection = await responseError(response);
+        throw isDefinitiveSettlementRejection(response.status)
+          ? new EvmSettlementRejectedError(rejection.message)
+          : rejection;
+      }
       lastConnectionError = undefined;
     } catch (error) {
       if (!(error instanceof TypeError)) throw error;
@@ -587,9 +595,13 @@ async function connect(selection: WalletSelection): Promise<void> {
         && button.dataset.connectNetwork === selection.rail;
       button.setAttribute("aria-pressed", String(isSelected));
     });
-    const pendingPayment = connectedWallet.rail === "base" || connectedWallet.rail === "ethereum"
-      ? pendingEvmPaymentForWallet(window.localStorage, connectedWallet.address)
+    const evmNetwork = isEvmRail(connectedWallet.rail) ? EVM_NETWORKS[connectedWallet.rail].network : undefined;
+    const pendingPayment = evmNetwork
+      ? pendingEvmPaymentForWallet(window.localStorage, connectedWallet.address, evmNetwork)
       : undefined;
+    const otherNetworkPayments = evmNetwork
+      ? otherNetworkPendingEvmPayments(window.localStorage, connectedWallet.address, evmNetwork)
+      : [];
     if (pendingPayment) {
       const recovery = pendingPaymentCheckoutMode(pendingPayment) === "existing_key"
         ? "Choose “Top up an existing key” and re-enter that key to resume."
@@ -599,7 +611,10 @@ async function connect(selection: WalletSelection): Promise<void> {
         "busy",
       );
     } else {
-      status("Wallet connected. Set the exact amount to add to your Corbanu API balance.", "success");
+      const otherNote = otherNetworkPayments
+        .map(payment => ` An earlier ${payment.networkName} transfer (${payment.transaction}) is still saved; reconnect on ${payment.networkName} to finish it.`)
+        .join("");
+      status(`Wallet connected on ${networkName}. Set the exact amount to add to your Corbanu API balance.${otherNote}`, "success");
     }
   } catch (error) {
     connectedWallet = undefined;
@@ -701,9 +716,9 @@ async function purchase(event: SubmitEvent): Promise<void> {
   }
   const wallet = connectedWallet;
   const checkoutMode = selectedCheckoutMode();
-  const isEvmWallet = isEvmRail(wallet.rail);
-  const savedPayment = isEvmWallet
-    ? pendingEvmPaymentForWallet(window.localStorage, wallet.address)
+  const walletNetwork = isEvmRail(wallet.rail) ? EVM_NETWORKS[wallet.rail].network : undefined;
+  const savedPayment = walletNetwork
+    ? pendingEvmPaymentForWallet(window.localStorage, wallet.address, walletNetwork)
     : undefined;
   setBusy(true);
   try {
@@ -739,7 +754,7 @@ async function purchase(event: SubmitEvent): Promise<void> {
       }
       status("Payment accepted. Confirming credit on the existing key…", "busy");
       const confirmed = await waitForExistingKeyTopUp(apiKey, intentId);
-      if (isEvmWallet) clearPendingEvmPayment(window.localStorage, wallet.address);
+      if (walletNetwork) clearPendingEvmPayment(window.localStorage, wallet.address, walletNetwork);
       if (existingApiKeyInput) existingApiKeyInput.value = "";
       status(
         `Existing key topped up. Available Corbanu API balance: $${confirmed.balance.availableUsd}.`,
@@ -783,12 +798,22 @@ async function purchase(event: SubmitEvent): Promise<void> {
     await waitForFundedAccount(wallet);
     status("Creating a new API key…", "busy");
     const created = await signedOperation<CreatedApiKey>(wallet, { kind: "create_key" });
-    if (isEvmWallet) clearPendingEvmPayment(window.localStorage, wallet.address);
+    if (walletNetwork) clearPendingEvmPayment(window.localStorage, wallet.address, walletNetwork);
     revealApiKey(created);
     status("API key created. Copy it now—the full key is shown only once.", "success");
   } catch (error) {
-    const pendingPayment = isEvmWallet
-      ? pendingEvmPaymentForWallet(window.localStorage, wallet.address)
+    if (error instanceof EvmSettlementRejectedError && walletNetwork) {
+      const rejected = pendingEvmPaymentForWallet(window.localStorage, wallet.address, walletNetwork);
+      clearPendingEvmPayment(window.localStorage, wallet.address, walletNetwork);
+      status(
+        `The gateway could not accept ${rejected ? `transfer ${rejected.transaction}` : "that transfer"}: ${error.message} `
+        + "It is no longer saved, so you can start a new payment. If USDC left your wallet, keep the transaction hash for support.",
+        "error",
+      );
+      return;
+    }
+    const pendingPayment = walletNetwork
+      ? pendingEvmPaymentForWallet(window.localStorage, wallet.address, walletNetwork)
       : undefined;
     status(checkoutError(error, pendingPayment), "error");
   } finally {
