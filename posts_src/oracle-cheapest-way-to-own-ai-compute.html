@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Long ORCLon spot on Felix at 139.16: Oracle trades at 8.8x fiscal 2029 consensus EPS because credit fears price the capex, not the $664B backlog. Probability-weighted target $231.75 by September 2028.">
+<meta name="theme-color" content="#030403">
+<title>Oracle: the cheapest way to own AI compute — Corbanu</title>
+<link rel="canonical" href="https://corbanu.com/posts/oracle-cheapest-way-to-own-ai-compute/">
+<meta property="og:title" content="Oracle: the cheapest way to own AI compute">
+<meta property="og:description" content="Long ORCLon spot on Felix at 139.16: Oracle trades at 8.8x fiscal 2029 consensus EPS because credit fears price the capex, not the $664B backlog. Probability-weighted target $231.75 by September 2028.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-09-27T00:00:00Z">
+<meta property="article:modified_time" content="2026-09-27T00:00:00Z">
+<meta property="og:url" content="https://corbanu.com/posts/oracle-cheapest-way-to-own-ai-compute/">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{
+  --bg:#030403;--surface:#080a08;--surface-2:#0d100d;--ink:#f5f7f1;
+  --body:#ccd1c6;--muted:#92998e;--dim:#687064;--lime:#ccff00;
+  --blue:#79c8ff;--gold:#d6a85f;--coral:#ff8b7c;--line:rgba(255,255,255,.14);
+  --grid:rgba(255,255,255,.065);--serif:Georgia,"Times New Roman",serif;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark;scroll-behavior:smooth}
+body{margin:0;overflow-x:hidden;color:var(--ink);background:var(--bg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration-color:rgba(204,255,0,.45);text-underline-offset:3px}
+a:hover{color:var(--lime)}
+.post-body a[href^="https://corbanu.com/"],.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]{padding:0;border-bottom:1px dotted rgba(174,190,170,.48);color:#aebaab;background:none;font-weight:650;text-decoration:none}
+.post-body a[href^="https://corbanu.com/"]:hover,.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]:hover{color:#dce6d8;border-bottom-color:#dce6d8}
+.post-body a[href^="https://corbanu.com/"]:focus-visible,.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]:focus-visible{outline:2px solid #c5d0c0;outline-offset:2px}
+.skip{position:fixed;top:-5rem;left:1rem;z-index:100;padding:.8rem 1rem;color:#000;background:var(--lime)}
+.skip:focus{top:1rem}
+.read-progress{position:fixed;top:0;left:0;z-index:80;width:0;height:2px;background:var(--lime)}
+.site-header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:2rem;min-height:76px;padding:.8rem clamp(1rem,3.4vw,3rem);border-bottom:1px solid rgba(255,255,255,.09);background:rgba(3,4,3,.92);backdrop-filter:blur(16px)}
+.brand{display:inline-flex;align-items:center;gap:.7rem;font-size:1.25rem;font-weight:700;text-decoration:none}
+.brand img{width:45px;height:45px;border:1px solid rgba(204,255,0,.5);border-radius:50%;object-fit:cover}
+.site-nav{display:flex;align-items:center;gap:1.6rem}
+.site-nav a{color:#d9ddd4;font-size:.9rem;text-decoration:none}
+.site-nav a[aria-current=page]{color:var(--lime)}
+.preview-state{display:inline-flex;align-items:center;gap:.5rem;color:#aeb5aa;font:700 .68rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.preview-state i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px rgba(204,255,0,.55)}
+.article-shell{width:min(1480px,calc(100% - 3rem));margin:0 auto;padding:clamp(2rem,4vw,4.5rem) 0 6rem;display:grid;grid-template-columns:220px minmax(0,1180px);justify-content:center;gap:clamp(2rem,4vw,4.5rem)}
+.article-rail{position:relative}
+.rail-inner{position:sticky;top:106px;display:grid;gap:1.4rem}
+.rail-label{margin:0;color:var(--lime);font:700 .68rem/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.trade-card{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:var(--surface)}
+.trade-stat{padding:.8rem;border-bottom:1px solid var(--line)}
+.trade-stat:nth-child(odd){border-right:1px solid var(--line)}
+.trade-stat:nth-last-child(-n+2){border-bottom:0}
+.trade-stat span{display:block;margin-bottom:.35rem;color:var(--dim);font:700 .58rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.trade-stat strong{font:700 .88rem/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.llm-copy{display:flex;align-items:center;justify-content:center;gap:.58rem;width:100%;min-height:46px;padding:.75rem .9rem;border:1px solid var(--lime);border-radius:0;color:#050705;background:var(--lime);font:800 .7rem/1 var(--mono);letter-spacing:.075em;text-transform:uppercase;cursor:pointer;transition:background .16s ease,color .16s ease,transform .16s ease}
+.llm-copy:hover{color:#000;background:#e2ff70;transform:translateY(-1px)}
+.llm-copy:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.llm-copy svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8}
+.llm-copy[data-state="copied"]{color:#050705;background:#fff;border-color:#fff}
+.copy-status{display:block;min-height:.9rem;margin-top:-.9rem;color:#8f978b;font:600 .6rem/1.35 var(--mono);text-align:center}
+.hl-referral{margin-top:-.75rem;color:#7f897b;font:600 .6rem/1.4 var(--mono);text-align:center;text-decoration-color:rgba(174,190,170,.35)}
+.hl-referral:hover{color:#b9c5b4}
+.toc{display:grid;gap:.15rem;border-top:1px solid var(--line);padding-top:1rem}
+.toc a{padding:.32rem 0;color:#8f978b;font-size:.76rem;line-height:1.25;text-decoration:none}
+.toc a:hover,.toc a.active{color:var(--lime)}
+.toc a.sub{padding-left:.75rem;color:#70786c;font-size:.69rem}
+.post-body{min-width:0}
+.post-body>h1{max-width:990px;margin:0 auto .8rem;font:400 clamp(2.65rem,5.7vw,5.6rem)/.96 var(--serif);letter-spacing:-.045em}
+.post-body>h1::after{content:"";display:block;width:74px;height:4px;margin-top:1.5rem;background:var(--lime)}
+.post-body>p,.post-body>ul,.post-body>ol,.post-body>blockquote,.post-body>pre,.post-body>h2,.post-body>h3{width:min(780px,100%);margin-left:auto;margin-right:auto}
+.post-body>p{margin-top:0;margin-bottom:1.35rem;color:var(--body);font:400 1.04rem/1.76 var(--sans)}
+.post-body>p:nth-of-type(1){color:var(--dim);font:700 .7rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.post-body strong{color:var(--ink);font-weight:700}
+.post-body h2{margin-top:4.8rem;margin-bottom:1.25rem;padding-top:1.4rem;border-top:1px solid var(--line);font:500 clamp(1.65rem,2.5vw,2.35rem)/1.12 var(--serif);letter-spacing:-.025em}
+.post-body h2::before{content:"";display:block;width:28px;height:3px;margin-bottom:1.15rem;background:var(--lime)}
+.post-body h3{margin-top:2.6rem;margin-bottom:1rem;color:var(--ink);font:700 .77rem/1.35 var(--mono);letter-spacing:.09em;text-transform:uppercase}
+.post-body ul,.post-body ol{margin-top:0;margin-bottom:1.5rem;padding-left:1.35rem;color:var(--body);font-size:1rem;line-height:1.7}
+.post-body li+li{margin-top:.5rem}
+.post-body blockquote{margin-top:1.8rem;margin-bottom:1.8rem;padding:.2rem 0 .2rem 1.2rem;border-left:3px solid var(--lime);color:#e5e9df}
+.post-body pre{overflow:auto;padding:1rem;border:1px solid var(--line);background:var(--surface);color:#dfe5d8}
+.post-body code{font-family:var(--mono);font-size:.86em}
+.post-body>img,.post-body>p:has(>img){display:block;width:min(1100px,100%);max-width:none;margin:2rem auto}
+.post-body img{display:block;width:100%;height:auto;border:1px solid rgba(255,255,255,.16);background:#fff}
+.table-scroll{width:100%;margin:2rem auto 3rem;overflow-x:auto;border:1px solid rgba(255,255,255,.16);background:var(--surface);scrollbar-color:rgba(204,255,0,.6) rgba(255,255,255,.06)}
+.table-scroll:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+table.fm{width:100%;min-width:860px;border-collapse:collapse;font:500 .76rem/1.45 var(--mono);font-variant-numeric:tabular-nums}
+table.fm caption{padding:1rem 1.1rem;color:var(--ink);background:#050705;border-bottom:1px solid var(--line);font:700 .77rem/1.35 var(--mono);letter-spacing:.055em;text-align:left;text-transform:uppercase}
+table.fm th,table.fm td{padding:.67rem .78rem;border-bottom:1px solid rgba(255,255,255,.075);text-align:right;white-space:nowrap}
+table.fm th:first-child,table.fm td:first-child{text-align:left}
+table.fm thead th{position:sticky;top:0;z-index:2;color:#858d80;background:#0a0d0a;border-bottom:1px solid rgba(204,255,0,.32);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase}
+table.fm tbody td{color:#bec5b9}
+table.fm tbody tr:hover td{background:rgba(204,255,0,.025)}
+table.fm tr.tot td{color:var(--ink);font-weight:750;border-top:1px solid rgba(255,255,255,.23)}
+table.fm tr.sub td{color:#899185;font-size:.7rem}
+table.fm tr.rev td{color:#dce2d7;font-style:italic}
+table.fm tr.grp td{padding:.48rem .78rem;color:#000;background:var(--lime);border:0;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+table.fm td.neg{color:var(--coral)}
+table.fm .e{background:rgba(121,200,255,.045)}
+table.fm .a{background:rgba(255,255,255,.025)}
+table.fm .i{background:rgba(214,168,95,.045)}
+table.fm .div{border-left:1px solid rgba(255,255,255,.25)}
+table.fm tfoot td{padding:.9rem 1rem;color:#7f877b;background:#050705;border:0;font:500 .67rem/1.55 var(--sans);text-align:left;white-space:normal}
+table.cal,table.pol,table.scen{min-width:1060px}
+table.cal td,table.pol td,table.scen td,table.spec td{white-space:normal;vertical-align:top}
+table.cal th,table.pol th,table.scen th,table.spec th{text-align:left;white-space:normal}
+table.cal td:first-child,table.pol td:first-child{font-weight:700}
+table.scen td:nth-child(3){min-width:310px;text-align:left}
+table.scen tr:last-child td{background:rgba(204,255,0,.065);color:var(--ink);border-top:1px solid rgba(204,255,0,.42)}
+.article-end{width:min(780px,100%);margin:4rem auto 0;padding-top:1.5rem;border-top:1px solid var(--line);color:var(--dim);font:.72rem/1.6 var(--mono)}
+.site-footer{display:flex;justify-content:space-between;gap:1rem;padding:2rem clamp(1rem,3.4vw,3rem);border-top:1px solid var(--line);color:#747c70;font-size:.78rem}
+.foot-links{display:flex;flex-wrap:wrap;gap:1.2rem}
+.foot-links a{text-decoration:none}
+@media(max-width:1100px){
+  .article-shell{display:block;width:min(1180px,calc(100% - 2rem))}
+  .rail-inner{position:static;margin:0 auto 2.5rem;width:min(780px,100%)}
+  .trade-card{grid-template-columns:repeat(4,1fr)}
+  .trade-stat{border-bottom:0}.trade-stat:nth-child(n){border-right:1px solid var(--line)}.trade-stat:last-child{border-right:0}
+  .toc{display:none}
+}
+@media(max-width:720px){
+  .site-header{grid-template-columns:auto 1fr;min-height:66px;gap:1rem}
+  .site-nav{justify-content:flex-end;gap:.85rem}.site-nav a:nth-child(-n+2){display:none}
+  .preview-state{display:none}
+  .article-shell{width:calc(100% - 1.1rem);padding-top:1.5rem}
+  .post-body>h1{font-size:clamp(2.35rem,12vw,3.65rem)}
+  .post-body>p{font-size:1rem;line-height:1.7}
+  .post-body h2{margin-top:3.8rem}
+  .trade-card{grid-template-columns:1fr 1fr}.trade-stat:nth-child(2){border-right:0}.trade-stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .table-scroll{margin-left:0;margin-right:0}
+  table.fm{font-size:.72rem}
+  .site-footer{display:grid}
+}
+@media print{
+  .site-header,.article-rail,.read-progress,.site-footer{display:none}
+  body{color:#111;background:#fff}.article-shell{display:block;width:100%;padding:0}.post-body{color:#111}
+  .post-body p,.post-body li{color:#222}.post-body h1,.post-body h2,.post-body h3,.post-body strong{color:#000}
+  .table-scroll{overflow:visible;border-color:#bbb;break-inside:avoid}table.fm{min-width:0;color:#111;font-size:8pt}
+}
+</style>
+
+<link rel="stylesheet" href="/assets/katex/katex.min.css">
+<style>
+.article-math{max-width:100%;overflow-x:auto;color:var(--body)}
+div.article-math{width:min(780px,100%);margin:1.6rem auto}
+.post-body table.fm td,.post-body table.fm th{white-space:normal}
+.post-body table.fm{min-width:720px}
+.post-body{overflow-wrap:anywhere}
+@media(max-width:420px){.site-nav a:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<script defer src="/assets/katex/katex.min.js"></script>
+<script>
+addEventListener('DOMContentLoaded',()=>document.querySelectorAll('[data-tex]').forEach(el=>{
+katex.render(el.dataset.tex,el,{displayMode:el.dataset.display==='true',throwOnError:false,trust:false});
+}));
+</script>
+</head>
+<body>
+<div class="read-progress" aria-hidden="true"></div>
+<a class="skip" href="#article">Skip to article</a>
+<header class="site-header">
+  <a class="brand" href="https://corbanu.com/"><img src="/assets/corbanu-logo.webp" alt="" width="45" height="45">Corbanu</a>
+  <nav class="site-nav" aria-label="Primary navigation"><a href="https://corbanu.com/">Home</a><a href="https://corbanu.com/markets/">Markets</a><a href="https://corbanu.com/posts/" aria-current="page">Research</a><a href="https://corbanu.com/terminal/">Terminal</a><a href="https://corbanu.com/#newsletter">Subscribe</a></nav>
+  <span class="preview-state"><i></i> Published research</span>
+</header>
+<main class="article-shell">
+  <aside class="article-rail" aria-label="Article summary">
+    <div class="rail-inner">
+      <p class="rail-label">Trade proposal / 26 Sep 2026</p>
+      <div class="trade-card"><div class="trade-stat"><span>Proposed long</span><strong>ORCLon, Felix spot</strong></div><div class="trade-stat"><span>Reference quote</span><strong>$139.16</strong></div><div class="trade-stat"><span>Weighted target</span><strong>$231.75 (+66.5%)</strong></div><div class="trade-stat"><span>Horizon</span><strong>30 Sep 2028</strong></div></div>
+      <button class="llm-copy" type="button" data-copy-source="article.txt" aria-describedby="llm-copy-status" title="Copy the complete article as Markdown">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="6" y="6" width="10" height="10" rx="1"></rect><path d="M4 13H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"></path></svg>
+        <span>Copy for LLM</span>
+      </button>
+      <span class="copy-status" id="llm-copy-status" role="status" aria-live="polite"></span>
+      <nav class="toc" id="toc" aria-label="Article sections"></nav>
+    </div>
+  </aside>
+  <article class="post-body" id="article"><h1 id="oracle-the-cheapest-way-to-own-ai-compute">Oracle: the cheapest way to own AI compute</h1>
+<p><strong>CORBANU · TRADE NOTE · 27 SEPTEMBER 2026</strong></p>
+<h2 id="the-trade">The trade</h2>
+<p>LONG ORCLon, the Ondo tokenized Oracle share, held spot on Felix, against a reference quote of 139.16 USD observed at 2026-09-26T23:10:53Z (a reference price, not an executed fill), for a horizon to 2028-09-30. Oracle trades at 8.8x the Street's fiscal 2029 earnings. After September's credit scare, the market is pricing the capex and debt and giving less weight to the contracted backlog those outlays are building. The catalysts are the December 2026 and March 2027 quarterly results and the New Mexico permit decisions. The thesis fails if OpenAI cannot fund its commitment, if backlog conversion slips, or if Oracle has to sell stock at these prices.</p>
+<p><strong>The probability-weighted target is $231.75 by 2028-09-30, a price return of +66.5%.</strong> That figure is the average of three scenario targets, weighted by probability: bear $72.73, base $240.83 and bull $350.65. The <a href="#valuation-and-model">valuation chart</a> shows all three.</p>
+<p><strong>LONG ORCLon</strong> · Felix (Ondo spot) · reference quote 139.16 USD · as of 2026-09-26T23:10:53Z · horizon 2028-09-30 · unlevered spot, no funding.</p>
+<h2 id="the-exposure">The exposure</h2>
+<p>Oracle has three businesses.</p>
+<ul>
+<li><strong>Database and licences.</strong> Oracle's oldest business is its database and support contracts. It is mature, and licence revenue is shrinking as customers move to the cloud.</li>
+<li><strong>Cloud applications.</strong> Fusion for finance and HR, NetSuite and industry software. This business is growing at about 10% a year.</li>
+<li><strong>Oracle Cloud Infrastructure (OCI).</strong> Oracle buys GPUs and CPUs and installs them in data centres it leases from developers such as Blue Owl's STACK, Vantage and Crusoe. It then rents that capacity to AI labs and enterprises on multi-year contracts. This business is why the stock trades like an AI name.</li>
+</ul>
+<p>OCI revenue was $7.4B in the quarter to 31 August 2026, up 121% (<a href="https://investor.oracle.com/investor-news/news-details/2026/Oracle-Announces-Q1-Results-Driven-by-Triple-Digit-Growth-in-Cloud-Infrastructure-Revenues/default.aspx">Oracle Q1 FY27 results</a>). Of that, the CPU-and-GPU line contributed $6.5B, up 151% (<a href="https://s23.q4cdn.com/440135859/files/content_files/Q1-FY27-Oracle-Earnings-Slides.pdf">Q1 FY27 earnings slides</a>).</p>
+<p>Under take-or-pay terms, customers pay for AI capacity for five to six years whether they use it or not. Oracle pays for the chips up front and leases the buildings. It had $288B of leases that had not yet started at quarter end, with terms of 15 to 19 years, beginning between now and fiscal 2029 (<a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Q1 FY27 10-Q</a>). The cash goes out before any revenue comes in, because revenue starts only when a site goes live. That is why free cash flow is deeply negative during the build.</p>
+<p>Remaining performance obligations (RPO) are contracted revenue that Oracle has yet to recognise. RPO stood at $664B at quarter end, about 1.6 times Oracle's market value of roughly $421B at the reference price. The 10-Q gives the schedule: about 13% is expected to be recognised within twelve months, 37% in months 13 to 36, 34% in months 37 to 60 and the remainder after that. Shareholders gain if this backlog turns into earnings faster than depreciation, interest and new share issuance eat into it.</p>
+<p><img loading="lazy" alt="Oracle's $664 billion backlog split by expected recognition: 13% within a year, 37% in years two and three, 34% in years four and five, 16% later" src="rpo-conversion-schedule.png" /></p>
+<p><em>Most of Oracle's contracted backlog is scheduled to turn into revenue between one and five years out. Source: Oracle Q1 FY27 10-Q; dollar values are approximate.</em></p>
+<p>The trade holds Oracle through ORCLon, a token backed one-for-one by Oracle shares that reinvests the dividend, so it tracks the listed share's total return without leverage or funding costs. Unlike the NYSE share, it carries no vote and depends on the issuer's custody; the <a href="#appendix-the-orclon-token">appendix</a> covers those differences.</p>
+<h2 id="why-now">Why now</h2>
+<p><strong>In September, Oracle sent two signals in opposite directions, and the stock followed the more worrying one.</strong></p>
+<ul>
+<li><strong>Operations strengthened.</strong> On 10 September Oracle reported revenue of $19.3B, up 30%, and adjusted EPS of $1.92 against about $1.74 expected. It raised full-year guidance to at least $90B of revenue and $8.10 of EPS (<a href="https://investor.oracle.com/investor-news/news-details/2026/Oracle-Announces-Q1-Results-Driven-by-Triple-Digit-Growth-in-Cloud-Infrastructure-Revenues/default.aspx">Oracle Q1 FY27 results</a>; <a href="https://cnbc.com/2026/09/10/oracle-orcl-q1-earnings-report-2027.html">CNBC</a>).</li>
+<li><strong>Credit deteriorated.</strong> A five-year credit default swap (CDS) is the annual cost of insuring a company's debt against default. Oracle's traded near 241 basis points on Bloomberg's flat-spread quote on 25 September, against about 53 for Microsoft and about 100 for Meta (Bloomberg). Published market reports put the record on the standard quoting convention at 227bp that week (<a href="https://www.tradingview.com/news/seekingalpha:62ed2825e094b:0-hyperscaler-cds-spreads-widen-with-oracle-hitting-record-high/">Seeking Alpha via TradingView</a>). On 24 September Oracle sent a force-majeure notice on its New Mexico campus, and the stock fell 3.5% (<a href="https://cnbc.com/2026/09/24/oracle-data-center-force-majeure.html">CNBC</a>).</li>
+</ul>
+<p><img loading="lazy" alt="Dated readings of Oracle's five-year credit default swap spread rising from about 160 basis points in June to between 227 and 241 in late September" src="oracle-cds-observations.png" /></p>
+<p><em>Oracle's five-year CDS in 2026, from published reports and Bloomberg. Markers show quoting basis; the points are observations, not a continuous series.</em></p>
+<p><strong>At today's price, each later year of earnings is priced at a lower multiple.</strong> Bloomberg consensus, dated 25 September, has EPS of $8.16 for the year to May 2027, $11.07 for fiscal 2028, $15.73 for fiscal 2029 and $20.46 for fiscal 2030. At the 139.16 reference quote, that is 17.1x this year, 12.6x next year, 8.8x fiscal 2029 and 6.8x fiscal 2030. The 50 analysts Bloomberg tracks have an average target of $240. On 9 September, at $162.52, Oracle traded at about 21x forward earnings, against 27x for Microsoft and 36x for Amazon (<a href="https://finance.yahoo.com/markets/stocks/articles/oracle-stock-wall-street-sees-150052759.html">Yahoo Finance</a>). Since then the stock has fallen about 15% while earnings guidance has gone up.</p>
+<p><strong>Against enterprise software and the other clouds, Oracle is the cheapest grower.</strong> Apart from the much smaller CoreWeave, it has the fastest consensus revenue growth in the table and the lowest multiple on next year's earnings. Its price-to-earnings-to-growth ratio (PEG) is about a third of the hyperscalers'.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Company</th>
+<th style="text-align: right;">Market cap</th>
+<th style="text-align: right;">Revenue growth, next FY</th>
+<th style="text-align: right;">EPS growth, year after</th>
+<th style="text-align: right;">P/E, next FY</th>
+<th style="text-align: right;">P/E, year after</th>
+<th style="text-align: right;">PEG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Oracle</strong></td>
+<td style="text-align: right;">$416B</td>
+<td style="text-align: right;">45%</td>
+<td style="text-align: right;">42%</td>
+<td style="text-align: right;">12.4x</td>
+<td style="text-align: right;">8.7x</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td>Microsoft</td>
+<td style="text-align: right;">$3,833B</td>
+<td style="text-align: right;">19%</td>
+<td style="text-align: right;">22%</td>
+<td style="text-align: right;">21.9x</td>
+<td style="text-align: right;">18.1x</td>
+<td style="text-align: right;">1.02</td>
+</tr>
+<tr>
+<td>Amazon</td>
+<td style="text-align: right;">$2,693B</td>
+<td style="text-align: right;">15%</td>
+<td style="text-align: right;">25%</td>
+<td style="text-align: right;">20.1x</td>
+<td style="text-align: right;">16.1x</td>
+<td style="text-align: right;">0.79</td>
+</tr>
+<tr>
+<td>Alphabet</td>
+<td style="text-align: right;">$4,189B</td>
+<td style="text-align: right;">26%</td>
+<td style="text-align: right;">23%</td>
+<td style="text-align: right;">21.5x</td>
+<td style="text-align: right;">17.5x</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+<tr>
+<td>CoreWeave</td>
+<td style="text-align: right;">$49B</td>
+<td style="text-align: right;">106%</td>
+<td style="text-align: right;">n/m</td>
+<td style="text-align: right;">n/m</td>
+<td style="text-align: right;">55.9x</td>
+<td style="text-align: right;">n/m</td>
+</tr>
+<tr>
+<td>SAP</td>
+<td style="text-align: right;">$259B</td>
+<td style="text-align: right;">12%</td>
+<td style="text-align: right;">19%</td>
+<td style="text-align: right;">22.0x</td>
+<td style="text-align: right;">18.4x</td>
+<td style="text-align: right;">1.13</td>
+</tr>
+<tr>
+<td>Salesforce</td>
+<td style="text-align: right;">$193B</td>
+<td style="text-align: right;">10%</td>
+<td style="text-align: right;">15%</td>
+<td style="text-align: right;">14.6x</td>
+<td style="text-align: right;">12.6x</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+<tr>
+<td>IBM</td>
+<td style="text-align: right;">$212B</td>
+<td style="text-align: right;">4%</td>
+<td style="text-align: right;">8%</td>
+<td style="text-align: right;">17.2x</td>
+<td style="text-align: right;">15.9x</td>
+<td style="text-align: right;">2.09</td>
+</tr>
+<tr>
+<td>MongoDB</td>
+<td style="text-align: right;">$33B</td>
+<td style="text-align: right;">18%</td>
+<td style="text-align: right;">22%</td>
+<td style="text-align: right;">52.6x</td>
+<td style="text-align: right;">43.2x</td>
+<td style="text-align: right;">2.41</td>
+</tr>
+<tr>
+<td>ServiceNow</td>
+<td style="text-align: right;">$140B</td>
+<td style="text-align: right;">19%</td>
+<td style="text-align: right;">21%</td>
+<td style="text-align: right;">27.0x</td>
+<td style="text-align: right;">22.3x</td>
+<td style="text-align: right;">1.27</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Bloomberg BEST consensus and closing prices, 25 September 2026. Each company's own fiscal years: Oracle's next fiscal year ends May 2028, Microsoft's June 2028, Salesforce's and MongoDB's January 2028, the rest December 2027. PEG is next-year P/E divided by the following year's EPS growth. CoreWeave has no positive EPS until its third year.</em></p>
+<p><strong>Four months ago, the stock stood at our base-case target.</strong> Oracle shares rose about 40% in May as OpenAI raised new money and said it was on track to meet its revenue targets (<a href="https://www.fool.com/investing/2026/06/03/why-oracle-stock-zoomed-399-higher-in-may/">Motley Fool</a>). The shares peaked at $248.15 in early June. To compare that peak with today, the table uses the 10 June and 10 September earnings calls alongside Bloomberg consensus:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">June</th>
+<th style="text-align: right;">Now</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Share price</td>
+<td style="text-align: right;">$248.15 (early-June peak)</td>
+<td style="text-align: right;">$137.10 (25 Sep close)</td>
+</tr>
+<tr>
+<td>Consensus EPS FY28 / FY29</td>
+<td style="text-align: right;">$10.78 / $15.62</td>
+<td style="text-align: right;">$11.07 / $15.73</td>
+</tr>
+<tr>
+<td>P/E on FY29 EPS</td>
+<td style="text-align: right;">15.9x</td>
+<td style="text-align: right;">8.7x</td>
+</tr>
+<tr>
+<td>Consensus target price</td>
+<td style="text-align: right;">$245</td>
+<td style="text-align: right;">$240</td>
+</tr>
+<tr>
+<td>Remaining performance obligations</td>
+<td style="text-align: right;">$553B at the peak; $638B reported 10 June</td>
+<td style="text-align: right;">$664B</td>
+</tr>
+<tr>
+<td>GPU utilisation</td>
+<td style="text-align: right;">97.5%</td>
+<td style="text-align: right;">97.9%</td>
+</tr>
+<tr>
+<td>FY27 EPS guidance</td>
+<td style="text-align: right;">$8.05 (10 June)</td>
+<td style="text-align: right;">$8.10</td>
+</tr>
+<tr>
+<td>Credit rating (S&amp;P)</td>
+<td style="text-align: right;">BBB</td>
+<td style="text-align: right;">BBB-</td>
+</tr>
+<tr>
+<td>Five-year CDS (Bloomberg)</td>
+<td style="text-align: right;">~160bp</td>
+<td style="text-align: right;">~241bp</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Consensus, target and CDS figures are Bloomberg data supplied by the author; published CDS reports use a different quoting convention and are discussed above.</em></p>
+<p>The operating numbers are flat or better. Consensus EPS is higher even after the at-the-market sale of 141M new shares, about 5% of the company (<a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Q1 FY27 10-Q</a>). The financing picture has worsened:</p>
+<ul>
+<li><strong>The June plan.</strong> Oracle announced a $40B debt-and-equity plan on 10 June, and the stock fell 8% to 12% the next day, depending on the report and the time of measurement (<a href="https://www.cnbc.com/2026/06/11/oracle-shares-tumble-11percent-on-increased-capital-raise-cash-concerns.html">CNBC</a>; <a href="https://finance.yahoo.com/markets/stocks/articles/oracle-shares-slide-hefty-ai-152535544.html">Reuters via Yahoo Finance</a>).</li>
+<li><strong>The downgrade.</strong> S&amp;P cut Oracle to BBB- in July (<a href="https://www.heise.de/en/news/S-P-downgrades-Oracle-to-BBB-only-one-notch-above-junk-level-11363472.html">heise</a>).</li>
+<li><strong>Capex and Jupiter.</strong> Gross capex guidance rose to $90–95B, and there was the force-majeure notice.</li>
+</ul>
+<p>These are real costs. Even so, the price has fallen 45% while the earnings the market is pricing have not.</p>
+<p><strong>Customers fund a large share of the build, and the rest can be financed.</strong> Last quarter Oracle received $11.4B of customer prepayments, about 40% of the $28.5B it spent on capex (<a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Q1 FY27 10-Q</a>). For the full year, gross capex is guided at $90–95B, with net cash spending of about $70B after $20–25B of prepayments (<a href="https://www.cnbc.com/2026/06/11/oracle-shares-tumble-11percent-on-increased-capital-raise-cash-concerns.html">CNBC</a>). Oracle signed more than $30B of AI contracts in the quarter and said they have "no incremental impact" on its capital-raising plans (<a href="https://investor.oracle.com/investor-news/news-details/2026/Oracle-Announces-Q1-Results-Driven-by-Triple-Digit-Growth-in-Cloud-Infrastructure-Revenues/default.aspx">Oracle Q1 FY27 results</a>). CFO Hilary Maxson says each project, once ramped, converts "something like 100%" of post-tax EBITDA into free cash flow, because the chips are bought once (<a href="https://www.fool.com/earnings/call-transcripts/2026/09/11/oracle-orcl-q1-2027-earnings-call-transcript/">Q1 FY27 earnings call transcript</a>). She did not give a date for company-wide free cash flow to turn positive.</p>
+<p>The rest of the gap can be counted. From September 2026 to the end of fiscal 2029, the cash Oracle needs and what it already has look like this (balance-sheet and cash-flow items from the <a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Q1 FY27 10-Q</a>):</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Uses, 1 Sep 2026 to 31 May 2029</th>
+<th style="text-align: right;">$B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consensus free cash flow deficit (rest of FY27, FY28, FY29)</td>
+<td style="text-align: right;">58.7</td>
+</tr>
+<tr>
+<td>Dividends at last quarter's $1.57B a quarter</td>
+<td style="text-align: right;">17.2</td>
+</tr>
+<tr>
+<td>Debt due within twelve months</td>
+<td style="text-align: right;">7.6</td>
+</tr>
+<tr>
+<td><strong>Total uses</strong></td>
+<td style="text-align: right;"><strong>83.5</strong></td>
+</tr>
+<tr>
+<td><strong>Sources</strong></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>Cash at 31 August, which already includes the $19.9B at-the-market sale</td>
+<td style="text-align: right;">36.4</td>
+</tr>
+<tr>
+<td>Rest of the fiscal 2027 plan: $40B of debt and equity less the $20B sale already done</td>
+<td style="text-align: right;">20.0</td>
+</tr>
+<tr>
+<td><strong>Remaining need, before any minimum cash balance</strong></td>
+<td style="text-align: right;"><strong>27.1</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>The free-cash-flow line takes Bloomberg's fiscal 2027 consensus of −$34.5B less the −$5.4B already spent in the first quarter. The base case covers the remaining need: its share count rises from 3.02B to 3.12B, and 100M new shares at around $170 would raise about $17B, leaving roughly $10B of new debt. Debt maturing after the next twelve months would be refinanced on top of that. The fiscal 2027 plan is from the 10 June call (<a href="https://www.cnbc.com/2026/06/11/oracle-shares-tumble-11percent-on-increased-capital-raise-cash-concerns.html">CNBC</a>).</p>
+<p><img loading="lazy" alt="What the stock pays for each year of consensus earnings, and consensus free cash flow" src="consensus-path.png" /></p>
+<p><em>At entry, price is divided by Bloomberg consensus EPS and by consensus free cash flow, using the fiscal year ending 31 May.</em></p>
+<p>Free cash flow explains the gap. Consensus has it at −$34.5B this year and −$29.4B next year, reaching about zero in fiscal 2029 and +$24B in fiscal 2030. Until that turn, the market prices Oracle as a borrower under stress. The two-year horizon runs up to the change: once free cash flow stops being negative, the stock should be valued on its earnings.</p>
+<p><strong>The capex economics are attractive.</strong> At Oracle's October 2025 analyst meeting, co-CEO Clay Magouyrk set out a one-gigawatt example:</p>
+<ul>
+<li>a six-year contract at $10B a year, or $60B in total;</li>
+<li>about $39B of cost, split roughly 35% for land, building and power and 65% for compute;</li>
+<li>a 35% gross margin (<a href="https://longbridge.com/en/news/261873306">Longbridge summary of the meeting</a>; <a href="https://www.investing.com/analysis/oracle-the-ai-backlog-is-real--the-cash-flow-isnt-yet-200678113">Investing.com analysis</a>).</li>
+</ul>
+<p>Oracle guided AI-infrastructure gross margins of 30–40% at the same meeting (<a href="https://know.creditsights.com/insights/oracle-top-10-takeaways-from-2025-analyst-meeting/">CreditSights</a>). The cash arithmetic below adds two assumptions of our own, a 21% tax rate and other costs of 2% of revenue:</p>
+<ul>
+<li><strong>Operating profit before depreciation.</strong> Revenue of $10.0B, less $2.28B for building rent and power and $0.2B of other costs, leaves operating profit before depreciation of $7.52B a year.</li>
+<li><strong>Tax.</strong> Straight-line depreciation on the chips of $4.225B a year brings taxable profit to $3.3B and tax to $0.69B.</li>
+<li><strong>Cash.</strong> Cash comes to $6.83B a year over the contract, with no further capex.</li>
+</ul>
+<p><img loading="lazy" alt="Waterfall from 10 billion dollars of annual revenue per gigawatt to 6.83 billion dollars of annual free cash flow after facility, other costs and tax" src="per-gigawatt-unit-economics.png" /></p>
+<p><em>One gigawatt of AI capacity on Oracle's illustrative terms, with our tax and cost assumptions. Values in $B per year.</em></p>
+<p>Six years at $6.83B a year on $25.35B of up-front chip spending gives a 3.7-year payback and an unlevered return of about 16%. Revenue has to stay above about $8.6B per gigawatt-year to clear a 9.5% cost of capital; the undiscounted cash break-even is about $6.7B.</p>
+<p>The lease term creates the main uncertainty. Building leases run 15 to 19 years, so each gigawatt needs a new tenant or a renewal when its first contract ends, and the renewal price decides whether the return holds. OpenAI's contract gives a better benchmark: $300B over five years for about 4.5GW works out to roughly $13.3B per gigawatt-year (<a href="https://finance.yahoo.com/news/openai-oracle-sign-300-billion-182157146.html">Yahoo Finance</a>).</p>
+<p>Utilisation last quarter was 97.9%. GPUs coming off contract, most of them at least four years old, were renewed or resold at a 20% premium (<a href="https://www.fool.com/earnings/call-transcripts/2026/09/11/oracle-orcl-q1-2027-earnings-call-transcript/">Q1 FY27 earnings call transcript</a>). The chips keep earning after their first contract: hardware that bears write off after one lease is going back out at a higher price.</p>
+<p><strong>Demand still exceeds supply.</strong></p>
+<ul>
+<li><strong>Old chips still rent well.</strong> In September the median on-demand price for an H100, launched in 2022, is $3.25 an hour, and for the 2020-vintage A100 it is $1.76 (<a href="https://aimultiple.com/gpu-index">AIMultiple GPU index</a>). Older chips still earn: CoreWeave has A100s contracted out to 2029, according to <a href="https://www.thundercompute.com/blog/ai-gpu-rental-market-trends">Thunder Compute's market review</a>.</li>
+<li><strong>Coding-agent downloads have surged.</strong> OpenAI's Codex and Anthropic's Claude Code were downloaded 156M times from the npm registry in August 2026, up from 22M a year earlier (<a href="https://api.npmjs.org/downloads/range/2025-08-01:2026-08-31/@openai/codex">npm registry</a>). The registry counts download events, not distinct users, but the increase is clear.</li>
+<li><strong>The labs ration usage while buying capacity.</strong> At current prices they are rationing: Anthropic cut Claude Code's weekly limits by 17% on 14 September (<a href="https://www.datagravity.dev/p/the-gpu-depreciation-curve-is-broken">Data Gravity</a>). They are also buying capacity wherever they can find it, as Anthropic's $11.6B, seven-year agreement with Akamai on 24 September shows (<a href="https://akamai.com/newsroom/press-release/akamai-announces-11-6-billion-multi-year-agreement-with-anthropic-to-support-growing-demand">Akamai</a>).</li>
+<li><strong>The build is still small next to the economy.</strong> Blackstone, whose QTS and AirTrunk platforms make it one of the largest data-centre owners, gave the build some context. At the Barclays conference on 15 September 2026, its chief financial officer put AI investment at "less than 1% of GDP," according to a transcript of the session. Past build-outs, from railroads to the dot-com era, ran at 2–5%.</li>
+</ul>
+<p><img loading="lazy" alt="Monthly npm downloads of OpenAI Codex and Anthropic Claude Code, February 2025 to August 2026" src="coding-agent-downloads.png" /></p>
+<p><em>Monthly npm downloads of the two coding-agent command-line tools. Codex's May 2026 figure of 239M was an install-loop spike and is drawn off scale. Source: npm registry.</em></p>
+<p><strong>Customers can pay.</strong></p>
+<ul>
+<li><strong>Anthropic</strong> told investors its gross margin exceeds 80% before partner revenue share and training costs, and that it expects a second straight quarter of adjusted operating profit, according to the Financial Times as reported by <a href="https://www.investing.com/news/stock-market-news/anthropic-tells-investors-it-will-be-profitable-for-second-straight-quarter-ft-reports-4898761">Reuters</a>. Reuters could not independently verify the report.</li>
+<li><strong>OpenAI</strong> is Oracle's biggest counterparty, at roughly half of RPO. It closed a $122B round at an $852B valuation in March (<a href="https://openai.com/index/accelerating-the-next-phase-ai">OpenAI</a>). In mid-September Bloomberg reported early, investor-led talks about a round above $1.2T (<a href="https://www.bloomberg.com/news/articles/2026-09-15/openai-weighing-funding-round-at-over-1-2-trillion-valuation">Bloomberg</a>). CNBC reported the next day that no formal discussions were under way.</li>
+</ul>
+<p><strong>Oracle is protecting its position as tenant, and the landlord says nothing has changed.</strong> Bloomberg first reported the force-majeure notice on Project Jupiter, a 2.45GW Stargate campus in Doña Ana County, New Mexico. The notice keeps open Oracle's right to delay rent if the campus misses its 2028 online date. Blue Owl and its STACK platform are the developer and landlord. A person familiar with the matter said the notice is not a default under the project financing. About $18B of project loans were quoted at 89–91 cents on the dollar afterwards, according to the Financial Times.</p>
+<p>The dispute is about on-site power. The State Land Office has twice refused the gas pipeline's route across state trust land (<a href="https://www.abqjournal.com/news/nm-supreme-court-pauses-project-jupiter-air-permit/3108233">Albuquerque Journal</a>), pushing the pipeline target to 1 February 2027. Oracle says Jupiter "remains on our planned schedule," and Blue Owl says the notice "does not change the financial commitments" (<a href="https://techcrunch.com/2026/09/24/oracle-sends-force-majeure-notice-on-its-new-mexico-stargate-data-center/">TechCrunch</a>). On 17 September the New Mexico Supreme Court unanimously lifted the stays that had frozen the air-permit hearing, although the state environment department still has to appoint a new hearing officer (<a href="https://www.krwg.org/krwg-news/2026-09-18/nm-supreme-court-lifts-stay-on-project-jupiter-permit">KRWG</a>). Oracle has also said the campus could fall back on grid power if the air permit fails (<a href="https://organmountainnews.com/oracle-says-project-jupiter-could-turn-to-grid-power-if-air-permit-falls-through">Organ Mountain News</a>). Management said on 10 September that Jupiter does not affect this year's guidance.</p>
+<p>Jupiter is part of Stargate, the programme launched at the White House in January 2025, so Washington has every reason to see its permits cleared. No federal backstop has been promised, and the valuation gives the political support no value.</p>
+<p><strong>The chairman is not selling.</strong> A day after the 10-Q disclosed his trading plan for up to 50M shares, worth about $7B at the reference price, Larry Ellison cancelled it. The filing says no stock was sold under the plan and that he "has no other plans to sell any of his Oracle stock" (<a href="https://www.sec.gov/Archives/edgar/data/0001341439/000119312526389753/d20034dex991.htm">Oracle 8-K</a>).</p>
+<h2 id="catalyst-calendar">Catalyst calendar</h2>
+<p><strong>28 October is the key date for the shares.</strong> Oracle AI World runs from 25 to 28 October at the Venetian in Las Vegas (<a href="https://www.oracle.com/ai-world/">Oracle</a>). TD Cowen expects a financial analyst meeting on 28 October with updated fiscal 2030 targets (<a href="https://finance.yahoo.com/markets/stocks/articles/orcl-stock-extends-fall-overnight-021742084.html">Yahoo Finance</a>). Oracle has not announced that date.</p>
+<p>At last year's meeting, on 16 October 2025, Oracle set fiscal 2030 targets of $225B of revenue and $21 of EPS, about 13% above consensus (<a href="https://www.tikr.com/blog/nyse-oracle-stock-falls-over-2-despite-strong-long-term-outlook">TIKR</a>). Magouyrk said seven deals with four customers, all of them other than OpenAI and including Meta, had brought in $65B in 30 days. The stock still fell the most in almost nine months the next day, about 7% (<a href="https://www.bloomberg.com/news/articles/2025-10-16/oracle-rallies-after-saying-ai-cloud-gross-margin-can-be-35">Bloomberg</a>). Targets alone did not satisfy the market then. This time it wants a funding plan.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Item</th>
+<th>Bull reading</th>
+<th>Bear reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FY30 targets</td>
+<td>$225B / $21 held or raised</td>
+<td>EPS cut, even if revenue rises</td>
+</tr>
+<tr>
+<td>Funding</td>
+<td>Free-cash-flow path, equity cap</td>
+<td>Open-ended equity, no path</td>
+</tr>
+<tr>
+<td>Customers</td>
+<td>Non-OpenAI backlog disclosed</td>
+<td>OpenAI share of backlog rises</td>
+</tr>
+<tr>
+<td>AI infra margin</td>
+<td>30–40% reaffirmed</td>
+<td>Range lowered</td>
+</tr>
+<tr>
+<td>Delivery</td>
+<td>Gigawatt guide for FY27–28</td>
+<td>Jupiter slips further</td>
+</tr>
+</tbody>
+</table></div>
+<p>The base case expects the targets to be held and a partial funding path to be set out. Credit, not the first day's share move, is the better test. On Bloomberg's measure, confirmation would be five-year CDS moving from about 241bp back toward the ~160bp of June.</p>
+<p><img loading="lazy" alt="Timeline of Oracle catalysts from October 2026 to the September 2028 horizon, separating announced dates from estimated windows" src="catalyst-timeline.png" /></p>
+<p><em>Announced dates and estimated windows between now and the 30 September 2028 horizon. Hollow markers are unconfirmed.</em></p>
+<p><strong>Meta is the customer that matters most for reducing Oracle's dependence on OpenAI.</strong> Meta's Muse agent launched on 8 September, reached No. 1 on the US App Store on 18 September and has held the spot since (<a href="https://techcrunch.com/2026/09/25/meta-is-putting-its-muscle-behind-muse-as-the-ai-app-takes-off/">TechCrunch</a>). Meta says Muse isolates each user's work in a dedicated virtual machine (<a href="https://www.implicator.ai/metas-muse-tops-us-app-store-ahead-of-chatgpt-ten-days-after-launch/">Implicator</a>). An agent that runs a machine per user creates demand for general-purpose compute, which Oracle sells alongside GPUs. Reuters has seen an internal memo in which Meta plans to double its computing capacity to 14GW in 2027 (<a href="https://www.investing.com/news/stock-market-news/meta-to-put-ai-chip-into-production-in-september-as-it-looks-to-double-computing-capacity-memo-shows-4787372">Reuters via Investing.com</a>). Oracle confirmed a Meta cloud deal in October 2025, with reports putting its value at about $20B (<a href="https://www.cnbc.com/2025/10/16/oracle-confirms-meta-cloud-deal-.html">CNBC</a>). A disclosed Meta expansion would do more than anything else to reduce reliance on OpenAI, and none has been reported yet.</p>
+<p><strong>Dates and what each will show:</strong></p>
+<ul>
+<li><strong>25–28 October 2026: AI World, with the analyst meeting expected on 28 October.</strong> The table above sets out what to watch.</li>
+<li><strong>Late October 2026: Meta, Microsoft, Alphabet and Amazon results.</strong> Meta's 2027 capex guidance, and any comment on renting outside capacity, will show how much of the build Oracle can win.</li>
+<li><strong>18 November 2026: Oracle's annual meeting</strong>, held virtually (<a href="https://www.sec.gov/Archives/edgar/data/0001341439/000119312526402816/orcl-20260925.htm">2026 proxy statement</a>). Shareholder questions give management a platform to update the funding plan.</li>
+<li><strong>23 November 2026: New Mexico air-permit deadline</strong> for Jupiter's fuel cells (<a href="https://techcrunch.com/2026/09/24/oracle-sends-force-majeure-notice-on-its-new-mexico-stargate-data-center/">TechCrunch</a>). The stays have been lifted, but the hearing officer has not been named, so the date may move. Approval would settle the on-site power question and ease the force-majeure overhang.</li>
+<li><strong>About 9–14 December 2026 (estimated; Oracle has not set the date): Q2 FY27 results.</strong> Cloud growth against the 65–71% guidance, RPO against $664B, net capex against the $70B ceiling and the first Vera Rubin deliveries will show whether October's promises hold.</li>
+<li><strong>Any time: OpenAI's next round.</strong> A round above $1.2T has been reported as under early discussion. Closing one would reduce the risk S&amp;P cited when it cut Oracle to BBB-, since OpenAI accounts for about half of the backlog (<a href="https://www.heise.de/en/news/S-P-downgrades-Oracle-to-BBB-only-one-notch-above-junk-level-11363472.html">heise</a>).</li>
+<li><strong>1 February 2027: Jupiter pipeline target date.</strong> Delivery on time would ease the delay concern; another slip would prolong it.</li>
+<li><strong>About mid-March 2027 (estimated): Q3 FY27 results.</strong></li>
+<li><strong>Calendar 2027: new campuses deliver.</strong> Shackelford County, Texas, begins customer delivery in the first half, followed by Michigan and Wisconsin in the second half. The 37% RPO tranche also starts converting in its first year.</li>
+<li><strong>Fiscal 2029 (June 2028 to May 2029): consensus free cash flow reaches break-even.</strong> The horizon rests on that shift.</li>
+</ul>
+<h2 id="fundamental-invalidation">Fundamental invalidation</h2>
+<p>The mechanism holds only while contracted backlog turns into earnings faster than depreciation, interest and dilution drain them. Research points to five observable developments that would break it:</p>
+<ul>
+<li><strong>OpenAI renegotiates or cannot fund</strong> its $300B commitment, a contract that makes up close to half the backlog.</li>
+<li><strong>RPO conversion slips.</strong> A drop in the share of RPO due within twelve months below the current 13%, or revenue growth falling short of guidance while RPO keeps rising (<a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Q1 FY27 10-Q</a>), would show that sites are coming online late. A fall in total RPO on its own proves less, since recognising revenue also reduces it.</li>
+<li><strong>Net capex runs well above the $70B ceiling</strong> without matching prepayments. That would mean customers have stopped funding the build.</li>
+<li><strong>Renewal pricing rolls over.</strong> If GPUs coming off contract re-let at a discount rather than today's 20% premium, both the per-gigawatt return and the six-year depreciation life are wrong.</li>
+<li><strong>Equity is forced at these prices.</strong> A cut below investment grade could force a repeat of the $20B at-the-market sale (141M shares in one quarter), handing the recovery to new shareholders.</li>
+</ul>
+<h2 id="when-to-add">When to add</h2>
+<p>These business developments would confirm the mechanism:</p>
+<ul>
+<li><strong>Q2 FY27 cloud growth</strong> lands within the 65–71% guidance, with RPO flat or higher.</li>
+<li><strong>Net capex</strong> stays at or below $70B, with gross capex held at $90–95B.</li>
+<li><strong>A second quarter of renewal premiums</strong> on GPUs coming off contract.</li>
+<li><strong>Credit steadies.</strong> CDS falls from the ~241bp Bloomberg level, and there is no further rating action after July's cut to BBB-.</li>
+</ul>
+<p>On valuation, extra exposure stays attractive on the model while the stock trades below about 12x base-case fiscal 2029 EPS, roughly $170. At that price more than 40% would remain to the $240.83 base-case target. A rally that comes without these confirmations would not meet the test.</p>
+<h2 id="valuation-and-model">Valuation and model</h2>
+<p>Fiscal 2029 runs from June 2028 to May 2029, and it is the year consensus free cash flow reaches zero. At the September 2028 horizon, the market will be pricing that year. The model therefore sets the price in two years as fiscal 2029 non-GAAP EPS multiplied by a P/E multiple. The consensus inputs are Bloomberg BEST figures dated 25 September 2026.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Scenario</th>
+<th style="text-align: right;">FY29 revenue</th>
+<th style="text-align: right;">Net margin</th>
+<th style="text-align: right;">Shares</th>
+<th style="text-align: right;">EPS</th>
+<th style="text-align: right;">P/E</th>
+<th style="text-align: right;">Price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bear</td>
+<td style="text-align: right;">$120B</td>
+<td style="text-align: right;">20%</td>
+<td style="text-align: right;">3.30B</td>
+<td style="text-align: right;">$7.27</td>
+<td style="text-align: right;">10x</td>
+<td style="text-align: right;">$72.73</td>
+</tr>
+<tr>
+<td>Base</td>
+<td style="text-align: right;">$170B</td>
+<td style="text-align: right;">26%</td>
+<td style="text-align: right;">3.12B</td>
+<td style="text-align: right;">$14.17</td>
+<td style="text-align: right;">17x</td>
+<td style="text-align: right;">$240.83</td>
+</tr>
+<tr>
+<td>Bull</td>
+<td style="text-align: right;">$183B</td>
+<td style="text-align: right;">27%</td>
+<td style="text-align: right;">3.10B</td>
+<td style="text-align: right;">$15.94</td>
+<td style="text-align: right;">22x</td>
+<td style="text-align: right;">$350.65</td>
+</tr>
+</tbody>
+</table></div>
+<p>For reference, fiscal 2026 revenue was $67.4B and non-GAAP EPS $7.63. Fiscal 2027 guidance is at least $90B and $8.10.</p>
+<p><strong>How each input is set:</strong></p>
+<ul>
+<li><strong>Base revenue, $170B.</strong> Management's own OCI plan puts fiscal 2029 OCI revenue at $114B (<a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312525199175/orcl-ex99_1.htm">Oracle, September 2025</a>). Oracle raised the fiscal 2030 end-point of that plan from $144B to $166B at its October 2025 analyst meeting, so $114B is a conservative anchor. Adding roughly flat revenue from the rest of the company gives about $56B, against about $58B implied for this year. The base sits 7% below the $183B Bloomberg consensus.</li>
+<li><strong>Margin, 26%.</strong> Consensus fiscal 2029 figures imply a net margin of about 26.6%, after depreciation on the new fleet and interest on the debt. Interest expense was $1.4B last quarter, up 55% on a year earlier (<a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Q1 FY27 10-Q</a>).</li>
+<li><strong>Base multiple, 17x.</strong> This is the stock's current multiple on this year's earnings (17.1x), and below the 21x Oracle commanded two weeks before the reference date. Applying it to fiscal 2029 EPS assumes the market pays the same multiple for those earnings once free cash flow turns. Today it pays 8.8x for them, and closing that gap is the trade. The sensitivity table below shows the target at lower multiples and higher bear odds.</li>
+<li><strong>Bull, consensus numbers at 22x.</strong> That is below the 27x the market paid for Microsoft in September (<a href="https://finance.yahoo.com/markets/stocks/articles/oracle-stock-wall-street-sees-150052759.html">Yahoo Finance</a>).</li>
+<li><strong>Bear, OpenAI resets.</strong> OpenAI renegotiates and half its ramp never arrives. Fiscal 2029 revenue reaches $120B, below what consensus already expects for fiscal 2028, and the build stalls. Idle depreciation and interest cut the margin to 20%. A forced equity raise near the lows lifts the share count to 3.30B. At 10x, the shares are worth $72.73, about half today's price.</li>
+</ul>
+<p><strong>Dilution and credit.</strong> Today's 3.02B share count already includes the 141M shares sold last quarter. The mandatory convertible preferred adds about 25–31M shares in January 2029, after the horizon. S&amp;P has rated Oracle BBB- since the July downgrade. At quarter end, Oracle's $125B of senior notes had a fair value of $105.7B, about 85% of face (<a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Q1 FY27 10-Q</a>). The equity case needs credit to stabilise, not to recover fully, and each scenario's multiple follows that path.</p>
+<p><strong>The model gives no value to the tax shield, so any benefit is extra upside.</strong> The One Big Beautiful Bill Act permanently restored 100% bonus depreciation for equipment acquired after 19 January 2025 (<a href="https://bdo.com/insights/industries/technology/4-key-obbba-provisions-data-centers-need-to-know">BDO</a>). In the one-gigawatt example, that lifts the return from about 16% to between 18% and 19.5%, depending on when the deduction is taken. Oracle's filings do not show it yet. Last quarter's deferred-tax line was only −$73M, income taxes payable rose $546M, and the effective tax rate was 15.1% (<a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Q1 FY27 10-Q</a>).</p>
+<p><strong>Sensitivity.</strong> The probability-weighted target across bear weights and base-case multiples, with the other two weights scaled in proportion and returns from the 139.16 reference:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Bear weight</th>
+<th style="text-align: right;">Base at 13x</th>
+<th style="text-align: right;">Base at 15x</th>
+<th style="text-align: right;">Base at 17x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>25%</td>
+<td style="text-align: right;">$206 (+48%)</td>
+<td style="text-align: right;">$219 (+57%)</td>
+<td style="text-align: right;">$232 (+67%)</td>
+</tr>
+<tr>
+<td>35%</td>
+<td style="text-align: right;">$188 (+35%)</td>
+<td style="text-align: right;">$199 (+43%)</td>
+<td style="text-align: right;">$211 (+51%)</td>
+</tr>
+<tr>
+<td>45%</td>
+<td style="text-align: right;">$171 (+23%)</td>
+<td style="text-align: right;">$180 (+29%)</td>
+<td style="text-align: right;">$189 (+36%)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Even at a 45% bear weight and a 13x base multiple, the weighted target is above the reference price.</p>
+<p><img loading="lazy" alt="ORCL scenario targets at 30 September 2028" src="valuation-scenarios.png" /></p>
+<p><em>Scenario prices at the 2028-09-30 horizon, in US dollars per share, calculated as fiscal 2029 non-GAAP EPS times the scenario P/E. The probabilities are our estimates. The probability-weighted target of $231.75 is the average of the three bars, weighted by probability. <a href="model.json">Valuation assumptions and calculations</a>.</em></p>
+<h2 id="scenarios">Scenarios</h2>
+<p>Each scenario is marked at 30 September 2028, and returns are measured from the 139.16 USD reference quote on price alone. The token's reinvested dividend is currently about 1.4% a year before withholding and comes on top of those returns.</p>
+<p>The valuation section sets out each case's inputs; the weights rest on this reasoning. The bear case gets 25% because OpenAI's gap between revenue and compute bill is offset by its closed $122B round and a supplier base that spreads its risk. The base case gets the most weight, 45%, because existing contracts and guidance already cover what it needs. The bull case gets 30% because it also needs the credit market to change its view.</p>
+<p>The probabilities are our estimates, with 2028-09-30 as the horizon.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Scenario</th>
+<th style="text-align: right;">Probability %</th>
+<th>Catalyst outcome</th>
+<th>Valuation driver</th>
+<th style="text-align: right;">Target price</th>
+<th style="text-align: right;">Trade price return %</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bear: OpenAI resets, half its ramp never arrives</td>
+<td style="text-align: right;">25.00</td>
+<td>OpenAI renegotiates; half its ramp never arrives; equity issued near the lows; credit at record wides</td>
+<td>FY29 revenue $120B, 20% margin, 3.30B shares: EPS $7.27 at a distressed 10x</td>
+<td style="text-align: right;">72.73</td>
+<td style="text-align: right;">(47.74)</td>
+</tr>
+<tr>
+<td>Base: backlog converts on schedule</td>
+<td style="text-align: right;">45.00</td>
+<td>RPO converts on schedule; capex inside the $70B net ceiling; credit stabilises</td>
+<td>FY29 revenue $170B, 26% margin, 3.12B shares: EPS $14.17 at today's 17x</td>
+<td style="text-align: right;">240.83</td>
+<td style="text-align: right;">73.06</td>
+</tr>
+<tr>
+<td>Bull: Street FY29 numbers, credit re-rates</td>
+<td style="text-align: right;">30.00</td>
+<td>Renewal premiums persist; free cash flow turns on schedule; CDS retraces</td>
+<td>FY29 revenue $183B, 27% margin, 3.10B shares: EPS $15.94 at 22x, still below Microsoft</td>
+<td style="text-align: right;">350.65</td>
+<td style="text-align: right;">151.98</td>
+</tr>
+</tbody>
+</table></div>
+<p>Probability-weighted target: $231.75. Probability-weighted price return: +66.54%.</p>
+<h2 id="appendix-the-orclon-token">Appendix: the ORCLon token</h2>
+<p>Buying ORCLon spot on Felix gives unlevered exposure with no funding payments. Ondo issues ORCLon one-for-one against Oracle shares held at a US broker-dealer. The token tracks total return: rather than paying out Oracle's dividend, it reinvests it into the token, net of withholding tax (<a href="https://ondo.finance/ondo-stocks">Ondo</a>).</p>
+<p>The token is a claim on Ondo Global Markets, a British Virgin Islands issuer. It is not a registered share and carries no voting rights or SIPC cover. Shares held at the US broker-dealer Alpaca back the token 1:1 in a bankruptcy-remote structure checked by independent attestations (<a href="https://metamask.io/news/what-is-ondo-stocks">MetaMask on Ondo Stocks</a>). Minting and redemption run 24 hours a day, five days a week, and outside US market hours the token can drift from the stock price. The reference quote of 139.16 USD was taken on Saturday 26 September, about 1.5% above Oracle's $137.10 close on Friday 25 September. Felix charges a trading fee on each side.</p>
+<h3 id="sources">Sources</h3>
+<ul>
+<li><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm">Oracle Q1 FY27 10-Q</a></li>
+<li><a href="https://investor.oracle.com/investor-news/news-details/2026/Oracle-Announces-Q1-Results-Driven-by-Triple-Digit-Growth-in-Cloud-Infrastructure-Revenues/default.aspx">Oracle Q1 FY27 results release</a></li>
+<li><a href="https://www.fool.com/earnings/call-transcripts/2026/09/11/oracle-orcl-q1-2027-earnings-call-transcript/">Oracle Q1 FY27 earnings call transcript</a></li>
+<li><a href="https://s23.q4cdn.com/440135859/files/content_files/Q1-FY27-Oracle-Earnings-Slides.pdf">Oracle Q1 FY27 slides</a></li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312525199175/orcl-ex99_1.htm">Oracle FY26 Q1 release with the OCI plan</a></li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0001341439/000119312526389753/d20034dex991.htm">Ellison cancels share sale plan (8-K)</a></li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0001341439/000119312526402816/orcl-20260925.htm">Oracle 2026 proxy statement and annual meeting date</a></li>
+<li><a href="https://investor.oracle.com/investor-news/news-details/2026/Oracle-announces-Equity-and-Debt-Financing-Plan-for-Calendar-Year-2026/default.aspx">Oracle calendar-2026 financing plan</a></li>
+<li><a href="https://cnbc.com/2026/09/10/oracle-orcl-q1-earnings-report-2027.html">CNBC on Q1 results</a></li>
+<li><a href="https://www.cnbc.com/2026/06/11/oracle-shares-tumble-11percent-on-increased-capital-raise-cash-concerns.html">CNBC on the June capital raise</a></li>
+<li><a href="https://finance.yahoo.com/markets/stocks/articles/oracle-shares-slide-hefty-ai-152535544.html">Reuters on the June share fall</a></li>
+<li><a href="https://www.heise.de/en/news/S-P-downgrades-Oracle-to-BBB-only-one-notch-above-junk-level-11363472.html">heise on the S&amp;P downgrade</a></li>
+<li><a href="https://www.tradingview.com/news/seekingalpha:62ed2825e094b:0-hyperscaler-cds-spreads-widen-with-oracle-hitting-record-high/">Seeking Alpha on record Oracle CDS</a></li>
+<li><a href="https://cnbc.com/2026/09/24/oracle-data-center-force-majeure.html">CNBC on the force-majeure notice</a></li>
+<li><a href="https://techcrunch.com/2026/09/24/oracle-sends-force-majeure-notice-on-its-new-mexico-stargate-data-center/">TechCrunch on Project Jupiter</a></li>
+<li><a href="https://www.abqjournal.com/news/nm-supreme-court-pauses-project-jupiter-air-permit/3108233">Albuquerque Journal on the pipeline route and court stay</a></li>
+<li><a href="https://www.krwg.org/krwg-news/2026-09-18/nm-supreme-court-lifts-stay-on-project-jupiter-permit">KRWG on the Supreme Court lifting the stay</a></li>
+<li><a href="https://organmountainnews.com/oracle-says-project-jupiter-could-turn-to-grid-power-if-air-permit-falls-through">Organ Mountain News on the grid-power fallback</a></li>
+<li><a href="https://longbridge.com/en/news/261873306">Oracle's 2025 one-gigawatt example</a></li>
+<li><a href="https://know.creditsights.com/insights/oracle-top-10-takeaways-from-2025-analyst-meeting/">CreditSights on the 2025 analyst meeting</a></li>
+<li><a href="https://www.bloomberg.com/news/articles/2025-10-16/oracle-rallies-after-saying-ai-cloud-gross-margin-can-be-35">Bloomberg on the 2025 analyst meeting share reaction</a></li>
+<li><a href="https://finance.yahoo.com/news/openai-oracle-sign-300-billion-182157146.html">OpenAI–Oracle $300B contract</a></li>
+<li><a href="https://openai.com/index/accelerating-the-next-phase-ai">OpenAI $122B round</a></li>
+<li><a href="https://www.bloomberg.com/news/articles/2026-09-15/openai-weighing-funding-round-at-over-1-2-trillion-valuation">Bloomberg on OpenAI's next round</a></li>
+<li><a href="https://www.investing.com/news/stock-market-news/anthropic-tells-investors-it-will-be-profitable-for-second-straight-quarter-ft-reports-4898761">Reuters/FT on Anthropic margins</a></li>
+<li><a href="https://akamai.com/newsroom/press-release/akamai-announces-11-6-billion-multi-year-agreement-with-anthropic-to-support-growing-demand">Akamai–Anthropic agreement</a></li>
+<li><a href="https://techcrunch.com/2026/09/25/meta-is-putting-its-muscle-behind-muse-as-the-ai-app-takes-off/">TechCrunch on Meta's Muse</a></li>
+<li><a href="https://www.implicator.ai/metas-muse-tops-us-app-store-ahead-of-chatgpt-ten-days-after-launch/">Implicator on Muse's design</a></li>
+<li><a href="https://www.investing.com/news/stock-market-news/meta-to-put-ai-chip-into-production-in-september-as-it-looks-to-double-computing-capacity-memo-shows-4787372">Reuters on Meta's capacity memo</a></li>
+<li><a href="https://aimultiple.com/gpu-index">AIMultiple GPU index</a></li>
+<li><a href="https://www.thundercompute.com/blog/ai-gpu-rental-market-trends">Thunder Compute on GPU rental markets</a></li>
+<li><a href="https://www.datagravity.dev/p/the-gpu-depreciation-curve-is-broken">Data Gravity on GPU depreciation</a></li>
+<li><a href="https://api.npmjs.org/downloads/range/2025-08-01:2026-08-31/@openai/codex">npm registry download counts</a></li>
+<li><a href="https://bdo.com/insights/industries/technology/4-key-obbba-provisions-data-centers-need-to-know">BDO on OBBBA provisions</a></li>
+<li><a href="https://ondo.finance/ondo-stocks">Ondo Stocks product terms</a></li>
+<li><a href="https://metamask.io/news/what-is-ondo-stocks">MetaMask on Ondo Stocks custody and attestations</a></li>
+<li>Bloomberg consensus estimates (BEST), CDS and ratings, 25 September 2026</li>
+<li>Blackstone at the Barclays Global Financial Services Conference, 15 September 2026 (transcript)</li>
+</ul>
+<p><strong>Corbanu · Trade note · 27 September 2026</strong></p></article>
+</main>
+<div class="article-end">This article describes a proposed trade, not a confirmed execution. Corbanu is a publication, not individualized investment advice. Venue links may carry referral compensation. <a href="/compliance/">Publication policies</a>.</div>
+<footer class="site-footer">
+  <div class="foot-links"><a href="https://corbanu.com/">Home</a><a href="https://corbanu.com/markets/">Markets</a><a href="https://corbanu.com/terminal/">Terminal</a><a href="https://corbanu.com/compliance/">Compliance</a><a href="https://corbanu.com/disclaimer/">Disclaimer</a></div>
+  <div>Corbanu · 2026</div>
+</footer>
+<script>
+(() => {
+  const article = document.getElementById('article');
+  const toc = document.getElementById('toc');
+  article.querySelectorAll('a[href="https://app.hyperliquid.xyz/join/CORBANU"]').forEach(link => {
+    link.target = '_blank';
+    link.rel = 'sponsored noopener noreferrer';
+  });
+  const copyButton = document.querySelector('.llm-copy');
+  const copyStatus = document.querySelector('.copy-status');
+  const copyText = async value => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+      return;
+    }
+    const field = document.createElement('textarea');
+    field.value = value;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    const copied = document.execCommand('copy');
+    field.remove();
+    if (!copied) throw new Error('clipboard unavailable');
+  };
+  if (copyButton) copyButton.addEventListener('click', async () => {
+    const label = copyButton.querySelector('span');
+    const original = label.textContent;
+    copyButton.disabled = true;
+    if (copyStatus) copyStatus.textContent = 'Preparing clean Markdown…';
+    try {
+      const response = await fetch(copyButton.dataset.copySource, {cache:'no-store'});
+      if (!response.ok) throw new Error('source unavailable');
+      await copyText(await response.text());
+      copyButton.dataset.state = 'copied';
+      label.textContent = 'Copied';
+      if (copyStatus) copyStatus.textContent = 'Article copied as Markdown.';
+      setTimeout(() => {
+        copyButton.dataset.state = '';
+        label.textContent = original;
+        copyButton.disabled = false;
+        if (copyStatus) copyStatus.textContent = '';
+      }, 1800);
+    } catch (_error) {
+      label.textContent = 'Copy failed';
+      if (copyStatus) copyStatus.textContent = 'Markdown source could not be copied.';
+      copyButton.disabled = false;
+      setTimeout(() => { label.textContent = original; }, 1800);
+    }
+  });
+  const heads = [...article.querySelectorAll('h2,h3')];
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  heads.forEach((h,i) => {
+    h.id = h.id || slug(h.textContent) || 'section-' + i;
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.className = 'sub';
+    toc.appendChild(a);
+  });
+  const links = [...toc.querySelectorAll('a')];
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => a.classList.toggle('active', a.hash === '#' + e.target.id));
+    });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  heads.forEach(h => observer.observe(h));
+  const bar = document.querySelector('.read-progress');
+  const update = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
+  };
+  addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+</body>
+</html>
