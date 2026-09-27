@@ -1,0 +1,64 @@
+{
+  "valuation_basis": "Exit-date rolling forward EPS as house percentage of captured 1BF EPS; not fiscal-year EPS",
+  "entry_equity_krw": 1933000.0,
+  "entry_perp_usd": 1409.3,
+  "oracle_usd": 1408.3,
+  "forecast_horizon": "2027-09-22",
+  "fx_assumption": "Constant normalized equity-to-oracle FX mapping; no FX forecast",
+  "scenarios": [
+    {
+      "scenario": "Bull: durability earns a premium",
+      "probability_pct": 20,
+      "eps_retained": 1.1,
+      "exit_eps_krw": 476499.45948550006,
+      "exit_pe": 10,
+      "target_krw": 4764994.594855,
+      "equity_return_pct": 146.50773899922402,
+      "perp_target_usd": 3471.568488326072,
+      "perp_price_return_pct": 146.33282397829223,
+      "with_30d_carry_pct": 132.30607022662556,
+      "with_90d_carry_pct": 110.59262371384779
+    },
+    {
+      "scenario": "Base: partial rerating, estimates cut",
+      "probability_pct": 45,
+      "eps_retained": 0.9,
+      "exit_eps_krw": 389863.19412450003,
+      "exit_pe": 8,
+      "target_krw": 3118905.5529960003,
+      "equity_return_pct": 61.350520072219375,
+      "perp_target_usd": 2272.299374177065,
+      "perp_price_return_pct": 61.2360302403367,
+      "with_30d_carry_pct": 47.20927648867003,
+      "with_90d_carry_pct": 25.495829975892264
+    },
+    {
+      "scenario": "Bear: ordinary memory downturn",
+      "probability_pct": 25,
+      "eps_retained": 0.55,
+      "exit_eps_krw": 238249.72974275003,
+      "exit_pe": 4.5,
+      "target_krw": 1072123.783842375,
+      "equity_return_pct": -44.5357587251746,
+      "perp_target_usd": 781.1029098733661,
+      "perp_price_return_pct": -44.575114604884256,
+      "with_30d_carry_pct": -58.60186835655092,
+      "with_90d_carry_pct": -80.31531486932869
+    },
+    {
+      "scenario": "Tail: contract and demand failure",
+      "probability_pct": 10,
+      "eps_retained": 0.15,
+      "exit_eps_krw": 64977.19902075,
+      "exit_pe": 3,
+      "target_krw": 194931.59706225,
+      "equity_return_pct": -89.9155924954863,
+      "perp_target_usd": 142.01871088606654,
+      "perp_price_return_pct": -89.92274810997895,
+      "with_30d_carry_pct": -103.94950186164563,
+      "with_90d_carry_pct": -125.6629483744234
+    }
+  ],
+  "expected_equity_return_pct": 36.78378290150124,
+  "expected_perp_return_pct": 36.686724941591
+}

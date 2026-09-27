@@ -1,0 +1,1884 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SK hynix: complete Bloomberg peer comparison</title>
+  <meta name="description" content="Private Corbanu trade-idea preview">
+  <link rel="canonical" href="">
+  <link rel="icon" href="https://corbanu.com/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://corbanu.com/assets/css/market-lens.css">
+  <style>
+    .post-wrap { width: min(720px, calc(100% - 2rem)); margin: 0 auto; padding: 2.4rem 0 4rem; }
+    .post-wrap h1 { margin: 0 0 .4rem; font: 400 clamp(1.9rem, 3vw, 2.6rem)/1.15 var(--serif); }
+    .post-meta { margin: 0 0 1.8rem; color: #8e948a; font: .74rem/1.5 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+    .post-body p, .post-body li { color: #ccd1c6; font-size: 1rem; line-height: 1.7; }
+    .post-body h2 { margin: 2rem 0 .6rem; font: 600 1.25rem/1.3 var(--sans); }
+    .post-body h3 { margin: 1.5rem 0 .5rem; font: 650 1.02rem/1.3 var(--sans); }
+    .post-body a { text-decoration-color: rgba(204,255,0,.4); text-underline-offset: 3px; }
+    .post-disclosure { margin-top: 2.6rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+    .post-disclosure p { color: #8b9186; font-size: .8rem; line-height: 1.6; }
+    .post-index { display: grid; gap: 1rem; }
+    .post-index a { display: block; padding: 1.2rem 1.3rem; border: 1px solid rgba(255,255,255,.14); border-radius: 10px; text-decoration: none; }
+    .post-index a:hover { border-color: var(--lime); }
+    .post-index strong { font: 600 1.1rem/1.3 var(--sans); }
+    .post-index span { display: block; margin-top: .4rem; color: #9aa094; font-size: .86rem; line-height: 1.5; }
+    .post-empty { color: #9aa094; line-height: 1.6; }
+  </style>
+<meta name="robots" content="noindex,nofollow"><style>.post-body{overflow-wrap:anywhere}.scenario-chart{margin:2rem 0}.scenario-chart svg{display:block;width:100%;max-width:440px;height:auto}.scenario-chart{overflow-x:auto}.scenario-chart figcaption{margin-bottom:1rem;color:#b3bdac}.post-body table{display:block;overflow-x:auto;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.85rem}.post-body td,.post-body th{padding:.7rem;border-bottom:1px solid #394036;text-align:right;min-width:7rem;overflow-wrap:normal;word-break:normal}.post-body th{white-space:nowrap}.scenario-chart:focus-visible,.post-body table:focus-visible{outline:2px solid #d6f278;outline-offset:3px}.post-body td:first-child,.post-body th:first-child{text-align:left}</style></head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/"><img src="https://corbanu.com/assets/corbanu-logo.webp" alt="" width="45" height="45">Corbanu</a>
+    <nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/markets/">Markets</a><a href="/posts/" aria-current="page">Posts</a><a href="/terminal/">Terminal</a><a href="/#newsletter">Subscribe</a></nav>
+    <div></div>
+  </header>
+  <main class="post-wrap"><article class="post-body"><h1>SK hynix versus QQQ and commodity producers: complete Bloomberg comparison</h1>
+<p>Captured <strong>22 September 2026, 01:01 UTC</strong> via the existing Bloomberg Desktop bridge. Holdings and rounded allocations were supplied by the user as of <strong>18 September 2026</strong>. This is a comparison of that supplied universe; Bloomberg FUND_HOLDINGS and INDX_MEMBERS probes on QQQ returned no rows and are not represented as validation of the fund composition.</p>
+<p><a href="index.html">Return to article</a> · <a href="qqq_all_holdings_bloomberg.csv">Full 101-security CSV with weights and raw fields</a> · <a href="all_bloomberg_comparison.csv">Full Bloomberg panel</a> · <a href="bloomberg_requests.json">Request metadata</a> · <a href="build_comparison.py">Calculation source</a></p>
+<h2>Definitions and coverage</h2>
+<ul>
+<li><strong>P/E:</strong> Bloomberg BEST_PE_RATIO, BEST_FPERIOD_OVERRIDE=1BF. Positive observations only for P/E averages. Nonpositive/missing P/E is n/a, never zero. No winsorization or outlier removal.</li>
+<li><strong>First growth measure:</strong> 100 × (BEST_SALES 1BF / TRAIL_12M_NET_SALES − 1). The numerator and denominator are total company sales in the same reporting currency and Bloomberg units.</li>
+<li><strong>Second growth measure:</strong> 100 × (BEST_SALES 2BF / BEST_SALES 1BF − 1). 1BF and 2BF are blended forward periods; fiscal-year endpoints vary by issuer.</li>
+<li><strong>Trailing gross margin:</strong> TRAIL_12M_GROSS_MARGIN. <strong>Forward gross margin:</strong> BEST_GROSS_MARGIN with 1BF. Values already in percentage units. No substitution of operating margins.</li>
+<li>The matched-currency PX_LAST / BEST_EPS arithmetic reproduces the direct P/E fields to better than 0.0001% relative error. For PDD, CCEP, FER and ASML, trading and earnings currencies differ; direct Bloomberg P/E handles that normalization, so an unconverted price/EPS quotient is not used.</li>
+<li>All 101 company share-class rows resolved to Bloomberg names. They represent 100 issuers and 99.82% of supplied portfolio weight. Alphabet classes are combined at issuer level, using Class A fundamentals/P/E and summed allocation. The two class-specific P/Es remain in the full table/CSV.</li>
+<li>The supplied table has 106 total rows. Non-company cash/futures/dividend rows are retained below and excluded from company multiples. Rounded supplied weights sum to 99.96%, not exactly 100%.</li>
+<li>Undefined positive forward P/E: <strong>CoreWeave, Nebius, Rocket Lab, Warner Bros. Discovery</strong>. They remain in revenue-growth calculations; no earnings multiple is imputed.</li>
+<li>“Technology” means Bloomberg GICS Information Technology: 42 issuers. Alphabet, Meta and other platforms in different sectors remain in all-QQQ averages and the selected-largest-issuers table.</li>
+<li>Equal-weight averages use one observation per issuer; counts accompany each metric. Weighted arithmetic means renormalize supplied weights over valid observations. Neither statistic is an ETF aggregate P/E or a market-cap-weighted earnings yield.</li>
+<li>Two exploratory bare-year override requests (2026/2027) returned missing EPS/P/E and identical quarterly-sized sales; these were rejected. Only explicit <strong>1BF/2BF</strong> requests enter the displayed comparison.</li>
+</ul>
+<h2>Group means, medians and denominators</h2>
+<table tabindex="0" aria-label="Scrollable financial table">
+<thead>
+<tr>
+<th>Comparison group</th>
+<th>Mean / median 1BF P/E</th>
+<th>Mean sales growth: 1BF / trailing</th>
+<th>Mean sales growth: 2BF / 1BF</th>
+<th>Mean trailing gross margin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SK hynix</strong></td>
+<td><strong>4.46×</strong></td>
+<td><strong>157.5%</strong></td>
+<td><strong>22.9%</strong></td>
+<td><strong>76.3%</strong></td>
+</tr>
+<tr>
+<td>QQQ all issuers</td>
+<td>31.6× / 22.5× (96/100)</td>
+<td>37.4% (100/100)</td>
+<td>16.5% (100/100)</td>
+<td>57.5% (96/100)</td>
+</tr>
+<tr>
+<td>QQQ Information Technology</td>
+<td>37.8× / 26.4× (40/42)</td>
+<td>64.3% (42/42)</td>
+<td>24.6% (42/42)</td>
+<td>65.6% (42/42)</td>
+</tr>
+<tr>
+<td>Five commodity producers</td>
+<td>12.4× / 14.3× (5/5)</td>
+<td>2.3% (5/5)</td>
+<td>-2.9% (5/5)</td>
+<td>26.6% (5/5)</td>
+</tr>
+</tbody>
+</table>
+<p>Full summary, including weighted means and coverage: <a href="summary.json">summary.json</a>.</p>
+<h2>All technology holdings</h2>
+<table tabindex="0" aria-label="Scrollable financial table">
+<thead>
+<tr>
+<th>Company</th>
+<th>BEST P/E (1BF)</th>
+<th>Sales: 1BF / trailing</th>
+<th>Sales: 2BF / 1BF</th>
+<th>Gross margin, trailing</th>
+<th>Gross margin, 1BF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA Corp (NVDA)</td>
+<td>16.8×</td>
+<td>97.6%</td>
+<td>41.9%</td>
+<td>74.7%</td>
+<td>73.1%</td>
+</tr>
+<tr>
+<td>Apple Inc (AAPL)</td>
+<td>35.3×</td>
+<td>12.2%</td>
+<td>7.9%</td>
+<td>48.7%</td>
+<td>47.5%</td>
+</tr>
+<tr>
+<td>Microsoft Corp (MSFT)</td>
+<td>24.3×</td>
+<td>23.4%</td>
+<td>19.4%</td>
+<td>67.9%</td>
+<td>65.9%</td>
+</tr>
+<tr>
+<td>Micron Technology Inc (MU)</td>
+<td>6.7×</td>
+<td>181.0%</td>
+<td>12.4%</td>
+<td>72.6%</td>
+<td>85.9%</td>
+</tr>
+<tr>
+<td>Advanced Micro Devices Inc (AMD)</td>
+<td>46.5×</td>
+<td>89.7%</td>
+<td>44.0%</td>
+<td>53.2%</td>
+<td>55.6%</td>
+</tr>
+<tr>
+<td>Broadcom Inc (AVGO)</td>
+<td>19.8×</td>
+<td>86.6%</td>
+<td>58.5%</td>
+<td>68.8%</td>
+<td>72.1%</td>
+</tr>
+<tr>
+<td>Intel Corp (INTC)</td>
+<td>63.5×</td>
+<td>23.2%</td>
+<td>15.5%</td>
+<td>38.6%</td>
+<td>43.4%</td>
+</tr>
+<tr>
+<td>Cisco Systems Inc (CSCO)</td>
+<td>21.6×</td>
+<td>16.5%</td>
+<td>7.2%</td>
+<td>64.5%</td>
+<td>64.8%</td>
+</tr>
+<tr>
+<td>Palantir Technologies Inc (PLTR)</td>
+<td>85.7×</td>
+<td>81.5%</td>
+<td>44.7%</td>
+<td>84.8%</td>
+<td>86.3%</td>
+</tr>
+<tr>
+<td>Lam Research Corp (LRCX)</td>
+<td>30.2×</td>
+<td>56.6%</td>
+<td>18.3%</td>
+<td>50.5%</td>
+<td>52.0%</td>
+</tr>
+<tr>
+<td>Applied Materials Inc (AMAT)</td>
+<td>25.6×</td>
+<td>48.0%</td>
+<td>21.0%</td>
+<td>49.4%</td>
+<td>50.7%</td>
+</tr>
+<tr>
+<td>Palo Alto Networks Inc (PANW)</td>
+<td>86.9×</td>
+<td>25.9%</td>
+<td>14.3%</td>
+<td>70.4%</td>
+<td>75.4%</td>
+</tr>
+<tr>
+<td>Sandisk Corp (SNDK)</td>
+<td>7.9×</td>
+<td>151.7%</td>
+<td>12.5%</td>
+<td>71.5%</td>
+<td>84.2%</td>
+</tr>
+<tr>
+<td>Texas Instruments Inc (TXN)</td>
+<td>27.2×</td>
+<td>24.0%</td>
+<td>12.2%</td>
+<td>58.3%</td>
+<td>61.6%</td>
+</tr>
+<tr>
+<td>Crowdstrike Holdings Inc (CRWD)</td>
+<td>168.6×</td>
+<td>27.5%</td>
+<td>22.3%</td>
+<td>75.2%</td>
+<td>79.0%</td>
+</tr>
+<tr>
+<td>KLA Corp (KLAC)</td>
+<td>31.8×</td>
+<td>40.2%</td>
+<td>19.1%</td>
+<td>61.3%</td>
+<td>62.7%</td>
+</tr>
+<tr>
+<td>Marvell Technology Inc (MRVL)</td>
+<td>43.9×</td>
+<td>69.1%</td>
+<td>46.9%</td>
+<td>52.2%</td>
+<td>58.0%</td>
+</tr>
+<tr>
+<td>Seagate Technology Holdings PLC (STX)</td>
+<td>21.8×</td>
+<td>65.9%</td>
+<td>32.3%</td>
+<td>45.6%</td>
+<td>61.1%</td>
+</tr>
+<tr>
+<td>QUALCOMM Inc (QCOM)</td>
+<td>19.2×</td>
+<td>2.4%</td>
+<td>15.6%</td>
+<td>54.2%</td>
+<td>52.8%</td>
+</tr>
+<tr>
+<td>Analog Devices Inc (ADI)</td>
+<td>23.4×</td>
+<td>30.5%</td>
+<td>8.7%</td>
+<td>65.8%</td>
+<td>73.9%</td>
+</tr>
+<tr>
+<td>Shopify Inc (SHOP)</td>
+<td>59.3×</td>
+<td>36.1%</td>
+<td>25.0%</td>
+<td>47.8%</td>
+<td>47.0%</td>
+</tr>
+<tr>
+<td>ASML Holding NV (ASML)</td>
+<td>30.7×</td>
+<td>48.4%</td>
+<td>23.0%</td>
+<td>52.7%</td>
+<td>55.9%</td>
+</tr>
+<tr>
+<td>Western Digital Corp (WDC)</td>
+<td>19.7×</td>
+<td>60.3%</td>
+<td>33.4%</td>
+<td>48.9%</td>
+<td>60.1%</td>
+</tr>
+<tr>
+<td>Fortinet Inc (FTNT)</td>
+<td>47.4×</td>
+<td>16.9%</td>
+<td>10.8%</td>
+<td>80.2%</td>
+<td>80.2%</td>
+</tr>
+<tr>
+<td>ARM Holdings PLC (ARM)</td>
+<td>122.0×</td>
+<td>37.9%</td>
+<td>32.9%</td>
+<td>97.5%</td>
+<td>94.3%</td>
+</tr>
+<tr>
+<td>Adobe Inc (ADBE)</td>
+<td>9.2×</td>
+<td>10.2%</td>
+<td>8.7%</td>
+<td>89.3%</td>
+<td>89.4%</td>
+</tr>
+<tr>
+<td>Intuit Inc (INTU)</td>
+<td>12.9×</td>
+<td>10.5%</td>
+<td>9.0%</td>
+<td>80.2%</td>
+<td>81.4%</td>
+</tr>
+<tr>
+<td>Cadence Design Systems Inc (CDNS)</td>
+<td>32.3×</td>
+<td>18.8%</td>
+<td>13.3%</td>
+<td>85.9%</td>
+<td>87.9%</td>
+</tr>
+<tr>
+<td>Datadog Inc (DDOG)</td>
+<td>82.7×</td>
+<td>31.5%</td>
+<td>22.3%</td>
+<td>79.5%</td>
+<td>80.3%</td>
+</tr>
+<tr>
+<td>Synopsys Inc (SNPS)</td>
+<td>23.2×</td>
+<td>12.5%</td>
+<td>12.3%</td>
+<td>72.4%</td>
+<td>83.5%</td>
+</tr>
+<tr>
+<td>Lumentum Holdings Inc (LITE)</td>
+<td>39.3×</td>
+<td>134.4%</td>
+<td>49.5%</td>
+<td>41.7%</td>
+<td>52.0%</td>
+</tr>
+<tr>
+<td>Monolithic Power Systems Inc (MPWR)</td>
+<td>37.4×</td>
+<td>55.4%</td>
+<td>23.2%</td>
+<td>55.2%</td>
+<td>55.9%</td>
+</tr>
+<tr>
+<td>Teradyne Inc (TER)</td>
+<td>35.6×</td>
+<td>32.5%</td>
+<td>21.5%</td>
+<td>59.2%</td>
+<td>59.5%</td>
+</tr>
+<tr>
+<td>NXP Semiconductors NV (NXPI)</td>
+<td>13.4×</td>
+<td>17.5%</td>
+<td>9.8%</td>
+<td>56.0%</td>
+<td>59.2%</td>
+</tr>
+<tr>
+<td>Astera Labs Inc (ALAB)</td>
+<td>58.8×</td>
+<td>130.9%</td>
+<td>35.3%</td>
+<td>75.1%</td>
+<td>71.4%</td>
+</tr>
+<tr>
+<td>Strategy Inc (MSTR)</td>
+<td>15.0×</td>
+<td>2.0%</td>
+<td>2.7%</td>
+<td>67.6%</td>
+<td>66.1%</td>
+</tr>
+<tr>
+<td>Nebius Group NV (NBIS)</td>
+<td>n/a</td>
+<td>621.8%</td>
+<td>119.3%</td>
+<td>74.3%</td>
+<td>74.1%</td>
+</tr>
+<tr>
+<td>Autodesk Inc (ADSK)</td>
+<td>16.1×</td>
+<td>14.4%</td>
+<td>10.8%</td>
+<td>91.2%</td>
+<td>92.9%</td>
+</tr>
+<tr>
+<td>Microchip Technology Inc (MCHP)</td>
+<td>18.3×</td>
+<td>34.3%</td>
+<td>13.2%</td>
+<td>60.2%</td>
+<td>66.1%</td>
+</tr>
+<tr>
+<td>Workday Inc (WDAY)</td>
+<td>15.4×</td>
+<td>12.0%</td>
+<td>10.6%</td>
+<td>75.8%</td>
+<td>79.5%</td>
+</tr>
+<tr>
+<td>Roper Technologies Inc (ROP)</td>
+<td>15.4×</td>
+<td>8.0%</td>
+<td>6.4%</td>
+<td>69.5%</td>
+<td>69.9%</td>
+</tr>
+<tr>
+<td>CoreWeave Inc (CRWV)</td>
+<td>n/a</td>
+<td>201.0%</td>
+<td>67.4%</td>
+<td>67.4%</td>
+<td>69.8%</td>
+</tr>
+</tbody>
+</table>
+<h2>Commodity businesses: full requested group</h2>
+<table tabindex="0" aria-label="Scrollable financial table">
+<thead>
+<tr>
+<th>Company</th>
+<th>BEST P/E (1BF)</th>
+<th>Sales: 1BF / trailing</th>
+<th>Sales: 2BF / 1BF</th>
+<th>Gross margin, trailing</th>
+<th>Gross margin, 1BF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SK hynix (000660)</td>
+<td>4.5×</td>
+<td>157.5%</td>
+<td>22.9%</td>
+<td>76.3%</td>
+<td>84.3%</td>
+</tr>
+<tr>
+<td>ExxonMobil (XOM)</td>
+<td>14.3×</td>
+<td>2.6%</td>
+<td>-4.4%</td>
+<td>14.1%</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>Chevron (CVX)</td>
+<td>14.4×</td>
+<td>0.7%</td>
+<td>-2.5%</td>
+<td>26.3%</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>CF Industries (CF)</td>
+<td>10.4×</td>
+<td>-2.9%</td>
+<td>-7.1%</td>
+<td>42.5%</td>
+<td>40.9%</td>
+</tr>
+<tr>
+<td>Nutrien (NTR)</td>
+<td>14.8×</td>
+<td>-2.0%</td>
+<td>-1.1%</td>
+<td>31.0%</td>
+<td>31.2%</td>
+</tr>
+<tr>
+<td>Alcoa (AA)</td>
+<td>7.9×</td>
+<td>13.2%</td>
+<td>0.5%</td>
+<td>18.9%</td>
+<td>18.8%</td>
+</tr>
+</tbody>
+</table>
+<h2>All QQQ company holdings</h2>
+<p>Order follows the supplied list; Alphabet's two share classes both appear here. Download the CSV above for allocations, GICS classifications, observation-date fields and raw values.</p>
+<table tabindex="0" aria-label="Scrollable financial table">
+<thead>
+<tr>
+<th>Company</th>
+<th>BEST P/E (1BF)</th>
+<th>Sales: 1BF / trailing</th>
+<th>Sales: 2BF / 1BF</th>
+<th>Gross margin, trailing</th>
+<th>Gross margin, 1BF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA Corp (NVDA)</td>
+<td>16.8×</td>
+<td>97.6%</td>
+<td>41.9%</td>
+<td>74.7%</td>
+<td>73.1%</td>
+</tr>
+<tr>
+<td>Apple Inc (AAPL)</td>
+<td>35.3×</td>
+<td>12.2%</td>
+<td>7.9%</td>
+<td>48.7%</td>
+<td>47.5%</td>
+</tr>
+<tr>
+<td>Microsoft Corp (MSFT)</td>
+<td>24.3×</td>
+<td>23.4%</td>
+<td>19.4%</td>
+<td>67.9%</td>
+<td>65.9%</td>
+</tr>
+<tr>
+<td>Micron Technology Inc (MU)</td>
+<td>6.7×</td>
+<td>181.0%</td>
+<td>12.4%</td>
+<td>72.6%</td>
+<td>85.9%</td>
+</tr>
+<tr>
+<td>Amazon.com Inc (AMZN)</td>
+<td>19.9×</td>
+<td>18.1%</td>
+<td>14.9%</td>
+<td>50.8%</td>
+<td>52.6%</td>
+</tr>
+<tr>
+<td>Advanced Micro Devices Inc (AMD)</td>
+<td>46.5×</td>
+<td>89.7%</td>
+<td>44.0%</td>
+<td>53.2%</td>
+<td>55.6%</td>
+</tr>
+<tr>
+<td>Alphabet Inc Class A (GOOGL)</td>
+<td>21.0×</td>
+<td>16.2%</td>
+<td>22.7%</td>
+<td>60.9%</td>
+<td>67.5%</td>
+</tr>
+<tr>
+<td>Meta Platforms Inc (META)</td>
+<td>19.8×</td>
+<td>27.7%</td>
+<td>19.0%</td>
+<td>81.7%</td>
+<td>79.6%</td>
+</tr>
+<tr>
+<td>Alphabet Inc Class C (GOOG)</td>
+<td>20.8×</td>
+<td>16.2%</td>
+<td>22.7%</td>
+<td>60.9%</td>
+<td>67.5%</td>
+</tr>
+<tr>
+<td>Tesla Inc (TSLA)</td>
+<td>181.6×</td>
+<td>12.2%</td>
+<td>16.3%</td>
+<td>18.9%</td>
+<td>19.1%</td>
+</tr>
+<tr>
+<td>Broadcom Inc (AVGO)</td>
+<td>19.8×</td>
+<td>86.6%</td>
+<td>58.5%</td>
+<td>68.8%</td>
+<td>72.1%</td>
+</tr>
+<tr>
+<td>Intel Corp (INTC)</td>
+<td>63.5×</td>
+<td>23.2%</td>
+<td>15.5%</td>
+<td>38.6%</td>
+<td>43.4%</td>
+</tr>
+<tr>
+<td>Walmart Inc (WMT)</td>
+<td>34.6×</td>
+<td>5.2%</td>
+<td>4.8%</td>
+<td>25.2%</td>
+<td>24.6%</td>
+</tr>
+<tr>
+<td>Cisco Systems Inc (CSCO)</td>
+<td>21.6×</td>
+<td>16.5%</td>
+<td>7.2%</td>
+<td>64.5%</td>
+<td>64.8%</td>
+</tr>
+<tr>
+<td>Palantir Technologies Inc (PLTR)</td>
+<td>85.7×</td>
+<td>81.5%</td>
+<td>44.7%</td>
+<td>84.8%</td>
+<td>86.3%</td>
+</tr>
+<tr>
+<td>Costco Wholesale Corp (COST)</td>
+<td>39.4×</td>
+<td>11.8%</td>
+<td>7.6%</td>
+<td>12.9%</td>
+<td>11.4%</td>
+</tr>
+<tr>
+<td>Lam Research Corp (LRCX)</td>
+<td>30.2×</td>
+<td>56.6%</td>
+<td>18.3%</td>
+<td>50.5%</td>
+<td>52.0%</td>
+</tr>
+<tr>
+<td>Applied Materials Inc (AMAT)</td>
+<td>25.6×</td>
+<td>48.0%</td>
+<td>21.0%</td>
+<td>49.4%</td>
+<td>50.7%</td>
+</tr>
+<tr>
+<td>Netflix Inc (NFLX)</td>
+<td>19.6×</td>
+<td>14.5%</td>
+<td>10.5%</td>
+<td>49.1%</td>
+<td>51.6%</td>
+</tr>
+<tr>
+<td>Palo Alto Networks Inc (PANW)</td>
+<td>86.9×</td>
+<td>25.9%</td>
+<td>14.3%</td>
+<td>70.4%</td>
+<td>75.4%</td>
+</tr>
+<tr>
+<td>Space Exploration Technologies Corp (SPCX)</td>
+<td>116.1×</td>
+<td>302.1%</td>
+<td>81.9%</td>
+<td>49.4%</td>
+<td>59.7%</td>
+</tr>
+<tr>
+<td>Sandisk Corp (SNDK)</td>
+<td>7.9×</td>
+<td>151.7%</td>
+<td>12.5%</td>
+<td>71.5%</td>
+<td>84.2%</td>
+</tr>
+<tr>
+<td>Texas Instruments Inc (TXN)</td>
+<td>27.2×</td>
+<td>24.0%</td>
+<td>12.2%</td>
+<td>58.3%</td>
+<td>61.6%</td>
+</tr>
+<tr>
+<td>Crowdstrike Holdings Inc (CRWD)</td>
+<td>168.6×</td>
+<td>27.5%</td>
+<td>22.3%</td>
+<td>75.2%</td>
+<td>79.0%</td>
+</tr>
+<tr>
+<td>KLA Corp (KLAC)</td>
+<td>31.8×</td>
+<td>40.2%</td>
+<td>19.1%</td>
+<td>61.3%</td>
+<td>62.7%</td>
+</tr>
+<tr>
+<td>Marvell Technology Inc (MRVL)</td>
+<td>43.9×</td>
+<td>69.1%</td>
+<td>46.9%</td>
+<td>52.2%</td>
+<td>58.0%</td>
+</tr>
+<tr>
+<td>Linde PLC (LIN)</td>
+<td>23.9×</td>
+<td>5.9%</td>
+<td>5.3%</td>
+<td>48.3%</td>
+<td>49.0%</td>
+</tr>
+<tr>
+<td>Amgen Inc (AMGN)</td>
+<td>16.4×</td>
+<td>4.6%</td>
+<td>3.3%</td>
+<td>69.5%</td>
+<td>81.5%</td>
+</tr>
+<tr>
+<td>Seagate Technology Holdings PLC (STX)</td>
+<td>21.8×</td>
+<td>65.9%</td>
+<td>32.3%</td>
+<td>45.6%</td>
+<td>61.1%</td>
+</tr>
+<tr>
+<td>QUALCOMM Inc (QCOM)</td>
+<td>19.2×</td>
+<td>2.4%</td>
+<td>15.6%</td>
+<td>54.2%</td>
+<td>52.8%</td>
+</tr>
+<tr>
+<td>Gilead Sciences Inc (GILD)</td>
+<td>21.6×</td>
+<td>5.4%</td>
+<td>5.4%</td>
+<td>79.6%</td>
+<td>86.8%</td>
+</tr>
+<tr>
+<td>Analog Devices Inc (ADI)</td>
+<td>23.4×</td>
+<td>30.5%</td>
+<td>8.7%</td>
+<td>65.8%</td>
+<td>73.9%</td>
+</tr>
+<tr>
+<td>T-Mobile US Inc (TMUS)</td>
+<td>12.6×</td>
+<td>5.8%</td>
+<td>4.3%</td>
+<td>62.2%</td>
+<td>63.4%</td>
+</tr>
+<tr>
+<td>PepsiCo Inc (PEP)</td>
+<td>14.6×</td>
+<td>4.3%</td>
+<td>3.5%</td>
+<td>54.0%</td>
+<td>54.2%</td>
+</tr>
+<tr>
+<td>Shopify Inc (SHOP)</td>
+<td>59.3×</td>
+<td>36.1%</td>
+<td>25.0%</td>
+<td>47.8%</td>
+<td>47.0%</td>
+</tr>
+<tr>
+<td>ASML Holding NV (ASML)</td>
+<td>30.7×</td>
+<td>48.4%</td>
+<td>23.0%</td>
+<td>52.7%</td>
+<td>55.9%</td>
+</tr>
+<tr>
+<td>Western Digital Corp (WDC)</td>
+<td>19.7×</td>
+<td>60.3%</td>
+<td>33.4%</td>
+<td>48.9%</td>
+<td>60.1%</td>
+</tr>
+<tr>
+<td>Intuitive Surgical Inc (ISRG)</td>
+<td>34.6×</td>
+<td>16.4%</td>
+<td>12.8%</td>
+<td>66.7%</td>
+<td>68.4%</td>
+</tr>
+<tr>
+<td>Booking Holdings Inc (BKNG)</td>
+<td>14.2×</td>
+<td>10.5%</td>
+<td>8.7%</td>
+<td>n/a</td>
+<td>100.0%</td>
+</tr>
+<tr>
+<td>Vertex Pharmaceuticals Inc (VRTX)</td>
+<td>25.1×</td>
+<td>13.1%</td>
+<td>11.4%</td>
+<td>86.0%</td>
+<td>86.8%</td>
+</tr>
+<tr>
+<td>Fortinet Inc (FTNT)</td>
+<td>47.4×</td>
+<td>16.9%</td>
+<td>10.8%</td>
+<td>80.2%</td>
+<td>80.2%</td>
+</tr>
+<tr>
+<td>ARM Holdings PLC (ARM)</td>
+<td>122.0×</td>
+<td>37.9%</td>
+<td>32.9%</td>
+<td>97.5%</td>
+<td>94.3%</td>
+</tr>
+<tr>
+<td>Starbucks Corp (SBUX)</td>
+<td>30.5×</td>
+<td>0.9%</td>
+<td>5.1%</td>
+<td>22.1%</td>
+<td>67.9%</td>
+</tr>
+<tr>
+<td>Automatic Data Processing Inc (ADP)</td>
+<td>21.6×</td>
+<td>7.1%</td>
+<td>5.9%</td>
+<td>46.4%</td>
+<td>46.8%</td>
+</tr>
+<tr>
+<td>Adobe Inc (ADBE)</td>
+<td>9.2×</td>
+<td>10.2%</td>
+<td>8.7%</td>
+<td>89.3%</td>
+<td>89.4%</td>
+</tr>
+<tr>
+<td>AppLovin Corp (APP)</td>
+<td>17.5×</td>
+<td>41.6%</td>
+<td>23.9%</td>
+<td>88.5%</td>
+<td>87.8%</td>
+</tr>
+<tr>
+<td>Constellation Energy Corp (CEG)</td>
+<td>20.2×</td>
+<td>4.9%</td>
+<td>6.4%</td>
+<td>43.9%</td>
+<td>48.0%</td>
+</tr>
+<tr>
+<td>MercadoLibre Inc (MELI)</td>
+<td>36.1×</td>
+<td>43.7%</td>
+<td>25.6%</td>
+<td>42.7%</td>
+<td>42.1%</td>
+</tr>
+<tr>
+<td>Marriott International Inc/MD (MAR)</td>
+<td>26.9×</td>
+<td>8.1%</td>
+<td>5.4%</td>
+<td>20.2%</td>
+<td>56.1%</td>
+</tr>
+<tr>
+<td>CSX Corp (CSX)</td>
+<td>20.9×</td>
+<td>8.5%</td>
+<td>4.3%</td>
+<td>n/a</td>
+<td>38.1%</td>
+</tr>
+<tr>
+<td>Monster Beverage Corp (MNST)</td>
+<td>34.6×</td>
+<td>13.0%</td>
+<td>9.3%</td>
+<td>55.5%</td>
+<td>55.8%</td>
+</tr>
+<tr>
+<td>Intuit Inc (INTU)</td>
+<td>12.9×</td>
+<td>10.5%</td>
+<td>9.0%</td>
+<td>80.2%</td>
+<td>81.4%</td>
+</tr>
+<tr>
+<td>Comcast Corp (CMCSA)</td>
+<td>6.6×</td>
+<td>-5.2%</td>
+<td>1.8%</td>
+<td>69.4%</td>
+<td>53.0%</td>
+</tr>
+<tr>
+<td>Regeneron Pharmaceuticals Inc (REGN)</td>
+<td>13.6×</td>
+<td>16.9%</td>
+<td>7.8%</td>
+<td>84.9%</td>
+<td>84.9%</td>
+</tr>
+<tr>
+<td>DoorDash Inc (DASH)</td>
+<td>29.6×</td>
+<td>29.1%</td>
+<td>18.5%</td>
+<td>51.4%</td>
+<td>53.1%</td>
+</tr>
+<tr>
+<td>Cintas Corp (CTAS)</td>
+<td>34.6×</td>
+<td>10.9%</td>
+<td>7.6%</td>
+<td>50.7%</td>
+<td>51.1%</td>
+</tr>
+<tr>
+<td>Mondelez International Inc (MDLZ)</td>
+<td>18.4×</td>
+<td>3.3%</td>
+<td>3.4%</td>
+<td>31.1%</td>
+<td>34.4%</td>
+</tr>
+<tr>
+<td>Cadence Design Systems Inc (CDNS)</td>
+<td>32.3×</td>
+<td>18.8%</td>
+<td>13.3%</td>
+<td>85.9%</td>
+<td>87.9%</td>
+</tr>
+<tr>
+<td>Datadog Inc (DDOG)</td>
+<td>82.7×</td>
+<td>31.5%</td>
+<td>22.3%</td>
+<td>79.5%</td>
+<td>80.3%</td>
+</tr>
+<tr>
+<td>Synopsys Inc (SNPS)</td>
+<td>23.2×</td>
+<td>12.5%</td>
+<td>12.3%</td>
+<td>72.4%</td>
+<td>83.5%</td>
+</tr>
+<tr>
+<td>Ross Stores Inc (ROST)</td>
+<td>26.2×</td>
+<td>9.6%</td>
+<td>6.2%</td>
+<td>29.7%</td>
+<td>29.1%</td>
+</tr>
+<tr>
+<td>Lumentum Holdings Inc (LITE)</td>
+<td>39.3×</td>
+<td>134.4%</td>
+<td>49.5%</td>
+<td>41.7%</td>
+<td>52.0%</td>
+</tr>
+<tr>
+<td>O'Reilly Automotive Inc (ORLY)</td>
+<td>23.3×</td>
+<td>7.5%</td>
+<td>6.2%</td>
+<td>51.6%</td>
+<td>51.9%</td>
+</tr>
+<tr>
+<td>Warner Bros Discovery Inc (WBD)</td>
+<td>n/a</td>
+<td>2.3%</td>
+<td>2.2%</td>
+<td>47.2%</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>Airbnb Inc (ABNB)</td>
+<td>27.8×</td>
+<td>16.7%</td>
+<td>10.9%</td>
+<td>82.9%</td>
+<td>83.2%</td>
+</tr>
+<tr>
+<td>Honeywell International Inc (HON)</td>
+<td>21.7×</td>
+<td>-43.3%</td>
+<td>4.6%</td>
+<td>36.6%</td>
+<td>41.7%</td>
+</tr>
+<tr>
+<td>American Electric Power Co Inc (AEP)</td>
+<td>17.8×</td>
+<td>7.2%</td>
+<td>7.3%</td>
+<td>67.7%</td>
+<td>71.4%</td>
+</tr>
+<tr>
+<td>PACCAR Inc (PCAR)</td>
+<td>16.7×</td>
+<td>12.9%</td>
+<td>7.6%</td>
+<td>16.6%</td>
+<td>15.5%</td>
+</tr>
+<tr>
+<td>Monolithic Power Systems Inc (MPWR)</td>
+<td>37.4×</td>
+<td>55.4%</td>
+<td>23.2%</td>
+<td>55.2%</td>
+<td>55.9%</td>
+</tr>
+<tr>
+<td>Teradyne Inc (TER)</td>
+<td>35.6×</td>
+<td>32.5%</td>
+<td>21.5%</td>
+<td>59.2%</td>
+<td>59.5%</td>
+</tr>
+<tr>
+<td>NXP Semiconductors NV (NXPI)</td>
+<td>13.4×</td>
+<td>17.5%</td>
+<td>9.8%</td>
+<td>56.0%</td>
+<td>59.2%</td>
+</tr>
+<tr>
+<td>Baker Hughes Co (BKR)</td>
+<td>20.0×</td>
+<td>10.5%</td>
+<td>7.9%</td>
+<td>23.6%</td>
+<td>23.5%</td>
+</tr>
+<tr>
+<td>Fastenal Co (FAST)</td>
+<td>36.4×</td>
+<td>13.7%</td>
+<td>8.7%</td>
+<td>44.7%</td>
+<td>44.3%</td>
+</tr>
+<tr>
+<td>Diamondback Energy Inc (FANG)</td>
+<td>10.1×</td>
+<td>4.6%</td>
+<td>-0.8%</td>
+<td>37.9%</td>
+<td>79.8%</td>
+</tr>
+<tr>
+<td>PDD Holdings Inc (PDD)</td>
+<td>6.7×</td>
+<td>11.9%</td>
+<td>10.2%</td>
+<td>56.3%</td>
+<td>56.6%</td>
+</tr>
+<tr>
+<td>Astera Labs Inc (ALAB)</td>
+<td>58.8×</td>
+<td>130.9%</td>
+<td>35.3%</td>
+<td>75.1%</td>
+<td>71.4%</td>
+</tr>
+<tr>
+<td>Honeywell Aerospace Inc (HONA)</td>
+<td>19.8×</td>
+<td>11.4%</td>
+<td>8.2%</td>
+<td>34.8%</td>
+<td>39.5%</td>
+</tr>
+<tr>
+<td>Strategy Inc (MSTR)</td>
+<td>15.0×</td>
+<td>2.0%</td>
+<td>2.7%</td>
+<td>67.6%</td>
+<td>66.1%</td>
+</tr>
+<tr>
+<td>Nebius Group NV (NBIS)</td>
+<td>n/a</td>
+<td>621.8%</td>
+<td>119.3%</td>
+<td>74.3%</td>
+<td>74.1%</td>
+</tr>
+<tr>
+<td>PayPal Holdings Inc (PYPL)</td>
+<td>9.3×</td>
+<td>4.9%</td>
+<td>4.4%</td>
+<td>50.6%</td>
+<td>44.1%</td>
+</tr>
+<tr>
+<td>Autodesk Inc (ADSK)</td>
+<td>16.1×</td>
+<td>14.4%</td>
+<td>10.8%</td>
+<td>91.2%</td>
+<td>92.9%</td>
+</tr>
+<tr>
+<td>Xcel Energy Inc (XEL)</td>
+<td>16.3×</td>
+<td>15.2%</td>
+<td>9.3%</td>
+<td>67.6%</td>
+<td>67.9%</td>
+</tr>
+<tr>
+<td>Coca-Cola Europacific Partners PLC (CCEP)</td>
+<td>18.3×</td>
+<td>4.0%</td>
+<td>3.9%</td>
+<td>35.6%</td>
+<td>35.6%</td>
+</tr>
+<tr>
+<td>Exelon Corp (EXC)</td>
+<td>14.0×</td>
+<td>2.6%</td>
+<td>3.0%</td>
+<td>63.5%</td>
+<td>64.7%</td>
+</tr>
+<tr>
+<td>Keurig Dr Pepper Inc (KDP)</td>
+<td>12.4×</td>
+<td>44.3%</td>
+<td>5.9%</td>
+<td>49.4%</td>
+<td>47.4%</td>
+</tr>
+<tr>
+<td>Paychex Inc (PAYX)</td>
+<td>18.9×</td>
+<td>7.2%</td>
+<td>5.7%</td>
+<td>74.3%</td>
+<td>74.9%</td>
+</tr>
+<tr>
+<td>IDEXX Laboratories Inc (IDXX)</td>
+<td>31.8×</td>
+<td>10.3%</td>
+<td>8.8%</td>
+<td>62.4%</td>
+<td>63.2%</td>
+</tr>
+<tr>
+<td>Microchip Technology Inc (MCHP)</td>
+<td>18.3×</td>
+<td>34.3%</td>
+<td>13.2%</td>
+<td>60.2%</td>
+<td>66.1%</td>
+</tr>
+<tr>
+<td>Ferrovial NV (FER)</td>
+<td>45.0×</td>
+<td>6.5%</td>
+<td>4.6%</td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>Workday Inc (WDAY)</td>
+<td>15.4×</td>
+<td>12.0%</td>
+<td>10.6%</td>
+<td>75.8%</td>
+<td>79.5%</td>
+</tr>
+<tr>
+<td>Take-Two Interactive Software Inc (TTWO)</td>
+<td>24.8×</td>
+<td>32.4%</td>
+<td>5.3%</td>
+<td>56.0%</td>
+<td>64.9%</td>
+</tr>
+<tr>
+<td>Roper Technologies Inc (ROP)</td>
+<td>15.4×</td>
+<td>8.0%</td>
+<td>6.4%</td>
+<td>69.5%</td>
+<td>69.9%</td>
+</tr>
+<tr>
+<td>Rocket Lab Corp (RKLB)</td>
+<td>n/a</td>
+<td>66.2%</td>
+<td>35.5%</td>
+<td>37.3%</td>
+<td>38.6%</td>
+</tr>
+<tr>
+<td>CoreWeave Inc (CRWV)</td>
+<td>n/a</td>
+<td>201.0%</td>
+<td>67.4%</td>
+<td>67.4%</td>
+<td>69.8%</td>
+</tr>
+<tr>
+<td>Axon Enterprise Inc (AXON)</td>
+<td>46.1×</td>
+<td>40.3%</td>
+<td>28.9%</td>
+<td>59.4%</td>
+<td>62.1%</td>
+</tr>
+<tr>
+<td>Old Dominion Freight Line Inc (ODFL)</td>
+<td>27.2×</td>
+<td>11.7%</td>
+<td>8.4%</td>
+<td>33.6%</td>
+<td>75.9%</td>
+</tr>
+<tr>
+<td>Thomson Reuters Corp (TRI)</td>
+<td>19.5×</td>
+<td>9.1%</td>
+<td>8.4%</td>
+<td>n/a</td>
+<td>40.6%</td>
+</tr>
+<tr>
+<td>Dexcom Inc (DXCM)</td>
+<td>29.9×</td>
+<td>13.6%</td>
+<td>11.2%</td>
+<td>62.5%</td>
+<td>64.6%</td>
+</tr>
+<tr>
+<td>Alnylam Pharmaceuticals Inc (ALNY)</td>
+<td>23.9×</td>
+<td>36.3%</td>
+<td>21.5%</td>
+<td>79.7%</td>
+<td>76.6%</td>
+</tr>
+<tr>
+<td>GE HealthCare Technologies Inc (GEHC)</td>
+<td>12.4×</td>
+<td>5.5%</td>
+<td>4.8%</td>
+<td>39.5%</td>
+<td>40.6%</td>
+</tr>
+<tr>
+<td>Copart Inc (CPRT)</td>
+<td>17.5×</td>
+<td>6.1%</td>
+<td>7.8%</td>
+<td>44.7%</td>
+<td>44.6%</td>
+</tr>
+</tbody>
+</table>
+<h2>Supplied holdings ledger, including non-company rows</h2>
+<table tabindex="0" aria-label="Scrollable financial table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Allocation %</th>
+<th>Mapped ticker / exclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA Corp</td>
+<td>8.54</td>
+<td>NVDA</td>
+</tr>
+<tr>
+<td>Apple Inc</td>
+<td>7.82</td>
+<td>AAPL</td>
+</tr>
+<tr>
+<td>Microsoft Corp</td>
+<td>5.81</td>
+<td>MSFT</td>
+</tr>
+<tr>
+<td>Micron Technology Inc</td>
+<td>5.01</td>
+<td>MU</td>
+</tr>
+<tr>
+<td>Amazon.com Inc</td>
+<td>4.33</td>
+<td>AMZN</td>
+</tr>
+<tr>
+<td>Advanced Micro Devices Inc</td>
+<td>3.99</td>
+<td>AMD</td>
+</tr>
+<tr>
+<td>Alphabet Inc Class A</td>
+<td>3.23</td>
+<td>GOOGL</td>
+</tr>
+<tr>
+<td>Meta Platforms Inc</td>
+<td>3.12</td>
+<td>META</td>
+</tr>
+<tr>
+<td>Alphabet Inc Class C</td>
+<td>2.98</td>
+<td>GOOG</td>
+</tr>
+<tr>
+<td>Tesla Inc</td>
+<td>2.88</td>
+<td>TSLA</td>
+</tr>
+<tr>
+<td>Broadcom Inc</td>
+<td>2.69</td>
+<td>AVGO</td>
+</tr>
+<tr>
+<td>Intel Corp</td>
+<td>2.39</td>
+<td>INTC</td>
+</tr>
+<tr>
+<td>Walmart Inc</td>
+<td>2.28</td>
+<td>WMT</td>
+</tr>
+<tr>
+<td>Cisco Systems Inc</td>
+<td>1.89</td>
+<td>CSCO</td>
+</tr>
+<tr>
+<td>Palantir Technologies Inc</td>
+<td>1.78</td>
+<td>PLTR</td>
+</tr>
+<tr>
+<td>Costco Wholesale Corp</td>
+<td>1.74</td>
+<td>COST</td>
+</tr>
+<tr>
+<td>Lam Research Corp</td>
+<td>1.58</td>
+<td>LRCX</td>
+</tr>
+<tr>
+<td>Applied Materials Inc</td>
+<td>1.54</td>
+<td>AMAT</td>
+</tr>
+<tr>
+<td>Netflix Inc</td>
+<td>1.32</td>
+<td>NFLX</td>
+</tr>
+<tr>
+<td>Palo Alto Networks Inc</td>
+<td>1.3</td>
+<td>PANW</td>
+</tr>
+<tr>
+<td>Space Exploration Technologies Corp</td>
+<td>1.28</td>
+<td>SPCX</td>
+</tr>
+<tr>
+<td>Sandisk Corp</td>
+<td>1.16</td>
+<td>SNDK</td>
+</tr>
+<tr>
+<td>Texas Instruments Inc</td>
+<td>1.06</td>
+<td>TXN</td>
+</tr>
+<tr>
+<td>Crowdstrike Holdings Inc</td>
+<td>1.06</td>
+<td>CRWD</td>
+</tr>
+<tr>
+<td>KLA Corp</td>
+<td>1.01</td>
+<td>KLAC</td>
+</tr>
+<tr>
+<td>Marvell Technology Inc</td>
+<td>0.93</td>
+<td>MRVL</td>
+</tr>
+<tr>
+<td>Linde PLC</td>
+<td>0.93</td>
+<td>LIN</td>
+</tr>
+<tr>
+<td>Amgen Inc</td>
+<td>0.91</td>
+<td>AMGN</td>
+</tr>
+<tr>
+<td>Seagate Technology Holdings PLC</td>
+<td>0.84</td>
+<td>STX</td>
+</tr>
+<tr>
+<td>QUALCOMM Inc</td>
+<td>0.82</td>
+<td>QCOM</td>
+</tr>
+<tr>
+<td>Gilead Sciences Inc</td>
+<td>0.82</td>
+<td>GILD</td>
+</tr>
+<tr>
+<td>Analog Devices Inc</td>
+<td>0.8</td>
+<td>ADI</td>
+</tr>
+<tr>
+<td>T-Mobile US Inc</td>
+<td>0.8</td>
+<td>TMUS</td>
+</tr>
+<tr>
+<td>PepsiCo Inc</td>
+<td>0.78</td>
+<td>PEP</td>
+</tr>
+<tr>
+<td>Shopify Inc</td>
+<td>0.69</td>
+<td>SHOP</td>
+</tr>
+<tr>
+<td>ASML Holding NV</td>
+<td>0.67</td>
+<td>ASML</td>
+</tr>
+<tr>
+<td>Western Digital Corp</td>
+<td>0.67</td>
+<td>WDC</td>
+</tr>
+<tr>
+<td>Intuitive Surgical Inc</td>
+<td>0.61</td>
+<td>ISRG</td>
+</tr>
+<tr>
+<td>Booking Holdings Inc</td>
+<td>0.57</td>
+<td>BKNG</td>
+</tr>
+<tr>
+<td>Vertex Pharmaceuticals Inc</td>
+<td>0.56</td>
+<td>VRTX</td>
+</tr>
+<tr>
+<td>Fortinet Inc</td>
+<td>0.54</td>
+<td>FTNT</td>
+</tr>
+<tr>
+<td>ARM Holdings PLC</td>
+<td>0.51</td>
+<td>ARM</td>
+</tr>
+<tr>
+<td>Starbucks Corp</td>
+<td>0.48</td>
+<td>SBUX</td>
+</tr>
+<tr>
+<td>Automatic Data Processing Inc</td>
+<td>0.48</td>
+<td>ADP</td>
+</tr>
+<tr>
+<td>Adobe Inc</td>
+<td>0.44</td>
+<td>ADBE</td>
+</tr>
+<tr>
+<td>AppLovin Corp</td>
+<td>0.41</td>
+<td>APP</td>
+</tr>
+<tr>
+<td>Constellation Energy Corp</td>
+<td>0.4</td>
+<td>CEG</td>
+</tr>
+<tr>
+<td>MercadoLibre Inc</td>
+<td>0.4</td>
+<td>MELI</td>
+</tr>
+<tr>
+<td>Marriott International Inc/MD</td>
+<td>0.39</td>
+<td>MAR</td>
+</tr>
+<tr>
+<td>CSX Corp</td>
+<td>0.38</td>
+<td>CSX</td>
+</tr>
+<tr>
+<td>Monster Beverage Corp</td>
+<td>0.38</td>
+<td>MNST</td>
+</tr>
+<tr>
+<td>Intuit Inc</td>
+<td>0.36</td>
+<td>INTU</td>
+</tr>
+<tr>
+<td>Comcast Corp</td>
+<td>0.35</td>
+<td>CMCSA</td>
+</tr>
+<tr>
+<td>Regeneron Pharmaceuticals Inc</td>
+<td>0.35</td>
+<td>REGN</td>
+</tr>
+<tr>
+<td>DoorDash Inc</td>
+<td>0.35</td>
+<td>DASH</td>
+</tr>
+<tr>
+<td>Cintas Corp</td>
+<td>0.35</td>
+<td>CTAS</td>
+</tr>
+<tr>
+<td>Mondelez International Inc</td>
+<td>0.34</td>
+<td>MDLZ</td>
+</tr>
+<tr>
+<td>Cadence Design Systems Inc</td>
+<td>0.34</td>
+<td>CDNS</td>
+</tr>
+<tr>
+<td>Datadog Inc</td>
+<td>0.33</td>
+<td>DDOG</td>
+</tr>
+<tr>
+<td>Synopsys Inc</td>
+<td>0.32</td>
+<td>SNPS</td>
+</tr>
+<tr>
+<td>Ross Stores Inc</td>
+<td>0.32</td>
+<td>ROST</td>
+</tr>
+<tr>
+<td>Lumentum Holdings Inc</td>
+<td>0.32</td>
+<td>LITE</td>
+</tr>
+<tr>
+<td>O'Reilly Automotive Inc</td>
+<td>0.31</td>
+<td>ORLY</td>
+</tr>
+<tr>
+<td>Warner Bros Discovery Inc</td>
+<td>0.3</td>
+<td>WBD</td>
+</tr>
+<tr>
+<td>Airbnb Inc</td>
+<td>0.3</td>
+<td>ABNB</td>
+</tr>
+<tr>
+<td>Honeywell International Inc</td>
+<td>0.29</td>
+<td>HON</td>
+</tr>
+<tr>
+<td>American Electric Power Co Inc</td>
+<td>0.29</td>
+<td>AEP</td>
+</tr>
+<tr>
+<td>PACCAR Inc</td>
+<td>0.27</td>
+<td>PCAR</td>
+</tr>
+<tr>
+<td>Monolithic Power Systems Inc</td>
+<td>0.26</td>
+<td>MPWR</td>
+</tr>
+<tr>
+<td>Teradyne Inc</td>
+<td>0.25</td>
+<td>TER</td>
+</tr>
+<tr>
+<td>NXP Semiconductors NV</td>
+<td>0.25</td>
+<td>NXPI</td>
+</tr>
+<tr>
+<td>Baker Hughes Co</td>
+<td>0.25</td>
+<td>BKR</td>
+</tr>
+<tr>
+<td>Fastenal Co</td>
+<td>0.25</td>
+<td>FAST</td>
+</tr>
+<tr>
+<td>Diamondback Energy Inc</td>
+<td>0.24</td>
+<td>FANG</td>
+</tr>
+<tr>
+<td>PDD Holdings Inc</td>
+<td>0.23</td>
+<td>PDD</td>
+</tr>
+<tr>
+<td>Astera Labs Inc</td>
+<td>0.23</td>
+<td>ALAB</td>
+</tr>
+<tr>
+<td>Honeywell Aerospace Inc</td>
+<td>0.23</td>
+<td>HONA</td>
+</tr>
+<tr>
+<td>Strategy Inc</td>
+<td>0.22</td>
+<td>MSTR</td>
+</tr>
+<tr>
+<td>Nebius Group NV</td>
+<td>0.22</td>
+<td>NBIS</td>
+</tr>
+<tr>
+<td>PayPal Holdings Inc</td>
+<td>0.2</td>
+<td>PYPL</td>
+</tr>
+<tr>
+<td>Autodesk Inc</td>
+<td>0.2</td>
+<td>ADSK</td>
+</tr>
+<tr>
+<td>Xcel Energy Inc</td>
+<td>0.2</td>
+<td>XEL</td>
+</tr>
+<tr>
+<td>Coca-Cola Europacific Partners PLC</td>
+<td>0.19</td>
+<td>CCEP</td>
+</tr>
+<tr>
+<td>Exelon Corp</td>
+<td>0.19</td>
+<td>EXC</td>
+</tr>
+<tr>
+<td>Keurig Dr Pepper Inc</td>
+<td>0.18</td>
+<td>KDP</td>
+</tr>
+<tr>
+<td>Paychex Inc</td>
+<td>0.18</td>
+<td>PAYX</td>
+</tr>
+<tr>
+<td>IDEXX Laboratories Inc</td>
+<td>0.18</td>
+<td>IDXX</td>
+</tr>
+<tr>
+<td>Microchip Technology Inc</td>
+<td>0.17</td>
+<td>MCHP</td>
+</tr>
+<tr>
+<td>Ferrovial NV</td>
+<td>0.17</td>
+<td>FER</td>
+</tr>
+<tr>
+<td>Workday Inc</td>
+<td>0.17</td>
+<td>WDAY</td>
+</tr>
+<tr>
+<td>Take-Two Interactive Software Inc</td>
+<td>0.17</td>
+<td>TTWO</td>
+</tr>
+<tr>
+<td>Roper Technologies Inc</td>
+<td>0.16</td>
+<td>ROP</td>
+</tr>
+<tr>
+<td>Rocket Lab Corp</td>
+<td>0.16</td>
+<td>RKLB</td>
+</tr>
+<tr>
+<td>CoreWeave Inc</td>
+<td>0.16</td>
+<td>CRWV</td>
+</tr>
+<tr>
+<td>Axon Enterprise Inc</td>
+<td>0.16</td>
+<td>AXON</td>
+</tr>
+<tr>
+<td>Old Dominion Freight Line Inc</td>
+<td>0.16</td>
+<td>ODFL</td>
+</tr>
+<tr>
+<td>Thomson Reuters Corp</td>
+<td>0.16</td>
+<td>TRI</td>
+</tr>
+<tr>
+<td>CME E-Mini NASDAQ 100 Index Future</td>
+<td>0.15</td>
+<td>Non-company row; no company P/E</td>
+</tr>
+<tr>
+<td>Dexcom Inc</td>
+<td>0.15</td>
+<td>DXCM</td>
+</tr>
+<tr>
+<td>Alnylam Pharmaceuticals Inc</td>
+<td>0.14</td>
+<td>ALNY</td>
+</tr>
+<tr>
+<td>CASH &amp; EQUIVALENTS</td>
+<td>0.13</td>
+<td>Non-company row; no company P/E</td>
+</tr>
+<tr>
+<td>GE HealthCare Technologies Inc</td>
+<td>0.13</td>
+<td>GEHC</td>
+</tr>
+<tr>
+<td>Copart Inc</td>
+<td>0.12</td>
+<td>CPRT</td>
+</tr>
+<tr>
+<td>CASH COLLATERAL</td>
+<td>0.01</td>
+<td>Non-company row; no company P/E</td>
+</tr>
+<tr>
+<td>CONTRA FUTURE NASDAQ 100 E-MINI DEC26NQZ6</td>
+<td>-0.15</td>
+<td>Non-company row; no company P/E</td>
+</tr>
+<tr>
+<td>USD Pending Dividends</td>
+<td></td>
+<td>Non-company row; no company P/E</td>
+</tr>
+</tbody>
+</table>
+<h2>Raw captures</h2>
+<p><a href="bloomberg_actual.json">Actuals</a> · <a href="bloomberg_1BF.json">1BF</a> · <a href="bloomberg_2BF.json">2BF</a> · <a href="growth_vs_pe.png">Growth/P-E chart PNG</a> · <a href="growth_vs_pe.svg">Growth/P-E chart SVG</a> · <a href="commodity_comparison.png">Commodity chart PNG</a> · <a href="commodity_comparison.svg">Commodity chart SVG</a></p></article></main>
+  <footer>
+    <div class="foot-links">
+      <a href="/">Home</a><a href="/markets/">Markets</a><a href="/terminal/">Terminal</a><a href="/compliance/">Compliance</a><a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>Corbanu · 2026</div>
+  </footer>
+</body>
+</html>

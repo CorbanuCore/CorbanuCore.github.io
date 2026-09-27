@@ -1,0 +1,141 @@
+{
+  "annualization": "simple APR, not compounded APY",
+  "applicable": true,
+  "basis": "Hypothetical constant notional; not actual account receipts. Actual events are cutoff-filtered before hourly bucketing.",
+  "complete": true,
+  "cutoff": "2026-09-25T00:56:18.583213+00:00",
+  "direction": "SHORT",
+  "duplicates_removed": 0,
+  "expected_forecast_observation": "2026-09-24T21:00:00+00:00",
+  "fetched_ranges": [
+    {
+      "end": "2026-09-25T00:56:18.583213+00:00",
+      "rows": 7378,
+      "start": "2025-07-01T00:00:00+00:00"
+    }
+  ],
+  "forecast_origin": "existing_promoted_method_on_full_selected_history",
+  "forecast_source_sha256": "fef43dd7d6a14cf6ccf0547140278547f1c12eab359abce44b0d36fcdcc83807",
+  "forecasts": [
+    {
+      "as_of_funding_timestamp": "2026-09-25T00:00:00+00:00",
+      "cash_flow": "receives",
+      "direction": "SHORT",
+      "forecast_period_return_pct": 0.012119824749656668,
+      "horizon_hours": 24,
+      "instrument": "xyz:AAPL",
+      "model": "ridge_1d_to_30d",
+      "signed_forecast_apr": 0.04423736033624684,
+      "validation_scope": "asset_walk_forward"
+    },
+    {
+      "as_of_funding_timestamp": "2026-09-25T00:00:00+00:00",
+      "cash_flow": "receives",
+      "direction": "SHORT",
+      "forecast_period_return_pct": 0.04657867166666667,
+      "horizon_hours": 168,
+      "instrument": "xyz:AAPL",
+      "model": "blend_7d_30d",
+      "signed_forecast_apr": 0.024287450226190478,
+      "validation_scope": "aggregate_22_contract_sweep"
+    }
+  ],
+  "history": [
+    {
+      "annualized_apr_pct": 4.766695078571429,
+      "cash_flow": "receives",
+      "complete": true,
+      "coverage_pct": 100.0,
+      "days": 7,
+      "dollars_per_10000": 9.141607,
+      "end_inclusive": "2026-09-25T00:56:18.583213+00:00",
+      "expected_intervals": 168,
+      "first_settlement": "2026-09-18T01:00:00.106000+00:00",
+      "last_settlement": "2026-09-25T00:00:00.076000+00:00",
+      "missing_intervals": 0,
+      "observed_intervals": 168,
+      "observed_only_annualized_apr_pct": 4.766695078571429,
+      "observed_only_return_pct": 0.09141607,
+      "start_exclusive": "2026-09-18T00:56:18.583213+00:00",
+      "window_return_pct": 0.09141607
+    },
+    {
+      "annualized_apr_pct": 0.09079496666666673,
+      "cash_flow": "receives",
+      "complete": true,
+      "coverage_pct": 100.0,
+      "days": 30,
+      "dollars_per_10000": 0.7462600000000005,
+      "end_inclusive": "2026-09-25T00:56:18.583213+00:00",
+      "expected_intervals": 720,
+      "first_settlement": "2026-08-26T01:00:00.049000+00:00",
+      "last_settlement": "2026-09-25T00:00:00.076000+00:00",
+      "missing_intervals": 0,
+      "observed_intervals": 720,
+      "observed_only_annualized_apr_pct": 0.09079496666666673,
+      "observed_only_return_pct": 0.007462600000000005,
+      "start_exclusive": "2026-08-26T00:56:18.583213+00:00",
+      "window_return_pct": 0.007462600000000005
+    },
+    {
+      "annualized_apr_pct": -1.0052159211111107,
+      "cash_flow": "pays",
+      "complete": true,
+      "coverage_pct": 100.0,
+      "days": 90,
+      "dollars_per_10000": -24.786145999999988,
+      "end_inclusive": "2026-09-25T00:56:18.583213+00:00",
+      "expected_intervals": 2160,
+      "first_settlement": "2026-06-27T01:00:00.061000+00:00",
+      "last_settlement": "2026-09-25T00:00:00.076000+00:00",
+      "missing_intervals": 0,
+      "observed_intervals": 2160,
+      "observed_only_annualized_apr_pct": -1.0052159211111107,
+      "observed_only_return_pct": -0.24786145999999987,
+      "start_exclusive": "2026-06-27T00:56:18.583213+00:00",
+      "window_return_pct": -0.24786145999999987
+    },
+    {
+      "annualized_apr_pct": null,
+      "cash_flow": "receives",
+      "complete": false,
+      "coverage_pct": 84.22374429223744,
+      "days": 365,
+      "dollars_per_10000": null,
+      "end_inclusive": "2026-09-25T00:56:18.583213+00:00",
+      "expected_intervals": 8760,
+      "first_settlement": "2025-11-21T15:00:00.047000+00:00",
+      "last_settlement": "2026-09-25T00:00:00.076000+00:00",
+      "missing_intervals": 1382,
+      "observed_intervals": 7378,
+      "observed_only_annualized_apr_pct": 2.114731997451884,
+      "observed_only_return_pct": 1.7811064700000003,
+      "start_exclusive": "2025-09-25T00:56:18.583213+00:00",
+      "window_return_pct": null
+    }
+  ],
+  "history_sha256": "0c7c06789324df1368082237773c3d3582b0ed2e9f29d20f583396681e3d507f",
+  "instrument": "xyz:AAPL",
+  "issues": [],
+  "last_observation": "2026-09-25T00:00:00.076000+00:00",
+  "method_sha256": "0628ee2fe82518919aa137fc81c1fedffe9b3d7eed0932460013c1e31d50bc15",
+  "request": {
+    "cutoff": "2026-09-25T00:56:18.583213+00:00",
+    "direction": "SHORT",
+    "forecast_method_sha256": "0628ee2fe82518919aa137fc81c1fedffe9b3d7eed0932460013c1e31d50bc15",
+    "schema_version": 2,
+    "symbol": "xyz:AAPL",
+    "venue": "hyperliquid",
+    "windows": [
+      7,
+      30,
+      90,
+      365
+    ]
+  },
+  "retrieved_at": "2026-09-25T01:28:29.626276+00:00",
+  "schema_version": 2,
+  "sign": "Positive normalized position funding is received; raw positive venue rates are paid by longs.",
+  "source": "/home/pfrpc/repos/navstrategies/var/production/coverage_total_return_indices/cache/hyperliquid_funding_hourly/xyz_AAPL.parquet",
+  "training_scope": "Untruncated selected-symbol archive; approved model unchanged. No new asset-specific validation claimed."
+}

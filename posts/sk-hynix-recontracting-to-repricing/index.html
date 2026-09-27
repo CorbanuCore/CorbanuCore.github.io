@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Long SK hynix through the xyz:SKHX perpetual at 4.30x Bloomberg forward earnings: five-year, deposit-backed memory contracts deserve more than a commodity multiple. Base case KRW3.119m (+67.5%) by September 2027.">
+<meta name="theme-color" content="#030403">
+<title>SK Hynix: The road from Recontracting to Repricing — Corbanu</title>
+<link rel="canonical" href="https://corbanu.com/posts/sk-hynix-recontracting-to-repricing/">
+<meta property="og:title" content="SK Hynix: The road from Recontracting to Repricing">
+<meta property="og:description" content="Long SK hynix through the xyz:SKHX perpetual at 4.30x Bloomberg forward earnings: five-year, deposit-backed memory contracts deserve more than a commodity multiple. Base case KRW3.119m (+67.5%) by September 2027.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-09-27T00:00:00Z">
+<meta property="article:modified_time" content="2026-09-27T00:00:00Z">
+<meta property="og:url" content="https://corbanu.com/posts/sk-hynix-recontracting-to-repricing/">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{
+  --bg:#030403;--surface:#080a08;--surface-2:#0d100d;--ink:#f5f7f1;
+  --body:#ccd1c6;--muted:#92998e;--dim:#687064;--lime:#ccff00;
+  --blue:#79c8ff;--gold:#d6a85f;--coral:#ff8b7c;--line:rgba(255,255,255,.14);
+  --grid:rgba(255,255,255,.065);--serif:Georgia,"Times New Roman",serif;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark;scroll-behavior:smooth}
+body{margin:0;overflow-x:hidden;color:var(--ink);background:var(--bg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration-color:rgba(204,255,0,.45);text-underline-offset:3px}
+a:hover{color:var(--lime)}
+.post-body a[href^="https://corbanu.com/"],.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]{padding:0;border-bottom:1px dotted rgba(174,190,170,.48);color:#aebaab;background:none;font-weight:650;text-decoration:none}
+.post-body a[href^="https://corbanu.com/"]:hover,.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]:hover{color:#dce6d8;border-bottom-color:#dce6d8}
+.post-body a[href^="https://corbanu.com/"]:focus-visible,.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]:focus-visible{outline:2px solid #c5d0c0;outline-offset:2px}
+.skip{position:fixed;top:-5rem;left:1rem;z-index:100;padding:.8rem 1rem;color:#000;background:var(--lime)}
+.skip:focus{top:1rem}
+.read-progress{position:fixed;top:0;left:0;z-index:80;width:0;height:2px;background:var(--lime)}
+.site-header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:2rem;min-height:76px;padding:.8rem clamp(1rem,3.4vw,3rem);border-bottom:1px solid rgba(255,255,255,.09);background:rgba(3,4,3,.92);backdrop-filter:blur(16px)}
+.brand{display:inline-flex;align-items:center;gap:.7rem;font-size:1.25rem;font-weight:700;text-decoration:none}
+.brand img{width:45px;height:45px;border:1px solid rgba(204,255,0,.5);border-radius:50%;object-fit:cover}
+.site-nav{display:flex;align-items:center;gap:1.6rem}
+.site-nav a{color:#d9ddd4;font-size:.9rem;text-decoration:none}
+.site-nav a[aria-current=page]{color:var(--lime)}
+.preview-state{display:inline-flex;align-items:center;gap:.5rem;color:#aeb5aa;font:700 .68rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.preview-state i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px rgba(204,255,0,.55)}
+.article-shell{width:min(1480px,calc(100% - 3rem));margin:0 auto;padding:clamp(2rem,4vw,4.5rem) 0 6rem;display:grid;grid-template-columns:220px minmax(0,1180px);justify-content:center;gap:clamp(2rem,4vw,4.5rem)}
+.article-rail{position:relative}
+.rail-inner{position:sticky;top:106px;display:grid;gap:1.4rem}
+.rail-label{margin:0;color:var(--lime);font:700 .68rem/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.trade-card{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:var(--surface)}
+.trade-stat{padding:.8rem;border-bottom:1px solid var(--line)}
+.trade-stat:nth-child(odd){border-right:1px solid var(--line)}
+.trade-stat:nth-last-child(-n+2){border-bottom:0}
+.trade-stat span{display:block;margin-bottom:.35rem;color:var(--dim);font:700 .58rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.trade-stat strong{font:700 .88rem/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.llm-copy{display:flex;align-items:center;justify-content:center;gap:.58rem;width:100%;min-height:46px;padding:.75rem .9rem;border:1px solid var(--lime);border-radius:0;color:#050705;background:var(--lime);font:800 .7rem/1 var(--mono);letter-spacing:.075em;text-transform:uppercase;cursor:pointer;transition:background .16s ease,color .16s ease,transform .16s ease}
+.llm-copy:hover{color:#000;background:#e2ff70;transform:translateY(-1px)}
+.llm-copy:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.llm-copy svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8}
+.llm-copy[data-state="copied"]{color:#050705;background:#fff;border-color:#fff}
+.copy-status{display:block;min-height:.9rem;margin-top:-.9rem;color:#8f978b;font:600 .6rem/1.35 var(--mono);text-align:center}
+.hl-referral{margin-top:-.75rem;color:#7f897b;font:600 .6rem/1.4 var(--mono);text-align:center;text-decoration-color:rgba(174,190,170,.35)}
+.hl-referral:hover{color:#b9c5b4}
+.toc{display:grid;gap:.15rem;border-top:1px solid var(--line);padding-top:1rem}
+.toc a{padding:.32rem 0;color:#8f978b;font-size:.76rem;line-height:1.25;text-decoration:none}
+.toc a:hover,.toc a.active{color:var(--lime)}
+.toc a.sub{padding-left:.75rem;color:#70786c;font-size:.69rem}
+.post-body{min-width:0}
+.post-body>h1{max-width:990px;margin:0 auto .8rem;font:400 clamp(2.65rem,5.7vw,5.6rem)/.96 var(--serif);letter-spacing:-.045em}
+.post-body>h1::after{content:"";display:block;width:74px;height:4px;margin-top:1.5rem;background:var(--lime)}
+.post-body>p,.post-body>ul,.post-body>ol,.post-body>blockquote,.post-body>pre,.post-body>h2,.post-body>h3{width:min(780px,100%);margin-left:auto;margin-right:auto}
+.post-body>p{margin-top:0;margin-bottom:1.35rem;color:var(--body);font:400 1.04rem/1.76 var(--sans)}
+.post-body>p:nth-of-type(1){color:var(--dim);font:700 .7rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.post-body strong{color:var(--ink);font-weight:700}
+.post-body h2{margin-top:4.8rem;margin-bottom:1.25rem;padding-top:1.4rem;border-top:1px solid var(--line);font:500 clamp(1.65rem,2.5vw,2.35rem)/1.12 var(--serif);letter-spacing:-.025em}
+.post-body h2::before{content:"";display:block;width:28px;height:3px;margin-bottom:1.15rem;background:var(--lime)}
+.post-body h3{margin-top:2.6rem;margin-bottom:1rem;color:var(--ink);font:700 .77rem/1.35 var(--mono);letter-spacing:.09em;text-transform:uppercase}
+.post-body ul,.post-body ol{margin-top:0;margin-bottom:1.5rem;padding-left:1.35rem;color:var(--body);font-size:1rem;line-height:1.7}
+.post-body li+li{margin-top:.5rem}
+.post-body blockquote{margin-top:1.8rem;margin-bottom:1.8rem;padding:.2rem 0 .2rem 1.2rem;border-left:3px solid var(--lime);color:#e5e9df}
+.post-body pre{overflow:auto;padding:1rem;border:1px solid var(--line);background:var(--surface);color:#dfe5d8}
+.post-body code{font-family:var(--mono);font-size:.86em}
+.post-body>img,.post-body>p:has(>img){display:block;width:min(1100px,100%);max-width:none;margin:2rem auto}
+.post-body img{display:block;width:100%;height:auto;border:1px solid rgba(255,255,255,.16);background:#fff}
+.table-scroll{width:100%;margin:2rem auto 3rem;overflow-x:auto;border:1px solid rgba(255,255,255,.16);background:var(--surface);scrollbar-color:rgba(204,255,0,.6) rgba(255,255,255,.06)}
+.table-scroll:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+table.fm{width:100%;min-width:860px;border-collapse:collapse;font:500 .76rem/1.45 var(--mono);font-variant-numeric:tabular-nums}
+table.fm caption{padding:1rem 1.1rem;color:var(--ink);background:#050705;border-bottom:1px solid var(--line);font:700 .77rem/1.35 var(--mono);letter-spacing:.055em;text-align:left;text-transform:uppercase}
+table.fm th,table.fm td{padding:.67rem .78rem;border-bottom:1px solid rgba(255,255,255,.075);text-align:right;white-space:nowrap}
+table.fm th:first-child,table.fm td:first-child{text-align:left}
+table.fm thead th{position:sticky;top:0;z-index:2;color:#858d80;background:#0a0d0a;border-bottom:1px solid rgba(204,255,0,.32);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase}
+table.fm tbody td{color:#bec5b9}
+table.fm tbody tr:hover td{background:rgba(204,255,0,.025)}
+table.fm tr.tot td{color:var(--ink);font-weight:750;border-top:1px solid rgba(255,255,255,.23)}
+table.fm tr.sub td{color:#899185;font-size:.7rem}
+table.fm tr.rev td{color:#dce2d7;font-style:italic}
+table.fm tr.grp td{padding:.48rem .78rem;color:#000;background:var(--lime);border:0;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+table.fm td.neg{color:var(--coral)}
+table.fm .e{background:rgba(121,200,255,.045)}
+table.fm .a{background:rgba(255,255,255,.025)}
+table.fm .i{background:rgba(214,168,95,.045)}
+table.fm .div{border-left:1px solid rgba(255,255,255,.25)}
+table.fm tfoot td{padding:.9rem 1rem;color:#7f877b;background:#050705;border:0;font:500 .67rem/1.55 var(--sans);text-align:left;white-space:normal}
+table.cal,table.pol,table.scen{min-width:1060px}
+table.cal td,table.pol td,table.scen td,table.spec td{white-space:normal;vertical-align:top}
+table.cal th,table.pol th,table.scen th,table.spec th{text-align:left;white-space:normal}
+table.cal td:first-child,table.pol td:first-child{font-weight:700}
+table.scen td:nth-child(3){min-width:310px;text-align:left}
+table.scen tr:last-child td{background:rgba(204,255,0,.065);color:var(--ink);border-top:1px solid rgba(204,255,0,.42)}
+.article-end{width:min(780px,100%);margin:4rem auto 0;padding-top:1.5rem;border-top:1px solid var(--line);color:var(--dim);font:.72rem/1.6 var(--mono)}
+.site-footer{display:flex;justify-content:space-between;gap:1rem;padding:2rem clamp(1rem,3.4vw,3rem);border-top:1px solid var(--line);color:#747c70;font-size:.78rem}
+.foot-links{display:flex;flex-wrap:wrap;gap:1.2rem}
+.foot-links a{text-decoration:none}
+@media(max-width:1100px){
+  .article-shell{display:block;width:min(1180px,calc(100% - 2rem))}
+  .rail-inner{position:static;margin:0 auto 2.5rem;width:min(780px,100%)}
+  .trade-card{grid-template-columns:repeat(4,1fr)}
+  .trade-stat{border-bottom:0}.trade-stat:nth-child(n){border-right:1px solid var(--line)}.trade-stat:last-child{border-right:0}
+  .toc{display:none}
+}
+@media(max-width:720px){
+  .site-header{grid-template-columns:auto 1fr;min-height:66px;gap:1rem}
+  .site-nav{justify-content:flex-end;gap:.85rem}.site-nav a:nth-child(-n+2){display:none}
+  .preview-state{display:none}
+  .article-shell{width:calc(100% - 1.1rem);padding-top:1.5rem}
+  .post-body>h1{font-size:clamp(2.35rem,12vw,3.65rem)}
+  .post-body>p{font-size:1rem;line-height:1.7}
+  .post-body h2{margin-top:3.8rem}
+  .trade-card{grid-template-columns:1fr 1fr}.trade-stat:nth-child(2){border-right:0}.trade-stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .table-scroll{margin-left:0;margin-right:0}
+  table.fm{font-size:.72rem}
+  .site-footer{display:grid}
+}
+@media print{
+  .site-header,.article-rail,.read-progress,.site-footer{display:none}
+  body{color:#111;background:#fff}.article-shell{display:block;width:100%;padding:0}.post-body{color:#111}
+  .post-body p,.post-body li{color:#222}.post-body h1,.post-body h2,.post-body h3,.post-body strong{color:#000}
+  .table-scroll{overflow:visible;border-color:#bbb;break-inside:avoid}table.fm{min-width:0;color:#111;font-size:8pt}
+}
+.post-body img{background:#080a08;border-color:rgba(255,255,255,.1)}.post-body td[style*="right"]{white-space:nowrap;overflow-wrap:normal}
+</style>
+
+<link rel="stylesheet" href="/assets/katex/katex.min.css">
+<style>
+.article-math{max-width:100%;overflow-x:auto;color:var(--body)}
+div.article-math{width:min(780px,100%);margin:1.6rem auto}
+.post-body table.fm td,.post-body table.fm th{white-space:normal}
+.post-body table.fm{min-width:720px}
+.post-body{overflow-wrap:anywhere}
+@media(max-width:420px){.site-nav a:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<script defer src="/assets/katex/katex.min.js"></script>
+<script>
+addEventListener('DOMContentLoaded',()=>document.querySelectorAll('[data-tex]').forEach(el=>{
+katex.render(el.dataset.tex,el,{displayMode:el.dataset.display==='true',throwOnError:false,trust:false});
+}));
+</script>
+</head>
+<body>
+<div class="read-progress" aria-hidden="true"></div>
+<a class="skip" href="#article">Skip to article</a>
+<header class="site-header">
+  <a class="brand" href="https://corbanu.com/"><img src="/assets/corbanu-logo.webp" alt="" width="45" height="45">Corbanu</a>
+  <nav class="site-nav" aria-label="Primary navigation"><a href="https://corbanu.com/">Home</a><a href="https://corbanu.com/markets/">Markets</a><a href="https://corbanu.com/posts/" aria-current="page">Research</a><a href="https://corbanu.com/terminal/">Terminal</a><a href="https://corbanu.com/#newsletter">Subscribe</a></nav>
+  <span class="preview-state"><i></i> Published research</span>
+</header>
+<main class="article-shell">
+  <aside class="article-rail" aria-label="Article summary">
+    <div class="rail-inner">
+      <p class="rail-label">Trade proposal / 27 Sep 2026</p>
+      <div class="trade-card"><div class="trade-stat"><span>Proposed long</span><strong>xyz:SKHX perpetual</strong></div><div class="trade-stat"><span>Reference mark</span><strong>$1,367.50</strong></div><div class="trade-stat"><span>Base target</span><strong>KRW3.119m (+67.5%)</strong></div><div class="trade-stat"><span>Horizon</span><strong>22 Sep 2027</strong></div></div>
+      <button class="llm-copy" type="button" data-copy-source="article.txt" aria-describedby="llm-copy-status" title="Copy the complete article as Markdown">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="6" y="6" width="10" height="10" rx="1"></rect><path d="M4 13H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"></path></svg>
+        <span>Copy for LLM</span>
+      </button>
+      <span class="copy-status" id="llm-copy-status" role="status" aria-live="polite"></span>
+      <nav class="toc" id="toc" aria-label="Article sections"></nav>
+    </div>
+  </aside>
+  <article class="post-body" id="article"><h1 id="sk-hynix-the-road-from-recontracting-to-repricing">SK Hynix: The road from Recontracting to Repricing</h1>
+<p><strong>CORBANU · TRADE NOTE · 27 SEPTEMBER 2026</strong></p>
+<p><em>22 September 2026; prices refreshed 2026-09-27 • Long SK hynix • 12-month horizon, to 22 September 2027</em></p>
+<h2 id="the-trade">The trade</h2>
+<p>On 10 July, the day SK hynix listed its shares in New York, chief executive Kwak Noh-jung told Reuters: "We forecast that next year will be the worst year in the industry's history from the supply perspective." He went further: "We still forecast that customer demand will remain higher than our supply capacity even beyond 2030." <a href="https://www.marketscreener.com/news/sk-hynix-ceo-sees-worst-ever-memory-supply-shortage-in-2027-says-demand-to-outstrip-supply-beyond-2-ce7f5edfdb88ff2c">Reuters via MarketScreener</a></p>
+<p>Three weeks later the stock was down more than half from its June high.</p>
+<p><strong>Corbanu is going long SK hynix.</strong> This is our third memory thesis in three weeks. In our <a href="https://corbanu.com/posts/chinese-memory-sovereign-ai-long-cxmt/">CXMT long</a> and our <a href="https://corbanu.com/posts/long-kioxia-short-nikkei-ai-storage/">Kioxia/Nikkei pair</a>, we argued that memory is being re-contracted: sold on multi-year, deposit-backed agreements instead of quarterly spot. The shift is most concrete at SK hynix, which has signed roughly ten long-term agreements, typically for five years, with deposits attached. We think that visibility warrants a higher earnings multiple than spot sales.</p>
+<p>We enter at <strong>4.30× Bloomberg forward earnings</strong>, about <strong>38% below the June high</strong>. Our base case pays <strong>8× on earnings cut 10%</strong>: <strong>+68% on the ordinary share</strong>. That return requires neither a software multiple nor further earnings upgrades.</p>
+<p>Hynix trades at a lower earnings multiple than the oil, fertilizer and aluminum producers in our comparison. ExxonMobil, Chevron, CF Industries, Nutrien and Alcoa average <strong>12.35×</strong> forward earnings on <strong>2.3%</strong> forward revenue growth and <strong>26.6%</strong> trailing gross margins. Hynix, at our entry: <strong>4.30×</strong>, <strong>157.5%</strong> growth, <strong>76.3%</strong> margins. It also trades at a third of CXMT's multiple, China's state-backed memory champion, which makes the same product. <a href="evidence/comparison.html">Bloomberg comparison</a></p>
+<p>Samsung trades near <strong>4.4×</strong> and Micron at <strong>6.7×</strong>, so part of hynix's discount is shared by Korean memory companies. It is not all specific to hynix. Past memory cycles also ended with forward earnings down 79% or negative. Our target depends on contracts making earnings more durable through a downturn, and on investors recognizing that change.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Decision point</th>
+<th>Investment case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Entry</td>
+<td>xyz:SKHX perpetual mark $1,367.50 at 21:27 UTC 2026-09-27 (live); KRW1,862,000 last ordinary-share close, 2026-09-23, used to convert KRW targets into returns</td>
+</tr>
+<tr>
+<td>Sizing</td>
+<td>1× notional perpetual; position size not stated</td>
+</tr>
+<tr>
+<td>Base, 45% house probability</td>
+<td>90% of current forward EPS × 8× → KRW3.119m; +67.5%</td>
+</tr>
+<tr>
+<td>Bull / bear / tail</td>
+<td>+155.9% / −42.4% / −89.5% equity returns; 20% / 25% / 10% probabilities</td>
+</tr>
+<tr>
+<td>Expected return</td>
+<td>+42.0% equity price return; +26.3% perpetual return if recent 30-day annualized funding cost persists</td>
+</tr>
+<tr>
+<td>What breaks it</td>
+<td>Contract failures, collapsing earnings, competitive margin erosion, or punitive perpetual funding</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>A note on multiples across our posts. Our CXMT note put hynix at 3.8× next-twelve-month and 4.7× first-fiscal-year earnings on 2 September; our Kioxia note put it at 3.62× second-fiscal-year earnings on 15 September. This note enters at 4.30× Bloomberg 1BF (blended forward) on the 2026-09-23 Seoul close; the 22 September capture was 4.46×. These are different points on a steeply rising earnings curve, not a contradiction: later-year earnings are larger, so their multiples are lower. The 4.46× 1BF and 4.7× FY1E figures describe the same near-term earnings.</em></p>
+<h2 id="the-meaning-of-recontracting">The Meaning of Recontracting</h2>
+<p>Memory has historically traded much like wheat: buyers ordered a quarter ahead, prices cleared on spot and contract markets, and shortages ended in gluts. The new agreements extend that buying horizon.</p>
+<p>At Sandisk's 13 August Investor Day, CEO David Goeckeler said: "Within 2 quarters, we've gone from 3 months of visibility to over 4 years of visibility." Micron calls its version "strategic customer agreements": by its fiscal third quarter it had signed <strong>16</strong>, and projected <strong>$22bn</strong> of cash deposits and related financial commitments. CEO Sanjay Mehrotra said the agreements "will significantly enhance the durability and predictability" of Micron's results. <a href="https://www.sandisk.com/company/newsroom/press-releases/2026/2026-08-13-sandisk-investor-day-2026">Sandisk Investor Day</a> · <a href="https://investors.micron.com/events-and-presentations/">Micron IR</a></p>
+<p>SK hynix confirmed its version in its Q2 results. It reported <strong>KRW79.32tn revenue, up 257% year on year</strong>, <strong>KRW60.54tn operating profit</strong> (a 76% operating margin), and the start of HBM4 mass shipments. It has completed long-term agreements (LTAs) with around ten customers. On the call, management described them:</p>
+<blockquote>
+<p>"LTAs are designed to be specific to each customer and product, typically with a five-year term. Pricing structures vary to address price volatility and enhance long-term business stability. The agreements include mechanisms like deposits to strengthen contract implementation and demand visibility, allowing us to optimize investment and production planning."</p>
+</blockquote>
+<p>And on the fear that every memory expansion ends in oversupply: "The capacity expansion is aligned with confirmed customer demand, and we do not believe it will lead to oversupply." <a href="https://news.skhynix.com/en/q2-2026-business-results/">Issuer release</a> · <a href="https://sg.finance.yahoo.com/news/sk-hynix-inc-skhy-q2-070022880.html">Call highlights</a> · <a href="evidence/demand_evidence.json">Captured call evidence</a></p>
+<p><img loading="lazy" alt="The re-contracting of memory: about ten customers, five-year terms, deposits down." src="assets/contract-structure.png" /></p>
+<p><em>The re-contracting of memory: about ten customers, five-year terms, deposits down.</em></p>
+<p>Apple's Tim Cook, on his final earnings call on 30 July, described a "100-year flood" in memory pricing. Amazon's Andy Jassy raised 2026 capex to about $220bn the same day and said even that "will still not have enough capacity to meet all the demand," adding the dynamic will "also be true in 2027 too." For buyers facing a memory shortage, a five-year supply commitment is a way to protect access. <a href="https://fortune.com/2026/07/30/tim-cook-signed-off-on-his-final-apple-earnings-call-with-a-warning-about-a-hundred-year-flood-in-memory-chip-pricing/">Fortune on Cook</a></p>
+<p>Commitments and deposits can support utilization when demand softens. That makes future cash less uncertain and can justify a higher multiple even if earnings estimates fall.</p>
+<p>But <strong>committed demand is not guaranteed profit.</strong> Management has not disclosed revenue coverage, deposit amounts, cancellation penalties or minimum prices. Some volume is more visible; future earnings are not locked. A price cap can limit upside while preserving a floor. We do not rely on unconfirmed reports that all contracts are uncapped. Micron has published a deposit figure; SK hynix has not. We want SK hynix to disclose the same detail.</p>
+<p>The cash may also reach shareholders. CFO Kim Woo-hyun said the company intends to communicate additional shareholder-return plans "within the year once they have been finalized"; form, size and timing are unspecified. SK Group's chairman, Chey Tae-won, bought SK hynix shares directly for the first time on 30 July, the day the stock bottomed: 3,620 shares, about KRW4.79bn. Two weeks earlier, at the Jeju Forum, he had told investors that memory chips "will continue to be needed, so the stock price will rise over time." A concrete capital-return policy is a catalyst to watch, not an announced buyback. <a href="https://www.koreaherald.com/article/10826278">Korea Herald</a> · <a href="evidence/demand_evidence.json">Management evidence</a></p>
+<h2 id="hynixs-specialization">Hynix's Specialization</h2>
+<p>High-bandwidth memory (HBM) is DRAM built upward. Eight, twelve and now sixteen DRAM dies are stacked on a logic base die and wired together through thousands of vertical through-silicon vias (TSVs). The stack sits on a silicon interposer next to the GPU, feeding it data faster than any board-level memory could. SK hynix bonds its stacks with a process called MR-MUF (mass reflow molded underfill), which it credits for its yield and heat advantage; Samsung and Micron use a different film-based method. With HBM4, the base die becomes customizable for each accelerator, tying supplier and customer together more tightly.</p>
+<p><img loading="lazy" alt="How HBM works: a stack of DRAM dies wired by through-silicon vias onto a logic die — the part that gates every AI accelerator." src="assets/hbm-stack.png" /></p>
+<p><em>How HBM works: a stack of DRAM dies wired by through-silicon vias onto a logic die — the part that gates every AI accelerator.</em></p>
+<p>HBM’s much greater wafer requirement per bit is also why the whole DRAM market is short. Micron's Sumit Sadana has said that producing 100 bits of HBM3E means giving up about 300 bits of conventional DRAM supply, a ratio that worsens with each generation. At Hot Chips in August, Micron's HBM design fellow Raghu Sreeramaneni said the penalty is "definitely not getting better." Every HBM wafer start tightens the supply of the DDR5 in servers and the LPDDR in phones. <a href="https://corbanu.com/posts/chinese-memory-sovereign-ai-long-cxmt/">Our CXMT note</a></p>
+<p><img loading="lazy" alt="Why the shortage is structural: every HBM bit crowds out roughly three bits of conventional DRAM." src="assets/wafer-tradeoff.png" /></p>
+<p><em>Why the shortage is structural: every HBM bit crowds out roughly three bits of conventional DRAM.</em></p>
+<p>SK hynix leads the HBM market. IDC data in SK hynix's US listing documents put its HBM revenue share at <strong>56.4%</strong> in Q1 2026, while it ranked second in DRAM overall at <strong>29.1%</strong>. TrendForce estimates SK hynix will supply <strong>60–70%</strong> of the HBM4 for Nvidia's Vera Rubin platform. Nvidia's Jensen Huang confirmed in June that all three suppliers had passed HBM4 qualification for Rubin, so the lead is real but contested.</p>
+<p>Our <a href="https://corbanu.com/posts/shorting-cerebras-openai-jalapeno-anthropic-ipo/">Cerebras short</a> argued that HBM-based inference chips beat Cerebras's SRAM wafer; OpenAI's Jalapeño carries 216 GB of HBM4. The supplier still matters: Jalapeño's HBM4 is <strong>reported</strong> to come from Samsung, whose HBM4 yields have reportedly recovered to around 80%. Broader HBM adoption supports demand; hynix still has to win accelerator designs.</p>
+<p>SK hynix is also exposed to our Kioxia thesis. Through its own NAND business and Solidigm, it sells the enterprise SSDs that hold AI context. In Q2, its enterprise SSD revenue roughly doubled from the prior quarter, and Solidigm's 30TB-plus SSD revenue more than tripled.</p>
+<h2 id="multiple-multiples">Multiple Multiples</h2>
+<p>Memory is now treated as strategic national infrastructure in Seoul, Beijing and Tokyo. The market prices the three national champions very differently:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Company</th>
+<th>Home market</th>
+<th style="text-align: right;">Forward P/E</th>
+<th>Who sets the price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CXMT</td>
+<td>Shanghai STAR board</td>
+<td style="text-align: right;">13.6× (2 Sep, T+12m)</td>
+<td>Domestic capital, state shareholders, 6.6% free float</td>
+</tr>
+<tr>
+<td>SK hynix</td>
+<td>Seoul (and New York ADR since July)</td>
+<td style="text-align: right;">4.46× (22 Sep, 1BF)</td>
+<td>Global investors applying a cycle and governance discount</td>
+</tr>
+<tr>
+<td>Kioxia</td>
+<td>Tokyo</td>
+<td style="text-align: right;">4.18× (15 Sep, T+12m)</td>
+<td>Global investors applying a cycle discount</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Sources: our <a href="https://corbanu.com/posts/chinese-memory-sovereign-ai-long-cxmt/">CXMT</a> and <a href="https://corbanu.com/posts/long-kioxia-short-nikkei-ai-storage/">Kioxia</a> notes and the Bloomberg capture for this note. Bases differ slightly; the gap does not depend on them.</em></p>
+<p><img loading="lazy" alt="One product, three price tags: the market pays up for a state champion and discounts the technology leader." src="assets/three-multiples.png" /></p>
+<p><em>One product, three price tags: the market pays up for a state champion and discounts the technology leader.</em></p>
+<p>CXMT is a generation behind in HBM and has a fraction of hynix's revenue, yet trades at three times the multiple. We attribute the valuation gap to ownership and investor expectations rather than product quality: buyers in Shanghai value a strategic asset, while global investors price Seoul's memory industry for the cycle. Korea's own reforms, covered below, are an attempt to change how Seoul prices its champions.</p>
+<h3 id="faster-growth-fatter-margins-lower-multiple">Faster growth, fatter margins, lower multiple</h3>
+<p>Every figure uses Bloomberg <strong>1BF blended forward P/E</strong>. We show two growth measures: (1) next-twelve-month consensus sales against reported trailing sales, and (2) the following blended forward year against the first. The triple-digit figure refers to measure 1; on measure 2, hynix grows <strong>22.9%</strong>. Margins are gross, not operating.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Comparison group</th>
+<th style="text-align: right;">Mean / median 1BF P/E</th>
+<th style="text-align: right;">Mean sales growth: 1BF / trailing</th>
+<th style="text-align: right;">Mean sales growth: 2BF / 1BF</th>
+<th style="text-align: right;">Mean trailing gross margin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SK hynix</strong></td>
+<td style="text-align: right;"><strong>4.46×</strong></td>
+<td style="text-align: right;"><strong>157.5%</strong></td>
+<td style="text-align: right;"><strong>22.9%</strong></td>
+<td style="text-align: right;"><strong>76.3%</strong></td>
+</tr>
+<tr>
+<td>QQQ all issuers</td>
+<td style="text-align: right;">31.6× / 22.5× (96/100)</td>
+<td style="text-align: right;">37.4% (100/100)</td>
+<td style="text-align: right;">16.5% (100/100)</td>
+<td style="text-align: right;">57.5% (96/100)</td>
+</tr>
+<tr>
+<td>QQQ Information Technology</td>
+<td style="text-align: right;">37.8× / 26.4× (40/42)</td>
+<td style="text-align: right;">64.3% (42/42)</td>
+<td style="text-align: right;">24.6% (42/42)</td>
+<td style="text-align: right;">65.6% (42/42)</td>
+</tr>
+<tr>
+<td>Five commodity producers</td>
+<td style="text-align: right;">12.4× / 14.3× (5/5)</td>
+<td style="text-align: right;">2.3% (5/5)</td>
+<td style="text-align: right;">-2.9% (5/5)</td>
+<td style="text-align: right;">26.6% (5/5)</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Means are equal-weight company averages; parentheses show available observations / companies. They are not the QQQ fund's aggregate P/E. The supplied holdings cover 101 share classes and 100 issuers, with Alphabet's classes combined. Four companies without a positive forward P/E stay in the growth calculations but cannot appear on the chart's log axis; no high multiple is removed or capped. Full list, allocations, all 42 Bloomberg-classified technology holdings and missing observations are in the <a href="evidence/comparison.html">appendix</a>.</em></p>
+<p><img loading="lazy" alt="SK hynix versus QQQ issuers and five commodity companies: Bloomberg forward P/E against two forward revenue-growth measures." src="assets/growth-vs-pe.png" /></p>
+<p><em>Logarithmic P/E axis; every positive-P/E observation is shown. Hynix is a low-multiple outlier on both growth horizons, though not the fastest grower in the sample.</em></p>
+<h3 id="the-largest-qqq-holdings">The largest QQQ holdings</h3>
+<p>Top 15 issuers by 18 September allocation (Alphabet's classes combined), plus hynix:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Company</th>
+<th style="text-align: right;">BEST P/E (1BF)</th>
+<th style="text-align: right;">Sales: 1BF / trailing</th>
+<th style="text-align: right;">Sales: 2BF / 1BF</th>
+<th style="text-align: right;">Gross margin, trailing</th>
+<th style="text-align: right;">Gross margin, 1BF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SK hynix (000660)</td>
+<td style="text-align: right;">4.5×</td>
+<td style="text-align: right;">157.5%</td>
+<td style="text-align: right;">22.9%</td>
+<td style="text-align: right;">76.3%</td>
+<td style="text-align: right;">84.3%</td>
+</tr>
+<tr>
+<td>NVIDIA Corp (NVDA)</td>
+<td style="text-align: right;">16.8×</td>
+<td style="text-align: right;">97.6%</td>
+<td style="text-align: right;">41.9%</td>
+<td style="text-align: right;">74.7%</td>
+<td style="text-align: right;">73.1%</td>
+</tr>
+<tr>
+<td>Apple Inc (AAPL)</td>
+<td style="text-align: right;">35.3×</td>
+<td style="text-align: right;">12.2%</td>
+<td style="text-align: right;">7.9%</td>
+<td style="text-align: right;">48.7%</td>
+<td style="text-align: right;">47.5%</td>
+</tr>
+<tr>
+<td>Alphabet Inc Class A (GOOGL)</td>
+<td style="text-align: right;">21.0×</td>
+<td style="text-align: right;">16.2%</td>
+<td style="text-align: right;">22.7%</td>
+<td style="text-align: right;">60.9%</td>
+<td style="text-align: right;">67.5%</td>
+</tr>
+<tr>
+<td>Microsoft Corp (MSFT)</td>
+<td style="text-align: right;">24.3×</td>
+<td style="text-align: right;">23.4%</td>
+<td style="text-align: right;">19.4%</td>
+<td style="text-align: right;">67.9%</td>
+<td style="text-align: right;">65.9%</td>
+</tr>
+<tr>
+<td>Micron Technology Inc (MU)</td>
+<td style="text-align: right;">6.7×</td>
+<td style="text-align: right;">181.0%</td>
+<td style="text-align: right;">12.4%</td>
+<td style="text-align: right;">72.6%</td>
+<td style="text-align: right;">85.9%</td>
+</tr>
+<tr>
+<td>Amazon.com Inc (AMZN)</td>
+<td style="text-align: right;">19.9×</td>
+<td style="text-align: right;">18.1%</td>
+<td style="text-align: right;">14.9%</td>
+<td style="text-align: right;">50.8%</td>
+<td style="text-align: right;">52.6%</td>
+</tr>
+<tr>
+<td>Advanced Micro Devices Inc (AMD)</td>
+<td style="text-align: right;">46.5×</td>
+<td style="text-align: right;">89.7%</td>
+<td style="text-align: right;">44.0%</td>
+<td style="text-align: right;">53.2%</td>
+<td style="text-align: right;">55.6%</td>
+</tr>
+<tr>
+<td>Meta Platforms Inc (META)</td>
+<td style="text-align: right;">19.8×</td>
+<td style="text-align: right;">27.7%</td>
+<td style="text-align: right;">19.0%</td>
+<td style="text-align: right;">81.7%</td>
+<td style="text-align: right;">79.6%</td>
+</tr>
+<tr>
+<td>Tesla Inc (TSLA)</td>
+<td style="text-align: right;">181.6×</td>
+<td style="text-align: right;">12.2%</td>
+<td style="text-align: right;">16.3%</td>
+<td style="text-align: right;">18.9%</td>
+<td style="text-align: right;">19.1%</td>
+</tr>
+<tr>
+<td>Broadcom Inc (AVGO)</td>
+<td style="text-align: right;">19.8×</td>
+<td style="text-align: right;">86.6%</td>
+<td style="text-align: right;">58.5%</td>
+<td style="text-align: right;">68.8%</td>
+<td style="text-align: right;">72.1%</td>
+</tr>
+<tr>
+<td>Intel Corp (INTC)</td>
+<td style="text-align: right;">63.5×</td>
+<td style="text-align: right;">23.2%</td>
+<td style="text-align: right;">15.5%</td>
+<td style="text-align: right;">38.6%</td>
+<td style="text-align: right;">43.4%</td>
+</tr>
+<tr>
+<td>Walmart Inc (WMT)</td>
+<td style="text-align: right;">34.6×</td>
+<td style="text-align: right;">5.2%</td>
+<td style="text-align: right;">4.8%</td>
+<td style="text-align: right;">25.2%</td>
+<td style="text-align: right;">24.6%</td>
+</tr>
+<tr>
+<td>Cisco Systems Inc (CSCO)</td>
+<td style="text-align: right;">21.6×</td>
+<td style="text-align: right;">16.5%</td>
+<td style="text-align: right;">7.2%</td>
+<td style="text-align: right;">64.5%</td>
+<td style="text-align: right;">64.8%</td>
+</tr>
+<tr>
+<td>Palantir Technologies Inc (PLTR)</td>
+<td style="text-align: right;">85.7×</td>
+<td style="text-align: right;">81.5%</td>
+<td style="text-align: right;">44.7%</td>
+<td style="text-align: right;">84.8%</td>
+<td style="text-align: right;">86.3%</td>
+</tr>
+<tr>
+<td>Costco Wholesale Corp (COST)</td>
+<td style="text-align: right;">39.4×</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">7.6%</td>
+<td style="text-align: right;">12.9%</td>
+<td style="text-align: right;">11.4%</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Micron is the closest comparator, and hynix is a third cheaper.</strong> Micron has higher first-year growth and a similar forward gross margin. Hynix trades roughly <strong>33% below it</strong> and grows faster the following year: <strong>22.9% versus 12.4%</strong>. Nvidia and AMD have different moats and capital needs. Their multiples mark the opportunity cost of capital, not a target for a memory maker.</p>
+<h3 id="even-ordinary-commodity-producers-cost-more">Even ordinary commodity producers cost more</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Company</th>
+<th style="text-align: right;">BEST P/E (1BF)</th>
+<th style="text-align: right;">Sales: 1BF / trailing</th>
+<th style="text-align: right;">Sales: 2BF / 1BF</th>
+<th style="text-align: right;">Gross margin, trailing</th>
+<th style="text-align: right;">Gross margin, 1BF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SK hynix (000660)</td>
+<td style="text-align: right;">4.5×</td>
+<td style="text-align: right;">157.5%</td>
+<td style="text-align: right;">22.9%</td>
+<td style="text-align: right;">76.3%</td>
+<td style="text-align: right;">84.3%</td>
+</tr>
+<tr>
+<td>ExxonMobil (XOM)</td>
+<td style="text-align: right;">14.3×</td>
+<td style="text-align: right;">2.6%</td>
+<td style="text-align: right;">-4.4%</td>
+<td style="text-align: right;">14.1%</td>
+<td style="text-align: right;">n/a</td>
+</tr>
+<tr>
+<td>Chevron (CVX)</td>
+<td style="text-align: right;">14.4×</td>
+<td style="text-align: right;">0.7%</td>
+<td style="text-align: right;">-2.5%</td>
+<td style="text-align: right;">26.3%</td>
+<td style="text-align: right;">n/a</td>
+</tr>
+<tr>
+<td>CF Industries (CF)</td>
+<td style="text-align: right;">10.4×</td>
+<td style="text-align: right;">-2.9%</td>
+<td style="text-align: right;">-7.1%</td>
+<td style="text-align: right;">42.5%</td>
+<td style="text-align: right;">40.9%</td>
+</tr>
+<tr>
+<td>Nutrien (NTR)</td>
+<td style="text-align: right;">14.8×</td>
+<td style="text-align: right;">-2.0%</td>
+<td style="text-align: right;">-1.1%</td>
+<td style="text-align: right;">31.0%</td>
+<td style="text-align: right;">31.2%</td>
+</tr>
+<tr>
+<td>Alcoa (AA)</td>
+<td style="text-align: right;">7.9×</td>
+<td style="text-align: right;">13.2%</td>
+<td style="text-align: right;">0.5%</td>
+<td style="text-align: right;">18.9%</td>
+<td style="text-align: right;">18.8%</td>
+</tr>
+</tbody>
+</table></div>
+<p><img loading="lazy" alt="SK hynix and XOM, CVX, CF, NTR and AA: forward P/E, forward sales growth and trailing gross margin." src="assets/commodity-comparison.png" /></p>
+<p>We picked the basket before pulling any data, to represent oil, fertilizer and aluminum. Its mean P/E is <strong>12.35×</strong>, about <strong>2.8 times hynix's</strong>, for following-year sales growth averaging <strong>−2.9%</strong>. The cheapest, Alcoa, still trades at <strong>7.9×</strong> on <strong>18.9%</strong> trailing gross margins. (Bloomberg returns no forward gross-margin estimate for ExxonMobil or Chevron.)</p>
+<p>These industries have different capital needs. Even so, we think the <strong>64% discount to other cyclicals</strong> requires a much worse earnings collapse in memory to justify it. Cyclicality alone does not explain the gap.</p>
+<h2 id="summer-of-pessimism-as-bear-case">Summer of Pessimism as Bear Case</h2>
+<p>The June and July sell-off preceded any fall in earnings.</p>
+<p>SK hynix hit an intraday record of <strong>KRW2,987,000 on 25 June</strong>. On 2 July a US chip rout knocked Korean memory down about 9% at the open. On 10 July hynix raised about <strong>$26.5bn</strong> in the largest US listing ever by a foreign company, at <strong>$149</strong> per ADR, and the Seoul shares fell <strong>15.4%</strong> the next trading session as money rotated toward the New York line. On its late-July results, record numbers still missed the whisper, and the stock fell <strong>9.6%</strong>. It bottomed near <strong>KRW1,322,000 on 30 July</strong>, roughly <strong>56%</strong> below the June high. (Our CXMT note recorded the fall as 54% on its own basis.) Kioxia fell <strong>64.7%</strong> from 22 June to 29 July; Samsung fell more than 30% from its June high; Micron dropped from $1,255 to below $740.</p>
+<p>Through all of it, forward estimates held or rose. <strong>This was a de-rating, not an earnings downgrade.</strong> Our entry at KRW1,862,000 is about <strong>41% above the July low and 38% below the June high</strong>.</p>
+<p><img loading="lazy" alt="The tell of summer 2026: price fell by more than half while forward estimates rose." src="assets/cycles-and-scare.png" /></p>
+<p><em>The tell of summer 2026: price fell by more than half while forward estimates rose.</em></p>
+<p>Retail money made the swing bigger. The Roundhill Memory ETF (DRAM), the first memory-only ETF, launched on 2 April, raised more than $5bn within weeks and counts SK hynix as its largest holding. Korean regulators moved to limit retail access to leveraged ETFs after the summer volatility. A sustained 8× valuation will need patient holders while momentum investors are still trading out. <a href="https://www.roundhillinvestments.com/etf/dram/">Roundhill</a> · <a href="https://www.cnbc.com/2026/05/08/the-hottest-etf-since-bitcoin-mania-just-added-1-billion-in-a-day.html">CNBC</a></p>
+<p>This summer’s price scare differs from earlier downturns, when forward earnings fell sharply:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Cycle</th>
+<th style="text-align: right;">Peak forward EPS / date</th>
+<th style="text-align: right;">Forward P/E at that point</th>
+<th style="text-align: right;">Subsequent trough forward EPS / date</th>
+<th style="text-align: right;">EPS change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2018–19</td>
+<td style="text-align: right;">KRW22,272 / 2018-07-30</td>
+<td style="text-align: right;">3.86×</td>
+<td style="text-align: right;">KRW4,672 / 2019-07-15</td>
+<td style="text-align: right;">-79%</td>
+</tr>
+<tr>
+<td>2021–23</td>
+<td style="text-align: right;">KRW19,206 / 2022-04-18</td>
+<td style="text-align: right;">5.67×</td>
+<td style="text-align: right;">KRW-7,630 / 2023-04-03</td>
+<td style="text-align: right;">-140%</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Peaks are the maximum weekly forward EPS in 2018 and in January 2021–June 2022; the trough windows end June 2020 and January 2024. These are Bloomberg </em><em>estimate changes</em><em>, not share-price drawdowns.</em> <a href="evidence/hynix_historical_1bf.csv">Historical series</a> · <a href="evidence/cycle_cashflow.json">Calculations</a></p>
+<p>Buying at 3.9–5.7× peak earnings offered little protection in those downturns. In 2019 the P/E rose to 16.3× at the trough because earnings shrank. In 2023 EPS went negative and the P/E ceased to mean anything. We expect deposits and multi-year procurement to make earnings more durable. Without that change, the old cycle can repeat.</p>
+<p>Our tail case keeps just <strong>15%</strong> of current forward earnings, a deeper cut than 2018–19, and implies roughly <strong>90% equity downside</strong>. A return to losses sits outside any positive-P/E framework and could wipe out most of the capital invested.</p>
+<p>The main risk to the thesis is supply catching up with demand. Micron's Q3 release confirms high-volume HBM4 shipments and plans HBM4E volume production in 2027. Samsung has cleared Nvidia's HBM4 qualification. SK hynix itself is building aggressively. It has committed about KRW21.6tn to its first fab at the Yongin mega-cluster, with the first cleanroom brought forward to February 2027, and is pulling its M15X fab in Cheongju into production in 2027. The company targets roughly doubling wafer capacity by 2030. On 21 September the Federation of Korean Industries warned that Yongin's roads, water and power still lag the schedule. Those infrastructure gaps could delay supply and support prices. <a href="https://investors.micron.com/news/press-release/2026/Micron-Technology-Inc--Reports-Record-Results-for-the-Third-Quarter-of-Fiscal-2026/default.aspx">Micron product roadmap</a> · <a href="https://news.skhynix.com/en/q2-2026-business-results/">Hynix capacity plans</a> · <a href="https://en.sedaily.com/finance/2026/06/24/korea-pushes-to-fast-track-yongin-chip-cluster-by-a-decade">Seoul Economic Daily on Yongin</a></p>
+<p><img loading="lazy" alt="Where the next wave of supply comes from — and the power it needs." src="assets/korea-supply.png" /></p>
+<p><em>Where the next wave of supply comes from — and the power it needs.</em></p>
+<p>That is why we stress lower realized prices rather than extrapolating today's shortage. Competitor qualification and new supply push the model toward its −30% bear-price or −60% severe-price cases, which are our stresses, not company guidance.</p>
+<h2 id="demand-versus-efficiency">Demand versus efficiency</h2>
+<p>Customers sign five-year contracts because they expect to need the memory. The four largest US hyperscalers have guided to about <strong>$725bn</strong> of 2026 capex, up <strong>77%</strong> on 2025's record, and analysts project more than $1tn in 2027. Agents and inference workloads keep growing their working context, and that context lives in HBM, DRAM and SSD. <a href="https://valueaddvc.com/ai-spending">AI capex tracker</a></p>
+<p>The counterargument arrived on 10 September. DeepSeek's V4.1-Flash paper claims the model's HBM-resident KV cache is roughly one-quarter the size of its predecessor's, and its SSD-resident cache roughly one-eighth. Mixture-of-experts designs and 4-bit quantization push the same way: less memory per task. <a href="https://www.neoteo.com/en/deepseek-v41-flash-bets-on-efficiency-at-massive-scale">NeoTeo on DeepSeek V4.1 Flash</a></p>
+<p>SK hynix's answer, on its call, was that efficiency means higher utilization of existing AI infrastructure and faster monetization, which in turn expands demand for HBM, server DRAM and high-performance NAND. That is the Jevons argument: cheaper inference leads to more inference. We think it is right over the contract horizon, but it is not guaranteed. A step change in efficiency arriving at the same time as new supply is the combination that would push us toward the bear case. Contracts with deposits soften that blow; they do not prevent customers from asking to renegotiate.</p>
+<p><img loading="lazy" alt="The two forces on memory demand: a capex flood against a compression breakthrough." src="assets/demand-forces.png" /></p>
+<p><em>The two forces on memory demand: a capex flood against a compression breakthrough.</em></p>
+<h2 id="the-cxmt-question">The CXMT question</h2>
+<p>We are long CXMT, the fourth supplier memory buyers say they want, as well as the incumbent it is trying to catch.</p>
+<p>For now, the two companies sell into different markets. CXMT feeds captive Chinese demand: Huawei's Ascend accelerators, Cambricon and Alibaba's T-Head, which US export controls cut off from Korean HBM. It reached HBM3E risk production this summer using older DUV lithography tools only. SemiAnalysis estimates its HBM3 yields at around 25% and its cost per bit more than 30% above the incumbents'. SK hynix is already in HBM4 mass production for Nvidia and the hyperscalers. CXMT's HBM mostly replaces stockpiled foreign HBM inside China; it does not yet compete for Nvidia sockets. <a href="https://www.techtimes.com/articles/326159/20260901/cxmt-ships-hbm3e-ai-memory-alibaba-cambricon-us-export-controls-failed-stop-it.htm">Tech Times on CXMT HBM3E</a> · <a href="https://newsletter.semianalysis.com/p/huawei-ascend-production-ramp">SemiAnalysis</a></p>
+<p>The companies overlap in commodity DRAM, where CXMT already ships DDR5 and LPDDR at prices at or above the incumbents'. An inflection in CXMT's HBM yields would be a reason to reduce our hynix position.</p>
+<p>Alongside our CXMT long and the proposed Kioxia/Nikkei pair, this note makes the tracker portfolio long three memory makers. All three positions depend on an AI memory shortage. An efficiency shock or a demand air pocket would hit all three together. The CXMT leg adds China policy and STAR-board liquidity risk; the Korean and Japanese legs add currency.</p>
+<h2 id="the-rerating-two-step">The Rerating Two-Step</h2>
+<p>Closing the Korean-memory discount would take hynix from <strong>4.30× to Micron's 6.7×</strong>. A further move from <strong>6.7× to 8×</strong> requires another <strong>19%</strong> on the multiple, which we think greater earnings persistence could justify. Both steps remain uncertain. Samsung at <strong>4.40×</strong> shows the market is discounting strong earnings across both Korean leaders. <a href="evidence/bloomberg_cashflow_1BF.json">Same-override supplementary capture</a></p>
+<p>Seoul’s governance reforms aim to narrow the Korean discount. The "Korea discount" has long been blamed on chaebol governance (founding families controlling groups through holding-company chains), low payouts and geopolitical risk. SK hynix sits at the end of such a chain: Chairman Chey Tae-won controls SK Inc., which controls SK Square, which owns about 20% of SK hynix. SK Square itself trades at roughly a 40% discount to the value of that stake. Under President Lee Jae-myung, elected in June 2025, the government has:</p>
+<ul>
+<li>amended the Commercial Act so that directors owe a fiduciary duty to all shareholders, not only the controlling family;</li>
+<li>cut the top tax rate on dividends from 45% to a 14–30% range (December 2025);</li>
+<li>required high-dividend companies to publish Value-Up plans to keep their tax benefits (February 2026);</li>
+<li>moved to curb split-off listings that dilute minority shareholders.</li>
+</ul>
+<p>The KOSPI crossed 5,000 in January, Lee's campaign target, and closed above <strong>7,000 on 21 September</strong>. But in June, MSCI kept Korea in Emerging Markets and did not add it to the watchlist for developed-market status, pushing any upgrade past 2027.</p>
+<p>Korea's K-Chips Act raised the tax credit for chip facility investment to 20% for large companies from April 2025, and the state is financing power and water for Yongin. US policy adds pressure to invest there. A 25% US tariff on semiconductors took effect in January 2026; Korea negotiated treatment no worse than its competitors, and memory was excluded from the first phase. Commerce Secretary Howard Lutnick has warned rates could reach 100% for companies that do not invest in the US. SK hynix's roughly $3.87bn HBM packaging plant in West Lafayette, Indiana, targeted for 2028, is its hedge. Its China fabs in Wuxi and Dalian operate under annually renewed US equipment authorizations, which effectively freezes their technology. <a href="https://www.softwareseni.com/china-dram-export-controls-and-the-geopolitical-factors-shaping-memory-supply/">SoftwareSeni on export controls</a></p>
+<p>HBM execution, fulfilled contracts and cash distributions could change what investors will pay. Geographic and governance risks could keep the discount in place.</p>
+<p>Since 2016, hynix's positive-forward-EPS history has a <strong>7.17× median</strong>; <strong>8×</strong> sits around the <strong>56th percentile</strong> and <strong>10×</strong> around the <strong>72nd</strong>. Those figures include low-earnings periods and are not normalized fair values. The multiples have been reached before, but the earlier cycles show how falling earnings can erase that apparent value.</p>
+<p>Against the KOSPI, hynix is not unusually cheap. The 21 September snapshot put it at <strong>0.78× the index forward P/E</strong>, versus a <strong>0.70× historical median</strong>. So this is a bet on changed earnings durability, not a snap-back to the old domestic-index relationship. <a href="evidence/skhx_vs_kospi_pe_weekly.csv">Historical comparison</a></p>
+<h2 id="cash-generation-after-capex">Cash generation, after capex</h2>
+<p>Bloomberg 1BF consensus, <strong>KRW trillion</strong>:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th style="text-align: right;">Revenue</th>
+<th style="text-align: right;">Gross profit, derived</th>
+<th style="text-align: right;">EBIT</th>
+<th style="text-align: right;">Net income</th>
+<th style="text-align: right;">D&amp;A, EBITDA less EBIT</th>
+<th style="text-align: right;">Capex outflow</th>
+<th style="text-align: right;">Free cash flow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">487.2</td>
+<td style="text-align: right;">410.7</td>
+<td style="text-align: right;">382.1</td>
+<td style="text-align: right;">316.7</td>
+<td style="text-align: right;">16.0</td>
+<td style="text-align: right;">57.2</td>
+<td style="text-align: right;">249.2</td>
+</tr>
+</tbody>
+</table></div>
+<p>At KRW1,862,000 and 730.49m shares, equity value is about <strong>KRW1,360tn</strong>. Free cash flow of <strong>KRW249.2tn, after KRW57.2tn of capex</strong>, is an <strong>18.3% forward FCF yield</strong>. That is a low valuation on free cash flow as well as earnings. <a href="evidence/bloomberg_cashflow_1BF.json">Bloomberg fields</a></p>
+<p>The consensus lines are aggregated independently and don't fully reconcile. Net income plus implied D&amp;A less capex needs another <strong>−KRW26.3tn</strong> to reach FCF. We carry that as an unallocated working-capital/other residual. We do not label it a tax or working-capital forecast, and we do not strip pretax investment gains out of reported net income.</p>
+<p>We test the EPS haircuts against changes in company-wide prices and volumes. Start from KRW487.2tn sales, KRW76.4tn cost of sales and KRW28.6tn implied operating expenses. Scale cost of sales with volume at constant unit cost, vary opex as shown, and convert positive EBIT to net income at the consensus 82.9% ratio. Hold capex, D&amp;A and the cash-flow residual constant:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>House stress</th>
+<th style="text-align: right;">Volume</th>
+<th style="text-align: right;">Realized price</th>
+<th style="text-align: right;">Opex</th>
+<th style="text-align: right;">Revenue, KRWtn</th>
+<th style="text-align: right;">Earnings retained</th>
+<th style="text-align: right;">FCF proxy, KRWtn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base stress</td>
+<td style="text-align: right;">+10%</td>
+<td style="text-align: right;">-15%</td>
+<td style="text-align: right;">+10%</td>
+<td style="text-align: right;">455.5</td>
+<td style="text-align: right;">89%</td>
+<td style="text-align: right;">214.2</td>
+</tr>
+<tr>
+<td>Bear stress</td>
+<td style="text-align: right;">-5%</td>
+<td style="text-align: right;">-30%</td>
+<td style="text-align: right;">+0%</td>
+<td style="text-align: right;">324.0</td>
+<td style="text-align: right;">58%</td>
+<td style="text-align: right;">117.1</td>
+</tr>
+<tr>
+<td>Severe stress</td>
+<td style="text-align: right;">-20%</td>
+<td style="text-align: right;">-60%</td>
+<td style="text-align: right;">+0%</td>
+<td style="text-align: right;">155.9</td>
+<td style="text-align: right;">17%</td>
+<td style="text-align: right;">-12.7</td>
+</tr>
+</tbody>
+</table></div>
+<p>The stresses back up the scenario haircuts. Base retains <strong>89%</strong> of earnings (scenario: <strong>90%</strong>). Bear retains <strong>58%</strong> (scenario: <strong>55%</strong>). Severe retains <strong>17%</strong> (tail: <strong>15%</strong>) and turns cash flow negative if capex holds. These are aggregate price/volume stresses, not HBM segment forecasts or assumed contract coverage. Fixed manufacturing costs, product mix, dilution and tax could make every row worse. <a href="evidence/cycle_cashflow.json">Full model</a></p>
+<p>The cash-flow assumptions help explain our 8× target and why we do not use 20×. Consensus converts about <strong>79% of net income</strong> to free cash. Capitalize a stable cash stream at a <strong>12% required equity return less 2% growth</strong> and you get roughly <strong>7.9× earnings</strong>. At 15% and no growth: <strong>5.2×</strong>. At 60% conversion and a ten-point return-less-growth spread: <strong>6×</strong>. These are house assumptions: five-year contracts do not prove the indefinite cash persistence this steady-state check assumes.</p>
+<h3 id="how-much-contract-protection-is-enough">How much contract protection is enough?</h3>
+<p>Run the model backward from the base target. With volume +10%, opex +10% and constant unit costs, keeping 90% of baseline earnings requires weighted realized prices to hold <strong>85.7%</strong> of the forward baseline. The harder unprotected prices fall, the more revenue needs protecting:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Unprotected price decline</th>
+<th style="text-align: right;">Required baseline revenue share with protected prices flat</th>
+<th style="text-align: right;">Required share with protected prices down 10%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>−30%</td>
+<td style="text-align: right;">52.5%</td>
+<td style="text-align: right;">78.7%</td>
+</tr>
+<tr>
+<td>−50%</td>
+<td style="text-align: right;">71.5%</td>
+<td style="text-align: right;">89.3%</td>
+</tr>
+<tr>
+<td>−60%</td>
+<td style="text-align: right;">76.2%</td>
+<td style="text-align: right;">91.5%</td>
+</tr>
+</tbody>
+</table></div>
+<p>In the first row, if unprotected prices fall 30%, about <strong>52.5%</strong> of baseline revenue must hold its price, or <strong>78.7%</strong> if protected prices also slip 10%. Revenue is weighted at baseline prices, with common volume growth. We do not claim hynix has that coverage, that deposits imply a price floor, or that today's forecast prices are contractual strikes. <a href="evidence/contract_coverage_sensitivity.json">Reproducible inverse stress</a></p>
+<p>The 85.7% price threshold gives us a test for the Q3 and Q4 disclosures. Weak contract protection can still work if tight supply holds prices near that level. If neither contracts nor market conditions do so, our base EPS is too high. We need evidence on prices, volumes, deposits and cash; the number of signed agreements alone cannot establish that protection.</p>
+<h2 id="priced-in-disappointment">Priced-In Disappointment</h2>
+<p>Captured 1BF EPS is <strong>KRW433,181</strong>; 2BF is <strong>KRW511,045</strong>. Our base uses <strong>KRW389,863</strong>, about <strong>24% below</strong> following-year consensus. Return = exit forward EPS × exit P/E ÷ entry price − 1:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Earnings retained versus today’s 1BF consensus</th>
+<th style="text-align: right;">4.5×</th>
+<th style="text-align: right;">6×</th>
+<th style="text-align: right;">8×</th>
+<th style="text-align: right;">10×</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100%</td>
+<td style="text-align: right;">+4.7%</td>
+<td style="text-align: right;">+39.6%</td>
+<td style="text-align: right;">+86.1%</td>
+<td style="text-align: right;">+132.6%</td>
+</tr>
+<tr>
+<td>90%</td>
+<td style="text-align: right;">-5.8%</td>
+<td style="text-align: right;">+25.6%</td>
+<td style="text-align: right;">+67.5%</td>
+<td style="text-align: right;">+109.4%</td>
+</tr>
+<tr>
+<td>75%</td>
+<td style="text-align: right;">-21.5%</td>
+<td style="text-align: right;">+4.7%</td>
+<td style="text-align: right;">+39.6%</td>
+<td style="text-align: right;">+74.5%</td>
+</tr>
+<tr>
+<td>50%</td>
+<td style="text-align: right;">-47.7%</td>
+<td style="text-align: right;">-30.2%</td>
+<td style="text-align: right;">-6.9%</td>
+<td style="text-align: right;">+16.3%</td>
+</tr>
+<tr>
+<td>15%</td>
+<td style="text-align: right;">-84.3%</td>
+<td style="text-align: right;">-79.1%</td>
+<td style="text-align: right;">-72.1%</td>
+<td style="text-align: right;">-65.1%</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>At 8×, earnings can fall about 46% before we lose money. At 6×, the cushion is about 28%.</strong> Halve earnings and get only 6×, and we lose roughly 30%. The case can withstand an estimate miss, but an unrestricted memory collapse would overwhelm the rerating.</p>
+<h2 id="scenarios-and-the-cost-of-the-perpetual">Scenarios and the cost of the perpetual</h2>
+<p>The vehicle is <strong>xyz:SKHX</strong>, a perpetual referencing the USD value of the ordinary share. Mark <strong>$1,367.50</strong>, oracle <strong>$1,367.20</strong>, at <strong>21:27 UTC on 2026-09-27</strong>. Equity returns use the 2026-09-23 Seoul close of KRW1,862,000 (Bloomberg); consensus and peer data are the 22 September 01:01 UTC capture; perpetual targets normalize those returns to the venue oracle. <a href="evidence/live-refresh.json">Quote</a> · <a href="https://docs.trade.xyz/perpetuals/markets/stocks/korea">Instrument specification</a></p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Scenario; house probability</th>
+<th style="text-align: right;">Exit forward EPS, KRW</th>
+<th style="text-align: right;">Exit P/E</th>
+<th style="text-align: right;">Equity target, KRW</th>
+<th style="text-align: right;">Equity return</th>
+<th style="text-align: right;">Perp target, USD</th>
+<th style="text-align: right;">Perp return after −15.7% annual carry*</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bull: durability earns a premium; 20%</td>
+<td style="text-align: right;">476,499</td>
+<td style="text-align: right;">10.0×</td>
+<td style="text-align: right;">4,764,995</td>
+<td style="text-align: right;">+155.9%</td>
+<td style="text-align: right;">$3,499</td>
+<td style="text-align: right;">+140.2%</td>
+</tr>
+<tr>
+<td>Base: partial rerating, estimates cut; 45%</td>
+<td style="text-align: right;">389,863</td>
+<td style="text-align: right;">8.0×</td>
+<td style="text-align: right;">3,118,906</td>
+<td style="text-align: right;">+67.5%</td>
+<td style="text-align: right;">$2,290</td>
+<td style="text-align: right;">+51.8%</td>
+</tr>
+<tr>
+<td>Bear: ordinary memory downturn; 25%</td>
+<td style="text-align: right;">238,250</td>
+<td style="text-align: right;">4.5×</td>
+<td style="text-align: right;">1,072,124</td>
+<td style="text-align: right;">-42.4%</td>
+<td style="text-align: right;">$787</td>
+<td style="text-align: right;">-58.1%</td>
+</tr>
+<tr>
+<td>Tail: contract and demand failure; 10%</td>
+<td style="text-align: right;">64,977</td>
+<td style="text-align: right;">3.0×</td>
+<td style="text-align: right;">194,932</td>
+<td style="text-align: right;">-89.5%</td>
+<td style="text-align: right;">$143</td>
+<td style="text-align: right;">-105.2%</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>*Each exit multiple applies to its own row's forward EPS. Constant shares and FX; no dividends or fees. The tail's −105.2% is an unconstrained price-plus-funding sensitivity on entry notional: funding can consume more than the starting collateral, so that path ends in a top-up or liquidation before twelve months. It is not a feasible hold-to-maturity return on a fully collateralized account. Probabilities, stresses, exit earnings and multiples are house judgments; consensus captures and contract disclosures are the observations. Equity and perpetual expected returns differ slightly (+42.0% vs +42.0%) because perpetual targets are normalized to the oracle price.</em></p>
+<p>The bull case assumes the new contracts deliver: deposits, disclosed coverage and a capital-return policy, rewarded with a premium to Micron. The base case is several quarters of utilization and margin evidence earning a partial rerating despite lower estimates. The bear case assumes a conventional downturn or ineffective commitments, realizing the risks investors priced this summer. The tail is a return to the 2023 pattern. The combined 35% bear/tail weight is not a calibrated disaster ceiling: move the tail to 25% and the base to 30%, and expected price return falls about <strong>24 percentage points</strong>.</p>
+<p>Funding reduces the return from the perpetual. Expected perpetual price return is <strong>+42.0%</strong>. Longs paid <strong>15.65% annualized over the last 30 days</strong> and <strong>31.85% over 90 days</strong>, both with full hourly coverage. Held for a year at constant notional, those rates leave <strong>+26.3%</strong> or <strong>+10.1%</strong>. The current hourly rate annualizes to <strong>5.47%</strong> paid by longs; it can change every hour. <a href="evidence/live-refresh.json">Funding evidence</a></p>
+<p>The perpetual also carries won exposure. A <strong>10% fall in the won's USD value</strong> cuts the base perpetual price return to <strong>+50.7%</strong>, or <strong>+35.1%</strong> after the 30-day historical carry. A USD-margined contract does not remove Korean currency risk.</p>
+<p>Hold <strong>1× notional with sufficient collateral</strong>, review funding weekly, and close the perpetual if its realized 30-day annualized cost exceeds <strong>25%</strong>, per our original note's rule. One-times sizing limits leverage risk; it does not rule out liquidation, collateral shortfalls or oracle failure. Sustained high funding costs can consume the entire rerating gain.</p>
+<h2 id="catalysts-for-the-next-six-months">Catalysts for the next six months</h2>
+<p>Over the next two quarters, results and contract disclosures will test the thesis. Micron reports first; its deposit disclosures will provide a benchmark for SK hynix.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Date</th>
+<th>Event</th>
+<th>What we're watching</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30 Sep 2026</td>
+<td>Micron fiscal Q4 results</td>
+<td>Updates on strategic customer agreements and deposits; HBM4 ramp; first FY27 outlook</td>
+<td>Confirmed (<a href="https://www.globenewswire.com/news-release/2026/08/26/3351673/14450/en/micron-technology-to-report-fiscal-fourth-quarter-results-on-september-30-2026.html">Micron</a>)</td>
+</tr>
+<tr>
+<td>~7–8 Oct</td>
+<td>Samsung Q3 preliminary results</td>
+<td>First read on memory pricing and HBM4 volumes</td>
+<td>Expected</td>
+</tr>
+<tr>
+<td>12–15 Oct</td>
+<td>OCP Global Summit, San Jose</td>
+<td>Memory and storage architecture for AI data centers</td>
+<td>Confirmed</td>
+</tr>
+<tr>
+<td>14–16 Oct</td>
+<td>SEDEX (Semiconductor Exhibition), Seoul</td>
+<td>Korean supply-chain and HBM roadmap disclosures</td>
+<td>Confirmed</td>
+</tr>
+<tr>
+<td>27 Oct</td>
+<td><strong>SK hynix Q3 results</strong></td>
+<td>LTA coverage, deposit disclosure, realized prices, HBM4 share, shareholder-return plan</td>
+<td>Expected (listed in our CXMT note and by aggregators; not yet on SK hynix IR)</td>
+</tr>
+<tr>
+<td>~29 Oct</td>
+<td>Samsung Q3 full results</td>
+<td>HBM4 yields and Nvidia share</td>
+<td>Expected</td>
+</tr>
+<tr>
+<td>~6 Nov</td>
+<td>Sandisk fiscal Q1 results</td>
+<td>NAND contract coverage; read-across to Solidigm</td>
+<td>Expected</td>
+</tr>
+<tr>
+<td>~13 Nov</td>
+<td>Kioxia results</td>
+<td>NAND pricing; read-across to Solidigm</td>
+<td>Expected</td>
+</tr>
+<tr>
+<td>Late Nov</td>
+<td>Nvidia fiscal Q3 results</td>
+<td>Rubin ramp and HBM content per accelerator</td>
+<td>Expected (date not yet set)</td>
+</tr>
+<tr>
+<td>30 Nov–3 Dec</td>
+<td>Nvidia GTC Washington DC</td>
+<td>Rubin roadmap; supplier commentary</td>
+<td>Confirmed</td>
+</tr>
+<tr>
+<td>By 31 Dec</td>
+<td>SK hynix shareholder-return announcement</td>
+<td>Form, size and timing of capital returns</td>
+<td>Expected (CFO commitment)</td>
+</tr>
+<tr>
+<td>6–9 Jan 2027</td>
+<td>CES</td>
+<td>Device memory content and pricing pass-through</td>
+<td>Confirmed</td>
+</tr>
+<tr>
+<td>14–18 Feb 2027</td>
+<td>ISSCC, San Francisco</td>
+<td>HBM4E and next-generation memory papers</td>
+<td>Confirmed</td>
+</tr>
+<tr>
+<td>Feb 2027</td>
+<td>Yongin Phase 1 first cleanroom</td>
+<td>New supply timing; infrastructure delays</td>
+<td>Company target</td>
+</tr>
+<tr>
+<td>2027</td>
+<td>M15X production start; Micron HBM4E volume</td>
+<td>The supply response the bear case depends on</td>
+<td>Company targets</td>
+</tr>
+<tr>
+<td>Late Jun 2027</td>
+<td>MSCI market classification review</td>
+<td>Korea developed-market watchlist</td>
+<td>Expected timing</td>
+</tr>
+</tbody>
+</table></div>
+<p><img loading="lazy" alt="The catalyst path: peer results first, then hynix's own disclosures, then the new supply." src="assets/catalyst-timeline.png" /></p>
+<p><em>The catalyst path: peer results first, then hynix's own disclosures, then the new supply.</em></p>
+<p><strong>Add</strong> when booked-volume visibility, deposits and cash collection improve while the discount persists. Reassess the targets at <strong>8× KRW389,863 EPS</strong> (base) and <strong>10× KRW476,499 EPS</strong> (bull), on a consistent, updated forward-EPS basis. Never put a bull multiple on a different earnings denominator.</p>
+<p><strong>Cut</strong> on ineffective or cancelled commitments, sustained HBM share or margin erosion, an inflection in CXMT's HBM yields, or an earnings outlook approaching the <strong>KRW238,250 bear case</strong>. Capex outrunning durable cash generation would also invalidate the case. A fall in spot prices alone would not: the stress model already allows for lower realized prices. We would assess the earnings that remain.</p>
+<p>We are buying before every contract term is public because we think the discount compensates for that uncertainty. This summer, investors priced SK hynix for a return to the old cycle while customers were signing contracts intended to prevent it. At 4.30×, a partial rerating leaves substantial upside even if earnings miss consensus. Realizing that return requires committed demand to produce lasting cash flow and investors to value it more highly; if earnings fall faster than the multiple rises, we lose.</p>
+<h3 id="data-and-sources">Data and sources</h3>
+<p><a href="evidence/comparison.html">Bloomberg comparison appendix</a> · <a href="evidence/qqq_all_holdings_bloomberg.csv">All 101 QQQ share classes and allocations</a> · <a href="evidence/commodity_comparison.csv">Commodity rows</a> · <a href="evidence/summary.json">Group statistics</a> · <a href="evidence/bloomberg_requests.json">Request metadata</a> · <a href="evidence/cycle_cashflow.json">Cash-flow and cycle calculations</a> · <a href="evidence/rerating_model.json">Scenario calculations</a></p>
+<p>The QQQ universe and rounded weights were supplied as of 18 September; this is not an independently reconstructed fund holdings statement. Missing fields stay missing, and no high P/E is capped. Bloomberg 1BF/2BF periods and local-currency sales are kept consistent. Detailed observation counts, exclusions and raw captures are in the private appendix.</p>
+<p><a href="https://news.skhynix.com/en/q2-2026-business-results/">SK hynix Q2 issuer results</a> support the reported financials, customer agreements and HBM4 shipments. The 28 July Bloomberg earnings-call capture supports the contract and shareholder-return commentary; the accompanying newsroom release is dated 29 July. <a href="evidence/demand_evidence.json">Evidence excerpts with source offsets</a></p>
+<p>Narrative sources: Kwak Noh-jung interview, <a href="https://www.marketscreener.com/news/sk-hynix-ceo-sees-worst-ever-memory-supply-shortage-in-2027-says-demand-to-outstrip-supply-beyond-2-ce7f5edfdb88ff2c">Reuters via MarketScreener</a> and <a href="https://finance.yahoo.com/technology/articles/sk-hynix-ceo-kwak-noh-121150974.html">Yahoo Finance</a>, 10 July 2026 · Q2 call quotes, <a href="https://sg.finance.yahoo.com/news/sk-hynix-inc-skhy-q2-070022880.html">call highlights</a> · Chey Tae-won share purchase, <a href="https://www.koreaherald.com/article/10826278">Korea Herald</a> · Tim Cook, <a href="https://fortune.com/2026/07/30/tim-cook-signed-off-on-his-final-apple-earnings-call-with-a-warning-about-a-hundred-year-flood-in-memory-chip-pricing/">Fortune</a>, 30 July 2026 · Micron agreements and results date, <a href="https://investors.micron.com/events-and-presentations/">Micron IR</a> and <a href="https://www.globenewswire.com/news-release/2026/08/26/3351673/14450/en/micron-technology-to-report-fiscal-fourth-quarter-results-on-september-30-2026.html">GlobeNewswire</a> · Hyperscaler capex, <a href="https://valueaddvc.com/ai-spending">ValueAdd VC tracker</a> · DeepSeek V4.1-Flash, <a href="https://www.neoteo.com/en/deepseek-v41-flash-bets-on-efficiency-at-massive-scale">NeoTeo</a> and arXiv 2609.19969 · CXMT HBM3E, <a href="https://www.techtimes.com/articles/326159/20260901/cxmt-ships-hbm3e-ai-memory-alibaba-cambricon-us-export-controls-failed-stop-it.htm">Tech Times</a> and <a href="https://newsletter.semianalysis.com/p/huawei-ascend-production-ramp">SemiAnalysis</a> · Export controls, <a href="https://www.softwareseni.com/china-dram-export-controls-and-the-geopolitical-factors-shaping-memory-supply/">SoftwareSeni</a> · Yongin, <a href="https://en.sedaily.com/finance/2026/06/24/korea-pushes-to-fast-track-yongin-chip-cluster-by-a-decade">Seoul Economic Daily</a> · Memory ETF flows, <a href="https://www.roundhillinvestments.com/etf/dram/">Roundhill</a> and <a href="https://www.cnbc.com/2026/05/08/the-hottest-etf-since-bitcoin-mania-just-added-1-billion-in-a-day.html">CNBC</a> · HBM market share: IDC data in SK hynix's US listing documents; TrendForce · Earlier Corbanu notes: <a href="https://corbanu.com/posts/chinese-memory-sovereign-ai-long-cxmt/">CXMT</a>, <a href="https://corbanu.com/posts/shorting-cerebras-openai-jalapeno-anthropic-ipo/">Cerebras</a>, <a href="https://corbanu.com/posts/long-kioxia-short-nikkei-ai-storage/">Kioxia</a>.</p>
+<p><em>Correction: an earlier chart labeled 1BF as "next fiscal year." 1BF is blended forward, and this note uses blended forward throughout.</em></p>
+<p><strong>Corbanu · Trade note · 27 September 2026</strong></p></article>
+</main>
+<div class="article-end">This article describes a proposed trade, not a confirmed execution. Corbanu is a publication, not individualized investment advice. Venue links may carry referral compensation. <a href="/compliance/">Publication policies</a>.</div>
+<footer class="site-footer">
+  <div class="foot-links"><a href="https://corbanu.com/">Home</a><a href="https://corbanu.com/markets/">Markets</a><a href="https://corbanu.com/terminal/">Terminal</a><a href="https://corbanu.com/compliance/">Compliance</a><a href="https://corbanu.com/disclaimer/">Disclaimer</a></div>
+  <div>Corbanu · 2026</div>
+</footer>
+<script>
+(() => {
+  const article = document.getElementById('article');
+  const toc = document.getElementById('toc');
+  article.querySelectorAll('a[href="https://app.hyperliquid.xyz/join/CORBANU"]').forEach(link => {
+    link.target = '_blank';
+    link.rel = 'sponsored noopener noreferrer';
+  });
+  const copyButton = document.querySelector('.llm-copy');
+  const copyStatus = document.querySelector('.copy-status');
+  const copyText = async value => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+      return;
+    }
+    const field = document.createElement('textarea');
+    field.value = value;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    const copied = document.execCommand('copy');
+    field.remove();
+    if (!copied) throw new Error('clipboard unavailable');
+  };
+  if (copyButton) copyButton.addEventListener('click', async () => {
+    const label = copyButton.querySelector('span');
+    const original = label.textContent;
+    copyButton.disabled = true;
+    if (copyStatus) copyStatus.textContent = 'Preparing clean Markdown…';
+    try {
+      const response = await fetch(copyButton.dataset.copySource, {cache:'no-store'});
+      if (!response.ok) throw new Error('source unavailable');
+      await copyText(await response.text());
+      copyButton.dataset.state = 'copied';
+      label.textContent = 'Copied';
+      if (copyStatus) copyStatus.textContent = 'Article copied as Markdown.';
+      setTimeout(() => {
+        copyButton.dataset.state = '';
+        label.textContent = original;
+        copyButton.disabled = false;
+        if (copyStatus) copyStatus.textContent = '';
+      }, 1800);
+    } catch (_error) {
+      label.textContent = 'Copy failed';
+      if (copyStatus) copyStatus.textContent = 'Markdown source could not be copied.';
+      copyButton.disabled = false;
+      setTimeout(() => { label.textContent = original; }, 1800);
+    }
+  });
+  const heads = [...article.querySelectorAll('h2,h3')];
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  heads.forEach((h,i) => {
+    h.id = h.id || slug(h.textContent) || 'section-' + i;
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.className = 'sub';
+    toc.appendChild(a);
+  });
+  const links = [...toc.querySelectorAll('a')];
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => a.classList.toggle('active', a.hash === '#' + e.target.id));
+    });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  heads.forEach(h => observer.observe(h));
+  const bar = document.querySelector('.read-progress');
+  const update = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
+  };
+  addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+</body>
+</html>

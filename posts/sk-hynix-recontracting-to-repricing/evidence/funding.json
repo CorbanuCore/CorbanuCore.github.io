@@ -1,0 +1,108 @@
+{
+  "schema_version": 2,
+  "request": {
+    "symbol": "xyz:SKHX",
+    "direction": "LONG",
+    "venue": "hyperliquid",
+    "cutoff": "2026-09-22T01:04:27.161828+00:00",
+    "windows": [
+      30,
+      90
+    ],
+    "forecast_method_sha256": "0628ee2fe82518919aa137fc81c1fedffe9b3d7eed0932460013c1e31d50bc15",
+    "schema_version": 2
+  },
+  "applicable": true,
+  "complete": true,
+  "instrument": "xyz:SKHX",
+  "direction": "LONG",
+  "cutoff": "2026-09-22T01:04:27.161828+00:00",
+  "retrieved_at": "2026-09-22T01:04:27.747608+00:00",
+  "source": "/home/postfiat/repos/navstrategies/var/production/coverage_total_return_indices/cache/hyperliquid_funding_hourly/xyz_SKHX.parquet",
+  "history_sha256": "7684a5950e376289362b16e5dd839f83515663a9add390b2cffbf9d66dcb5e03",
+  "duplicates_removed": 0,
+  "history": [
+    {
+      "days": 30,
+      "start_exclusive": "2026-08-23T01:04:27.161828+00:00",
+      "end_inclusive": "2026-09-22T01:04:27.161828+00:00",
+      "first_settlement": "2026-08-23T02:00:00.032000+00:00",
+      "last_settlement": "2026-09-22T01:00:00.043000+00:00",
+      "expected_intervals": 720,
+      "observed_intervals": 720,
+      "missing_intervals": 0,
+      "coverage_pct": 100.0,
+      "complete": true,
+      "window_return_pct": -1.1528838700000001,
+      "annualized_apr_pct": -14.026753751666671,
+      "dollars_per_10000": -115.28838700000001,
+      "observed_only_return_pct": -1.1528838700000001,
+      "observed_only_annualized_apr_pct": -14.026753751666671,
+      "cash_flow": "pays"
+    },
+    {
+      "days": 90,
+      "start_exclusive": "2026-06-24T01:04:27.161828+00:00",
+      "end_inclusive": "2026-09-22T01:04:27.161828+00:00",
+      "first_settlement": "2026-06-24T02:00:00.045000+00:00",
+      "last_settlement": "2026-09-22T01:00:00.043000+00:00",
+      "expected_intervals": 2160,
+      "observed_intervals": 2160,
+      "missing_intervals": 0,
+      "coverage_pct": 100.0,
+      "complete": true,
+      "window_return_pct": -8.81265212,
+      "annualized_apr_pct": -35.74020026444444,
+      "dollars_per_10000": -881.2652119999999,
+      "observed_only_return_pct": -8.81265212,
+      "observed_only_annualized_apr_pct": -35.74020026444444,
+      "cash_flow": "pays"
+    }
+  ],
+  "forecasts": [
+    {
+      "instrument": "xyz:SKHX",
+      "direction": "LONG",
+      "horizon_hours": 24,
+      "model": "ridge_1d_to_30d",
+      "validation_scope": "asset_walk_forward",
+      "as_of_funding_timestamp": "2026-09-21T21:00:00+00:00",
+      "signed_forecast_apr": -0.3034994070675448,
+      "forecast_period_return_pct": -0.08315052248425885,
+      "cash_flow": "pays"
+    },
+    {
+      "instrument": "xyz:SKHX",
+      "direction": "LONG",
+      "horizon_hours": 168,
+      "model": "blend_7d_30d",
+      "validation_scope": "aggregate_22_contract_sweep",
+      "as_of_funding_timestamp": "2026-09-21T21:00:00+00:00",
+      "signed_forecast_apr": -0.16801481292261905,
+      "forecast_period_return_pct": -0.32222018916666667,
+      "cash_flow": "pays"
+    }
+  ],
+  "forecast_origin": "published_market_lens",
+  "method_sha256": "0628ee2fe82518919aa137fc81c1fedffe9b3d7eed0932460013c1e31d50bc15",
+  "forecast_source_sha256": "b11e2b61dbf458badf916e02d91e16be3605802ec6cb9a1cbd616caa20d77f31",
+  "expected_forecast_observation": "2026-09-21T21:00:00+00:00",
+  "fetched_ranges": [
+    {
+      "start": "2025-07-01T00:00:00+00:00",
+      "end": "2026-02-19T23:59:59.999000+00:00",
+      "rows": 0
+    },
+    {
+      "start": "2026-09-21T22:00:00+00:00",
+      "end": "2026-09-22T01:04:27.161828+00:00",
+      "rows": 4
+    }
+  ],
+  "issues": [],
+  "last_observation": "2026-09-22T01:00:00.043000+00:00",
+  "annualization": "simple APR, not compounded APY",
+  "sign": "Positive normalized position funding is received; raw positive venue rates are paid by longs.",
+  "basis": "Hypothetical constant notional; not actual account receipts. Actual events are cutoff-filtered before hourly bucketing.",
+  "training_scope": "Untruncated selected-symbol archive; approved model unchanged. No new asset-specific validation claimed."
+}
