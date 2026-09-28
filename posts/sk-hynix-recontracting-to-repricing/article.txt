@@ -22,7 +22,7 @@ Samsung trades near **4.4×** and Micron at **6.7×**, so part of hynix's discou
 | Decision point | Investment case |
 |---|---|
 | Entry | xyz:SKHX perpetual mark $1,367.50 at 21:27 UTC 2026-09-27 (live); KRW1,862,000 last ordinary-share close, 2026-09-23, used to convert KRW targets into returns |
-| Sizing | 1× notional perpetual; position size not stated |
+| Sizing | 1.33% of capital, unlevered (1× notional); vol-weighted with a 5.0% Apple short and a 2.52% Oracle long |
 | Base, 45% house probability | 90% of current forward EPS × 8× → KRW3.119m; +67.5% |
 | Bull / bear / tail | +155.9% / −42.4% / −89.5% equity returns; 20% / 25% / 10% probabilities |
 | Expected return | +42.0% equity price return; +26.3% perpetual return if recent 30-day annualized funding cost persists |
@@ -299,6 +299,8 @@ The bull case assumes the new contracts deliver: deposits, disclosed coverage an
 Funding reduces the return from the perpetual. Expected perpetual price return is **+42.0%**. Longs paid **15.65% annualized over the last 30 days** and **31.85% over 90 days**, both with full hourly coverage. Held for a year at constant notional, those rates leave **+26.3%** or **+10.1%**. The current hourly rate annualizes to **5.47%** paid by longs; it can change every hour. [Funding evidence](evidence/live-refresh.json)
 
 The perpetual also carries won exposure. A **10% fall in the won's USD value** cuts the base perpetual price return to **+50.7%**, or **+35.1%** after the 30-day historical carry. A USD-margined contract does not remove Korean currency risk.
+
+**Sizing: 1.33% of capital**, part of our vol-weighted book: 5.0% short Apple ([Apple short](https://corbanu.com/posts/apple-short-hundred-year-flood/)), 1.33% long SK hynix ([SK hynix long](https://corbanu.com/posts/sk-hynix-recontracting-to-repricing/)) and 2.52% long Oracle ([Oracle long](https://corbanu.com/posts/oracle-cheapest-way-to-own-ai-compute/)). Each position carries the same risk: 5.0% of capital × Apple's 28.5% 63-day volatility = 1.43% of capital in annualized volatility, and each size is 1.43% divided by that instrument's own 63-day volatility (SK hynix 107.2%, Oracle 56.5%; Hyperliquid daily closes, 30 June–25 September 2026). There is no market-beta hedge: Apple's 63-day correlation to the Nasdaq-100 is currently negative, so a beta-based hedge ratio is unstable. Gross exposure across the three positions is 8.85% of capital, with book volatility of about 3.4% of capital. [Sizing data](evidence/sizing.json)
 
 Hold **1× notional with sufficient collateral**, review funding weekly, and close the perpetual if its realized 30-day annualized cost exceeds **25%**, per our original note's rule. One-times sizing limits leverage risk; it does not rule out liquidation, collateral shortfalls or oracle failure. Sustained high funding costs can consume the entire rerating gain.
 
