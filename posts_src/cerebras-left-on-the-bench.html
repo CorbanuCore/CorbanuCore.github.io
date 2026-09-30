@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Adding to the Cerebras short at $191.75: OpenAI reportedly runs its new Sol Ultrafast tier on Nvidia GPUs, Q3 guidance implies core operating losses up ~50%, and Jalapeño plus Groq LPX erode the speed premium. Weighted value $111.">
+<meta name="theme-color" content="#030403">
+<title>Cerebras: Left on the Bench — Corbanu</title>
+<link rel="canonical" href="https://corbanu.com/posts/cerebras-left-on-the-bench/">
+<meta property="og:title" content="Cerebras: Left on the Bench">
+<meta property="og:description" content="Adding to the Cerebras short at $191.75: OpenAI reportedly runs its new Sol Ultrafast tier on Nvidia GPUs, Q3 guidance implies core operating losses up ~50%, and Jalapeño plus Groq LPX erode the speed premium. Weighted value $111.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-09-30T00:00:00Z">
+<meta property="article:modified_time" content="2026-09-30T00:00:00Z">
+<meta property="og:url" content="https://corbanu.com/posts/cerebras-left-on-the-bench/">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{
+  --bg:#030403;--surface:#080a08;--surface-2:#0d100d;--ink:#f5f7f1;
+  --body:#ccd1c6;--muted:#92998e;--dim:#687064;--lime:#ccff00;
+  --blue:#79c8ff;--gold:#d6a85f;--coral:#ff8b7c;--line:rgba(255,255,255,.14);
+  --grid:rgba(255,255,255,.065);--serif:Georgia,"Times New Roman",serif;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark;scroll-behavior:smooth}
+body{margin:0;overflow-x:hidden;color:var(--ink);background:var(--bg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration-color:rgba(204,255,0,.45);text-underline-offset:3px}
+a:hover{color:var(--lime)}
+.post-body a[href^="https://corbanu.com/"],.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]{padding:0;border-bottom:1px dotted rgba(174,190,170,.48);color:#aebaab;background:none;font-weight:650;text-decoration:none}
+.post-body a[href^="https://corbanu.com/"]:hover,.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]:hover{color:#dce6d8;border-bottom-color:#dce6d8}
+.post-body a[href^="https://corbanu.com/"]:focus-visible,.post-body a[href="https://app.hyperliquid.xyz/join/CORBANU"]:focus-visible{outline:2px solid #c5d0c0;outline-offset:2px}
+.skip{position:fixed;top:-5rem;left:1rem;z-index:100;padding:.8rem 1rem;color:#000;background:var(--lime)}
+.skip:focus{top:1rem}
+.read-progress{position:fixed;top:0;left:0;z-index:80;width:0;height:2px;background:var(--lime)}
+.site-header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:2rem;min-height:76px;padding:.8rem clamp(1rem,3.4vw,3rem);border-bottom:1px solid rgba(255,255,255,.09);background:rgba(3,4,3,.92);backdrop-filter:blur(16px)}
+.brand{display:inline-flex;align-items:center;gap:.7rem;font-size:1.25rem;font-weight:700;text-decoration:none}
+.brand img{width:45px;height:45px;border:1px solid rgba(204,255,0,.5);border-radius:50%;object-fit:cover}
+.site-nav{display:flex;align-items:center;gap:1.6rem}
+.site-nav a{color:#d9ddd4;font-size:.9rem;text-decoration:none}
+.site-nav a[aria-current=page]{color:var(--lime)}
+.preview-state{display:inline-flex;align-items:center;gap:.5rem;color:#aeb5aa;font:700 .68rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.preview-state i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px rgba(204,255,0,.55)}
+.article-shell{width:min(1480px,calc(100% - 3rem));margin:0 auto;padding:clamp(2rem,4vw,4.5rem) 0 6rem;display:grid;grid-template-columns:220px minmax(0,1180px);justify-content:center;gap:clamp(2rem,4vw,4.5rem)}
+.article-rail{position:relative}
+.rail-inner{position:sticky;top:106px;display:grid;gap:1.4rem}
+.rail-label{margin:0;color:var(--lime);font:700 .68rem/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.trade-card{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:var(--surface)}
+.trade-stat{padding:.8rem;border-bottom:1px solid var(--line)}
+.trade-stat:nth-child(odd){border-right:1px solid var(--line)}
+.trade-stat:nth-last-child(-n+2){border-bottom:0}
+.trade-stat span{display:block;margin-bottom:.35rem;color:var(--dim);font:700 .58rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.trade-stat strong{font:700 .88rem/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.llm-copy{display:flex;align-items:center;justify-content:center;gap:.58rem;width:100%;min-height:46px;padding:.75rem .9rem;border:1px solid var(--lime);border-radius:0;color:#050705;background:var(--lime);font:800 .7rem/1 var(--mono);letter-spacing:.075em;text-transform:uppercase;cursor:pointer;transition:background .16s ease,color .16s ease,transform .16s ease}
+.llm-copy:hover{color:#000;background:#e2ff70;transform:translateY(-1px)}
+.llm-copy:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.llm-copy svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8}
+.llm-copy[data-state="copied"]{color:#050705;background:#fff;border-color:#fff}
+.copy-status{display:block;min-height:.9rem;margin-top:-.9rem;color:#8f978b;font:600 .6rem/1.35 var(--mono);text-align:center}
+.hl-referral{margin-top:-.75rem;color:#7f897b;font:600 .6rem/1.4 var(--mono);text-align:center;text-decoration-color:rgba(174,190,170,.35)}
+.hl-referral:hover{color:#b9c5b4}
+.toc{display:grid;gap:.15rem;border-top:1px solid var(--line);padding-top:1rem}
+.toc a{padding:.32rem 0;color:#8f978b;font-size:.76rem;line-height:1.25;text-decoration:none}
+.toc a:hover,.toc a.active{color:var(--lime)}
+.toc a.sub{padding-left:.75rem;color:#70786c;font-size:.69rem}
+.post-body{min-width:0}
+.post-body>h1{max-width:990px;margin:0 auto .8rem;font:400 clamp(2.65rem,5.7vw,5.6rem)/.96 var(--serif);letter-spacing:-.045em}
+.post-body>h1::after{content:"";display:block;width:74px;height:4px;margin-top:1.5rem;background:var(--lime)}
+.post-body>p,.post-body>ul,.post-body>ol,.post-body>blockquote,.post-body>pre,.post-body>h2,.post-body>h3{width:min(780px,100%);margin-left:auto;margin-right:auto}
+.post-body>p{margin-top:0;margin-bottom:1.35rem;color:var(--body);font:400 1.04rem/1.76 var(--sans)}
+.post-body>p:nth-of-type(1){color:var(--dim);font:700 .7rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.post-body strong{color:var(--ink);font-weight:700}
+.post-body h2{margin-top:4.8rem;margin-bottom:1.25rem;padding-top:1.4rem;border-top:1px solid var(--line);font:500 clamp(1.65rem,2.5vw,2.35rem)/1.12 var(--serif);letter-spacing:-.025em}
+.post-body h2::before{content:"";display:block;width:28px;height:3px;margin-bottom:1.15rem;background:var(--lime)}
+.post-body h3{margin-top:2.6rem;margin-bottom:1rem;color:var(--ink);font:700 .77rem/1.35 var(--mono);letter-spacing:.09em;text-transform:uppercase}
+.post-body ul,.post-body ol{margin-top:0;margin-bottom:1.5rem;padding-left:1.35rem;color:var(--body);font-size:1rem;line-height:1.7}
+.post-body li+li{margin-top:.5rem}
+.post-body blockquote{margin-top:1.8rem;margin-bottom:1.8rem;padding:.2rem 0 .2rem 1.2rem;border-left:3px solid var(--lime);color:#e5e9df}
+.post-body pre{overflow:auto;padding:1rem;border:1px solid var(--line);background:var(--surface);color:#dfe5d8}
+.post-body code{font-family:var(--mono);font-size:.86em}
+.post-body>img,.post-body>p:has(>img){display:block;width:min(1100px,100%);max-width:none;margin:2rem auto}
+.post-body img{display:block;width:100%;height:auto;border:1px solid rgba(255,255,255,.16);background:#fff}
+.table-scroll{width:100%;margin:2rem auto 3rem;overflow-x:auto;border:1px solid rgba(255,255,255,.16);background:var(--surface);scrollbar-color:rgba(204,255,0,.6) rgba(255,255,255,.06)}
+.table-scroll:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+table.fm{width:100%;min-width:860px;border-collapse:collapse;font:500 .76rem/1.45 var(--mono);font-variant-numeric:tabular-nums}
+table.fm caption{padding:1rem 1.1rem;color:var(--ink);background:#050705;border-bottom:1px solid var(--line);font:700 .77rem/1.35 var(--mono);letter-spacing:.055em;text-align:left;text-transform:uppercase}
+table.fm th,table.fm td{padding:.67rem .78rem;border-bottom:1px solid rgba(255,255,255,.075);text-align:right;white-space:nowrap}
+table.fm th:first-child,table.fm td:first-child{text-align:left}
+table.fm thead th{position:sticky;top:0;z-index:2;color:#858d80;background:#0a0d0a;border-bottom:1px solid rgba(204,255,0,.32);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase}
+table.fm tbody td{color:#bec5b9}
+table.fm tbody tr:hover td{background:rgba(204,255,0,.025)}
+table.fm tr.tot td{color:var(--ink);font-weight:750;border-top:1px solid rgba(255,255,255,.23)}
+table.fm tr.sub td{color:#899185;font-size:.7rem}
+table.fm tr.rev td{color:#dce2d7;font-style:italic}
+table.fm tr.grp td{padding:.48rem .78rem;color:#000;background:var(--lime);border:0;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+table.fm td.neg{color:var(--coral)}
+table.fm .e{background:rgba(121,200,255,.045)}
+table.fm .a{background:rgba(255,255,255,.025)}
+table.fm .i{background:rgba(214,168,95,.045)}
+table.fm .div{border-left:1px solid rgba(255,255,255,.25)}
+table.fm tfoot td{padding:.9rem 1rem;color:#7f877b;background:#050705;border:0;font:500 .67rem/1.55 var(--sans);text-align:left;white-space:normal}
+table.cal,table.pol,table.scen{min-width:1060px}
+table.cal td,table.pol td,table.scen td,table.spec td{white-space:normal;vertical-align:top}
+table.cal th,table.pol th,table.scen th,table.spec th{text-align:left;white-space:normal}
+table.cal td:first-child,table.pol td:first-child{font-weight:700}
+table.scen td:nth-child(3){min-width:310px;text-align:left}
+table.scen tr:last-child td{background:rgba(204,255,0,.065);color:var(--ink);border-top:1px solid rgba(204,255,0,.42)}
+.article-end{width:min(780px,100%);margin:4rem auto 0;padding-top:1.5rem;border-top:1px solid var(--line);color:var(--dim);font:.72rem/1.6 var(--mono)}
+.site-footer{display:flex;justify-content:space-between;gap:1rem;padding:2rem clamp(1rem,3.4vw,3rem);border-top:1px solid var(--line);color:#747c70;font-size:.78rem}
+.foot-links{display:flex;flex-wrap:wrap;gap:1.2rem}
+.foot-links a{text-decoration:none}
+@media(max-width:1100px){
+  .article-shell{display:block;width:min(1180px,calc(100% - 2rem))}
+  .rail-inner{position:static;margin:0 auto 2.5rem;width:min(780px,100%)}
+  .trade-card{grid-template-columns:repeat(4,1fr)}
+  .trade-stat{border-bottom:0}.trade-stat:nth-child(n){border-right:1px solid var(--line)}.trade-stat:last-child{border-right:0}
+  .toc{display:none}
+}
+@media(max-width:720px){
+  .site-header{grid-template-columns:auto 1fr;min-height:66px;gap:1rem}
+  .site-nav{justify-content:flex-end;gap:.85rem}.site-nav a:nth-child(-n+2){display:none}
+  .preview-state{display:none}
+  .article-shell{width:calc(100% - 1.1rem);padding-top:1.5rem}
+  .post-body>h1{font-size:clamp(2.35rem,12vw,3.65rem)}
+  .post-body>p{font-size:1rem;line-height:1.7}
+  .post-body h2{margin-top:3.8rem}
+  .trade-card{grid-template-columns:1fr 1fr}.trade-stat:nth-child(2){border-right:0}.trade-stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .table-scroll{margin-left:0;margin-right:0}
+  table.fm{font-size:.72rem}
+  .site-footer{display:grid}
+}
+@media print{
+  .site-header,.article-rail,.read-progress,.site-footer{display:none}
+  body{color:#111;background:#fff}.article-shell{display:block;width:100%;padding:0}.post-body{color:#111}
+  .post-body p,.post-body li{color:#222}.post-body h1,.post-body h2,.post-body h3,.post-body strong{color:#000}
+  .table-scroll{overflow:visible;border-color:#bbb;break-inside:avoid}table.fm{min-width:0;color:#111;font-size:8pt}
+}
+</style>
+
+<link rel="stylesheet" href="/assets/katex/katex.min.css">
+<style>
+.article-math{max-width:100%;overflow-x:auto;color:var(--body)}
+div.article-math{width:min(780px,100%);margin:1.6rem auto}
+.post-body table.fm td,.post-body table.fm th{white-space:normal}
+.post-body table.fm{min-width:720px}
+.post-body{overflow-wrap:anywhere}
+@media(max-width:420px){.site-nav a:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<script defer src="/assets/katex/katex.min.js"></script>
+<script>
+addEventListener('DOMContentLoaded',()=>document.querySelectorAll('[data-tex]').forEach(el=>{
+katex.render(el.dataset.tex,el,{displayMode:el.dataset.display==='true',throwOnError:false,trust:false});
+}));
+</script>
+</head>
+<body>
+<div class="read-progress" aria-hidden="true"></div>
+<a class="skip" href="#article">Skip to article</a>
+<header class="site-header">
+  <a class="brand" href="https://corbanu.com/"><img src="/assets/corbanu-logo.webp" alt="" width="45" height="45">Corbanu</a>
+  <nav class="site-nav" aria-label="Primary navigation"><a href="https://corbanu.com/">Home</a><a href="https://corbanu.com/markets/">Markets</a><a href="https://corbanu.com/posts/" aria-current="page">Research</a><a href="https://corbanu.com/terminal/">Terminal</a><a href="https://corbanu.com/#newsletter">Subscribe</a></nav>
+  <span class="preview-state"><i></i> Published research</span>
+</header>
+<main class="article-shell">
+  <aside class="article-rail" aria-label="Article summary">
+    <div class="rail-inner">
+      <p class="rail-label">Trade update / 30 Sep 2026</p>
+      <div class="trade-card"><div class="trade-stat"><span>Position</span><strong>2.625% short → 3.5%</strong></div><div class="trade-stat"><span>Add mark</span><strong>$191.75</strong></div><div class="trade-stat"><span>Original entry</span><strong>$209.225</strong></div><div class="trade-stat"><span>Weighted value</span><strong>$111</strong></div></div>
+      <button class="llm-copy" type="button" data-copy-source="article.txt" aria-describedby="llm-copy-status" title="Copy the complete article as Markdown">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="6" y="6" width="10" height="10" rx="1"></rect><path d="M4 13H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"></path></svg>
+        <span>Copy for LLM</span>
+      </button>
+      <span class="copy-status" id="llm-copy-status" role="status" aria-live="polite"></span>
+      <nav class="toc" id="toc" aria-label="Article sections"></nav>
+    </div>
+  </aside>
+  <article class="post-body" id="article"><h1 id="cerebras-left-on-the-bench">Cerebras: Left on the Bench</h1>
+<p><em>OpenAI is selling speed on Nvidia. We think Cerebras's losses will get worse before they get better, and we are doubling the short in two steps.</em></p>
+<p><strong>CORBANU · TRADE UPDATE · 30 SEPTEMBER 2026</strong></p>
+<h2 id="the-update">The Update</h2>
+<p>Our <a href="https://corbanu.com/posts/shorting-cerebras-openai-jalapeno-anthropic-ipo/">Cerebras short</a> opened at $209.23 on 4 September. The Hyperliquid perp marked $191.75 at 03:33 UTC on 30 September 2026, a gain of 8.4%. Our $118 base case sits 38% below that price.</p>
+<p>We are taking the short from <strong>1.75% to 3.5% of capital</strong> in two steps: to 2.625% now at $191.75, and the rest once OpenAI's Sol 6.1 Ultrafast launches and its hardware is confirmed. The reason is what happened at OpenAI DevDay on 29 September, and what it implies for a company whose losses are already widening.</p>
+<h2 id="what-devday-showed">What DevDay Showed</h2>
+<p>OpenAI turned speed into a paid product. Ultrafast now runs at up to 300 output tokens per second in Codex, eight times standard, and up to six times standard in the API. It costs six times the normal token price and sits in a new $500-a-month Pro 500 plan. Astra Ultrafast is live; GPT-6.1 Sol Ultrafast is "coming soon." <a href="https://openai.com/index/devday-2026-recap/">OpenAI recap</a> · <a href="https://simonwillison.net/2026/Sep/29/openai-devday-2026-live-blog/">Simon Willison live blog</a></p>
+<p>The same day, <a href="https://x.com/SemiAnalysis_/status/2105055045959995719">SemiAnalysis reported</a> that Sol 6.1 Ultrafast runs on Nvidia GPUs at low batch size, not on Cerebras. Sol is the model OpenAI wants people to use every day: close to Astra on coding and computer use, at one-fifth of Astra's token price. <a href="https://openai.com/index/introducing-gpt-6-1-sol/">OpenAI launch</a></p>
+<p>Compare August. The GPT-5.6 Sol Ultrafast preview was "powered by Cerebras" and ran at up to <strong>750 tokens per second</strong>. <a href="https://openai.com/index/previewing-ultrafast/">OpenAI preview</a> The two speed figures are not like-for-like. The 750 was for the smaller Sol family; the 300 headline is for Astra, OpenAI's more expensive frontier model, and larger models generate more slowly on any hardware. The comparison that matters is within the Sol family: in August its fast tier ran on Cerebras, and for the 6.1 release it is reported to run on GPUs.</p>
+<p>That is the bearish fact. OpenAI is charging a 6× premium for speed, and for its everyday model it reportedly chose to deliver that speed on GPUs. Low batch size means each GPU serves fewer requests at once, like a bus leaving half full so riders move sooner. It costs OpenAI some efficiency. At six times the token price, OpenAI can afford that.</p>
+<p>Two caveats. OpenAI has not said what hardware serves Astra Ultrafast, and it may still be Cerebras. The live Ultrafast demo also failed several times on stage (<a href="https://decrypt.co/379584/openai-ai-agents-computers-devday-2026-everything-announced">Decrypt</a>), which tells us nothing about the chips underneath. The Sol report comes from one source and has not been confirmed by OpenAI or Cerebras. That is why the second half of the add waits for the launch.</p>
+<h2 id="the-competition-has-arrived">The Competition Has Arrived</h2>
+<p>Cerebras used to sell something no one else could. That is changing on three fronts.</p>
+<p><strong>Nvidia GPUs.</strong> DevDay shows OpenAI will run a premium speed tier on standard GPUs when the price covers the lost efficiency.</p>
+<p><strong>Nvidia Groq 3 LPX.</strong> Nvidia bought Groq's technology for $20 billion in December. Its LPX rack, 256 Groq chips built to sit next to Vera Rubin GPU systems, entered full production on 24 August, with Nebius as the first cloud customer. In an Artificial Analysis test on Gemma 4 31B, it produced about 3,400 output tokens per second. <a href="https://nvidianews.nvidia.com/news/nvidia-groq-3-lpx-now-in-full-production-with-world-class-speed-for-agentic-ai">Nvidia</a> · <a href="https://www.cnbc.com/2026/08/24/nvidia-says-groq-racks-will-be-online-this-year-after-20-billion-deal.html">CNBC</a> That is a smaller model than OpenAI's, so the number does not compare directly with 750. The point is that fast decoding now plugs into the Nvidia stack customers already run, without leaving CUDA.</p>
+<p><strong>OpenAI's own chip.</strong> On Broadcom's 2 September call, Hock Tan said Broadcom shipped Jalapeño, OpenAI's first custom inference chip, during the quarter. He guided to a <strong>1.3 GW</strong> deployment in 2027 and line of sight to <strong>more than 5 GW</strong> of Jalapeño and its successor in 2028. OpenAI is preparing to tape out the second generation and planning a third. <a href="https://www.cnbc.com/2026/09/02/broadcom-avgo-q3-earnings-report-2026.html">CNBC</a> For scale, the whole OpenAI–Cerebras agreement is <strong>750 MW</strong>, phased through 2028. <a href="https://openai.com/index/cerebras-partnership/">OpenAI</a> The 2028 Jalapeño-family plan alone is more than six times that.</p>
+<h2 id="why-losses-accelerate">Why Losses Accelerate</h2>
+<p>Cerebras is already guiding to wider losses. Its Q2 core operating loss was about $34 million, a −16% margin on $209.9 million of core revenue. For Q3 it guides core revenue of $214–216 million, only 2–3% sequential growth, and a core operating margin of −23% to −25%. That implies a core operating loss of roughly <strong>$49–54 million, up about 50% in one quarter</strong>. Core gross margin is guided to 38–40%, down from 40.6% in Q2 and 46.5% in Q1. <a href="https://www.sec.gov/Archives/edgar/data/0002021728/000162828026056186/cbrsannouncesfinancialresu.htm">Q2 8-K</a> · <a href="https://investors.cerebras.ai/news-releases/news-release-details/cerebras-systems-fast-inference-cloud-business-nearly-quadruples">Q2 release</a></p>
+<p>Those figures exclude stock compensation. On a GAAP basis, Q2's net loss was <strong>$450.5 million</strong>, including $386.6 million of stock-based compensation.</p>
+<p>This guidance was set in August, before DevDay, so it is not new evidence. DevDay bears on what comes after Q3. Management calls Q3 the trough. Its argument is that margins recover once Cerebras replaces capacity it rents back from customers with systems it owns. Cerebras has more than 600 MW live or under contract by the end of 2027, backed by $8.6 billion of cash and $25.4 billion of remaining performance obligations.</p>
+<p>We think the recovery comes later and smaller than that. Owned capacity brings depreciation, power and lease costs from the day it is switched on. Margins recover only if that capacity fills at today's prices. DevDay suggests the premium speed buyer can get acceptable speed on GPUs. Groq LPX gives every Nvidia cloud a fast-decoding option. Jalapeño starts absorbing OpenAI inference in 2027, the same year much of Cerebras's new capacity arrives. If Cerebras has to cut prices to fill that capacity, costs rise ahead of revenue and losses widen after Q3 instead of narrowing.</p>
+<p>The backlog does not remove that risk. OpenAI's master agreement is worth more than $20 billion against total RPO of $25.4 billion. The two use different measures, but OpenAI is a large, unallocated share of the backlog. RPO measures contracted revenue, not margin, and a contract can be honoured at a loss. Follow-on work is what justifies the valuation.</p>
+<h2 id="what-it-is-worth">What It Is Worth</h2>
+<p>We keep the three 2028 scenarios from the original note and move the weights. DevDay does not change what each case looks like. It changes how likely each one is.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable research data table"><table class="fm">
+<thead>
+<tr>
+<th>Case</th>
+<th>FY28 revenue</th>
+<th>Gross margin</th>
+<th>Value</th>
+<th>Weight, Sept</th>
+<th>Weight, now</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Street / bull</td>
+<td>$7.83bn</td>
+<td>56%</td>
+<td>$194</td>
+<td>15%</td>
+<td>10%</td>
+</tr>
+<tr>
+<td>Base</td>
+<td>$7.0bn</td>
+<td>52%</td>
+<td>$118</td>
+<td>60%</td>
+<td>55%</td>
+</tr>
+<tr>
+<td>Bear</td>
+<td>$6.0bn</td>
+<td>47%</td>
+<td>$77</td>
+<td>25%</td>
+<td>35%</td>
+</tr>
+<tr>
+<td><strong>Weighted value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>$119</strong></td>
+<td><strong>$111</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>The bear case is the one DevDay points to: OpenAI treats Cerebras as a hardware option rather than its home for fast inference, and non-OpenAI demand stays thin. The Street case needs Cerebras to win the next wave of OpenAI work and to charge more for it. DevDay points the other way on both.</p>
+<p>The re-weighting moves fair value by only $8. If the SemiAnalysis report is wrong and Sol Ultrafast runs on Cerebras, we revert to the September weights and $119. From $191.75, that is a 38% price-only gain for the short under the old weights and 42% under the new ones. The case for adding rests less on one report than on a price that has barely moved toward fair value while the loss path and competition have both worsened.</p>
+<h2 id="what-would-change-our-mind">What Would Change Our Mind</h2>
+<p>Each counter-reading implies a specific response:</p>
+<ul>
+<li><strong>Sol Ultrafast launches on Cerebras.</strong> The report was wrong or temporary. We skip the second step and return to 1.75%.</li>
+<li><strong>Astra Ultrafast is confirmed on Cerebras.</strong> This is already consistent with our view, since the thesis is about Sol and the next wave of work. No change.</li>
+<li><strong>Cerebras capacity was simply full.</strong> That is good for demand. It would show up as Q3 revenue above guidance and a raised Q4 outlook. If both happen, we return to 1.75%.</li>
+<li><strong>OpenAI signs a new capacity commitment.</strong> OpenAI owns a 4.2% stake from warrants exercised in July and has reason to keep Cerebras healthy. A new commitment would break the thesis. We would cover.</li>
+<li><strong>Non-OpenAI customers scale.</strong> Cognition, Lovable, CrowdStrike and AWS (from mid-2027) are real customers. Q4 guidance with sequential revenue growth above 10% and an improving operating margin would make us cover.</li>
+</ul>
+<h2 id="the-trade">The Trade</h2>
+<p><strong>Sizing.</strong> Step one takes the short to 2.625% of capital at $191.75; step two takes it to 3.5% once Sol 6.1 Ultrafast launches on non-Cerebras hardware. At the full 3.5%, a 50% rise in Cerebras costs about 1.75% of capital before funding and fees; a 100% squeeze costs 3.5%.</p>
+<p><strong>Funding.</strong> Over the past seven days the Cerebras perp's funding has run against the short: about 0.21% of notional, or 11% annualized. Across the seven weeks to the Q3 report, that is roughly 1.5% of notional, or about 0.05% of capital at full size. It is a cost, not a threat to the trade.</p>
+<p><strong>Liquidity and squeeze risk.</strong> Open interest is about $41 million, daily volume about $19 million, and maximum leverage 10×. Position size is small against that, but a short in a recently listed, volatile name can gap. The final lock-up release, by 10 November, adds supply. The Q3 report can move the stock either way.</p>
+<p><strong>The CXMT leg.</strong> The original note paired the 1.75% Cerebras short with a 3.5% CXMT long to keep the pair beta-neutral. We are leaving CXMT at 3.5%. The added Cerebras short is a deliberate directional bet, not a hedge. Keeping the pair neutral would require doubling CXMT to 7%, and we do not want that exposure.</p>
+<p><strong>Catalysts, next seven weeks:</strong></p>
+<ul>
+<li><strong>Sol 6.1 Ultrafast launch.</strong> Hardware confirmation triggers step two or a return to 1.75%.</li>
+<li><strong>Final lock-up release, by 10 November.</strong> New supply of stock.</li>
+<li><strong>Q3 report, mid-November.</strong> Whether the core operating loss lands at $49–54 million, and whether management keeps calling Q3 the trough.</li>
+</ul>
+<p>OpenAI gave Cerebras its best advertisement in August. In September it reportedly sold the same promise on Nvidia. We think the market is still pricing the August version of this relationship.</p>
+<p><em>Marks and funding: live Hyperliquid xyz:CBRS data at 03:33 UTC on 30 September 2026; seven-day funding -0.21% of notional (<a href="evidence/live-mark.json">evidence</a>). Returns are price-only and exclude funding and fees. This is research, not investment advice.</em></p></article>
+</main>
+<div class="article-end">This article describes a proposed trade, not a confirmed execution. Corbanu is a publication, not individualized investment advice. Venue links may carry referral compensation. <a href="/compliance/">Publication policies</a>.</div>
+<footer class="site-footer">
+  <div class="foot-links"><a href="https://corbanu.com/">Home</a><a href="https://corbanu.com/markets/">Markets</a><a href="https://corbanu.com/terminal/">Terminal</a><a href="https://corbanu.com/compliance/">Compliance</a><a href="https://corbanu.com/disclaimer/">Disclaimer</a></div>
+  <div>Corbanu · 2026</div>
+</footer>
+<script>
+(() => {
+  const article = document.getElementById('article');
+  const toc = document.getElementById('toc');
+  article.querySelectorAll('a[href="https://app.hyperliquid.xyz/join/CORBANU"]').forEach(link => {
+    link.target = '_blank';
+    link.rel = 'sponsored noopener noreferrer';
+  });
+  const copyButton = document.querySelector('.llm-copy');
+  const copyStatus = document.querySelector('.copy-status');
+  const copyText = async value => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+      return;
+    }
+    const field = document.createElement('textarea');
+    field.value = value;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    const copied = document.execCommand('copy');
+    field.remove();
+    if (!copied) throw new Error('clipboard unavailable');
+  };
+  if (copyButton) copyButton.addEventListener('click', async () => {
+    const label = copyButton.querySelector('span');
+    const original = label.textContent;
+    copyButton.disabled = true;
+    if (copyStatus) copyStatus.textContent = 'Preparing clean Markdown…';
+    try {
+      const response = await fetch(copyButton.dataset.copySource, {cache:'no-store'});
+      if (!response.ok) throw new Error('source unavailable');
+      await copyText(await response.text());
+      copyButton.dataset.state = 'copied';
+      label.textContent = 'Copied';
+      if (copyStatus) copyStatus.textContent = 'Article copied as Markdown.';
+      setTimeout(() => {
+        copyButton.dataset.state = '';
+        label.textContent = original;
+        copyButton.disabled = false;
+        if (copyStatus) copyStatus.textContent = '';
+      }, 1800);
+    } catch (_error) {
+      label.textContent = 'Copy failed';
+      if (copyStatus) copyStatus.textContent = 'Markdown source could not be copied.';
+      copyButton.disabled = false;
+      setTimeout(() => { label.textContent = original; }, 1800);
+    }
+  });
+  const heads = [...article.querySelectorAll('h2,h3')];
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  heads.forEach((h,i) => {
+    h.id = h.id || slug(h.textContent) || 'section-' + i;
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.className = 'sub';
+    toc.appendChild(a);
+  });
+  const links = [...toc.querySelectorAll('a')];
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => a.classList.toggle('active', a.hash === '#' + e.target.id));
+    });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  heads.forEach(h => observer.observe(h));
+  const bar = document.querySelector('.read-progress');
+  const update = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
+  };
+  addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+</body>
+</html>

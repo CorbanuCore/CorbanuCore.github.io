@@ -1,0 +1,91 @@
+# Cerebras: Left on the Bench
+
+*OpenAI is selling speed on Nvidia. We think Cerebras's losses will get worse before they get better, and we are doubling the short in two steps.*
+
+**CORBANU · TRADE UPDATE · 30 SEPTEMBER 2026**
+
+## The Update
+
+Our [Cerebras short](https://corbanu.com/posts/shorting-cerebras-openai-jalapeno-anthropic-ipo/) opened at $209.23 on 4 September. The Hyperliquid perp marked $191.75 at 03:33 UTC on 30 September 2026, a gain of 8.4%. Our $118 base case sits 38% below that price.
+
+We are taking the short from **1.75% to 3.5% of capital** in two steps: to 2.625% now at $191.75, and the rest once OpenAI's Sol 6.1 Ultrafast launches and its hardware is confirmed. The reason is what happened at OpenAI DevDay on 29 September, and what it implies for a company whose losses are already widening.
+
+## What DevDay Showed
+
+OpenAI turned speed into a paid product. Ultrafast now runs at up to 300 output tokens per second in Codex, eight times standard, and up to six times standard in the API. It costs six times the normal token price and sits in a new $500-a-month Pro 500 plan. Astra Ultrafast is live; GPT-6.1 Sol Ultrafast is "coming soon." [OpenAI recap](https://openai.com/index/devday-2026-recap/) · [Simon Willison live blog](https://simonwillison.net/2026/Sep/29/openai-devday-2026-live-blog/)
+
+The same day, [SemiAnalysis reported](https://x.com/SemiAnalysis_/status/2105055045959995719) that Sol 6.1 Ultrafast runs on Nvidia GPUs at low batch size, not on Cerebras. Sol is the model OpenAI wants people to use every day: close to Astra on coding and computer use, at one-fifth of Astra's token price. [OpenAI launch](https://openai.com/index/introducing-gpt-6-1-sol/)
+
+Compare August. The GPT-5.6 Sol Ultrafast preview was "powered by Cerebras" and ran at up to **750 tokens per second**. [OpenAI preview](https://openai.com/index/previewing-ultrafast/) The two speed figures are not like-for-like. The 750 was for the smaller Sol family; the 300 headline is for Astra, OpenAI's more expensive frontier model, and larger models generate more slowly on any hardware. The comparison that matters is within the Sol family: in August its fast tier ran on Cerebras, and for the 6.1 release it is reported to run on GPUs.
+
+That is the bearish fact. OpenAI is charging a 6× premium for speed, and for its everyday model it reportedly chose to deliver that speed on GPUs. Low batch size means each GPU serves fewer requests at once, like a bus leaving half full so riders move sooner. It costs OpenAI some efficiency. At six times the token price, OpenAI can afford that.
+
+Two caveats. OpenAI has not said what hardware serves Astra Ultrafast, and it may still be Cerebras. The live Ultrafast demo also failed several times on stage ([Decrypt](https://decrypt.co/379584/openai-ai-agents-computers-devday-2026-everything-announced)), which tells us nothing about the chips underneath. The Sol report comes from one source and has not been confirmed by OpenAI or Cerebras. That is why the second half of the add waits for the launch.
+
+## The Competition Has Arrived
+
+Cerebras used to sell something no one else could. That is changing on three fronts.
+
+**Nvidia GPUs.** DevDay shows OpenAI will run a premium speed tier on standard GPUs when the price covers the lost efficiency.
+
+**Nvidia Groq 3 LPX.** Nvidia bought Groq's technology for $20 billion in December. Its LPX rack, 256 Groq chips built to sit next to Vera Rubin GPU systems, entered full production on 24 August, with Nebius as the first cloud customer. In an Artificial Analysis test on Gemma 4 31B, it produced about 3,400 output tokens per second. [Nvidia](https://nvidianews.nvidia.com/news/nvidia-groq-3-lpx-now-in-full-production-with-world-class-speed-for-agentic-ai) · [CNBC](https://www.cnbc.com/2026/08/24/nvidia-says-groq-racks-will-be-online-this-year-after-20-billion-deal.html) That is a smaller model than OpenAI's, so the number does not compare directly with 750. The point is that fast decoding now plugs into the Nvidia stack customers already run, without leaving CUDA.
+
+**OpenAI's own chip.** On Broadcom's 2 September call, Hock Tan said Broadcom shipped Jalapeño, OpenAI's first custom inference chip, during the quarter. He guided to a **1.3 GW** deployment in 2027 and line of sight to **more than 5 GW** of Jalapeño and its successor in 2028. OpenAI is preparing to tape out the second generation and planning a third. [CNBC](https://www.cnbc.com/2026/09/02/broadcom-avgo-q3-earnings-report-2026.html) For scale, the whole OpenAI–Cerebras agreement is **750 MW**, phased through 2028. [OpenAI](https://openai.com/index/cerebras-partnership/) The 2028 Jalapeño-family plan alone is more than six times that.
+
+## Why Losses Accelerate
+
+Cerebras is already guiding to wider losses. Its Q2 core operating loss was about $34 million, a −16% margin on $209.9 million of core revenue. For Q3 it guides core revenue of $214–216 million, only 2–3% sequential growth, and a core operating margin of −23% to −25%. That implies a core operating loss of roughly **$49–54 million, up about 50% in one quarter**. Core gross margin is guided to 38–40%, down from 40.6% in Q2 and 46.5% in Q1. [Q2 8-K](https://www.sec.gov/Archives/edgar/data/0002021728/000162828026056186/cbrsannouncesfinancialresu.htm) · [Q2 release](https://investors.cerebras.ai/news-releases/news-release-details/cerebras-systems-fast-inference-cloud-business-nearly-quadruples)
+
+Those figures exclude stock compensation. On a GAAP basis, Q2's net loss was **$450.5 million**, including $386.6 million of stock-based compensation.
+
+This guidance was set in August, before DevDay, so it is not new evidence. DevDay bears on what comes after Q3. Management calls Q3 the trough. Its argument is that margins recover once Cerebras replaces capacity it rents back from customers with systems it owns. Cerebras has more than 600 MW live or under contract by the end of 2027, backed by $8.6 billion of cash and $25.4 billion of remaining performance obligations.
+
+We think the recovery comes later and smaller than that. Owned capacity brings depreciation, power and lease costs from the day it is switched on. Margins recover only if that capacity fills at today's prices. DevDay suggests the premium speed buyer can get acceptable speed on GPUs. Groq LPX gives every Nvidia cloud a fast-decoding option. Jalapeño starts absorbing OpenAI inference in 2027, the same year much of Cerebras's new capacity arrives. If Cerebras has to cut prices to fill that capacity, costs rise ahead of revenue and losses widen after Q3 instead of narrowing.
+
+The backlog does not remove that risk. OpenAI's master agreement is worth more than $20 billion against total RPO of $25.4 billion. The two use different measures, but OpenAI is a large, unallocated share of the backlog. RPO measures contracted revenue, not margin, and a contract can be honoured at a loss. Follow-on work is what justifies the valuation.
+
+## What It Is Worth
+
+We keep the three 2028 scenarios from the original note and move the weights. DevDay does not change what each case looks like. It changes how likely each one is.
+
+| Case | FY28 revenue | Gross margin | Value | Weight, Sept | Weight, now |
+|---|---|---|---|---|---|
+| Street / bull | $7.83bn | 56% | $194 | 15% | 10% |
+| Base | $7.0bn | 52% | $118 | 60% | 55% |
+| Bear | $6.0bn | 47% | $77 | 25% | 35% |
+| **Weighted value** | | | | **$119** | **$111** |
+
+The bear case is the one DevDay points to: OpenAI treats Cerebras as a hardware option rather than its home for fast inference, and non-OpenAI demand stays thin. The Street case needs Cerebras to win the next wave of OpenAI work and to charge more for it. DevDay points the other way on both.
+
+The re-weighting moves fair value by only $8. If the SemiAnalysis report is wrong and Sol Ultrafast runs on Cerebras, we revert to the September weights and $119. From $191.75, that is a 38% price-only gain for the short under the old weights and 42% under the new ones. The case for adding rests less on one report than on a price that has barely moved toward fair value while the loss path and competition have both worsened.
+
+## What Would Change Our Mind
+
+Each counter-reading implies a specific response:
+
+- **Sol Ultrafast launches on Cerebras.** The report was wrong or temporary. We skip the second step and return to 1.75%.
+- **Astra Ultrafast is confirmed on Cerebras.** This is already consistent with our view, since the thesis is about Sol and the next wave of work. No change.
+- **Cerebras capacity was simply full.** That is good for demand. It would show up as Q3 revenue above guidance and a raised Q4 outlook. If both happen, we return to 1.75%.
+- **OpenAI signs a new capacity commitment.** OpenAI owns a 4.2% stake from warrants exercised in July and has reason to keep Cerebras healthy. A new commitment would break the thesis. We would cover.
+- **Non-OpenAI customers scale.** Cognition, Lovable, CrowdStrike and AWS (from mid-2027) are real customers. Q4 guidance with sequential revenue growth above 10% and an improving operating margin would make us cover.
+
+## The Trade
+
+**Sizing.** Step one takes the short to 2.625% of capital at $191.75; step two takes it to 3.5% once Sol 6.1 Ultrafast launches on non-Cerebras hardware. At the full 3.5%, a 50% rise in Cerebras costs about 1.75% of capital before funding and fees; a 100% squeeze costs 3.5%.
+
+**Funding.** Over the past seven days the Cerebras perp's funding has run against the short: about 0.21% of notional, or 11% annualized. Across the seven weeks to the Q3 report, that is roughly 1.5% of notional, or about 0.05% of capital at full size. It is a cost, not a threat to the trade.
+
+**Liquidity and squeeze risk.** Open interest is about $41 million, daily volume about $19 million, and maximum leverage 10×. Position size is small against that, but a short in a recently listed, volatile name can gap. The final lock-up release, by 10 November, adds supply. The Q3 report can move the stock either way.
+
+**The CXMT leg.** The original note paired the 1.75% Cerebras short with a 3.5% CXMT long to keep the pair beta-neutral. We are leaving CXMT at 3.5%. The added Cerebras short is a deliberate directional bet, not a hedge. Keeping the pair neutral would require doubling CXMT to 7%, and we do not want that exposure.
+
+**Catalysts, next seven weeks:**
+
+- **Sol 6.1 Ultrafast launch.** Hardware confirmation triggers step two or a return to 1.75%.
+- **Final lock-up release, by 10 November.** New supply of stock.
+- **Q3 report, mid-November.** Whether the core operating loss lands at $49–54 million, and whether management keeps calling Q3 the trough.
+
+OpenAI gave Cerebras its best advertisement in August. In September it reportedly sold the same promise on Nvidia. We think the market is still pricing the August version of this relationship.
+
+
+*Marks and funding: live Hyperliquid xyz:CBRS data at 03:33 UTC on 30 September 2026; seven-day funding -0.21% of notional ([evidence](evidence/live-mark.json)). Returns are price-only and exclude funding and fees. This is research, not investment advice.*
