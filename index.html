@@ -563,10 +563,10 @@
       <div class="terminal-install-cta">
           <div class="terminal-install-head">
             <div>
-              <span class="terminal-install-kicker">One-line install · v0.1.36</span>
+              <span class="terminal-install-kicker">One-line install · v0.1.48</span>
               <h2 class="terminal-install-title" id="terminal-install-title"><a href="/terminal/">Install Corbanu Terminal</a></h2>
               <p class="terminal-install-subtitle">The Multi Agent Coding Harness for Professional Speculators</p>
-              <p class="terminal-install-subtitle"><a href="/terminal/#privacy" style="color:inherit">Corbanu Private Inference</a>: zero data retention — prompts are never stored and never train models.</p>
+              <p class="terminal-install-subtitle"><a href="/terminal/#why" style="color:inherit">Corbanu Private Inference</a>: zero data retention — prompts are never stored and never train models.</p>
             </div>
             <a class="terminal-install-learn" href="/terminal/">Explore Terminal&nbsp; →</a>
           </div>
@@ -762,6 +762,7 @@
       const fmt = (value) => value == null ? '—' : `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
       const cls = (value) => value == null ? '' : value >= 0 ? 'moves-pos' : 'moves-neg';
       let baseEntries = [];
+      let lastSuccess = null;
       function render(entries, note) {
         const top = entries
           .filter((e) => e.divergence24hPct != null)
@@ -776,9 +777,9 @@
           </a>`).join('');
         if (asof) asof.textContent = note;
       }
-      async function fetchMids(dexes) {
+      async function fetchContexts(dexes) {
         const snapshots = await Promise.all(dexes.map(async (dex) => {
-          const body = { type: 'allMids' };
+          const body = { type: 'metaAndAssetCtxs' };
           if (dex) body.dex = dex;
           const response = await fetch('https://api.hyperliquid.xyz/info', {
             method: 'POST',
@@ -786,7 +787,9 @@
             body: JSON.stringify(body),
           });
           if (!response.ok) throw new Error(String(response.status));
-          return response.json();
+          const payload = await response.json();
+          if (!Array.isArray(payload?.[0]?.universe) || !Array.isArray(payload[1])) throw new Error('Incomplete venue response');
+          return Object.fromEntries(payload[0].universe.map((asset, index) => [asset.name, payload[1][index]]));
         }));
         return Object.assign({}, ...snapshots);
       }
@@ -796,29 +799,34 @@
           const dexes = [...new Set(baseEntries.flatMap((e) =>
             [e.rawSymbol, ...(e.peers || []).map((p) => p.rawSymbol)]
               .map((raw) => raw.includes(':') ? raw.split(':', 1)[0] : '')))];
-          const mids = await fetchMids(dexes);
-          const change = (raw, ref) => {
-            const mid = parseFloat(mids[raw]);
-            return Number.isFinite(mid) && ref > 0 ? (mid / ref - 1) * 100 : null;
+          const contexts = await fetchContexts(dexes);
+          const change = (raw) => {
+            const mid = Number(contexts[raw]?.midPx);
+            const previous = Number(contexts[raw]?.prevDayPx);
+            if (!(mid > 0) || !(previous > 0) || !Number.isFinite(mid) || !Number.isFinite(previous)) {
+              throw new Error('Incomplete venue prices');
+            }
+            return (mid / previous - 1) * 100;
           };
           const live = baseEntries.map((e) => {
-            const target = e.reference24hPrice ? change(e.rawSymbol, e.reference24hPrice) : null;
+            const target = change(e.rawSymbol);
             let weightSum = 0, weighted = 0;
             (e.peers || []).forEach((p) => {
-              const value = p.reference24hPrice ? change(p.rawSymbol, p.reference24hPrice) : null;
-              if (value != null && p.weight > 0) { weighted += p.weight * value; weightSum += p.weight; }
+              if (p.weight > 0) { weighted += p.weight * change(p.rawSymbol); weightSum += p.weight; }
             });
             const peers = weightSum > 0 ? weighted / weightSum : null;
             return {
               ...e,
-              change24hPct: target != null ? target : e.change24hPct,
-              peerAvg24hPct: peers != null ? peers : e.peerAvg24hPct,
-              divergence24hPct: target != null && peers != null ? target - peers : e.divergence24hPct,
+              change24hPct: target,
+              peerAvg24hPct: peers,
+              divergence24hPct: peers != null ? target - peers : null,
             };
           });
-          render(live, `Ranked by live divergence: Hyperliquid mids vs 24h-ago reference, updated ${new Date().toUTCString().slice(17, 25)} UTC`);
+          lastSuccess = new Date().toUTCString();
+          render(live, `Ranked by live divergence: current venue 24h prices, updated ${lastSuccess}`);
           if (liveDot) liveDot.classList.add('is-live');
         } catch (error) {
+          if (asof) asof.textContent = lastSuccess ? `Live refresh unavailable · last successful refresh ${lastSuccess}` : 'Live refresh unavailable · retaining the dated snapshot';
           if (liveDot) liveDot.classList.remove('is-live');
         }
       }
@@ -829,7 +837,7 @@
           const payload = await response.json();
           baseEntries = payload.entries || [];
           const observed = baseEntries.map((e) => e.observedAt).sort().pop() || payload.generatedAt;
-          render(baseEntries, `Hourly snapshot through ${observed} · going live… · ranking updates with live Hyperliquid mids`);
+          render(baseEntries, `Hourly snapshot through ${observed} · going live… · ranking updates with current venue 24h prices`);
           liveRefresh();
           setInterval(liveRefresh, 45000);
           document.addEventListener('visibilitychange', () => { if (!document.hidden) liveRefresh(); });
