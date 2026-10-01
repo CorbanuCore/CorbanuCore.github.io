@@ -612,6 +612,7 @@
   }
 
   function updateCopy(data) {
+    data.earningsOptions = optionsForDisplay(data.earningsOptions);
     document.title = `${data.symbol} Spot and Swap Total Return — Corbanu`;
     text("spot-start", dateLabel(data.spotStart, true));
     text("perp-start", dateLabel(data.perpStart, true));
@@ -650,6 +651,21 @@
     });
   }
 
+  function optionsForDisplay(options, today = new Date()) {
+    if (!options || !options.chain) return null;
+    const day = Date.parse(today.toISOString().slice(0, 10));
+    const days = (expiration) => Math.round((Date.parse(expiration) - day) / 86400000);
+    const active = (structures) => (structures || []).filter((play) => days(play.expiration || options.chain.expiration) >= 0)
+      .map((play) => ({ ...play, daysToExpiration: days(play.expiration || options.chain.expiration) }));
+    if (options.mode === "term_straddles") {
+      const structures = active(options.structures);
+      return structures.length ? { ...options, structures } : null;
+    }
+    if (days(options.chain.expiration) < 0) return null;
+    return { ...options, chain: { ...options.chain, daysToExpiration: days(options.chain.expiration) },
+      historicalAnalysis: options.historicalAnalysis ? { ...options.historicalAnalysis, structures: active(options.historicalAnalysis.structures) } : null };
+  }
+
   function renderEarningsOptions(options) {
     const panel = document.querySelector(".earnings-options-panel");
     if (!panel) return;
@@ -661,7 +677,8 @@
     const underlier = options.underlierSymbol || options.symbol;
     const history = termMode ? null : options.historicalAnalysis;
     const structures = termMode ? options.structures || [] : history ? history.structures || [] : [];
-    text("earnings-options-asof", `Chain quote · ${timestampLabel(options.chain.quoteAt)} UTC`);
+    const retained = options.refreshStatus?.state === "retained_last_good";
+    text("earnings-options-asof", `${retained ? "Retained quote" : "Chain quote"} · ${timestampLabel(options.chain.quoteAt)} UTC${retained ? " · latest refresh unavailable" : ""}`);
 
     if (termMode) {
       const oneMonth = structures.find((play) => Number(play.targetDays) === 30);

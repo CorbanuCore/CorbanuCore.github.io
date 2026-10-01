@@ -62,9 +62,19 @@ const marker = "  if (document.readyState === \"loading\")";
 assert.ok(source.includes(marker), "market client initialization marker changed");
 source = source.replace(
   marker,
-  "  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__upsertLivePerpCandle = upsertLivePerpCandle;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__renderWeightedPeerAverages = renderWeightedPeerAverages;\n  window.__fetchLivePeerContexts = fetchLivePeerContexts;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
+  "  window.__optionsForDisplay = optionsForDisplay;\n  window.__startLivePerpPrice = startLivePerpPrice;\n  window.__upsertLivePerpCandle = upsertLivePerpCandle;\n  window.__candleWidthForRows = candleWidthForRows;\n  window.__priceDomainForValues = priceDomainForValues;\n  window.__structureImpliedVolPct = structureImpliedVolPct;\n  window.__computeLivePeerRow = computeLivePeerRow;\n  window.__renderPeerPerformance = renderPeerPerformance;\n  window.__renderWeightedPeerAverages = renderWeightedPeerAverages;\n  window.__fetchLivePeerContexts = fetchLivePeerContexts;\n  window.__rebasePeerSeriesToSpot = rebasePeerSeriesToSpot;\n\n" + marker,
 );
 vm.runInNewContext(source, context, { filename: "market-lens.js" });
+
+const historicalQuote = {mode: "term_straddles", chain: {quoteAt: "2026-09-09T20:00:00Z"}, structures: [
+  {expiration: "2026-09-30", daysToExpiration: 21},
+  {expiration: "2026-11-20", daysToExpiration: 72},
+]};
+const currentOptions = context.window.__optionsForDisplay(historicalQuote, new Date("2026-10-01T21:00:00Z"));
+assert.equal(currentOptions.structures.length, 1);
+assert.equal(currentOptions.structures[0].daysToExpiration, 50);
+assert.equal(currentOptions.chain.quoteAt, historicalQuote.chain.quoteAt);
+assert.equal(historicalQuote.structures.length, 2, "dated historical evidence is preserved");
 
 const xrpDomain = context.window.__priceDomainForValues([.992346, 1.7422357]);
 assert.ok(xrpDomain.low > .9, "sub-dollar and low-dollar charts must not be forced to a zero baseline");
