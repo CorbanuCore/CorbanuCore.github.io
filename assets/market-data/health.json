@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-01T23:00:13.385500Z",
+ "generatedAt": "2026-10-01T23:12:27.506581Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-01T23:00:13.385500Z"
+     "detail": "health snapshot generated 2026-10-01T23:12:27.506581Z"
     }
    ],
    "status": "ok"
@@ -25,7 +25,7 @@
     {
      "name": "index build",
      "status": "ok",
-     "detail": "coverage indices finished 0.3h ago"
+     "detail": "coverage indices finished 0.5h ago"
     },
     {
      "name": "CXMT",
@@ -48,25 +48,9 @@
   {
    "id": "options",
    "label": "Listed Options",
-   "summary": "31/34 chains fresh \u00b7 8 instruments without listed options",
-   "items": [
-    {
-     "name": "COIN",
-     "status": "warn",
-     "detail": "retained last-good payload (529.4h old); refresh attempted 0.1h ago: RuntimeError: No liquid ATM straddle survived for COIN: {\"contracts\": 138, \"eligibleCalls\": 0, \"eligiblePuts\": 1, \"expiration\": \"2026-10-30\", \"rejections\": {\"insufficient_interest_and_volume\": 104, \"invalid_bid_ask_or_strike\": 17, \"spread_above_limit\": 86}}"
-    },
-    {
-     "name": "EWY",
-     "status": "warn",
-     "detail": "retained last-good payload (1.3h old); refresh attempted 0.1h ago: RuntimeError: No liquid paired strike survived for the 90-day EWY target"
-    },
-    {
-     "name": "NBIS",
-     "status": "warn",
-     "detail": "retained last-good payload (25.4h old); refresh attempted 0.1h ago: RuntimeError: No liquid ATM straddle survived for NBIS: {\"contracts\": 58, \"eligibleCalls\": 0, \"eligiblePuts\": 0, \"expiration\": \"2026-11-13\", \"rejections\": {\"insufficient_interest_and_volume\": 53, \"spread_above_limit\": 30}}"
-    }
-   ],
-   "status": "warn"
+   "summary": "34/34 chains fresh \u00b7 8 instruments without listed options",
+   "items": [],
+   "status": "ok"
   },
   {
    "id": "transcripts",
@@ -76,7 +60,7 @@
     {
      "name": "packet build",
      "status": "ok",
-     "detail": "transcript packet generated 0.2h ago"
+     "detail": "transcript packet generated 0.4h ago"
     },
     {
      "name": "fundamentals",
@@ -294,7 +278,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 0.2h ago"
+     "detail": "35 instruments, generated 0.4h ago"
     }
    ],
    "status": "ok"
@@ -322,7 +306,7 @@
     {
      "name": "ai publication",
      "status": "ok",
-     "detail": "state started; last verified 2026-10-01T22:46:20.695934Z; retry due None"
+     "detail": "state verified; last verified 2026-10-01T23:01:06.948213Z; retry due None"
     },
     {
      "name": "full publication",
@@ -355,12 +339,12 @@
     {
      "name": "corbanu-ai-capital-stack.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-10-01 23:00:04 UTC; last successful completion Thu 2026-10-01 22:45:26 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 23:00:04 UTC; last successful completion Thu 2026-10-01 23:00:22 UTC"
     },
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-10-01 23:00:06 UTC; last successful completion Thu 2026-10-01 22:34:51 UTC"
+     "detail": "state activating; last attempt Thu 2026-10-01 23:12:20 UTC; last successful completion Thu 2026-10-01 22:34:51 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -380,22 +364,22 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-01 22:55:35 UTC; last successful completion Thu 2026-10-01 22:55:46 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 23:10:39 UTC; last successful completion Thu 2026-10-01 23:10:51 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-01 23:00:04 UTC; last successful completion Thu 2026-10-01 23:00:04 UTC"
+     "detail": "state activating; last attempt Thu 2026-10-01 23:12:20 UTC; last successful completion Thu 2026-10-01 23:00:04 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-10-01 23:00:10 UTC; last successful completion Thu 2026-10-01 22:53:32 UTC"
+     "detail": "state activating; last attempt Thu 2026-10-01 23:10:01 UTC; last successful completion Thu 2026-10-01 22:53:32 UTC"
     },
     {
      "name": "pipeline-research-context-publish.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-01 22:56:45 UTC; last successful completion Thu 2026-10-01 22:57:50 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 23:07:50 UTC; last successful completion Thu 2026-10-01 23:08:54 UTC"
     },
     {
      "name": "pipeline-research-context-reconcile.service",
@@ -409,8 +393,8 @@
     },
     {
      "name": "corbanu-market-lens-inputs.service",
-     "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-10-01 23:00:04 UTC; last successful completion not yet recorded"
+     "status": "warn",
+     "detail": "state failed; last attempt Thu 2026-10-01 23:00:04 UTC; last successful completion not yet recorded"
     }
    ],
    "status": "warn"
@@ -428,18 +412,18 @@
   },
   {
    "name": "corbanu-ai-capital-stack.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Thu 2026-10-01 23:00:04 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Thu 2026-10-01 23:00:22 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:45:26 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 23:00:22 UTC"
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
    "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 23:00:06 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 23:12:20 UTC",
    "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Thu 2026-10-01 22:34:51 UTC"
@@ -474,17 +458,17 @@
    "name": "pipeline-current-signal-catalog-sync.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 22:55:35 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:55:46 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 23:10:39 UTC",
+   "lastExitAt": "Thu 2026-10-01 23:10:51 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:55:46 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 23:10:51 UTC"
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 23:00:04 UTC",
-   "lastExitAt": "Thu 2026-10-01 23:00:04 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 23:12:20 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Thu 2026-10-01 23:00:04 UTC"
   },
@@ -492,7 +476,7 @@
    "name": "pipeline-research-context-refresh.service",
    "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 23:00:10 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 23:10:01 UTC",
    "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Thu 2026-10-01 22:53:32 UTC"
@@ -501,10 +485,10 @@
    "name": "pipeline-research-context-publish.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 22:56:45 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:57:50 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 23:07:50 UTC",
+   "lastExitAt": "Thu 2026-10-01 23:08:54 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:57:50 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 23:08:54 UTC"
   },
   {
    "name": "pipeline-research-context-reconcile.service",
@@ -525,11 +509,11 @@
   },
   {
    "name": "corbanu-market-lens-inputs.service",
-   "state": "activating",
-   "result": "success",
+   "state": "failed",
+   "result": "signal",
    "lastAttemptAt": "Thu 2026-10-01 23:00:04 UTC",
-   "lastExitAt": null,
-   "exitStatus": "0"
+   "lastExitAt": "Thu 2026-10-01 23:02:59 UTC",
+   "exitStatus": "15"
   }
  ],
  "sources": [
@@ -859,240 +843,240 @@
   },
   {
    "name": "aapl-options options",
-   "observedAt": "2026-10-01T20:00:00.758000Z",
+   "observedAt": "2026-10-01T20:00:01.966000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "amd-options options",
-   "observedAt": "2026-10-01T20:00:00.230000Z",
+   "observedAt": "2026-10-01T20:00:00.588000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "amzn-options options",
-   "observedAt": "2026-10-01T19:59:59.981000Z",
+   "observedAt": "2026-10-01T19:59:59.992000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "be-options options",
    "observedAt": "2026-10-01T20:00:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "brentoil-options options",
-   "observedAt": "2026-10-01T20:00:00Z",
+   "observedAt": "2026-10-01T20:00:03.467000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "btc-options options",
    "observedAt": "2026-10-01T20:15:00.178000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "cbrs-options options",
    "observedAt": "2026-10-01T20:00:03.526000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "cl-options options",
    "observedAt": "2026-10-01T20:00:04.182000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "coin-options options",
-   "observedAt": "2026-09-09T19:59:59.995000Z",
-   "lastAttemptAt": "2026-10-01T22:52:27.197597Z",
-   "generatedAt": "2026-09-09T21:37:45.714945Z",
-   "state": "retained_last_good"
+   "observedAt": "2026-10-01T20:00:01.735000Z",
+   "lastAttemptAt": null,
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
+   "state": "available"
   },
   {
    "name": "crcl-options options",
-   "observedAt": "2026-10-01T20:00:02.483000Z",
+   "observedAt": "2026-10-01T20:00:03.198000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "dram-options options",
-   "observedAt": "2026-10-01T20:15:00.055000Z",
+   "observedAt": "2026-10-01T20:15:00.274000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "eth-options options",
-   "observedAt": "2026-10-01T20:00:01.908000Z",
+   "observedAt": "2026-10-01T20:00:03.309000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "ewy-options options",
    "observedAt": "2026-10-01T20:15:00.159000Z",
-   "lastAttemptAt": "2026-10-01T22:52:27.197597Z",
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
-   "state": "retained_last_good"
+   "lastAttemptAt": null,
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
+   "state": "available"
   },
   {
    "name": "gold-options options",
    "observedAt": "2026-10-01T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "googl-options options",
-   "observedAt": "2026-10-01T19:59:59.996000Z",
+   "observedAt": "2026-10-01T20:00:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "intc-options options",
-   "observedAt": "2026-10-01T20:00:00.888000Z",
+   "observedAt": "2026-10-01T20:00:00.940000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "meta-options options",
-   "observedAt": "2026-10-01T19:59:59.998000Z",
+   "observedAt": "2026-10-01T20:00:02.183000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "mrvl-options options",
-   "observedAt": "2026-10-01T19:59:59.980000Z",
+   "observedAt": "2026-10-01T20:00:02.377000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "msft-options options",
-   "observedAt": "2026-10-01T20:00:00.989000Z",
+   "observedAt": "2026-10-01T20:00:05.613000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "mstr-options options",
-   "observedAt": "2026-10-01T19:59:59.995000Z",
+   "observedAt": "2026-10-01T19:59:59.998000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "mu-options options",
    "observedAt": "2026-10-01T20:00:02.448000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "natgas-options options",
    "observedAt": "2026-10-01T20:15:00.045000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "nbis-options options",
-   "observedAt": "2026-09-30T20:00:02.852000Z",
-   "lastAttemptAt": "2026-10-01T22:52:27.197597Z",
-   "generatedAt": "2026-09-30T21:36:30.972029Z",
-   "state": "retained_last_good"
+   "observedAt": "2026-10-01T20:00:02.649000Z",
+   "lastAttemptAt": null,
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
+   "state": "available"
   },
   {
    "name": "nvda-options options",
-   "observedAt": "2026-10-01T19:59:59.995000Z",
+   "observedAt": "2026-10-01T20:00:00.409000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "pltr-options options",
-   "observedAt": "2026-10-01T20:00:01.489000Z",
+   "observedAt": "2026-10-01T20:00:02.159000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "silver-options options",
-   "observedAt": "2026-10-01T20:15:00.105000Z",
+   "observedAt": "2026-10-01T20:15:00.649000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "skhx-options options",
-   "observedAt": "2026-10-01T20:00:01.437000Z",
+   "observedAt": "2026-10-01T20:00:02.886000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "skhy-options options",
-   "observedAt": "2026-10-01T20:00:01.437000Z",
+   "observedAt": "2026-10-01T20:00:02.886000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "sndk-options options",
-   "observedAt": "2026-10-01T20:00:03.313000Z",
+   "observedAt": "2026-10-01T20:00:03.316000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "soxl-options options",
-   "observedAt": "2026-10-01T20:15:00.098000Z",
+   "observedAt": "2026-10-01T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "sp500-options options",
    "observedAt": "2026-10-01T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "spcx-options options",
-   "observedAt": "2026-10-01T20:00:00Z",
+   "observedAt": "2026-10-01T20:00:01.862000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "tsla-options options",
-   "observedAt": "2026-10-01T20:00:00.009000Z",
+   "observedAt": "2026-10-01T20:00:01.864000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
    "name": "xyz100-options options",
    "observedAt": "2026-10-01T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T22:52:27.197597Z",
+   "generatedAt": "2026-10-01T23:11:26.476939Z",
    "state": "available"
   },
   {
@@ -2141,15 +2125,16 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "started",
-   "updatedAt": "2026-10-01T23:00:07.432707Z",
+   "state": "verified",
+   "updatedAt": "2026-10-01T23:01:06.948213Z",
    "lastAttemptAt": "2026-10-01T23:00:07.432707Z",
-   "generatedAt": "2026-10-01T22:45:21.046530Z",
-   "pushedAt": "2026-10-01T22:45:25.645576Z",
-   "commit": "a07b5b47d2fd8a2915972648120d942b46b9ee08",
-   "lastSuccessAt": "2026-10-01T22:46:20.695934Z",
-   "verifiedAt": "2026-10-01T22:46:20.695934Z",
-   "deferredAt": "2026-10-01T22:45:49.221752Z"
+   "generatedAt": "2026-10-01T23:00:17.159482Z",
+   "pushedAt": "2026-10-01T23:00:21.583398Z",
+   "commit": "3f27991ceef824b1b0d2cdf6da3daf1574e071bb",
+   "lastSuccessAt": "2026-10-01T23:01:06.948213Z",
+   "verifiedAt": "2026-10-01T23:01:06.948213Z",
+   "deferredAt": "2026-10-01T23:00:35.930500Z",
+   "verifiedCommit": "3f27991ceef824b1b0d2cdf6da3daf1574e071bb"
   },
   {
    "mode": "full",
@@ -2166,8 +2151,8 @@
   {
    "mode": "inputs",
    "state": "started",
-   "updatedAt": "2026-10-01T23:00:07.431800Z",
-   "lastAttemptAt": "2026-10-01T23:00:07.431800Z"
+   "updatedAt": "2026-10-01T23:11:26.379641Z",
+   "lastAttemptAt": "2026-10-01T23:11:26.379641Z"
   },
   {
    "mode": "transcripts",
