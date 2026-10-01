@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-01T22:34:35.632025Z",
+ "generatedAt": "2026-10-01T22:36:22.715418Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-01T22:34:35.632025Z"
+     "detail": "health snapshot generated 2026-10-01T22:36:22.715418Z"
     }
    ],
    "status": "ok"
@@ -53,7 +53,7 @@
     {
      "name": "COIN",
      "status": "warn",
-     "detail": "retained last-good payload (528.9h old); refresh attempted 0.9h ago: RuntimeError: No liquid ATM straddle survived for COIN"
+     "detail": "retained last-good payload (529.0h old); refresh attempted 0.9h ago: RuntimeError: No liquid ATM straddle survived for COIN"
     },
     {
      "name": "NBIS",
@@ -326,8 +326,8 @@
     },
     {
      "name": "transcripts publication",
-     "status": "warn",
-     "detail": "state deferred; last verified None; retry due 2026-10-01T22:35:27.412020+00:00"
+     "status": "ok",
+     "detail": "state started; last verified 2026-10-01T22:35:43.367507Z; retry due 2026-10-01T22:37:03.904529+00:00"
     }
    ],
    "status": "critical"
@@ -350,7 +350,7 @@
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-10-01 22:34:16 UTC; last successful completion Thu 2026-10-01 22:16:34 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 22:34:16 UTC; last successful completion Thu 2026-10-01 22:34:51 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -370,12 +370,12 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-01 22:30:33 UTC; last successful completion Thu 2026-10-01 22:30:45 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 22:35:33 UTC; last successful completion Thu 2026-10-01 22:35:45 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-01 22:34:24 UTC; last successful completion Thu 2026-10-01 22:34:27 UTC"
+     "detail": "state activating; last attempt Thu 2026-10-01 22:36:13 UTC; last successful completion Thu 2026-10-01 22:35:43 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -385,7 +385,7 @@
     {
      "name": "pipeline-research-context-publish.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-10-01 22:34:33 UTC; last successful completion Thu 2026-10-01 22:24:33 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 22:34:33 UTC; last successful completion Thu 2026-10-01 22:35:38 UTC"
     },
     {
      "name": "pipeline-research-context-reconcile.service",
@@ -427,12 +427,12 @@
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Thu 2026-10-01 22:34:16 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Thu 2026-10-01 22:34:51 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:16:34 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 22:34:51 UTC"
   },
   {
    "name": "pipeline-coverage-equity-live.service",
@@ -464,19 +464,19 @@
    "name": "pipeline-current-signal-catalog-sync.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 22:30:33 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:30:45 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 22:35:33 UTC",
+   "lastExitAt": "Thu 2026-10-01 22:35:45 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:30:45 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 22:35:45 UTC"
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 22:34:24 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:34:27 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 22:36:13 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:34:27 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 22:35:43 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
@@ -489,12 +489,12 @@
   },
   {
    "name": "pipeline-research-context-publish.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Thu 2026-10-01 22:34:33 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Thu 2026-10-01 22:35:38 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:24:33 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 22:35:38 UTC"
   },
   {
    "name": "pipeline-research-context-reconcile.service",
@@ -2148,14 +2148,16 @@
   },
   {
    "mode": "transcripts",
-   "state": "deferred",
-   "updatedAt": "2026-10-01T22:34:27.412001Z",
-   "lastAttemptAt": "2026-10-01T22:34:24.793502Z",
-   "generatedAt": "2026-10-01T22:00:25.650071Z",
-   "pushedAt": "2026-10-01T22:00:33.342506Z",
+   "state": "started",
+   "updatedAt": "2026-10-01T22:36:14.167254Z",
+   "lastAttemptAt": "2026-10-01T22:36:14.167254Z",
+   "generatedAt": "2026-10-01T22:35:48.499759Z",
+   "pushedAt": "2026-10-01T22:34:48.122756Z",
    "commit": "c0a68caf5ccf595345552ae75a5807ed515d936e",
-   "deferredAt": "2026-10-01T22:34:27.412001Z",
-   "retryDueAt": "2026-10-01T22:35:27.412020+00:00"
+   "deferredAt": "2026-10-01T22:36:03.904517Z",
+   "lastSuccessAt": "2026-10-01T22:35:43.367507Z",
+   "verifiedAt": "2026-10-01T22:35:43.367507Z",
+   "retryDueAt": "2026-10-01T22:37:03.904529+00:00"
   }
  ]
 }
