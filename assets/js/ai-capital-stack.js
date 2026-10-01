@@ -22,7 +22,7 @@
       <div class="card-top"><span class="tier">TIER ${item.tier}</span><span class="pill ${escapeHtml(item.state)}">${escapeHtml(item.state)}</span></div>
       <h3>${escapeHtml(item.label)}</h3><p class="card-value">${escapeHtml(item.display_value)}${change}</p>
       <p class="card-note">${escapeHtml(item.note || item.interpretation)}</p>
-      <details><summary>Threshold and source</summary><p>${escapeHtml(item.threshold || "No locked threshold")}</p><p>Observed ${escapeHtml(date(item.observed_at))} · ${escapeHtml(item.freshness)}</p>${source}</details>
+      <details><summary>Threshold and source</summary><p>${escapeHtml(item.threshold || "No locked threshold")}</p><p>Observed ${escapeHtml(date(item.observed_at))} · ${escapeHtml(item.freshness)}</p><p>${escapeHtml(item.update_method || "Manual review")} · ${escapeHtml(item.expected_update || "Review required")}</p><p>Source checked ${escapeHtml(date(item.last_source_check_at))}${item.review_due_at ? ` · review due ${escapeHtml(date(item.review_due_at))}` : ""}</p>${source}</details>
     </article>`;
   }
 
