@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-01T15:21:13.793315Z",
+ "generatedAt": "2026-10-01T15:44:30.318324Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-01T15:21:13.793315Z"
+     "detail": "health snapshot generated 2026-10-01T15:44:30.318324Z"
     }
    ],
    "status": "ok"
@@ -20,30 +20,65 @@
   {
    "id": "coverage",
    "label": "Spot / Perp Coverage",
-   "summary": "42/42 instruments current",
+   "summary": "39/42 instruments current",
    "items": [
     {
      "name": "index build",
      "status": "ok",
-     "detail": "coverage indices finished 17.9h ago"
+     "detail": "coverage indices finished 0.2h ago"
+    },
+    {
+     "name": "CXMT",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-09-28"
+    },
+    {
+     "name": "SKHX",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-09-28"
+    },
+    {
+     "name": "SMSN",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-09-28"
     }
    ],
-   "status": "ok"
+   "status": "warn"
   },
   {
    "id": "options",
    "label": "Listed Options",
-   "summary": "32/34 chains fresh \u00b7 8 instruments without listed options",
+   "summary": "28/34 chains fresh \u00b7 8 instruments without listed options",
    "items": [
+    {
+     "name": "AMD",
+     "status": "warn",
+     "detail": "retained last-good payload (18.1h old); refresh attempted 0.1h ago: RuntimeError: No liquid ATM straddle survived for AMD"
+    },
+    {
+     "name": "BE",
+     "status": "warn",
+     "detail": "retained last-good payload (18.1h old); refresh attempted 0.1h ago: RuntimeError: No volume-screened historical option structures survived for BE"
+    },
     {
      "name": "COIN",
      "status": "warn",
-     "detail": "retained last-good payload (521.7h old); refresh attempted 17.7h ago: RuntimeError: No liquid ATM straddle survived for COIN"
+     "detail": "retained last-good payload (522.1h old); refresh attempted 0.1h ago: RuntimeError: No volume-screened historical option structures survived for COIN"
+    },
+    {
+     "name": "NBIS",
+     "status": "warn",
+     "detail": "retained last-good payload (18.1h old); refresh attempted 0.1h ago: RuntimeError: No liquid ATM straddle survived for NBIS"
+    },
+    {
+     "name": "PLTR",
+     "status": "warn",
+     "detail": "retained last-good payload (18.1h old); refresh attempted 0.1h ago: RuntimeError: No volume-screened historical option structures survived for PLTR"
     },
     {
      "name": "SNDK",
      "status": "warn",
-     "detail": "retained last-good payload (185.7h old); refresh attempted 17.7h ago: RuntimeError: No volume-screened historical option structures survived for SNDK"
+     "detail": "retained last-good payload (186.1h old); refresh attempted 0.1h ago: RuntimeError: No liquid ATM straddle survived for SNDK"
     }
    ],
    "status": "warn"
@@ -56,7 +91,7 @@
     {
      "name": "packet build",
      "status": "ok",
-     "detail": "transcript packet generated 0.0h ago"
+     "detail": "transcript packet generated 0.1h ago"
     },
     {
      "name": "fundamentals",
@@ -279,7 +314,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 17.7h ago"
+     "detail": "35 instruments, generated 0.1h ago"
     }
    ],
    "status": "ok"
