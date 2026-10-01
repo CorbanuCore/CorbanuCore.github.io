@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-01T22:45:16.518297Z",
+ "generatedAt": "2026-10-01T22:53:38.025769Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-01T22:45:16.518297Z"
+     "detail": "health snapshot generated 2026-10-01T22:53:38.025769Z"
     }
    ],
    "status": "ok"
@@ -25,7 +25,7 @@
     {
      "name": "index build",
      "status": "ok",
-     "detail": "coverage indices finished 0.1h ago"
+     "detail": "coverage indices finished 0.2h ago"
     },
     {
      "name": "CXMT",
@@ -48,17 +48,22 @@
   {
    "id": "options",
    "label": "Listed Options",
-   "summary": "32/34 chains fresh \u00b7 8 instruments without listed options",
+   "summary": "31/34 chains fresh \u00b7 8 instruments without listed options",
    "items": [
     {
      "name": "COIN",
      "status": "warn",
-     "detail": "retained last-good payload (529.1h old); refresh attempted 1.1h ago: RuntimeError: No liquid ATM straddle survived for COIN"
+     "detail": "retained last-good payload (529.3h old); refresh attempted 0.0h ago: RuntimeError: No liquid ATM straddle survived for COIN: {\"contracts\": 138, \"eligibleCalls\": 0, \"eligiblePuts\": 1, \"expiration\": \"2026-10-30\", \"rejections\": {\"insufficient_interest_and_volume\": 104, \"invalid_bid_ask_or_strike\": 17, \"spread_above_limit\": 86}}"
+    },
+    {
+     "name": "EWY",
+     "status": "warn",
+     "detail": "retained last-good payload (1.2h old); refresh attempted 0.0h ago: RuntimeError: No liquid paired strike survived for the 90-day EWY target"
     },
     {
      "name": "NBIS",
      "status": "warn",
-     "detail": "retained last-good payload (25.1h old); refresh attempted 1.1h ago: RuntimeError: No liquid ATM straddle survived for NBIS"
+     "detail": "retained last-good payload (25.3h old); refresh attempted 0.0h ago: RuntimeError: No liquid ATM straddle survived for NBIS: {\"contracts\": 58, \"eligibleCalls\": 0, \"eligiblePuts\": 0, \"expiration\": \"2026-11-13\", \"rejections\": {\"insufficient_interest_and_volume\": 53, \"spread_above_limit\": 30}}"
     }
    ],
    "status": "warn"
@@ -71,7 +76,7 @@
     {
      "name": "packet build",
      "status": "ok",
-     "detail": "transcript packet generated 1.0h ago"
+     "detail": "transcript packet generated 0.1h ago"
     },
     {
      "name": "fundamentals",
@@ -289,7 +294,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 1.1h ago"
+     "detail": "35 instruments, generated 0.0h ago"
     }
    ],
    "status": "ok"
@@ -317,7 +322,7 @@
     {
      "name": "ai publication",
      "status": "ok",
-     "detail": "state started; last verified 2026-10-01T22:33:53.903297Z; retry due None"
+     "detail": "state verified; last verified 2026-10-01T22:46:20.695934Z; retry due None"
     },
     {
      "name": "full publication",
@@ -345,12 +350,12 @@
     {
      "name": "corbanu-ai-capital-stack.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-10-01 22:45:07 UTC; last successful completion Thu 2026-10-01 22:32:59 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 22:45:07 UTC; last successful completion Thu 2026-10-01 22:45:26 UTC"
     },
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "warn",
-     "detail": "state failed; last attempt Thu 2026-10-01 22:40:02 UTC; last successful completion Thu 2026-10-01 22:34:51 UTC"
+     "detail": "state failed; last attempt Thu 2026-10-01 22:51:35 UTC; last successful completion Thu 2026-10-01 22:34:51 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -370,22 +375,22 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-01 22:40:34 UTC; last successful completion Thu 2026-10-01 22:40:45 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 22:50:35 UTC; last successful completion Thu 2026-10-01 22:50:46 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-01 22:44:47 UTC; last successful completion Thu 2026-10-01 22:44:47 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 22:53:26 UTC; last successful completion Thu 2026-10-01 22:53:26 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
-     "status": "warn",
-     "detail": "state failed; last attempt Thu 2026-10-01 22:40:14 UTC; last successful completion Thu 2026-10-01 22:33:33 UTC"
+     "status": "ok",
+     "detail": "state inactive; last attempt Thu 2026-10-01 22:50:04 UTC; last successful completion Thu 2026-10-01 22:53:32 UTC"
     },
     {
      "name": "pipeline-research-context-publish.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-01 22:34:33 UTC; last successful completion Thu 2026-10-01 22:35:38 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-01 22:45:39 UTC; last successful completion Thu 2026-10-01 22:46:45 UTC"
     },
     {
      "name": "pipeline-research-context-reconcile.service",
@@ -418,19 +423,19 @@
   },
   {
    "name": "corbanu-ai-capital-stack.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Thu 2026-10-01 22:45:07 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Thu 2026-10-01 22:45:26 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:32:59 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 22:45:26 UTC"
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
    "state": "failed",
    "result": "exit-code",
-   "lastAttemptAt": "Thu 2026-10-01 22:40:02 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:40:10 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 22:51:35 UTC",
+   "lastExitAt": "Thu 2026-10-01 22:51:44 UTC",
    "exitStatus": "20",
    "lastSuccessAt": "Thu 2026-10-01 22:34:51 UTC"
   },
@@ -464,37 +469,37 @@
    "name": "pipeline-current-signal-catalog-sync.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 22:40:34 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:40:45 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 22:50:35 UTC",
+   "lastExitAt": "Thu 2026-10-01 22:50:46 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:40:45 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 22:50:46 UTC"
   },
   {
    "name": "corbanu-market-lens-retry.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 22:44:47 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:44:47 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 22:53:26 UTC",
+   "lastExitAt": "Thu 2026-10-01 22:53:26 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:44:47 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 22:53:26 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
-   "state": "failed",
-   "result": "exit-code",
-   "lastAttemptAt": "Thu 2026-10-01 22:40:14 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:40:16 UTC",
-   "exitStatus": "1",
-   "lastSuccessAt": "Thu 2026-10-01 22:33:33 UTC"
+   "state": "inactive",
+   "result": "success",
+   "lastAttemptAt": "Thu 2026-10-01 22:50:04 UTC",
+   "lastExitAt": "Thu 2026-10-01 22:53:32 UTC",
+   "exitStatus": "0",
+   "lastSuccessAt": "Thu 2026-10-01 22:53:32 UTC"
   },
   {
    "name": "pipeline-research-context-publish.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-01 22:34:33 UTC",
-   "lastExitAt": "Thu 2026-10-01 22:35:38 UTC",
+   "lastAttemptAt": "Thu 2026-10-01 22:45:39 UTC",
+   "lastExitAt": "Thu 2026-10-01 22:46:45 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-01 22:35:38 UTC"
+   "lastSuccessAt": "Thu 2026-10-01 22:46:45 UTC"
   },
   {
    "name": "pipeline-research-context-reconcile.service",
@@ -525,7 +530,7 @@
  "sources": [
   {
    "name": "SP500 financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -536,7 +541,7 @@
   },
   {
    "name": "SOXL financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -547,7 +552,7 @@
   },
   {
    "name": "SNDK financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -558,7 +563,7 @@
   },
   {
    "name": "SMSN financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -569,7 +574,7 @@
   },
   {
    "name": "SKHX financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -580,7 +585,7 @@
   },
   {
    "name": "SPCX financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "epsRevision28dPctOfPrice": "2026-09-25"
@@ -589,7 +594,7 @@
   },
   {
    "name": "PLTR financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -600,7 +605,7 @@
   },
   {
    "name": "NVDA financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -611,7 +616,7 @@
   },
   {
    "name": "NBIS financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-09-28",
     "epsRevision28dPctOfPrice": "2026-09-25"
@@ -620,7 +625,7 @@
   },
   {
    "name": "MU financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -631,7 +636,7 @@
   },
   {
    "name": "MSFT financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -642,7 +647,7 @@
   },
   {
    "name": "CXMT financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -653,7 +658,7 @@
   },
   {
    "name": "META financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -664,7 +669,7 @@
   },
   {
    "name": "LITE financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -675,7 +680,7 @@
   },
   {
    "name": "INTC financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -686,7 +691,7 @@
   },
   {
    "name": "GOOGL financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -697,7 +702,7 @@
   },
   {
    "name": "EWY financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -708,7 +713,7 @@
   },
   {
    "name": "CRCL financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -719,7 +724,7 @@
   },
   {
    "name": "CBRS financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -729,7 +734,7 @@
   },
   {
    "name": "AMZN financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -740,7 +745,7 @@
   },
   {
    "name": "AMD financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -751,7 +756,7 @@
   },
   {
    "name": "AAPL financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -762,7 +767,7 @@
   },
   {
    "name": "TSLA financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -773,7 +778,7 @@
   },
   {
    "name": "MRVL financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-25",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -784,7 +789,7 @@
   },
   {
    "name": "XYZ100 financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -795,7 +800,7 @@
   },
   {
    "name": "MSTR financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -805,7 +810,7 @@
   },
   {
    "name": "SKHY financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -816,7 +821,7 @@
   },
   {
    "name": "COIN financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -827,7 +832,7 @@
   },
   {
    "name": "BE financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -838,7 +843,7 @@
   },
   {
    "name": "DRAM financial fields",
-   "generatedAt": "2026-10-01T21:35:35.151689Z",
+   "generatedAt": "2026-10-01T22:45:20.957348Z",
    "observations": {
     "forwardPE": "2026-09-28",
     "forwardSalesGrowthPct": "2026-09-28",
@@ -851,160 +856,160 @@
    "name": "aapl-options options",
    "observedAt": "2026-10-01T20:00:00.758000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "amd-options options",
    "observedAt": "2026-10-01T20:00:00.230000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "amzn-options options",
    "observedAt": "2026-10-01T19:59:59.981000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "be-options options",
    "observedAt": "2026-10-01T20:00:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "brentoil-options options",
    "observedAt": "2026-10-01T20:00:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "btc-options options",
    "observedAt": "2026-10-01T20:15:00.178000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "cbrs-options options",
    "observedAt": "2026-10-01T20:00:03.526000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "cl-options options",
    "observedAt": "2026-10-01T20:00:04.182000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "coin-options options",
    "observedAt": "2026-09-09T19:59:59.995000Z",
-   "lastAttemptAt": "2026-10-01T21:41:07.539771Z",
+   "lastAttemptAt": "2026-10-01T22:52:27.197597Z",
    "generatedAt": "2026-09-09T21:37:45.714945Z",
    "state": "retained_last_good"
   },
   {
    "name": "crcl-options options",
-   "observedAt": "2026-10-01T20:00:03.184000Z",
+   "observedAt": "2026-10-01T20:00:02.483000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "dram-options options",
    "observedAt": "2026-10-01T20:15:00.055000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "eth-options options",
    "observedAt": "2026-10-01T20:00:01.908000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "ewy-options options",
    "observedAt": "2026-10-01T20:15:00.159000Z",
-   "lastAttemptAt": null,
+   "lastAttemptAt": "2026-10-01T22:52:27.197597Z",
    "generatedAt": "2026-10-01T21:41:07.539771Z",
-   "state": "available"
+   "state": "retained_last_good"
   },
   {
    "name": "gold-options options",
    "observedAt": "2026-10-01T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "googl-options options",
    "observedAt": "2026-10-01T19:59:59.996000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "intc-options options",
    "observedAt": "2026-10-01T20:00:00.888000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "meta-options options",
    "observedAt": "2026-10-01T19:59:59.998000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "mrvl-options options",
-   "observedAt": "2026-10-01T19:59:59.999000Z",
+   "observedAt": "2026-10-01T19:59:59.980000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "msft-options options",
    "observedAt": "2026-10-01T20:00:00.989000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "mstr-options options",
    "observedAt": "2026-10-01T19:59:59.995000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "mu-options options",
    "observedAt": "2026-10-01T20:00:02.448000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "natgas-options options",
    "observedAt": "2026-10-01T20:15:00.045000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "nbis-options options",
    "observedAt": "2026-09-30T20:00:02.852000Z",
-   "lastAttemptAt": "2026-10-01T21:41:07.539771Z",
+   "lastAttemptAt": "2026-10-01T22:52:27.197597Z",
    "generatedAt": "2026-09-30T21:36:30.972029Z",
    "state": "retained_last_good"
   },
@@ -1012,77 +1017,77 @@
    "name": "nvda-options options",
    "observedAt": "2026-10-01T19:59:59.995000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "pltr-options options",
    "observedAt": "2026-10-01T20:00:01.489000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "silver-options options",
-   "observedAt": "2026-10-01T20:15:00.649000Z",
+   "observedAt": "2026-10-01T20:15:00.105000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "skhx-options options",
    "observedAt": "2026-10-01T20:00:01.437000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "skhy-options options",
    "observedAt": "2026-10-01T20:00:01.437000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "sndk-options options",
    "observedAt": "2026-10-01T20:00:03.313000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "soxl-options options",
    "observedAt": "2026-10-01T20:15:00.098000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "sp500-options options",
    "observedAt": "2026-10-01T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "spcx-options options",
    "observedAt": "2026-10-01T20:00:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "tsla-options options",
    "observedAt": "2026-10-01T20:00:00.009000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
    "name": "xyz100-options options",
    "observedAt": "2026-10-01T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-01T21:41:07.539771Z",
+   "generatedAt": "2026-10-01T22:52:27.197597Z",
    "state": "available"
   },
   {
@@ -1591,264 +1596,264 @@
   },
   {
    "name": "BTC funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "ETH funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "HYPE funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "LIT funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SOL funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "XRP funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "ZEC funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "AAPL funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "AMD funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "AMZN funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "BE funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "BRENTOIL funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "CBRS funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "CL funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "COIN funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "COPPER funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "CRCL funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "CXMT funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "DRAM funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "EWY funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "GOLD funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "GOOGL funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "INTC funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "META funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "MRVL funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "MSFT funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "MSTR funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "MU funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "NATGAS funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "NBIS funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "NVDA funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "PLTR funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SILVER funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SKHX funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SKHY funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SMSN funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SNDK funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SOXL funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SP500 funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "SPCX funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "TSLA funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "XYZ100 funding forecast",
-   "observedAt": "2026-10-01T21:00:00Z",
-   "generatedAt": "2026-10-01T21:30:50.394984+00:00",
+   "observedAt": "2026-10-01T22:00:00Z",
+   "generatedAt": "2026-10-01T22:40:36.024339+00:00",
    "state": "available"
   },
   {
    "name": "onchain spot catalog",
-   "generatedAt": "2026-10-01T21:41:07.404395Z",
+   "generatedAt": "2026-10-01T22:51:04.902535Z",
    "state": "dated_observations"
   },
   {
    "name": "transcript briefings",
-   "generatedAt": "2026-10-01T21:42:52.071752Z",
+   "generatedAt": "2026-10-01T22:46:19.910698Z",
    "inputFingerprint": "529298cce6286bef24fafa417c7176498815aebd99531aa57b7a781ef9343fa5",
    "state": "dated_observations"
   },
@@ -2131,15 +2136,15 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "started",
-   "updatedAt": "2026-10-01T22:45:07.665912Z",
-   "lastAttemptAt": "2026-10-01T22:45:07.665912Z",
-   "generatedAt": "2026-10-01T22:32:53.354891Z",
-   "pushedAt": "2026-10-01T22:32:58.105760Z",
-   "commit": "34d5521f156903a7d424ab06b6b69f7691c43dae",
-   "lastSuccessAt": "2026-10-01T22:33:53.903297Z",
-   "verifiedAt": "2026-10-01T22:33:53.903297Z",
-   "deferredAt": "2026-10-01T22:33:18.569122Z"
+   "state": "verified",
+   "updatedAt": "2026-10-01T22:46:20.695934Z",
+   "lastAttemptAt": "2026-10-01T22:46:19.755955Z",
+   "generatedAt": "2026-10-01T22:45:21.046530Z",
+   "pushedAt": "2026-10-01T22:45:25.645576Z",
+   "commit": "a07b5b47d2fd8a2915972648120d942b46b9ee08",
+   "lastSuccessAt": "2026-10-01T22:46:20.695934Z",
+   "verifiedAt": "2026-10-01T22:46:20.695934Z",
+   "deferredAt": "2026-10-01T22:45:49.221752Z"
   },
   {
    "mode": "full",
@@ -2150,8 +2155,8 @@
   {
    "mode": "transcripts",
    "state": "failed",
-   "updatedAt": "2026-10-01T22:40:10.537386Z",
-   "lastAttemptAt": "2026-10-01T22:40:02.776828Z",
+   "updatedAt": "2026-10-01T22:51:44.318359Z",
+   "lastAttemptAt": "2026-10-01T22:51:36.077858Z",
    "generatedAt": "2026-10-01T22:36:26.964566Z",
    "pushedAt": "2026-10-01T22:36:35.271343Z",
    "commit": "d323b274573f47e1868822c3c6b552d788a2624b",
