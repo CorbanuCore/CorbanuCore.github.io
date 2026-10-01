@@ -712,6 +712,8 @@
           : play.structure === "long put"
           ? [`Buy ${underlier} ${expirationLabel} ${priceMoney(play.put.strike)} put`]
           : [`Buy ${underlier} ${expirationLabel} ${priceMoney(play.call.strike)} call`];
+        const quoteLines = [play.call, play.put].filter(Boolean).map((leg) =>
+          `${leg.putCall === "PUT" ? "Put" : "Call"}: bid ${priceMoney(leg.bid)} · ask ${priceMoney(leg.ask)} · ${number(leg.spreadPct, 1)}% spread · ${Number(leg.openInterest).toLocaleString("en-US")} open interest · ${Number(leg.volume).toLocaleString("en-US")} volume`);
         const impliedVolPct = structureImpliedVolPct(play);
         const metricCells = termMode
           ? `<td><strong>${Number(play.combinedOpenInterest).toLocaleString("en-US")}</strong></td>
@@ -723,7 +725,7 @@
              <td><strong>${number(impliedVolPct, 1)}%</strong></td>`;
         return `<tr data-structure-index="${index}" tabindex="0" aria-selected="${index === state.selectedStructureIndex}">
           <td><input type="radio" name="earnings-structure" tabindex="-1" aria-label="Display ${escapeHtml(play.name)} payout"${index === state.selectedStructureIndex ? " checked" : ""}><strong>${escapeHtml(play.name)}</strong></td>
-          <td>${contractLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</td>
+          <td>${[...contractLines, ...quoteLines].map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</td>
           <td><strong>${priceMoney(play.debitAsk)}</strong></td>
           <td><strong>${Number(play.combinedVolume).toLocaleString("en-US")}</strong></td>
           ${metricCells}
@@ -755,9 +757,9 @@
     }
     const note = $("options-method-note");
     if (note && termMode) {
-      note.textContent = "The nearest paired liquid ATM call and put define each straddle. The combined ask determines its breakevens and option-implied expiration distribution.";
+      note.textContent = "The nearest paired quoted ATM call and put define each straddle. The combined ask determines its breakevens and option-implied expiration distribution. Spread, volume, and open interest are shown for each leg.";
     } else if (note && history) {
-      note.textContent = "Payout equals expiration value divided by the total ask. Calls and puts are ranked by average gross payout across the recent replay; hit rate and volume break ties. Historical option prices are not reconstructed.";
+      note.textContent = "Payout equals expiration value divided by the total ask. Calls and puts are ranked by average gross payout across the recent replay; hit rate and volume break ties. Spread, volume, and open interest are shown for each leg. Wide spreads imply uncertainty in midpoint-based estimates. Historical option prices are not reconstructed.";
     }
   }
 
