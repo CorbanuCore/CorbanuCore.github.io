@@ -98,24 +98,29 @@
 }
 
 .portfolio-statistics-intro { margin: -.3rem 0 1.2rem; }
-.portfolio-statistics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
-.portfolio-statistics-card { overflow: hidden; }
-.portfolio-statistics-head { padding: 1.3rem 1.5rem; border-bottom: 1px solid var(--line); }
-.portfolio-statistics-head h3 { font: 400 1.8rem var(--serif); margin: 0 0 .4rem; }
-.portfolio-statistics-head span { color: var(--dim); font: .7rem var(--mono); }
-.portfolio-statistics-card dl { margin: 0; }
-.portfolio-stat-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .4rem 1rem; padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--line); }
-.portfolio-stat-row:last-child { border-bottom: 0; }
-.portfolio-stat-row dt { color: var(--muted); font: .76rem var(--mono); line-height: 1.6; }
-.portfolio-stat-row dt small { display: block; color: var(--dim); font-size: .64rem; }
-.portfolio-stat-row dd { margin: 0; color: var(--lime); font: 1.2rem var(--mono); white-space: nowrap; }
-.portfolio-stat-row p { grid-column: 1 / -1; margin: 0; font: .65rem/1.6 var(--mono); color: var(--dim); }
-.portfolio-stat-row .portfolio-stat-note { color: var(--muted); }
+.portfolio-statistics-scroll { overflow-x: auto; }
+.portfolio-statistics-scroll:focus-visible { outline: 2px solid var(--lime); outline-offset: -2px; }
+.portfolio-statistics-table { width: 100%; table-layout: fixed; border-collapse: collapse; font: .78rem/1.6 var(--mono); }
+.portfolio-statistics-table th, .portfolio-statistics-table td { padding: 1.1rem 1.4rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.portfolio-statistics-table thead th { background: #ffffff02; font-size: .9rem; font-weight: 500; }
+.portfolio-statistics-table th:first-child { width: 34%; }
+.portfolio-statistics-table tbody th { font-weight: 400; color: var(--muted); }
+.portfolio-statistics-table tbody tr:last-child th, .portfolio-statistics-table tbody tr:last-child td { border-bottom: 0; }
+.portfolio-statistics-table small { display: block; color: var(--dim); font-size: .64rem; margin-top: .2rem; }
+.portfolio-statistics-table thead small { font-weight: 400; }
+.portfolio-stat-value { color: var(--lime); font-size: 1.25rem; font-weight: 500; white-space: nowrap; }
+.portfolio-statistics-table .positive { color: var(--lime); }
+.portfolio-statistics-table .negative { color: var(--coral); }
+.portfolio-statistics-sources { margin-top: .8rem; font: .7rem/1.7 var(--mono); color: var(--muted); }
+.portfolio-statistics-sources summary { cursor: pointer; }
+.portfolio-statistics-sources li { margin: .45rem 0; }
 .portfolio-statistics-note { margin-top: 1rem; max-width: 100%; }
+.portfolio-statistics-note a { text-decoration: underline; text-underline-offset: .2rem; }
 @media (max-width: 720px) {
-  .portfolio-statistics-grid { grid-template-columns: 1fr; }
-  .portfolio-statistics-head { padding: 1rem; }
-  .portfolio-stat-row { padding: 1rem; gap: .4rem .6rem; }
-  .portfolio-stat-row dt { font-size: .7rem; }
-  .portfolio-stat-row dd { font-size: 1.05rem; }
+  .portfolio-statistics-table { font-size: .67rem; }
+  .portfolio-statistics-table th, .portfolio-statistics-table td { padding: .9rem .5rem; }
+  .portfolio-statistics-table th:first-child { width: 27%; }
+  .portfolio-statistics-table thead th { font-size: .8rem; }
+  .portfolio-statistics-table small { font-size: .58rem; }
+  .portfolio-stat-value { font-size: 1rem; }
 }
