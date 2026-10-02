@@ -1,6 +1,153 @@
 {
   "schema": "corbanu.portfolio.v1",
-  "state": "pending",
-  "name": "Corbanu tracker portfolio",
-  "reason": "The tracker book, capital basis and dated position changes are awaiting confirmation."
+  "state": "ready",
+  "name": "Corbanu published-trade tracker",
+  "updatedAt": "2026-10-02T00:14:09.861969Z",
+  "initialCapital": 1,
+  "capitalUnit": "normalized initial capital",
+  "currency": "USD",
+  "inception": "2026-09-04T20:09:40Z",
+  "positions": [
+    {
+      "id": "cxmt",
+      "symbol": "CXMT",
+      "name": "ChangXin Memory Technologies",
+      "rawSymbol": "xyz:CXMT",
+      "venue": "Hyperliquid / TradeXYZ",
+      "markAdapter": "hyperliquid",
+      "href": "/cxmt/",
+      "articleHref": "/posts/chinese-memory-sovereign-ai-long-cxmt/"
+    },
+    {
+      "id": "cbrs",
+      "symbol": "CBRS",
+      "name": "Cerebras Systems",
+      "rawSymbol": "xyz:CBRS",
+      "venue": "Hyperliquid / TradeXYZ",
+      "markAdapter": "hyperliquid",
+      "href": "/cbrs/",
+      "articleHref": "/posts/cerebras-left-on-the-bench/"
+    },
+    {
+      "id": "aapl",
+      "symbol": "AAPL",
+      "name": "Apple",
+      "rawSymbol": "xyz:AAPL",
+      "venue": "Hyperliquid / TradeXYZ",
+      "markAdapter": "hyperliquid",
+      "href": "/aapl/",
+      "articleHref": "/posts/apple-short-hundred-year-flood/"
+    },
+    {
+      "id": "skhx",
+      "symbol": "SKHX",
+      "name": "SK hynix",
+      "rawSymbol": "xyz:SKHX",
+      "venue": "Hyperliquid / TradeXYZ",
+      "markAdapter": "hyperliquid",
+      "href": "/skhx/",
+      "articleHref": "/posts/sk-hynix-recontracting-to-repricing/"
+    },
+    {
+      "id": "orcl",
+      "symbol": "ORCLon",
+      "name": "Oracle tokenized share",
+      "rawSymbol": "ORCLon",
+      "underlyingTicker": "ORCL",
+      "venue": "Felix / Ondo spot",
+      "markAdapter": "felix",
+      "articleHref": "/posts/oracle-cheapest-way-to-own-ai-compute/",
+      "href": "/posts/oracle-cheapest-way-to-own-ai-compute/"
+    }
+  ],
+  "events": [
+    {
+      "id": "cxmt-entry",
+      "positionId": "cxmt",
+      "type": "trade",
+      "at": "2026-09-04T20:09:40Z",
+      "quantity": 0.004196491732911287,
+      "price": 8.3403,
+      "targetWeightPct": 3.5,
+      "note": "Published tracker entry.",
+      "href": "/posts/chinese-memory-sovereign-ai-long-cxmt/",
+      "sourceHref": "/posts/chinese-memory-sovereign-ai-long-cxmt/article.txt",
+      "sourceSha256": "9b97c3652ba048ce27079a45ca023f85d9d3f6531b2b2141800e1bbefb2ad5dc",
+      "priceConvention": "published reference price"
+    },
+    {
+      "id": "cbrs-entry",
+      "positionId": "cbrs",
+      "type": "trade",
+      "at": "2026-09-04T20:09:40Z",
+      "quantity": -8.364201218783608e-05,
+      "price": 209.225,
+      "targetWeightPct": -1.75,
+      "note": "Published tracker entry.",
+      "href": "/posts/shorting-cerebras-openai-jalapeno-anthropic-ipo/",
+      "sourceHref": "/posts/shorting-cerebras-openai-jalapeno-anthropic-ipo/article.txt",
+      "sourceSha256": "1afa16fcd7579df4e7b8e7ef47693dd46ac38fd4d6300ee59c268bacc9cbdbed",
+      "priceConvention": "published reference price"
+    },
+    {
+      "id": "orcl-entry",
+      "positionId": "orcl",
+      "type": "trade",
+      "at": "2026-09-26T23:10:53Z",
+      "quantity": 0.00018108651911468815,
+      "price": 139.16,
+      "targetWeightPct": 2.52,
+      "note": "Published spot reference entry.",
+      "href": "/posts/oracle-cheapest-way-to-own-ai-compute/",
+      "sourceHref": "/posts/oracle-cheapest-way-to-own-ai-compute/article.txt",
+      "sourceSha256": "aefdd8d217ccc2896e62ba65c661f3e51c70a41838a1ae6f664b0fbe0c9e693b",
+      "priceConvention": "published reference price"
+    },
+    {
+      "id": "aapl-entry",
+      "positionId": "aapl",
+      "type": "trade",
+      "at": "2026-09-27T21:27:41Z",
+      "quantity": -0.00014687307229092618,
+      "price": 340.43,
+      "targetWeightPct": -5.0,
+      "note": "Published perpetual reference entry.",
+      "href": "/posts/apple-short-hundred-year-flood/",
+      "sourceHref": "/posts/apple-short-hundred-year-flood/article.txt",
+      "sourceSha256": "7094d3e2179ef3a6d5614310b777ce623bf88ba5aa15b3870bdfd92058e21174",
+      "priceConvention": "published reference price"
+    },
+    {
+      "id": "skhx-entry",
+      "positionId": "skhx",
+      "type": "trade",
+      "at": "2026-09-27T21:27:41Z",
+      "quantity": 9.725776965265081e-06,
+      "price": 1367.5,
+      "targetWeightPct": 1.33,
+      "note": "Published perpetual reference entry.",
+      "href": "/posts/sk-hynix-recontracting-to-repricing/",
+      "sourceHref": "/posts/sk-hynix-recontracting-to-repricing/article.txt",
+      "sourceSha256": "7f7f8bf83dd715c40a0bb9c5e6bc11bbf533846887c367d00e8847aa704bc1d3",
+      "priceConvention": "published reference price"
+    },
+    {
+      "id": "cbrs-add",
+      "positionId": "cbrs",
+      "type": "trade",
+      "at": "2026-09-30T03:33:23Z",
+      "quantity": -5.325498911594487e-05,
+      "price": 191.75,
+      "targetWeightPct": -2.625,
+      "note": "Published first-stage addition to 2.625% short; second stage remains conditional.",
+      "href": "/posts/cerebras-left-on-the-bench/",
+      "sourceHref": "/posts/cerebras-left-on-the-bench/article.txt",
+      "sourceSha256": "702b939943d5dc24c1ce6c3135029383f7a63acac2d49489264495edc6648932",
+      "priceConvention": "published reference price"
+    }
+  ],
+  "costsNote": "Price P&L only. Perpetual funding, trading fees and borrowing costs are excluded. Oracle uses the token price, including any distributions already reflected in that price; no separate dividends are added.",
+  "historyNote": "Historical P&L uses completed hourly perpetual candle closes and dated published reference quotes. Oracle carries its last recorded token quote until a newer quote is available. From 2 October 2026, recorded snapshots use native perpetual marks and Felix token quotes. The live endpoint uses current perpetual marks; spot quotes retain their own dates. The line is a published-reference model tracker, not an account execution record.",
+  "bookNote": "Position weights and changes follow published articles. The proposed Kioxia / JP225 pair and the conditional second Cerebras addition are outside this marked book. No exit is inferred from a conditional rule.",
+  "sizingNote": "Weights are percentages of normalized starting capital. Initial entries and published resizes set quantity at the dated reference price. Quantities stay fixed between published changes; unallocated capital contributes zero price P&L."
 }

@@ -3,6 +3,7 @@
   const $ = id => document.getElementById(id);
   const pct = value => value == null ? '—' : `${value >= 0 ? '+' : '−'}${Math.abs(value).toFixed(2)}%`;
   const price = value => value == null ? '—' : new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: value < 10 ? 4 : 2}).format(value);
+  const weight = value => value == null ? '—' : new Intl.NumberFormat('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 3}).format(Math.abs(value)) + '%';
   const date = value => new Date(value).toLocaleString('en-GB', {timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) + ' UTC';
   const shortDate = value => new Date(value).toLocaleDateString('en-GB', {timeZone: 'UTC', day: '2-digit', month: 'short'});
   const safeLink = href => typeof href === 'string' && /^\/(?!\/)[a-z0-9/_-]*$/i.test(href) ? href : null;
@@ -41,8 +42,8 @@
       if (href) label.href = href;
       label.append(node('strong', row.symbol)); identity.append(label, node('small', side, 'portfolio-mobile-side'), node('small', `${row.name} · ${row.venue || 'tracker'}`)); tr.append(identity);
       tr.append(node('td', side));
-      const size = node('td', row.weightPct == null ? '—' : `${Math.abs(row.weightPct).toFixed(2)}%`);
-      size.append(node('small', row.quantity ? `${Math.abs(row.entryWeightPct).toFixed(2)}% at cost` : 'position fully exited')); tr.append(size);
+      const size = node('td', weight(row.statedWeightPct ?? row.weightPct));
+      size.append(node('small', row.quantity ? row.statedWeightPct == null ? `${weight(row.entryWeightPct)} at cost` : `${weight(row.weightPct)} marked` : 'position fully exited')); tr.append(size);
       tr.append(node('td', row.quantity ? price(row.averageEntry) : '—'));
       const mark = node('td', row.quantity ? price(row.mark) : '—');
       if (row.quantity && row.markAsOf) { const stamp = node('small', shortDate(row.markAsOf)); stamp.title = `${date(row.markAsOf)} · ${row.markSource || 'recorded mark'}`; mark.append(stamp); }
@@ -78,6 +79,8 @@
     chart.querySelectorAll('.portfolio-chart-crosshair, .portfolio-chart-hover').forEach(element => element.remove());
     chart.append(svgNode('line', {x1: point.x, x2: point.x, y1: 12, y2: chart.viewBox.baseVal.height - 38, class: 'portfolio-chart-crosshair'}), svgNode('circle', {cx: point.x, cy: point.y, r: 4, class: 'portfolio-chart-point portfolio-chart-hover'}));
     $('portfolio-chart-readout').replaceChildren(node('span', `${date(point.at)} · `), node('strong', `${pct(point.pnlPct)} of capital`));
+    const carried = point.positions.filter(row => row.quantity && row.markAsOf && Date.parse(point.at) - Date.parse(row.markAsOf) > 3600000);
+    if (carried.length) $('portfolio-chart-readout').append(node('span', ` · retained ${carried.map(row => `${row.symbol} quote ${shortDate(row.markAsOf)}`).join(', ')}`));
   }
   function chart() {
     const svg = $('pnl-chart'); svg.replaceChildren(); chartPoints = [];
@@ -151,6 +154,8 @@
       feed(latest ? `Recorded marks · ${date(latest.at)}` : 'Waiting for market observations', false);
       $('portfolio-costs').textContent = ledger.costsNote || 'P&L includes only the price changes and cash flows explicitly recorded in the ledger.';
       $('portfolio-history-method').textContent = ledger.historyNote || 'The line uses dated portfolio observations. Period buttons change the visible time range; they do not reset cumulative P&L.';
+      $('portfolio-book-notes').textContent = ledger.bookNote || '';
+      $('portfolio-sizing-method').textContent = ledger.sizingNote || '';
       notice(current.complete ? ledger.notice : `P&L awaiting marks for ${current.missing.join(', ')}.`);
       render(); await refresh();
     } catch (error) {
@@ -188,7 +193,8 @@
       if (!value.complete) throw Error('Incomplete portfolio mark coverage.');
       liveObservation = {at, marks}; current = value;
       const allLive = held.length === native.length;
-      feed(allLive ? `Live marks · ${date(at)}` : `Perps live · other marks dated below`, allLive);
+      const other = value.positions.filter(row => row.quantity && row.markAdapter !== 'hyperliquid');
+      feed(allLive ? `Live marks · ${date(at)}` : `Perps live · ${other.map(row => `${row.symbol} quote ${date(row.markAsOf)}`).join(' · ')}`, allLive);
       notice(ledger.notice); render();
     } catch (error) {
       feed(`Live refresh unavailable · marks retained`, false);
