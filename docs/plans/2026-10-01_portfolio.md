@@ -6,7 +6,7 @@ The user's request on 1 October 2026 locks the scope: add `/portfolio/`, matchin
 
 The public site is static HTML, CSS and JavaScript. `markets/index.html` and `assets/css/market-lens.css` supply the existing black/lime palette, typography, header, search and table conventions. NavStrategies' `scripts/market_lens/build_market_pages.py`, `build_posts.py` and `build_onchainstocks_page.py` regenerate navigation. The single publishing checkout owns public pushes.
 
-Published articles contain tracker entries and some capital weights, including CBRS/CXMT and Apple/Oracle/SK hynix. They are not a complete confirmed ledger: proposed trades and conditional future changes must not become executed changes. The user has been asked to identify the portfolio and capital/sizing. Account holdings and private journal material are outside this website task.
+Published articles contain tracker entries and some capital weights, including CBRS/CXMT and Apple/Oracle/SK hynix. They are not a complete confirmed ledger: proposed trades and conditional future changes must not become executed changes. The user confirmed published trades and stated weights on 2 October. Account holdings and private journal material are outside this website task.
 
 ## Tasks and acceptance criteria
 
@@ -32,6 +32,8 @@ Task Node is unavailable in this environment; the working plan records scope and
 
 The page, event-based P&L calculation, statuses, responsive layout, chart controls and dated last-good retention are implemented. The private publisher integration collects native perpetual and Felix token observations before the writer lock, merging history without allowing a delayed run to overwrite a changed ledger.
 
-Validation: all 22 website tests pass, all 54 relevant private pipeline tests pass, and the portfolio browser check passes for native mark selection, realized/unrealized totals, additions/cuts/exits, filters, chart keyboard controls, source failure, mobile layout and pending setup. Browser previews contain explicitly labeled synthetic test data only.
+Validation: all 23 website tests pass, all 56 relevant private pipeline tests pass, and the portfolio browser check passes for native mark selection, realized/unrealized totals, additions/cuts/exits, filters, chart keyboard controls, source failure, mobile layout and pending setup. Calculation browser tests use explicitly labeled synthetic data; the approved public book is checked separately before release.
 
-The actual tracker ledger remains pending. The product specification identifies the capital-weight spreadsheet as its source of truth; no corresponding ledger was found in the checked workspace paths. The user's source/capital clarification is still pending. Production publication and installation of the updated generator are not done. Existing production timers and generator revision remain in place.
+On 2 October the user confirmed "published trades and stated wiehgts". The tracker uses published articles, dated reference quotes and stated capital weights on a normalized initial-capital basis. A published resize sets the quantity to the stated target fraction at that update's reference price; quantities stay fixed between published updates. Proposed and conditional changes remain outside the marked book.
+
+Historical price P&L uses completed native hourly perpetual closes and dated published reference quotes. Oracle carries its last dated token quote until a newer actual token observation is available; this convention is disclosed. Current marks use native perpetual markPx and the actual Felix token price. Funding, fees and borrowing costs are excluded and labeled. This is a published-reference model tracker, not an account execution record. Publication and live verification are in progress.

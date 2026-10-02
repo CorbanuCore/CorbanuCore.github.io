@@ -56,6 +56,17 @@ test('history preserves incomplete gaps and validates timestamp order', () => {
   assert.deepEqual(result.map(point => point.pnlPct), [0, null, 20]);
   assert.throws(() => history(ledger, [{at: at(2), marks: {}}, {at: at(1), marks: {}}]), /increasing/);
 });
+test('published weights resize at the reference price and remain explicit', () => {
+  const first = -.0175 / 209.225, next = -.02625 / 191.75;
+  const ledger = {...book([event(1, first, 209.225, {targetWeightPct: -1.75}), event(2, next - first, 191.75, {targetWeightPct: -2.625})]), initialCapital: 1};
+  const resized = valueBook(ledger, at(2), marks(2, 191.75));
+  close(resized.positions[0].weightPct, -2.625);
+  assert.equal(resized.positions[0].statedWeightPct, -2.625);
+  assert.equal(resized.positions[0].status, 'Added');
+  const later = valueBook(ledger, at(3), marks(3, 170));
+  close(later.positions[0].quantity, next);
+  assert.equal(later.positions[0].statedWeightPct, -2.625);
+});
 test('rejects fabricated defaults for missing capital, prices, dates and duplicate fills', () => {
   assert.throws(() => validateLedger({...book([]), initialCapital: null}), /capital/);
   assert.throws(() => validateLedger(book([event(1, 10, 0)])), /price/);

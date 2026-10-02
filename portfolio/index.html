@@ -31,13 +31,13 @@
   </header>
   <main class="portfolio-wrap" id="main">
     <div class="portfolio-heading">
-      <div><p class="portfolio-eyebrow">Corbanu tracker</p><h1>Portfolio</h1><p class="portfolio-sub">The book, marked to market. Follow performance, current exposure, and every position change.</p></div>
+      <div><p class="portfolio-eyebrow">Published-trade tracker</p><h1>Portfolio</h1><p class="portfolio-sub">Published entries and capital weights, marked to market. Price P&amp;L before funding, fees and borrowing costs.</p></div>
       <div class="portfolio-feed" id="portfolio-feed"><span class="dot" aria-hidden="true"></span><span id="portfolio-feed-text" role="status">Loading tracker…</span></div>
     </div>
     <p class="portfolio-notice" id="portfolio-notice" role="status" hidden></p>
     <section class="portfolio-card" aria-labelledby="performance-title">
       <div class="portfolio-metrics">
-        <dl class="portfolio-metric"><dt>Total P&amp;L</dt><dd id="portfolio-pnl">—</dd><small>as % of initial capital</small></dl>
+        <dl class="portfolio-metric"><dt>Price P&amp;L</dt><dd id="portfolio-pnl">—</dd><small>as % of initial capital</small></dl>
         <dl class="portfolio-metric"><dt>Unrealized P&amp;L</dt><dd id="portfolio-unrealized">—</dd><small>open positions</small></dl>
         <dl class="portfolio-metric"><dt>Realized P&amp;L</dt><dd id="portfolio-realized">—</dd><small>closed quantities</small></dl>
         <dl class="portfolio-metric"><dt>Gross exposure</dt><dd id="portfolio-gross">—</dd><small id="portfolio-net">of initial capital</small></dl>
@@ -48,10 +48,11 @@
     </section>
     <section class="portfolio-section" aria-labelledby="positions-title">
       <div class="portfolio-section-head"><h2 id="positions-title">Positions <span id="portfolio-position-count"></span></h2><div class="portfolio-tabs" role="group" aria-label="Position filter"><button type="button" data-filter="current" aria-pressed="true">Current</button><button type="button" data-filter="exited" aria-pressed="false">Exited</button><button type="button" data-filter="all" aria-pressed="false">All</button></div></div>
-      <div class="portfolio-card"><div class="portfolio-table-scroll" tabindex="0" role="region" aria-label="Portfolio positions"><table class="portfolio-table"><thead><tr><th scope="col">Position</th><th scope="col">Side</th><th scope="col">Size / capital</th><th scope="col">Average entry</th><th scope="col">Current mark</th><th scope="col">P&amp;L / capital</th><th scope="col">Last change</th></tr></thead><tbody id="portfolio-positions"></tbody></table></div><div class="portfolio-empty" id="portfolio-positions-empty"><h3>Loading positions</h3><p>Confirmed tracker positions will appear here.</p></div></div>
+      <div class="portfolio-card"><div class="portfolio-table-scroll" tabindex="0" role="region" aria-label="Portfolio positions"><table class="portfolio-table"><thead><tr><th scope="col">Position</th><th scope="col">Side</th><th scope="col">Published weight</th><th scope="col">Average entry</th><th scope="col">Current mark</th><th scope="col">P&amp;L / capital</th><th scope="col">Last change</th></tr></thead><tbody id="portfolio-positions"></tbody></table></div><div class="portfolio-empty" id="portfolio-positions-empty"><h3>Loading positions</h3><p>Confirmed tracker positions will appear here.</p></div></div>
+      <p class="portfolio-sub" id="portfolio-book-notes"></p>
     </section>
     <section class="portfolio-section" aria-labelledby="activity-title"><div class="portfolio-section-head"><h2 id="activity-title">Position activity</h2><span>Entries, additions, cuts and exits</span></div><div class="portfolio-card"><ol class="portfolio-activity" id="portfolio-activity"></ol><div class="portfolio-empty" id="portfolio-activity-empty"><h3>No recorded changes yet</h3><p>Each confirmed change keeps its date, price and research link.</p></div></div></section>
-    <details class="portfolio-card portfolio-method"><summary>How the tracker works</summary><p id="portfolio-methodology">Cumulative P&amp;L equals realized gains and losses plus the marked gain or loss on remaining quantities, plus recorded investment cash flows, less recorded fees, divided by initial capital. Adding or cutting a position changes its quantity; exiting preserves its realized result. Current marks carry their observation times. Missing marks leave the affected valuation unavailable.</p><p id="portfolio-costs">The portfolio source will specify whether funding, fees, dividends and borrowing costs are included.</p><p id="portfolio-history-method"></p></details>
+    <details class="portfolio-card portfolio-method"><summary>How the tracker works</summary><p id="portfolio-methodology">Cumulative P&amp;L equals realized gains and losses plus the marked gain or loss on remaining quantities, plus recorded investment cash flows, less recorded fees, divided by initial capital. Adding or cutting a position changes its quantity; exiting preserves its realized result. Current marks carry their observation times. Missing marks leave the affected valuation unavailable.</p><p id="portfolio-sizing-method"></p><p id="portfolio-costs">The portfolio source will specify whether funding, fees, dividends and borrowing costs are included.</p><p id="portfolio-history-method"></p></details>
     <noscript><p class="portfolio-notice">Enable JavaScript to load the tracker ledger and marked P&amp;L.</p></noscript>
   </main>
   <footer><div class="foot-links"><a href="/">Home</a><a href="/markets/">Markets</a><a href="/portfolio/">Portfolio</a><a href="/posts/">Posts</a><a href="/terminal/">Terminal</a><a href="/compliance/">Compliance</a><a href="/disclaimer/">Disclaimer</a></div><div>Corbanu · 2026</div></footer>

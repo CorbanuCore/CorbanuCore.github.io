@@ -30,6 +30,7 @@
       if (event.type === 'trade') {
         if (!number(event.quantity) || Math.abs(event.quantity) < epsilon || !number(event.price) || event.price <= 0) throw Error('Trade quantity and price are required.');
         if (event.fee != null && (!number(event.fee) || event.fee < 0)) throw Error('Invalid transaction fee.');
+        if (event.targetWeightPct != null && !number(event.targetWeightPct)) throw Error('Invalid published capital weight.');
       } else if (event.type === 'cashflow') {
         if (!number(event.amount)) throw Error('Invalid portfolio cash flow.');
       } else throw Error('Unsupported portfolio event.');
@@ -79,6 +80,7 @@
       row.pnlPct = row.pnl == null ? null : row.pnl / ledger.initialCapital * 100;
       row.weightPct = row.quantity ? valid ? row.quantity * mark.price / ledger.initialCapital * 100 : null : 0;
       row.entryWeightPct = row.quantity * row.averageEntry / ledger.initialCapital * 100;
+      row.statedWeightPct = row.lastEvent?.targetWeightPct ?? null;
       if (row.pnl == null) missing.push(row.symbol);
       else { total += row.pnl; unrealized += row.unrealizedPnl; }
       realized += row.realizedPnl;
