@@ -34,3 +34,13 @@ CORBANU_PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node tests/portfolio_bro
 ```
 
 Browser checks use clearly synthetic test fixtures, validate native mark selection against a different mid price, retention after a failed refresh, filters, chart keyboard controls and mobile layout. They do not read private accounts or submit transactions.
+
+## Aggregate statistics
+
+The Longs and Shorts cards below Positions use `assets/portfolio/statistics.json` (`corbanu.portfolio-statistics.v1`). Only current positions enter the averages. Each side uses absolute published capital weights; a book without published weights falls back to entry-cost weights. Each metric is an arithmetic weighted average over its available values, with missing position/weight coverage and actual source dates disclosed. Missing values and explicit n/m are excluded, while valid zero and negative growth/revisions remain meaningful values. Exited positions never enter the averages.
+
+The compact snapshot copies only matching issuer target rows from Market Lens, preserving `BEST_PE_RATIO`, consensus 1BF sales/EPS growth versus trailing reported values, 28-observation EPS revisions as a percentage of price, annotations and per-metric observation dates. Oracle's unavailable consensus values remain outside fundamental averages. Earnings revision is not percentage growth in EPS.
+
+Funding uses the existing annualized seven-day model forecast, with its own source date and model. Positive rates are paid by longs and received by shorts; the side carry display reverses the sign for longs. Spot tokens contribute structural zero perpetual funding across their side's weight. Forecast carry never enters tracker price P&L. Source failures retain valid dated statistics, and a failed browser snapshot reload retains the last successful statistics independently of the P&L refresh.
+
+The publisher generates statistics after issuer payload generation and publishes on its existing schedules. Delayed output cannot replace a newer statistics snapshot or cross a changed ledger fingerprint. Publication receipts verify the statistics snapshot live as well as marks.

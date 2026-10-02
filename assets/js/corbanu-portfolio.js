@@ -103,7 +103,43 @@
       return valueBook(ledger, observation.at, observation.marks);
     });
   }
-  const api = {validateLedger, valueBook, history};
+  function aggregateStatistics(positions, statistics, at = new Date().toISOString()) {
+    const fields = ['forwardPE', 'forwardSalesGrowthPct', 'forwardEPSGrowthPct', 'sevenDayFundingAprPct', 'epsRevision28dPctOfPrice'];
+    const result = {};
+    for (const side of ['long', 'short']) {
+      const rows = positions.filter(row => side === 'long' ? row.quantity > 0 : row.quantity < 0)
+        .map(row => ({...row, statisticsWeight: Math.abs(row.statedWeightPct ?? row.entryWeightPct)}));
+      const totalWeight = rows.reduce((sum, row) => sum + row.statisticsWeight, 0);
+      const metrics = {};
+      for (const field of fields) {
+        let weighted = 0, coveredWeight = 0, coveredCount = 0;
+        const dates = [], missing = [], notes = [], bases = [];
+        for (const row of rows) {
+          const source = statistics?.positions?.[row.id];
+          const metric = source?.rawSymbol === row.rawSymbol ? source?.metrics?.[field] : null;
+          const value = metric?.value;
+          const dated = typeof metric?.observedAt === 'string' && Number.isFinite(Date.parse(metric.observedAt)) && Date.parse(metric.observedAt) <= Date.parse(at);
+          const structuralZero = field === 'sevenDayFundingAprPct' && row.markAdapter === 'felix' && metric?.notApplicable === true && value === 0;
+          const valid = Number.isFinite(value) && (field !== 'forwardPE' || value > 0) && (dated || structuralZero);
+          if (!valid || !(row.statisticsWeight > 0)) { missing.push({symbol: row.symbol, note: metric?.note || 'data unavailable'}); continue; }
+          weighted += value * row.statisticsWeight; coveredWeight += row.statisticsWeight; coveredCount++;
+          if (dated) dates.push(metric.observedAt);
+          if (metric.note) notes.push(`${row.symbol}: ${metric.note}`);
+          if (source.retained) notes.push(`${row.symbol}: retained source`);
+          if (metric.basis) bases.push(metric.basis);
+        }
+        dates.sort();
+        const value = coveredWeight ? weighted / coveredWeight : null;
+        metrics[field] = {value, coveredCount, totalCount: rows.length, coveredWeight, totalWeight,
+          coveragePct: totalWeight ? coveredWeight / totalWeight * 100 : 0,
+          oldestAt: dates[0] || null, newestAt: dates.at(-1) || null, missing, notes, bases: [...new Set(bases)]};
+        if (field === 'sevenDayFundingAprPct') metrics[field].carryAprPct = value == null ? null : value * (side === 'long' ? -1 : 1);
+      }
+      result[side] = {positionCount: rows.length, totalWeight, metrics};
+    }
+    return result;
+  }
+  const api = {validateLedger, valueBook, history, aggregateStatistics};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.CorbanuPortfolio = api;
 })(typeof window === 'undefined' ? globalThis : window);
