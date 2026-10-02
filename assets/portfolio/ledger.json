@@ -2,7 +2,7 @@
   "schema": "corbanu.portfolio.v1",
   "state": "ready",
   "name": "Corbanu published-trade tracker",
-  "updatedAt": "2026-10-02T00:14:09.861969Z",
+  "updatedAt": "2026-10-02T02:47:28.675Z",
   "initialCapital": 1,
   "capitalUnit": "normalized initial capital",
   "currency": "USD",
@@ -58,6 +58,34 @@
       "markAdapter": "felix",
       "articleHref": "/posts/oracle-cheapest-way-to-own-ai-compute/",
       "href": "/posts/oracle-cheapest-way-to-own-ai-compute/"
+    },
+    {
+      "id": "kioxia",
+      "symbol": "KIOXIA",
+      "name": "Kioxia Holdings",
+      "rawSymbol": "xyz:KIOXIA",
+      "venue": "Hyperliquid / TradeXYZ \u00b7 article perpetual alternative",
+      "markAdapter": "hyperliquid",
+      "href": "/posts/long-kioxia-short-nikkei-ai-storage/",
+      "articleHref": "/posts/long-kioxia-short-nikkei-ai-storage/",
+      "historicalPriceAdjustments": [
+        {
+          "before": "2026-09-28T08:00:00Z",
+          "divisor": 3,
+          "sourceHref": "https://ssl4.eir-parts.net/doc/285A/tdnet/2859912/00.pdf",
+          "note": "Continuous model exposure on the post-split quote basis across venue contract relisting."
+        }
+      ]
+    },
+    {
+      "id": "jp225",
+      "symbol": "JP225",
+      "name": "Nikkei 225",
+      "rawSymbol": "xyz:JP225",
+      "venue": "Hyperliquid / TradeXYZ \u00b7 article perpetual alternative",
+      "markAdapter": "hyperliquid",
+      "href": "/posts/long-kioxia-short-nikkei-ai-storage/",
+      "articleHref": "/posts/long-kioxia-short-nikkei-ai-storage/"
     }
   ],
   "events": [
@@ -88,6 +116,40 @@
       "sourceHref": "/posts/shorting-cerebras-openai-jalapeno-anthropic-ipo/article.txt",
       "sourceSha256": "1afa16fcd7579df4e7b8e7ef47693dd46ac38fd4d6300ee59c268bacc9cbdbed",
       "priceConvention": "published reference price"
+    },
+    {
+      "id": "kioxia-entry",
+      "positionId": "kioxia",
+      "type": "trade",
+      "at": "2026-09-16T00:00:00Z",
+      "quantity": 0.0002730334010860662,
+      "price": 109.87666666666667,
+      "targetWeightPct": 3.0,
+      "note": "Published idea at stated weight; article perpetual alternative. Entry uses native publication-time hourly opening quote; split-adjusted.",
+      "href": "/posts/long-kioxia-short-nikkei-ai-storage/",
+      "sourceHref": "/posts/long-kioxia-short-nikkei-ai-storage/article.txt",
+      "sourceSha256": "cdc8259d6316c9d5fc3f48f357bafd1a84c109115ee94d25481bf1149e5b87cf",
+      "priceConvention": "native hourly opening quote at article publication; current split-adjusted basis",
+      "rawReferencePrice": 329.63,
+      "referencePriceDivisor": 3,
+      "referenceQuoteHref": "/assets/portfolio/reference-quotes.json"
+    },
+    {
+      "id": "jp225-entry",
+      "positionId": "jp225",
+      "type": "trade",
+      "at": "2026-09-16T00:00:00Z",
+      "quantity": -1.3359738463472905e-06,
+      "price": 63624.0,
+      "targetWeightPct": -8.5,
+      "note": "Published idea at stated weight; article perpetual alternative. Entry uses native publication-time hourly opening quote.",
+      "href": "/posts/long-kioxia-short-nikkei-ai-storage/",
+      "sourceHref": "/posts/long-kioxia-short-nikkei-ai-storage/article.txt",
+      "sourceSha256": "cdc8259d6316c9d5fc3f48f357bafd1a84c109115ee94d25481bf1149e5b87cf",
+      "priceConvention": "native hourly opening quote at article publication",
+      "rawReferencePrice": 63624.0,
+      "referencePriceDivisor": 1,
+      "referenceQuoteHref": "/assets/portfolio/reference-quotes.json"
     },
     {
       "id": "orcl-entry",
@@ -147,7 +209,7 @@
     }
   ],
   "costsNote": "Price P&L only. Perpetual funding, trading fees and borrowing costs are excluded. Oracle uses the token price, including any distributions already reflected in that price; no separate dividends are added.",
-  "historyNote": "Historical P&L uses completed hourly perpetual candle closes and dated published reference quotes. Oracle carries its last recorded token quote until a newer quote is available. From 2 October 2026, recorded snapshots use native perpetual marks and Felix token quotes. The live endpoint uses current perpetual marks; spot quotes retain their own dates. The line is a published-reference model tracker, not an account execution record.",
-  "bookNote": "Position weights and changes follow published articles. The proposed Kioxia / JP225 pair and the conditional second Cerebras addition are outside this marked book. No exit is inferred from a conditional rule.",
+  "historyNote": "Historical P&L uses completed hourly perpetual candle closes and dated published reference quotes. Oracle carries its last recorded token quote until a newer quote is available. From 2 October 2026, recorded snapshots use native perpetual marks and Felix token quotes. The live endpoint uses current perpetual marks; spot quotes retain their own dates. The line is a published-reference model tracker, not an account execution record. Kioxia and Nikkei use the article's perpetual alternative with native publication-time hourly opening quotes, rather than its yen cash references. Kioxia entry and pre-relisting history are expressed on the three-for-one split-adjusted basis, preserving continuous model economic exposure across the venue relisting. This convention does not represent actual contract settlement or re-entry fills.",
+  "bookNote": "Position weights and changes follow published ideas, including the Kioxia / Nikkei pair at 3% long and 8.5% short. The conditional second Cerebras addition remains pending. Conditional rules do not infer exits.",
   "sizingNote": "Weights are percentages of normalized starting capital. Initial entries and published resizes set quantity at the dated reference price. Quantities stay fixed between published changes; unallocated capital contributes zero price P&L."
 }
