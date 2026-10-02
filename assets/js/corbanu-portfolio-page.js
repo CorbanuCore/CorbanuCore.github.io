@@ -14,6 +14,9 @@
     return result;
   };
   let ledger, statistics, statisticsUnavailable = false, observations = [], historicalValues = [], current, liveObservation, chartPoints = [], chartIndex = 0, period = 'all', filter = 'current', refreshing = false;
+  const betaBenchmarks = [{id: 'sp500', rawSymbol: 'xyz:SP500'}, {id: 'btc', rawSymbol: 'BTC'}];
+  const betaPrices = {};
+  let betaRefreshing = false, betaUnavailable = false;
   function notice(message) { $('portfolio-notice').textContent = message || ''; $('portfolio-notice').hidden = !message; }
   function feed(message, live) { $('portfolio-feed-text').textContent = message; $('portfolio-feed').classList.toggle('is-live', !!live); }
   function empty(id, heading, message) {
@@ -115,6 +118,61 @@
     if (!sourceNotes.size) notes.append(node('li', groups.long.positionCount + groups.short.positionCount ? 'All current positions have source coverage for the displayed metrics.' : 'No current positions to aggregate.'));
     $('portfolio-statistics-status').textContent = statistics ? statisticsUnavailable ? 'Statistics refresh unavailable · retained dates shown' : 'Dated source observations · coverage shown per metric' : 'Statistics source unavailable · coverage shown below';
   }
+  function portfolioBetas() {
+    const body = $('portfolio-betas'); body.replaceChildren();
+    if (!ledger || ledger.state !== 'ready') {
+      $('portfolio-beta-status').textContent = 'Awaiting published book'; $('portfolio-beta-notes').textContent = ''; return;
+    }
+    const at = new Date().toISOString(), values = CorbanuPortfolio.dailyBook(ledger, observations, betaPrices, at);
+    const estimates = Object.fromEntries([30, 90].map(days => [days, betaBenchmarks.map(benchmark => CorbanuPortfolio.realizedBeta(values, betaPrices[benchmark.rawSymbol] || [], {...benchmark, days, at}))]));
+    const hasThreeMonths = estimates[90].every(value => value.fullWindow);
+    for (const days of hasThreeMonths ? [30, 90] : [30]) {
+      const row = node('tr'); row.dataset.betaDays = days;
+      const heading = node('th', days === 30 ? '1 month' : '3 months'); heading.scope = 'row'; heading.append(node('small', `Trailing ${days} days`)); row.append(heading);
+      for (const [index, benchmark] of betaBenchmarks.entries()) {
+        const value = estimates[days][index], cell = node('td'); cell.dataset.benchmark = benchmark.id;
+        cell.append(node('strong', value.beta == null ? '—' : `${value.beta < 0 ? '−' : '+'}${Math.abs(value.beta).toFixed(3)}`, 'portfolio-stat-value'));
+        cell.append(node('small', `${value.observations}/${days} paired daily returns`, 'portfolio-beta-coverage'));
+        if (value.startAt) {
+          const dayLabel = stamp => new Date(stamp).toLocaleDateString('en-GB', {timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric'});
+          cell.append(node('small', `${dayLabel(value.startAt)} – ${dayLabel(value.endAt)}`, 'portfolio-beta-date'));
+        }
+        if (value.rSquared != null) cell.append(node('small', `R² ${(value.rSquared * 100).toFixed(1)}%`));
+        if (value.reason) cell.append(node('small', value.reason));
+        row.append(cell);
+      }
+      body.append(row);
+    }
+    let status = hasThreeMonths ? 'Completed daily returns · 1M and 3M' : '3M unavailable · available 1M history shown';
+    if (!Object.keys(betaPrices).length && !betaUnavailable) status = 'Loading native daily prices…';
+    if (betaUnavailable) status = estimates[30].some(value => value.beta != null) ? 'Daily refresh unavailable · retained dates shown' : 'Native daily prices unavailable';
+    $('portfolio-beta-status').textContent = status;
+    const retained = [...new Set(estimates[30].flatMap(value => value.retainedSymbols))];
+    $('portfolio-beta-notes').textContent = retained.length ? `Daily valuations include retained dated spot quotes for ${retained.join(', ')}. These values measure the published model’s observed price exposure.` : '';
+  }
+  async function refreshBetas() {
+    if (betaRefreshing || !ledger || ledger.state !== 'ready' || document.hidden || !navigator.onLine) return;
+    betaRefreshing = true;
+    try {
+      const endTime = Date.now(), startTime = Math.max(Date.parse(ledger.inception) - 86400000, Math.floor(endTime / 86400000) * 86400000 - 91 * 86400000);
+      const symbols = [...new Set([...ledger.positions.filter(row => row.markAdapter === 'hyperliquid').map(row => row.rawSymbol), ...betaBenchmarks.map(row => row.rawSymbol)])];
+      const results = await Promise.allSettled(symbols.map(async coin => {
+        const response = await fetch('https://api.hyperliquid.xyz/info', {method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({type: 'candleSnapshot', req: {coin, interval: '1d', startTime, endTime}}), signal: AbortSignal.timeout(12000)});
+        if (!response.ok) throw Error(`Daily price feed returned HTTP ${response.status}`);
+        const candles = await response.json();
+        CorbanuPortfolio.dailyPrices(candles, coin, new Date(endTime).toISOString());
+        return {coin, candles: candles.filter(row => row.T <= endTime)};
+      }));
+      betaUnavailable = results.some(result => result.status === 'rejected');
+      for (const result of results) {
+        if (result.status === 'fulfilled') betaPrices[result.value.coin] = result.value.candles;
+        else console.warn('Portfolio daily prices:', result.reason.message);
+      }
+      portfolioBetas();
+    } catch (error) { betaUnavailable = true; $('portfolio-beta-status').textContent = 'Daily beta unavailable'; console.warn('Portfolio beta:', error.message); }
+    finally { betaRefreshing = false; }
+  }
   const svgNode = (tag, attrs, text) => {
     const result = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [key, value] of Object.entries(attrs)) result.setAttribute(key, value);
@@ -194,7 +252,7 @@
         $('portfolio-activity-empty').hidden = false; notice(null); feed('Tracker setup pending', false);
         empty('portfolio-chart-empty', 'Tracker awaiting confirmation', book.reason);
         empty('portfolio-positions-empty', 'Portfolio ledger pending', 'Positions will appear after the tracker book and capital weights are confirmed.');
-        portfolioStatistics();
+        portfolioStatistics(); portfolioBetas();
         return;
       }
       const values = CorbanuPortfolio.history(book, marks.observations); // Validate before replacing a last good view.
@@ -210,7 +268,7 @@
       $('portfolio-book-notes').textContent = ledger.bookNote || '';
       $('portfolio-sizing-method').textContent = ledger.sizingNote || '';
       notice(current.complete ? ledger.notice : `P&L awaiting marks for ${current.missing.join(', ')}.`);
-      render(); await refresh();
+      render(); portfolioBetas(); void refreshBetas(); await refresh();
     } catch (error) {
       notice(current ? 'Tracker refresh unavailable. Showing the last successfully loaded book and dated marks.' : 'Portfolio data could not be loaded. Please try again shortly.');
       feed('Tracker data unavailable', false);
@@ -272,8 +330,9 @@
       event.preventDefault(); inspect(event.key === 'Home' ? 0 : event.key === 'End' ? chartPoints.length - 1 : chartIndex + (event.key === 'ArrowLeft' ? -1 : 1));
     }
   });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { refresh(); refreshBetas(); } });
   window.addEventListener('online', refresh);
+  window.addEventListener('online', refreshBetas);
   window.addEventListener('resize', chart);
   load(); setInterval(refresh, 30000); setInterval(load, 300000);
 })();

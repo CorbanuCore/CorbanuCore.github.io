@@ -37,8 +37,17 @@ await page.route('https://corbanu.com/**', async route => {
   catch { await route.fulfill({status: 404}); }
 });
 await page.route('https://api.hyperliquid.xyz/**', async route => {
+  const body = route.request().postDataJSON();
+  if (body.type === 'candleSnapshot') {
+    assert.equal(body.req.interval, '1d');
+    const end = Math.floor(now / 86400000) * 86400000 - 1;
+    return route.fulfill({json: Array.from({length: 14}, (_, i) => {
+      const T = end - (13 - i) * 86400000;
+      return {s: body.req.coin, i: '1d', t: T - 86400000 + 1, T, c: String(100 + i * 2 + Math.sin(i))};
+    })});
+  }
   markReads++;
-  assert.deepEqual(route.request().postDataJSON(), {type: 'metaAndAssetCtxs', dex: 'xyz'});
+  assert.deepEqual(body, {type: 'metaAndAssetCtxs', dex: 'xyz'});
   if (rejectMarks) return route.fulfill({status: 503, body: 'Fixture failure'});
   const native = ledger.positions.filter(row => row.markAdapter === 'hyperliquid');
   return route.fulfill({json: [{universe: native.map(row => ({name: row.rawSymbol}))}, native.map(row => ({markPx: String({short: 80, long: 65, added: 12}[row.id]), midPx: '400'}))]});
