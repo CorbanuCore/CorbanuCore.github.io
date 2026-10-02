@@ -20,12 +20,18 @@ const ledger = {schema: 'corbanu.portfolio.v1', state: 'ready', initialCapital: 
   {id: 'c2', type: 'trade', positionId: 'closed', at: at(4), quantity: -1, price: 120},
 ]};
 const marks = {schema: 'corbanu.portfolio-marks.v1', observations: [12, 11, 9, 8, 6, 4, 1].map(days => ({at: at(days), marks: Object.fromEntries([['short', 100 - (12 - days)], ['long', 50 + (12 - days)], ['closed', 100 + 2 * (12 - days)]].map(([id, price]) => [id, {price, observedAt: at(days), source: 'synthetic historical mark'}]))}))};
-let mode = 'ready', rejectMarks = false, markReads = 0;
+const fixtureMetric = value => ({value, observedAt: at(1)});
+const statistics = {schema: 'corbanu.portfolio-statistics.v1', positions: {
+  short: {rawSymbol: 'xyz:SHORT', metrics: {forwardPE: fixtureMetric(40), forwardSalesGrowthPct: fixtureMetric(5), forwardEPSGrowthPct: fixtureMetric(-2), sevenDayFundingAprPct: fixtureMetric(-5), epsRevision28dPctOfPrice: fixtureMetric(0)}},
+  long: {rawSymbol: 'xyz:LONG', metrics: {forwardPE: fixtureMetric(20), forwardSalesGrowthPct: fixtureMetric(30), forwardEPSGrowthPct: fixtureMetric(50), sevenDayFundingAprPct: fixtureMetric(10), epsRevision28dPctOfPrice: fixtureMetric(1)}},
+}};
+let mode = 'ready', rejectMarks = false, rejectStatistics = false, markReads = 0;
 const errors = []; page.on('pageerror', error => errors.push(error.message));
 await page.route('https://corbanu.com/**', async route => {
   const path = new URL(route.request().url()).pathname;
   if (path === '/assets/portfolio/ledger.json') return route.fulfill({json: mode === 'pending' ? {schema: 'corbanu.portfolio.v1', state: 'pending', reason: 'Synthetic pending state'} : ledger});
   if (path === '/assets/portfolio/marks.json') return route.fulfill({json: marks});
+  if (path === '/assets/portfolio/statistics.json') return rejectStatistics ? route.fulfill({status: 503}) : route.fulfill({json: statistics});
   const file = resolve(root, '.' + path + (path.endsWith('/') ? 'index.html' : ''));
   try { await route.fulfill({contentType: {'.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json'}[extname(file)] || 'image/png', body: await readFile(file)}); }
   catch { await route.fulfill({status: 404}); }
@@ -36,6 +42,7 @@ await page.route('https://api.hyperliquid.xyz/**', async route => {
   if (rejectMarks) return route.fulfill({status: 503, body: 'Fixture failure'});
   return route.fulfill({json: [{universe: [{name: 'xyz:SHORT'}, {name: 'xyz:LONG'}]}, [{markPx: '80', midPx: '400'}, {markPx: '65', midPx: '450'}]]});
 });
+await page.clock.install({time: new Date(now)});
 try {
   await page.goto('https://corbanu.com/portfolio/');
   await page.waitForFunction(() => document.querySelector('#portfolio-feed').classList.contains('is-live'));
@@ -46,6 +53,11 @@ try {
   assert.match(await page.locator('#portfolio-positions').textContent(), /\$80.00/);
   assert.doesNotMatch(await page.locator('#portfolio-positions').textContent(), /\$400.00/);
   assert.equal(await page.locator('#portfolio-activity li').count(), 6);
+  assert.equal(await page.locator('#portfolio-long-statistics [data-metric="forwardPE"] dd').textContent(), '20.00×');
+  assert.equal(await page.locator('#portfolio-short-statistics [data-metric="forwardPE"] dd').textContent(), '40.00×');
+  assert.equal(await page.locator('#portfolio-short-statistics [data-metric="epsRevision28dPctOfPrice"] dd').textContent(), '+0.00%');
+  assert.match(await page.locator('#portfolio-short-statistics [data-metric="sevenDayFundingAprPct"]').textContent(), /Side carry −5.00% APR/);
+  assert.equal(await page.evaluate(() => document.querySelector('#statistics-title').closest('section').previousElementSibling.getAttribute('aria-labelledby')), 'positions-title');
   assert.match(await page.locator('#portfolio-activity').textContent(), /Added/);
   assert.match(await page.locator('#portfolio-activity').textContent(), /Cut/);
   assert.match(await page.locator('#portfolio-activity').textContent(), /Exited/);
@@ -70,6 +82,10 @@ try {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
   assert.equal(await page.getByRole('navigation', {name: 'Primary navigation'}).isVisible(), true);
   if (evidence) await page.screenshot({path: resolve(evidence, 'portfolio-mobile-synthetic.png'), fullPage: true});
+  rejectStatistics = true;
+  await page.clock.fastForward(300001);
+  await page.waitForFunction(() => document.querySelector('#portfolio-statistics-status').textContent.includes('retained'));
+  assert.equal(await page.locator('#portfolio-long-statistics [data-metric="forwardPE"] dd').textContent(), '20.00×');
   mode = 'pending'; await page.reload();
   await page.getByRole('heading', {name: 'Tracker awaiting confirmation'}).waitFor();
   assert.equal(await page.locator('#portfolio-pnl').textContent(), '—');
@@ -77,5 +93,5 @@ try {
   const count = markReads; await page.evaluate(() => window.dispatchEvent(new Event('online')));
   assert.equal(markReads, count);
   assert.deepEqual(errors, []);
-  console.log('Portfolio browser checks passed: native markPx, realized/unrealized totals, dated statuses, filters, chart controls, retained failure, mobile layout, and pending book. Synthetic data only.');
+  console.log('Portfolio browser checks passed: native markPx, realized/unrealized totals, dated statuses, filters, chart controls, retained failure, weighted long/short statistics, dated coverage, failed statistics reload retention, mobile layout, and pending book. Synthetic data only.');
 } finally { await browser.close(); }

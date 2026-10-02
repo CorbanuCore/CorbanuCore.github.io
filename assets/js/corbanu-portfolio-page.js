@@ -13,7 +13,7 @@
     if (className) result.className = className;
     return result;
   };
-  let ledger, observations = [], historicalValues = [], current, liveObservation, chartPoints = [], chartIndex = 0, period = 'all', filter = 'current', refreshing = false;
+  let ledger, statistics, statisticsUnavailable = false, observations = [], historicalValues = [], current, liveObservation, chartPoints = [], chartIndex = 0, period = 'all', filter = 'current', refreshing = false;
   function notice(message) { $('portfolio-notice').textContent = message || ''; $('portfolio-notice').hidden = !message; }
   function feed(message, live) { $('portfolio-feed-text').textContent = message; $('portfolio-feed').classList.toggle('is-live', !!live); }
   function empty(id, heading, message) {
@@ -65,6 +65,34 @@
       if (href) { const link = node('a', 'Research ↗'); link.href = href; li.append(link); }
       $('portfolio-activity').append(li);
     }
+  }
+  function portfolioStatistics() {
+    const groups = CorbanuPortfolio.aggregateStatistics(current?.positions || [], statistics);
+    const labels = [['forwardPE', 'Avg forward P/E · BEST'], ['forwardSalesGrowthPct', 'Avg sales growth'],
+      ['forwardEPSGrowthPct', 'Avg EPS growth'], ['sevenDayFundingAprPct', 'Avg funding APR · 7d forecast'],
+      ['epsRevision28dPctOfPrice', 'Avg earnings revisions · 28 obs.']];
+    for (const side of ['long', 'short']) {
+      const group = groups[side], body = $(`portfolio-${side}-statistics`);
+      body.replaceChildren();
+      $(`portfolio-${side}-summary`).textContent = `${group.positionCount} positions · ${weight(group.totalWeight)} published weight`;
+      for (const [field, label] of labels) {
+        const metric = group.metrics[field], row = node('div', null, 'portfolio-stat-row'); row.dataset.metric = field;
+        const description = node('dt', label), value = node('dd', metric.value == null ? '—' : field === 'forwardPE' ? `${metric.value.toFixed(2)}×` : pct(metric.value));
+        if (field === 'epsRevision28dPctOfPrice') description.append(node('small', 'change in consensus EPS as % of price'));
+        if (field === 'sevenDayFundingAprPct' && metric.carryAprPct != null) description.append(node('small', `Side carry ${pct(metric.carryAprPct)} APR · + received / − paid`));
+        row.append(description, value);
+        let coverage = `${metric.coveredCount}/${metric.totalCount} positions · ${metric.coveragePct.toFixed(1)}% of weight`;
+        const metricDate = value => new Date(value).toLocaleDateString('en-GB', {timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric'});
+        if (metric.oldestAt) coverage += ` · ${metricDate(metric.oldestAt)}${metric.newestAt !== metric.oldestAt ? ' – ' + metricDate(metric.newestAt) : ''}`;
+        const detail = node('p', coverage, 'portfolio-stat-coverage');
+        detail.title = [metric.oldestAt ? `Source dates: ${metric.oldestAt} to ${metric.newestAt}` : 'No dated source values', ...metric.bases].join(' · ');
+        row.append(detail);
+        const notes = [...metric.missing.map(item => `${item.symbol}: ${item.note}`), ...metric.notes];
+        if (notes.length) row.append(node('p', [...new Set(notes)].join(' · '), 'portfolio-stat-note'));
+        body.append(row);
+      }
+    }
+    $('portfolio-statistics-status').textContent = statistics ? statisticsUnavailable ? 'Statistics refresh unavailable · retained dates shown' : 'Source dates and coverage shown per metric' : 'Statistics source unavailable · coverage shown below';
   }
   const svgNode = (tag, attrs, text) => {
     const result = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -124,7 +152,7 @@
     }
     $('portfolio-gross').textContent = current.grossPct == null ? '—' : `${current.grossPct.toFixed(2)}%`;
     $('portfolio-net').textContent = current.netPct == null ? 'mark coverage incomplete' : `${pct(current.netPct)} net exposure`;
-    positions(); activity(); chart();
+    positions(); portfolioStatistics(); activity(); chart();
   }
   async function getJSON(url) {
     const response = await fetch(url, {cache: 'no-store', signal: AbortSignal.timeout(12000)});
@@ -133,21 +161,25 @@
   }
   async function load() {
     try {
-      const [book, marks] = await Promise.all([getJSON('/assets/portfolio/ledger.json'), getJSON('/assets/portfolio/marks.json')]);
+      const [book, marks, sourceStats] = await Promise.all([getJSON('/assets/portfolio/ledger.json'), getJSON('/assets/portfolio/marks.json'),
+        getJSON('/assets/portfolio/statistics.json').catch(() => null)]);
       CorbanuPortfolio.validateLedger(book);
       if (marks.schema !== 'corbanu.portfolio-marks.v1' || !Array.isArray(marks.observations)) throw Error('Invalid portfolio observations.');
       if (book.state === 'pending') {
-        ledger = book; current = null; observations = []; historicalValues = []; liveObservation = null;
+        ledger = book; current = null; statistics = null; observations = []; historicalValues = []; liveObservation = null;
         $('pnl-chart').replaceChildren(); $('portfolio-positions').replaceChildren(); $('portfolio-activity').replaceChildren();
         for (const id of ['pnl', 'unrealized', 'realized', 'gross']) $(`portfolio-${id}`).textContent = '—';
         $('portfolio-position-count').textContent = ''; $('portfolio-net').textContent = 'of initial capital';
         $('portfolio-activity-empty').hidden = false; notice(null); feed('Tracker setup pending', false);
         empty('portfolio-chart-empty', 'Tracker awaiting confirmation', book.reason);
         empty('portfolio-positions-empty', 'Portfolio ledger pending', 'Positions will appear after the tracker book and capital weights are confirmed.');
+        portfolioStatistics();
         return;
       }
       const values = CorbanuPortfolio.history(book, marks.observations); // Validate before replacing a last good view.
       ledger = book; observations = marks.observations; liveObservation = null;
+      if (sourceStats?.schema === 'corbanu.portfolio-statistics.v1' && sourceStats.positions && !Array.isArray(sourceStats.positions)) statistics = sourceStats;
+      statisticsUnavailable = sourceStats?.schema !== 'corbanu.portfolio-statistics.v1' || !sourceStats.positions || Array.isArray(sourceStats.positions);
       historicalValues = values;
       const latest = observations[observations.length - 1];
       current = CorbanuPortfolio.valueBook(ledger, new Date().toISOString(), latest?.marks || {});

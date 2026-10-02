@@ -75,3 +75,37 @@ test('rejects fabricated defaults for missing capital, prices, dates and duplica
   assert.throws(() => validateLedger(book([event(2, 10, 100), event(1, 10, 100)])), /order/);
   assert.equal(valueBook({schema: 'corbanu.portfolio.v1', state: 'pending'}, at(1), {}), null);
 });
+
+test('aggregate statistics use published weights, preserve zero and negative metrics, and exclude exits', () => {
+  const {aggregateStatistics} = createRequire(import.meta.url)('../assets/js/corbanu-portfolio.js');
+  const rows = [{id:'a',symbol:'A',rawSymbol:'xyz:A',quantity:1,statedWeightPct:3,weightPct:30},
+    {id:'b',symbol:'B',rawSymbol:'xyz:B',quantity:1,statedWeightPct:1,weightPct:30},
+    {id:'s',symbol:'S',rawSymbol:'xyz:S',quantity:-1,statedWeightPct:-2},
+    {id:'closed',symbol:'C',rawSymbol:'xyz:C',quantity:0,statedWeightPct:100}];
+  const metric=(value,observedAt='2026-09-28')=>({value,observedAt});
+  const source={positions:{a:{rawSymbol:'xyz:A',metrics:{forwardPE:metric(10),forwardSalesGrowthPct:metric(-10),epsRevision28dPctOfPrice:metric(0),sevenDayFundingAprPct:metric(4)}},
+    b:{rawSymbol:'xyz:B',metrics:{forwardPE:metric(30,'2026-09-25'),forwardSalesGrowthPct:metric(30),epsRevision28dPctOfPrice:metric(4),sevenDayFundingAprPct:metric(-4)}},
+    s:{rawSymbol:'xyz:S',metrics:{forwardPE:metric(90),sevenDayFundingAprPct:metric(-5)}}}};
+  const out=aggregateStatistics(rows,source,at(30));
+  close(out.long.metrics.forwardPE.value,15);close(out.long.metrics.forwardSalesGrowthPct.value,0);
+  close(out.long.metrics.epsRevision28dPctOfPrice.value,1);close(out.long.metrics.sevenDayFundingAprPct.carryAprPct,-2);
+  close(out.short.metrics.sevenDayFundingAprPct.carryAprPct,-5);
+  assert.equal(out.long.positionCount,2);assert.equal(out.long.totalWeight,4);
+  assert.equal(out.long.metrics.forwardPE.oldestAt,'2026-09-25');assert.equal(out.long.metrics.forwardPE.newestAt,'2026-09-28');
+  assert.equal(out.short.metrics.forwardPE.value,90);
+});
+test('aggregate coverage excludes n/m, future and mismatched data, and spot funding is structural zero', () => {
+  const {aggregateStatistics} = createRequire(import.meta.url)('../assets/js/corbanu-portfolio.js');
+  const rows=[{id:'a',symbol:'A',rawSymbol:'xyz:A',quantity:1,statedWeightPct:3},
+    {id:'spot',symbol:'TOKEN',rawSymbol:'TOKEN',markAdapter:'felix',quantity:1,statedWeightPct:1},
+    {id:'s',symbol:'S',rawSymbol:'xyz:S',quantity:-1,statedWeightPct:-2}];
+  const source={positions:{a:{rawSymbol:'xyz:A',metrics:{forwardPE:{value:10,observedAt:'2026-09-28'},forwardEPSGrowthPct:{value:null,note:'n/m: trailing loss'},sevenDayFundingAprPct:{value:4,observedAt:'2026-09-28'}}},
+    spot:{rawSymbol:'TOKEN',metrics:{forwardPE:{value:20,observedAt:'2026-10-04'},sevenDayFundingAprPct:{value:0,notApplicable:true,note:'Spot token: no perpetual funding'}}},
+    s:{rawSymbol:'xyz:WRONG',metrics:{forwardPE:{value:99,observedAt:'2026-09-28'}}}}};
+  const out=aggregateStatistics(rows,source,at(30));
+  close(out.long.metrics.forwardPE.value,10);close(out.long.metrics.forwardPE.coveragePct,75);
+  assert.equal(out.long.metrics.forwardEPSGrowthPct.value,null);assert.equal(out.long.metrics.forwardEPSGrowthPct.missing[0].note,'n/m: trailing loss');
+  close(out.long.metrics.sevenDayFundingAprPct.value,3);assert.equal(out.long.metrics.sevenDayFundingAprPct.coveragePct,100);
+  assert.equal(out.short.metrics.forwardPE.value,null);
+  assert.equal(aggregateStatistics([],source,at(30)).long.metrics.forwardPE.value,null);
+});
