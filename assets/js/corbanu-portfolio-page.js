@@ -72,7 +72,7 @@
       ['forwardSalesGrowthPct', 'Avg sales growth', 'Forward consensus vs trailing 12 months'],
       ['forwardEPSGrowthPct', 'Avg EPS growth', 'Forward consensus vs trailing 12 months'],
       ['sevenDayFundingAprPct', 'Avg funding APR', 'Seven-day model forecast'],
-      ['epsRevision28dPctOfPrice', 'Avg earnings revisions', '28 observations · change in EPS / price']];
+      ['epsRevision28dPctOfPrice', 'Avg earnings revisions', 'Change in EPS / price']];
     const body = $('portfolio-statistics'); body.replaceChildren();
     const sourceNotes = new Map();
     for (const side of ['long', 'short']) {
@@ -97,6 +97,9 @@
           const key = `${side} · ${item.symbol}: ${item.note}`;
           if (!sourceNotes.has(key)) sourceNotes.set(key, []);
           sourceNotes.get(key).push(label.replace('Avg ', ''));
+        }
+        if (field === 'epsRevision28dPctOfPrice') for (const basis of metric.bases) {
+          if (/observation window/i.test(basis)) sourceNotes.set(`${side} · Earnings revision window: ${basis}`, ['Earnings revisions']);
         }
         for (const note of metric.notes) {
           const key = `${side} · ${note}`;

@@ -87,10 +87,11 @@ try {
   assert.equal(await page.locator('#portfolio-statistics td').count(), 10);
   ledger.positions.push({id: 'added', symbol: 'NEW_FIXTURE', name: 'New synthetic holding', rawSymbol: 'xyz:NEW_FIXTURE', venue: 'Fixture venue', markAdapter: 'hyperliquid'});
   ledger.events.push({id: 'new-entry', type: 'trade', positionId: 'added', at: at(0), quantity: 3, price: 10, targetWeightPct: 3});
-  statistics.positions.added = {rawSymbol: 'xyz:NEW_FIXTURE', metrics: {forwardPE: fixtureMetric(10), forwardSalesGrowthPct: fixtureMetric(0), forwardEPSGrowthPct: fixtureMetric(0), sevenDayFundingAprPct: fixtureMetric(0), epsRevision28dPctOfPrice: fixtureMetric(0)}};
+  statistics.positions.added = {rawSymbol: 'xyz:NEW_FIXTURE', metrics: {forwardPE: fixtureMetric(10), forwardSalesGrowthPct: fixtureMetric(0), forwardEPSGrowthPct: fixtureMetric(0), sevenDayFundingAprPct: fixtureMetric(0), epsRevision28dPctOfPrice: {...fixtureMetric(0), basis: '8-observation window'}}};
   await page.clock.fastForward(300001);
   await page.waitForFunction(() => document.querySelector('#portfolio-statistics [data-metric="forwardPE"] [data-side="long"] strong').textContent === '18.33×');
   assert.match(await page.locator('#portfolio-long-summary').textContent(), /2 positions/);
+  assert.match(await page.locator('#portfolio-statistics-notes').textContent(), /8-observation window/);
   assert.equal(await page.locator('#portfolio-positions tr').count(), 3);
   assert.equal(await page.locator('#portfolio-statistics [data-metric="forwardPE"] [data-side="short"] strong').textContent(), '40.00×');
   rejectStatistics = true;
