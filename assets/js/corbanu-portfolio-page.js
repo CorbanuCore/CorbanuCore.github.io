@@ -68,31 +68,49 @@
   }
   function portfolioStatistics() {
     const groups = CorbanuPortfolio.aggregateStatistics(current?.positions || [], statistics);
-    const labels = [['forwardPE', 'Avg forward P/E · BEST'], ['forwardSalesGrowthPct', 'Avg sales growth'],
-      ['forwardEPSGrowthPct', 'Avg EPS growth'], ['sevenDayFundingAprPct', 'Avg funding APR · 7d forecast'],
-      ['epsRevision28dPctOfPrice', 'Avg earnings revisions · 28 obs.']];
+    const labels = [['forwardPE', 'Avg forward P/E', 'Consensus BEST P/E'],
+      ['forwardSalesGrowthPct', 'Avg sales growth', 'Forward consensus vs trailing 12 months'],
+      ['forwardEPSGrowthPct', 'Avg EPS growth', 'Forward consensus vs trailing 12 months'],
+      ['sevenDayFundingAprPct', 'Avg funding APR', 'Seven-day model forecast'],
+      ['epsRevision28dPctOfPrice', 'Avg earnings revisions', '28 observations · change in EPS / price']];
+    const body = $('portfolio-statistics'); body.replaceChildren();
+    const sourceNotes = new Map();
     for (const side of ['long', 'short']) {
-      const group = groups[side], body = $(`portfolio-${side}-statistics`);
-      body.replaceChildren();
+      const group = groups[side];
       $(`portfolio-${side}-summary`).textContent = `${group.positionCount} positions · ${weight(group.totalWeight)} published weight`;
-      for (const [field, label] of labels) {
-        const metric = group.metrics[field], row = node('div', null, 'portfolio-stat-row'); row.dataset.metric = field;
-        const description = node('dt', label), value = node('dd', metric.value == null ? '—' : field === 'forwardPE' ? `${metric.value.toFixed(2)}×` : pct(metric.value));
-        if (field === 'epsRevision28dPctOfPrice') description.append(node('small', 'change in consensus EPS as % of price'));
-        if (field === 'sevenDayFundingAprPct' && metric.carryAprPct != null) description.append(node('small', `Side carry ${pct(metric.carryAprPct)} APR · + received / − paid`));
-        row.append(description, value);
-        let coverage = `${metric.coveredCount}/${metric.totalCount} positions · ${metric.coveragePct.toFixed(1)}% of weight`;
-        const metricDate = value => new Date(value).toLocaleDateString('en-GB', {timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric'});
-        if (metric.oldestAt) coverage += ` · ${metricDate(metric.oldestAt)}${metric.newestAt !== metric.oldestAt ? ' – ' + metricDate(metric.newestAt) : ''}`;
-        const detail = node('p', coverage, 'portfolio-stat-coverage');
-        detail.title = [metric.oldestAt ? `Source dates: ${metric.oldestAt} to ${metric.newestAt}` : 'No dated source values', ...metric.bases].join(' · ');
-        row.append(detail);
-        const notes = [...metric.missing.map(item => `${item.symbol}: ${item.note}`), ...metric.notes];
-        if (notes.length) row.append(node('p', [...new Set(notes)].join(' · '), 'portfolio-stat-note'));
-        body.append(row);
-      }
     }
-    $('portfolio-statistics-status').textContent = statistics ? statisticsUnavailable ? 'Statistics refresh unavailable · retained dates shown' : 'Source dates and coverage shown per metric' : 'Statistics source unavailable · coverage shown below';
+    for (const [field, label, basis] of labels) {
+      const row = node('tr'); row.dataset.metric = field;
+      const heading = node('th', label); heading.scope = 'row'; heading.append(node('small', basis)); row.append(heading);
+      for (const side of ['long', 'short']) {
+        const metric = groups[side].metrics[field], cell = node('td'); cell.dataset.side = side;
+        const value = node('strong', metric.value == null ? '—' : field === 'forwardPE' ? `${metric.value.toFixed(2)}×` : pct(metric.value), 'portfolio-stat-value');
+        cell.append(value, node('small', `${metric.coveragePct.toFixed(1)}% weight · ${metric.coveredCount}/${metric.totalCount} positions`, 'portfolio-stat-coverage'));
+        const metricDate = stamp => new Date(stamp).toLocaleDateString('en-GB', {timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric'});
+        if (metric.oldestAt) {
+          const dates = node('small', metricDate(metric.oldestAt) + (metric.newestAt !== metric.oldestAt ? ' – ' + metricDate(metric.newestAt) : ''), 'portfolio-stat-date');
+          dates.title = `Source observations: ${metric.oldestAt} to ${metric.newestAt}`; cell.append(dates);
+        }
+        if (field === 'sevenDayFundingAprPct' && metric.carryAprPct != null) cell.append(node('small', `Carry ${pct(metric.carryAprPct)} APR`, metric.carryAprPct < 0 ? 'negative' : 'positive'));
+        cell.title = [...metric.bases, ...metric.missing.map(item => `${item.symbol}: ${item.note}`)].join(' · ');
+        for (const item of metric.missing) {
+          const key = `${side} · ${item.symbol}: ${item.note}`;
+          if (!sourceNotes.has(key)) sourceNotes.set(key, []);
+          sourceNotes.get(key).push(label.replace('Avg ', ''));
+        }
+        for (const note of metric.notes) {
+          const key = `${side} · ${note}`;
+          if (!sourceNotes.has(key)) sourceNotes.set(key, []);
+          sourceNotes.get(key).push(label.replace('Avg ', ''));
+        }
+        row.append(cell);
+      }
+      body.append(row);
+    }
+    const notes = $('portfolio-statistics-notes'); notes.replaceChildren();
+    for (const [key, fields] of sourceNotes) notes.append(node('li', `${key.replace(/^(long|short)/, value => value === 'long' ? 'Longs' : 'Shorts')} (${[...new Set(fields)].join(', ')})`));
+    if (!sourceNotes.size) notes.append(node('li', groups.long.positionCount + groups.short.positionCount ? 'All current positions have source coverage for the displayed metrics.' : 'No current positions to aggregate.'));
+    $('portfolio-statistics-status').textContent = statistics ? statisticsUnavailable ? 'Statistics refresh unavailable · retained dates shown' : 'Dated source observations · coverage shown per metric' : 'Statistics source unavailable · coverage shown below';
   }
   const svgNode = (tag, attrs, text) => {
     const result = document.createElementNS('http://www.w3.org/2000/svg', tag);
