@@ -139,7 +139,90 @@
     }
     return result;
   }
-  const api = {validateLedger, valueBook, history, aggregateStatistics};
+  const day = 86400000;
+  function dailyPrices(candles, rawSymbol, at = new Date().toISOString()) {
+    if (!Array.isArray(candles)) throw Error('Daily venue candles are required.');
+    const end = time(at), prices = new Map();
+    for (const candle of candles) {
+      if (candle.s !== rawSymbol || candle.i !== '1d') throw Error('Daily candle instrument or interval mismatch.');
+      if (!number(candle.t) || !number(candle.T) || candle.t % day !== 0 || candle.T !== candle.t + day - 1) throw Error('Invalid UTC daily candle boundary.');
+      if (candle.T > end) continue;
+      const price = Number(candle.c);
+      if (!Number.isFinite(price) || price <= 0) throw Error('Invalid daily closing price.');
+      if (prices.has(candle.T) && prices.get(candle.T) !== price) throw Error('Conflicting daily closing prices.');
+      prices.set(candle.T, price);
+    }
+    return prices;
+  }
+  function dailyBook(ledger, observations, series, at = new Date().toISOString(), days = 90) {
+    validateLedger(ledger);
+    if (ledger.state !== 'ready') return [];
+    const end = Math.floor(time(at) / day) * day - 1;
+    const start = Math.max(Math.floor(time(ledger.inception) / day) * day + day - 1, end - days * day);
+    const native = ledger.positions.filter(row => row.markAdapter === 'hyperliquid');
+    const closes = Object.fromEntries(native.map(row => [row.id, dailyPrices(series[row.rawSymbol] || [], row.rawSymbol, at)]));
+    let previous = -Infinity;
+    for (const point of observations) {
+      const stamp = time(point.at);
+      if (stamp <= previous) throw Error('Market observations must have unique increasing dates.');
+      previous = stamp;
+    }
+    let index = 0, recorded = {};
+    const values = [];
+    for (let stamp = start; stamp <= end; stamp += day) {
+      while (index < observations.length && time(observations[index].at) <= stamp) recorded = observations[index++].marks;
+      const marks = {...recorded}, closeAt = new Date(stamp).toISOString();
+      for (const position of native) {
+        delete marks[position.id]; // A retained intraday perp quote is not a matching daily close.
+        let price = closes[position.id].get(stamp);
+        if (price == null) continue;
+        let adjusted = false;
+        for (const rule of position.historicalPriceAdjustments || []) {
+          if (!number(rule.divisor) || rule.divisor <= 0) throw Error('Invalid historical price adjustment.');
+          if (stamp < time(rule.before)) { price /= rule.divisor; adjusted = true; }
+        }
+        marks[position.id] = {price, observedAt: closeAt, source: 'Hyperliquid UTC daily candle close' + (adjusted ? ' · adjusted quote basis' : '')};
+      }
+      const value = valueBook(ledger, closeAt, marks);
+      value.retained = value.positions.filter(row => row.quantity && row.markAsOf && time(row.markAsOf) < stamp)
+        .map(row => ({symbol: row.symbol, observedAt: row.markAsOf}));
+      values.push(value);
+    }
+    return values;
+  }
+  function realizedBeta(values, candles, {rawSymbol, days = 30, at = new Date().toISOString()} = {}) {
+    if (![30, 90].includes(days)) throw Error('Beta window must be 30 or 90 days.');
+    const end = Math.floor(time(at) / day) * day - 1, start = end - days * day;
+    const prices = dailyPrices(candles, rawSymbol, at), book = new Map(), pairs = [];
+    for (const value of values) {
+      const stamp = time(value.at), nav = 1 + value.pnlPct / 100;
+      if (value.complete && number(value.pnlPct) && nav > 0 && stamp >= start && stamp <= end) book.set(stamp, {nav, value});
+    }
+    for (let stamp = start + day; stamp <= end; stamp += day) {
+      const previous = book.get(stamp - day), current = book.get(stamp);
+      if (!previous || !current || !prices.has(stamp - day) || !prices.has(stamp)) continue;
+      pairs.push({startAt: previous.value.at, endAt: current.value.at,
+        bookReturn: current.nav / previous.nav - 1, benchmarkReturn: prices.get(stamp) / prices.get(stamp - day) - 1,
+        retained: [...(previous.value.retained || []), ...(current.value.retained || [])]});
+    }
+    const count = pairs.length;
+    const result = {beta: null, rSquared: null, observations: count, requestedDays: days, fullWindow: count === days,
+      startAt: pairs[0]?.startAt || null, endAt: pairs.at(-1)?.endAt || null,
+      retainedSymbols: [...new Set(pairs.flatMap(row => row.retained.map(item => item.symbol)))], reason: null};
+    if (count < 2) return {...result, reason: 'Fewer than two paired daily returns'};
+    const xMean = pairs.reduce((sum, row) => sum + row.benchmarkReturn, 0) / count;
+    const yMean = pairs.reduce((sum, row) => sum + row.bookReturn, 0) / count;
+    let xx = 0, xy = 0, yy = 0;
+    for (const row of pairs) {
+      const x = row.benchmarkReturn - xMean, y = row.bookReturn - yMean;
+      xx += x * x; xy += x * y; yy += y * y;
+    }
+    if (!(xx > 0)) return {...result, reason: 'Benchmark returns have no variance'};
+    result.beta = xy / xx;
+    result.rSquared = yy > 0 ? Math.min(1, Math.max(0, xy * xy / (xx * yy))) : null;
+    return result;
+  }
+  const api = {validateLedger, valueBook, history, aggregateStatistics, dailyPrices, dailyBook, realizedBeta};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.CorbanuPortfolio = api;
 })(typeof window === 'undefined' ? globalThis : window);
