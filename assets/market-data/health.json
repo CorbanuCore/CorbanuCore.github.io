@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-04T21:30:35.031313Z",
+ "generatedAt": "2026-10-04T21:44:43.212374Z",
  "overall": "warn",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-04T21:30:35.031313Z"
+     "detail": "health snapshot generated 2026-10-04T21:44:43.212374Z"
     }
    ],
    "status": "ok"
@@ -20,15 +20,30 @@
   {
    "id": "coverage",
    "label": "Spot / Perp Coverage",
-   "summary": "42/42 instruments current",
+   "summary": "39/42 instruments current",
    "items": [
     {
      "name": "index build",
      "status": "ok",
-     "detail": "coverage indices finished 24.1h ago"
+     "detail": "coverage indices finished 0.2h ago"
+    },
+    {
+     "name": "CXMT",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-09-30"
+    },
+    {
+     "name": "SKHX",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-10-02"
+    },
+    {
+     "name": "SMSN",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-10-02"
     }
    ],
-   "status": "ok"
+   "status": "warn"
   },
   {
    "id": "options",
@@ -45,7 +60,7 @@
     {
      "name": "packet build",
      "status": "ok",
-     "detail": "transcript packet generated 24.1h ago"
+     "detail": "transcript packet generated 0.1h ago"
     },
     {
      "name": "fundamentals",
@@ -93,7 +108,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 24.0h ago"
+     "detail": "35 instruments, generated 0.0h ago"
     }
    ],
    "status": "ok"
@@ -121,7 +136,7 @@
     {
      "name": "ai publication",
      "status": "ok",
-     "detail": "state started; last verified 2026-10-04T21:16:19.695004Z; retry due None"
+     "detail": "state verified; last verified 2026-10-04T21:31:39.728956Z; retry due None"
     },
     {
      "name": "full publication",
@@ -154,12 +169,12 @@
     {
      "name": "corbanu-ai-capital-stack.service",
      "status": "ok",
-     "detail": "state activating; last attempt Sun 2026-10-04 21:30:20 UTC; last successful completion Sun 2026-10-04 21:00:33 UTC"
+     "detail": "state inactive; last attempt Sun 2026-10-04 21:30:20 UTC; last successful completion Sun 2026-10-04 21:30:48 UTC"
     },
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "ok",
-     "detail": "state activating; last attempt Sun 2026-10-04 21:30:00 UTC; last successful completion Sun 2026-10-04 21:11:25 UTC"
+     "detail": "state inactive; last attempt Sun 2026-10-04 21:40:15 UTC; last successful completion Sun 2026-10-04 21:40:24 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -179,22 +194,22 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sun 2026-10-04 21:25:39 UTC; last successful completion Sun 2026-10-04 21:25:51 UTC"
+     "detail": "state inactive; last attempt Sun 2026-10-04 21:40:40 UTC; last successful completion Sun 2026-10-04 21:40:52 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sun 2026-10-04 21:30:05 UTC; last successful completion Sun 2026-10-04 21:30:05 UTC"
+     "detail": "state inactive; last attempt Sun 2026-10-04 21:44:20 UTC; last successful completion Sun 2026-10-04 21:44:20 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
      "status": "ok",
-     "detail": "state activating; last attempt Sun 2026-10-04 21:30:03 UTC; last successful completion Sun 2026-10-04 21:12:55 UTC"
+     "detail": "state inactive; last attempt Sun 2026-10-04 21:40:09 UTC; last successful completion Sun 2026-10-04 21:43:00 UTC"
     },
     {
      "name": "pipeline-research-context-publish.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sun 2026-10-04 21:25:13 UTC; last successful completion Sun 2026-10-04 21:26:19 UTC"
+     "detail": "state inactive; last attempt Sun 2026-10-04 21:36:19 UTC; last successful completion Sun 2026-10-04 21:37:26 UTC"
     },
     {
      "name": "pipeline-research-context-reconcile.service",
@@ -227,21 +242,21 @@
   },
   {
    "name": "corbanu-ai-capital-stack.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Sun 2026-10-04 21:30:20 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Sun 2026-10-04 21:30:48 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sun 2026-10-04 21:00:33 UTC"
+   "lastSuccessAt": "Sun 2026-10-04 21:30:48 UTC"
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Sun 2026-10-04 21:30:00 UTC",
-   "lastExitAt": null,
+   "lastAttemptAt": "Sun 2026-10-04 21:40:15 UTC",
+   "lastExitAt": "Sun 2026-10-04 21:40:24 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sun 2026-10-04 21:11:25 UTC"
+   "lastSuccessAt": "Sun 2026-10-04 21:40:24 UTC"
   },
   {
    "name": "pipeline-coverage-equity-live.service",
@@ -274,37 +289,37 @@
    "name": "pipeline-current-signal-catalog-sync.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Sun 2026-10-04 21:25:39 UTC",
-   "lastExitAt": "Sun 2026-10-04 21:25:51 UTC",
+   "lastAttemptAt": "Sun 2026-10-04 21:40:40 UTC",
+   "lastExitAt": "Sun 2026-10-04 21:40:52 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sun 2026-10-04 21:25:51 UTC"
+   "lastSuccessAt": "Sun 2026-10-04 21:40:52 UTC"
   },
   {
    "name": "corbanu-market-lens-retry.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Sun 2026-10-04 21:30:05 UTC",
-   "lastExitAt": "Sun 2026-10-04 21:30:05 UTC",
+   "lastAttemptAt": "Sun 2026-10-04 21:44:20 UTC",
+   "lastExitAt": "Sun 2026-10-04 21:44:20 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sun 2026-10-04 21:30:05 UTC"
+   "lastSuccessAt": "Sun 2026-10-04 21:44:20 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Sun 2026-10-04 21:30:03 UTC",
-   "lastExitAt": null,
+   "lastAttemptAt": "Sun 2026-10-04 21:40:09 UTC",
+   "lastExitAt": "Sun 2026-10-04 21:43:00 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sun 2026-10-04 21:12:55 UTC"
+   "lastSuccessAt": "Sun 2026-10-04 21:43:00 UTC"
   },
   {
    "name": "pipeline-research-context-publish.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Sun 2026-10-04 21:25:13 UTC",
-   "lastExitAt": "Sun 2026-10-04 21:26:19 UTC",
+   "lastAttemptAt": "Sun 2026-10-04 21:36:19 UTC",
+   "lastExitAt": "Sun 2026-10-04 21:37:26 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sun 2026-10-04 21:26:19 UTC"
+   "lastSuccessAt": "Sun 2026-10-04 21:37:26 UTC"
   },
   {
    "name": "pipeline-research-context-reconcile.service",
@@ -337,7 +352,7 @@
  "sources": [
   {
    "name": "NBIS financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-10-02",
     "epsRevision28dPctOfPrice": "2026-10-02"
@@ -346,7 +361,7 @@
   },
   {
    "name": "NVDA financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -357,7 +372,7 @@
   },
   {
    "name": "PLTR financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -368,7 +383,7 @@
   },
   {
    "name": "SKHX financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -379,7 +394,7 @@
   },
   {
    "name": "SPCX financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "epsRevision28dPctOfPrice": "2026-10-02"
@@ -388,7 +403,7 @@
   },
   {
    "name": "SNDK financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -399,7 +414,7 @@
   },
   {
    "name": "SOXL financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -410,7 +425,7 @@
   },
   {
    "name": "SP500 financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -421,7 +436,7 @@
   },
   {
    "name": "MU financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -432,7 +447,7 @@
   },
   {
    "name": "SMSN financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -443,7 +458,7 @@
   },
   {
    "name": "MSFT financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -454,7 +469,7 @@
   },
   {
    "name": "EWY financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -465,7 +480,7 @@
   },
   {
    "name": "META financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -476,7 +491,7 @@
   },
   {
    "name": "LITE financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -487,7 +502,7 @@
   },
   {
    "name": "INTC financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -498,7 +513,7 @@
   },
   {
    "name": "GOOGL financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -509,7 +524,7 @@
   },
   {
    "name": "CXMT financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-09-30",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -520,7 +535,7 @@
   },
   {
    "name": "CRCL financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -531,7 +546,7 @@
   },
   {
    "name": "CBRS financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -541,7 +556,7 @@
   },
   {
    "name": "AMZN financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -552,7 +567,7 @@
   },
   {
    "name": "AMD financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -563,7 +578,7 @@
   },
   {
    "name": "AAPL financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -574,7 +589,7 @@
   },
   {
    "name": "TSLA financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -585,7 +600,7 @@
   },
   {
    "name": "MRVL financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -596,7 +611,7 @@
   },
   {
    "name": "XYZ100 financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -607,7 +622,7 @@
   },
   {
    "name": "MSTR financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -617,7 +632,7 @@
   },
   {
    "name": "SKHY financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -628,7 +643,7 @@
   },
   {
    "name": "COIN financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -639,7 +654,7 @@
   },
   {
    "name": "BE financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-02",
     "forwardSalesGrowthPct": "2026-10-02",
@@ -650,7 +665,7 @@
   },
   {
    "name": "DRAM financial fields",
-   "generatedAt": "2026-10-04T21:09:57.783049Z",
+   "generatedAt": "2026-10-04T21:36:39.321690Z",
    "observations": {
     "forwardPE": "2026-10-04",
     "forwardSalesGrowthPct": "2026-10-04",
@@ -663,1004 +678,1004 @@
    "name": "aapl-options options",
    "observedAt": "2026-10-02T20:00:03.829000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "amd-options options",
    "observedAt": "2026-10-02T20:00:00.320000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "amzn-options options",
    "observedAt": "2026-10-02T20:00:02.651000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "be-options options",
    "observedAt": "2026-10-02T20:00:05.333000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "brentoil-options options",
    "observedAt": "2026-10-02T20:00:03.508000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "btc-options options",
    "observedAt": "2026-10-02T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "cbrs-options options",
    "observedAt": "2026-10-02T20:00:03.455000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "cl-options options",
    "observedAt": "2026-10-02T20:00:02.301000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "coin-options options",
    "observedAt": "2026-10-02T20:00:01.993000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "crcl-options options",
    "observedAt": "2026-10-02T20:00:05.121000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "dram-options options",
    "observedAt": "2026-10-02T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "eth-options options",
    "observedAt": "2026-10-02T20:00:05.368000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "ewy-options options",
    "observedAt": "2026-10-02T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "gold-options options",
    "observedAt": "2026-10-02T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "googl-options options",
    "observedAt": "2026-10-02T20:00:01.528000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "intc-options options",
    "observedAt": "2026-10-02T20:00:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "meta-options options",
    "observedAt": "2026-10-02T20:00:05.931000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "mrvl-options options",
    "observedAt": "2026-10-02T20:00:03.261000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "msft-options options",
    "observedAt": "2026-10-02T20:00:01.328000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "mstr-options options",
    "observedAt": "2026-10-02T20:00:06.750000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "mu-options options",
    "observedAt": "2026-10-02T20:00:02.290000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "natgas-options options",
    "observedAt": "2026-10-02T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "nbis-options options",
    "observedAt": "2026-10-02T20:00:00.391000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "nvda-options options",
    "observedAt": "2026-10-02T20:00:05.993000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "pltr-options options",
    "observedAt": "2026-10-02T20:00:03.391000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "silver-options options",
    "observedAt": "2026-10-02T20:15:00.634000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "skhx-options options",
    "observedAt": "2026-10-02T20:00:03.021000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "skhy-options options",
    "observedAt": "2026-10-02T20:00:03.021000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "sndk-options options",
    "observedAt": "2026-10-02T20:00:03.340000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "soxl-options options",
    "observedAt": "2026-10-02T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "sp500-options options",
    "observedAt": "2026-10-02T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "spcx-options options",
    "observedAt": "2026-10-02T20:00:02.560000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "tsla-options options",
    "observedAt": "2026-10-02T20:00:05.195000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "xyz100-options options",
    "observedAt": "2026-10-02T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-04T21:10:57.247104Z",
+   "generatedAt": "2026-10-04T21:43:39.681736Z",
    "state": "available"
   },
   {
    "name": "BTC cash history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ETH cash history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "HYPE cash history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "LIT cash history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOL cash history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XRP cash history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ZEC cash history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AAPL cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMD cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMZN cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BE cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BRENTOIL cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CBRS cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CL cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COIN cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COPPER cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CRCL cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CXMT cash history",
    "observedAt": "2026-09-30T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "DRAM cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "EWY cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOLD cash history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOOGL cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "INTC cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "META cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MRVL cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSFT cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSTR cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MU cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NATGAS cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NBIS cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NVDA cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "PLTR cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SILVER cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHX cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHY cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SMSN cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SNDK cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOXL cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SP500 cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SPCX cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "TSLA cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XYZ100 cash history",
    "observedAt": "2026-10-02T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BTC perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ETH perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "HYPE perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "LIT perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOL perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XRP perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ZEC perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AAPL perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMD perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMZN perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BE perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BRENTOIL perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CBRS perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CL perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COIN perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COPPER perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CRCL perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CXMT perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "DRAM perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "EWY perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOLD perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOOGL perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "INTC perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "META perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MRVL perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSFT perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSTR perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MU perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NATGAS perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NBIS perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NVDA perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "PLTR perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SILVER perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHX perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHY perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SMSN perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SNDK perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOXL perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SP500 perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SPCX perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "TSLA perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XYZ100 perp history",
-   "observedAt": "2026-10-03T00:00:00+00:00",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T00:00:00+00:00",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BTC funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "ETH funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "HYPE funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "LIT funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SOL funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "XRP funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "ZEC funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "AAPL funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "AMD funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "AMZN funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "BE funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "BRENTOIL funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "CBRS funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "CL funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "COIN funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "COPPER funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "CRCL funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "CXMT funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "DRAM funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "EWY funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "GOLD funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "GOOGL funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "INTC funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "META funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "MRVL funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "MSFT funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "MSTR funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "MU funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "NATGAS funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "NBIS funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "NVDA funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "PLTR funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SILVER funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SKHX funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SKHY funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SMSN funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SNDK funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SOXL funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SP500 funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "SPCX funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "TSLA funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "XYZ100 funding forecast",
-   "observedAt": "2026-10-03T21:00:00Z",
-   "generatedAt": "2026-10-03T21:25:20.989757+00:00",
+   "observedAt": "2026-10-04T21:00:00Z",
+   "generatedAt": "2026-10-04T21:31:55.865193+00:00",
    "state": "available"
   },
   {
    "name": "onchain spot catalog",
-   "generatedAt": "2026-10-03T21:30:32.115676Z",
+   "generatedAt": "2026-10-04T21:42:18.053524Z",
    "state": "dated_observations"
   },
   {
    "name": "transcript briefings",
-   "generatedAt": "2026-10-03T21:25:55.038456Z",
+   "generatedAt": "2026-10-04T21:37:40.576882Z",
    "inputFingerprint": "529298cce6286bef24fafa417c7176498815aebd99531aa57b7a781ef9343fa5",
    "state": "dated_observations"
   },
@@ -1943,16 +1958,16 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "started",
-   "updatedAt": "2026-10-04T21:30:28.879521Z",
+   "state": "verified",
+   "updatedAt": "2026-10-04T21:31:39.728956Z",
    "lastAttemptAt": "2026-10-04T21:30:28.879521Z",
-   "generatedAt": "2026-10-04T21:15:28.731349Z",
-   "pushedAt": "2026-10-04T21:15:34.195780Z",
-   "commit": "97385486273cf96d4543293098851704eb435f96",
-   "lastSuccessAt": "2026-10-04T21:16:19.695004Z",
-   "verifiedAt": "2026-10-04T21:16:19.695004Z",
-   "deferredAt": "2026-10-04T21:15:47.054612Z",
-   "verifiedCommit": "97385486273cf96d4543293098851704eb435f96"
+   "generatedAt": "2026-10-04T21:30:42.446158Z",
+   "pushedAt": "2026-10-04T21:30:48.047694Z",
+   "commit": "67106a5ab8416d4f9ef8df188729989c460ea6ca",
+   "lastSuccessAt": "2026-10-04T21:31:39.728956Z",
+   "verifiedAt": "2026-10-04T21:31:39.728956Z",
+   "deferredAt": "2026-10-04T21:31:06.909045Z",
+   "verifiedCommit": "67106a5ab8416d4f9ef8df188729989c460ea6ca"
   },
   {
    "mode": "full",
@@ -1983,8 +1998,8 @@
   {
    "mode": "transcripts",
    "state": "unchanged",
-   "updatedAt": "2026-10-04T21:20:24.020509Z",
-   "lastAttemptAt": "2026-10-04T21:20:15.945324Z",
+   "updatedAt": "2026-10-04T21:40:23.970671Z",
+   "lastAttemptAt": "2026-10-04T21:40:15.949800Z",
    "generatedAt": "2026-10-01T22:36:26.964566Z",
    "pushedAt": "2026-10-01T22:36:35.271343Z",
    "commit": "d323b274573f47e1868822c3c6b552d788a2624b",
