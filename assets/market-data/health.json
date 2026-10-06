@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-06T09:00:34.121730Z",
+ "generatedAt": "2026-10-06T09:00:45.763733Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-06T09:00:34.121730Z"
+     "detail": "health snapshot generated 2026-10-06T09:00:45.763733Z"
     }
    ],
    "status": "ok"
@@ -655,8 +655,8 @@
     },
     {
      "name": "ai publication",
-     "status": "ok",
-     "detail": "state started; last verified 2026-10-06T08:46:25.725424Z; retry due None"
+     "status": "warn",
+     "detail": "state deferred; last verified 2026-10-06T08:46:25.725424Z; retry due 2026-10-06T09:01:47.687262+00:00"
     },
     {
      "name": "full publication",
@@ -671,7 +671,7 @@
     {
      "name": "transcripts publication",
      "status": "ok",
-     "detail": "state started; last verified 2026-10-01T22:36:40.997677Z; retry due None"
+     "detail": "state unchanged; last verified 2026-10-01T22:36:40.997677Z; retry due None"
     }
    ],
    "status": "critical"
@@ -694,7 +694,7 @@
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "ok",
-     "detail": "state activating; last attempt Tue 2026-10-06 09:00:29 UTC; last successful completion Tue 2026-10-06 08:40:38 UTC"
+     "detail": "state inactive; last attempt Tue 2026-10-06 09:00:29 UTC; last successful completion Tue 2026-10-06 09:00:37 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -719,7 +719,7 @@
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Tue 2026-10-06 09:00:14 UTC; last successful completion Tue 2026-10-06 09:00:14 UTC"
+     "detail": "state activating; last attempt Tue 2026-10-06 09:00:45 UTC; last successful completion Tue 2026-10-06 09:00:14 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -771,12 +771,12 @@
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Tue 2026-10-06 09:00:29 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Tue 2026-10-06 09:00:37 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-10-06 08:40:38 UTC"
+   "lastSuccessAt": "Tue 2026-10-06 09:00:37 UTC"
   },
   {
    "name": "pipeline-coverage-equity-live.service",
@@ -816,10 +816,10 @@
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Tue 2026-10-06 09:00:14 UTC",
-   "lastExitAt": "Tue 2026-10-06 09:00:14 UTC",
+   "lastAttemptAt": "Tue 2026-10-06 09:00:45 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Tue 2026-10-06 09:00:14 UTC"
   },
@@ -2478,16 +2478,17 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "started",
-   "updatedAt": "2026-10-06T09:00:28.274451Z",
+   "state": "deferred",
+   "updatedAt": "2026-10-06T09:00:47.687247Z",
    "lastAttemptAt": "2026-10-06T09:00:28.274451Z",
-   "generatedAt": "2026-10-06T08:45:41.717510Z",
-   "pushedAt": "2026-10-06T08:45:47.609669Z",
-   "commit": "d32f71be6cfebf466e1a979ecc2d0701059b7f16",
+   "generatedAt": "2026-10-06T09:00:40.602001Z",
+   "pushedAt": "2026-10-06T09:00:46.545454Z",
+   "commit": "937b4fd7e58455ed0130565921be6b9e0f7547dd",
    "lastSuccessAt": "2026-10-06T08:46:25.725424Z",
    "verifiedAt": "2026-10-06T08:46:25.725424Z",
-   "deferredAt": "2026-10-06T08:45:52.927515Z",
-   "verifiedCommit": "d32f71be6cfebf466e1a979ecc2d0701059b7f16"
+   "deferredAt": "2026-10-06T09:00:47.687247Z",
+   "verifiedCommit": "d32f71be6cfebf466e1a979ecc2d0701059b7f16",
+   "retryDueAt": "2026-10-06T09:01:47.687262+00:00"
   },
   {
    "mode": "full",
@@ -2517,8 +2518,8 @@
   },
   {
    "mode": "transcripts",
-   "state": "started",
-   "updatedAt": "2026-10-06T09:00:30.098234Z",
+   "state": "unchanged",
+   "updatedAt": "2026-10-06T09:00:37.705053Z",
    "lastAttemptAt": "2026-10-06T09:00:30.098234Z",
    "generatedAt": "2026-10-01T22:36:26.964566Z",
    "pushedAt": "2026-10-01T22:36:35.271343Z",
