@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-13T15:12:05.869900Z",
+ "generatedAt": "2026-10-13T15:12:32.243432Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-13T15:12:05.869900Z"
+     "detail": "health snapshot generated 2026-10-13T15:12:32.243432Z"
     }
    ],
    "status": "ok"
@@ -685,8 +685,8 @@
     },
     {
      "name": "inputs publication",
-     "status": "ok",
-     "detail": "state started; last verified 2026-10-13T14:13:51.909007Z; retry due None"
+     "status": "warn",
+     "detail": "state deferred; last verified 2026-10-13T14:13:51.909007Z; retry due 2026-10-13T15:13:30.001029+00:00"
     },
     {
      "name": "transcripts publication",
@@ -734,12 +734,12 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Tue 2026-10-13 15:07:17 UTC; last successful completion Tue 2026-10-13 15:07:30 UTC"
+     "detail": "state inactive; last attempt Tue 2026-10-13 15:12:18 UTC; last successful completion Tue 2026-10-13 15:12:30 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Tue 2026-10-13 15:11:53 UTC; last successful completion Tue 2026-10-13 15:11:53 UTC"
+     "detail": "state activating; last attempt Tue 2026-10-13 15:12:23 UTC; last successful completion Tue 2026-10-13 15:11:53 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -764,7 +764,7 @@
     {
      "name": "corbanu-market-lens-inputs.service",
      "status": "ok",
-     "detail": "state activating; last attempt Tue 2026-10-13 15:05:06 UTC; last successful completion Tue 2026-10-13 14:12:33 UTC"
+     "detail": "state inactive; last attempt Tue 2026-10-13 15:05:06 UTC; last successful completion Tue 2026-10-13 15:12:30 UTC"
     }
    ],
    "status": "warn"
@@ -829,17 +829,17 @@
    "name": "pipeline-current-signal-catalog-sync.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Tue 2026-10-13 15:07:17 UTC",
-   "lastExitAt": "Tue 2026-10-13 15:07:30 UTC",
+   "lastAttemptAt": "Tue 2026-10-13 15:12:18 UTC",
+   "lastExitAt": "Tue 2026-10-13 15:12:30 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-10-13 15:07:30 UTC"
+   "lastSuccessAt": "Tue 2026-10-13 15:12:30 UTC"
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Tue 2026-10-13 15:11:53 UTC",
-   "lastExitAt": "Tue 2026-10-13 15:11:53 UTC",
+   "lastAttemptAt": "Tue 2026-10-13 15:12:23 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Tue 2026-10-13 15:11:53 UTC"
   },
@@ -881,12 +881,12 @@
   },
   {
    "name": "corbanu-market-lens-inputs.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Tue 2026-10-13 15:05:06 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Tue 2026-10-13 15:12:30 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-10-13 14:12:33 UTC"
+   "lastSuccessAt": "Tue 2026-10-13 15:12:30 UTC"
   }
  ],
  "sources": [
@@ -2524,16 +2524,17 @@
   },
   {
    "mode": "inputs",
-   "state": "started",
-   "updatedAt": "2026-10-13T15:05:18.954218Z",
+   "state": "deferred",
+   "updatedAt": "2026-10-13T15:12:30.001011Z",
    "lastAttemptAt": "2026-10-13T15:05:18.954218Z",
-   "generatedAt": "2026-10-13T14:12:16.091532Z",
-   "pushedAt": "2026-10-13T14:12:28.350454Z",
-   "commit": "3e55bbcb034e52d0d681a15f59f16799e4999604",
+   "generatedAt": "2026-10-13T15:12:12.904071Z",
+   "pushedAt": "2026-10-13T15:12:24.276972Z",
+   "commit": "072230f67846a5c16c5e955a9e705dbc2ceabd5d",
    "lastSuccessAt": "2026-10-13T14:13:51.909007Z",
    "verifiedAt": "2026-10-13T14:13:51.909007Z",
    "verifiedCommit": "3e55bbcb034e52d0d681a15f59f16799e4999604",
-   "deferredAt": "2026-10-13T14:13:15.073594Z"
+   "deferredAt": "2026-10-13T15:12:30.001011Z",
+   "retryDueAt": "2026-10-13T15:13:30.001029+00:00"
   },
   {
    "mode": "transcripts",
