@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-13T12:12:35.877542Z",
+ "generatedAt": "2026-10-13T12:15:40.348812Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-13T12:12:35.877542Z"
+     "detail": "health snapshot generated 2026-10-13T12:15:40.348812Z"
     }
    ],
    "status": "ok"
@@ -648,7 +648,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 14.5h ago"
+     "detail": "35 instruments, generated 14.6h ago"
     }
    ],
    "status": "ok"
@@ -676,7 +676,7 @@
     {
      "name": "ai publication",
      "status": "ok",
-     "detail": "state verified; last verified 2026-10-13T12:02:18.795978Z; retry due None"
+     "detail": "state started; last verified 2026-10-13T12:02:18.795978Z; retry due None"
     },
     {
      "name": "full publication",
@@ -685,8 +685,8 @@
     },
     {
      "name": "inputs publication",
-     "status": "warn",
-     "detail": "state deferred; last verified 2026-10-13T11:13:27.626484Z; retry due 2026-10-13T12:13:37.136596+00:00"
+     "status": "ok",
+     "detail": "state verified; last verified 2026-10-13T12:13:35.318901Z; retry due None"
     },
     {
      "name": "transcripts publication",
@@ -709,7 +709,7 @@
     {
      "name": "corbanu-ai-capital-stack.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Tue 2026-10-13 12:00:01 UTC; last successful completion Tue 2026-10-13 12:00:40 UTC"
+     "detail": "state activating; last attempt Tue 2026-10-13 12:15:18 UTC; last successful completion Tue 2026-10-13 12:00:40 UTC"
     },
     {
      "name": "pipeline-coverage-universe-transcripts.service",
@@ -718,8 +718,8 @@
     },
     {
      "name": "pipeline-coverage-equity-live.service",
-     "status": "warn",
-     "detail": "state failed; last attempt Mon 2026-10-12 12:15:28 UTC; last successful completion Sat 2026-10-03 12:21:27 UTC"
+     "status": "ok",
+     "detail": "state activating; last attempt Tue 2026-10-13 12:15:33 UTC; last successful completion Sat 2026-10-03 12:21:27 UTC"
     },
     {
      "name": "pipeline-hyperliquid-crypto-cross-daily.service",
@@ -739,17 +739,17 @@
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state activating; last attempt Tue 2026-10-13 12:12:28 UTC; last successful completion Tue 2026-10-13 12:11:58 UTC"
+     "detail": "state inactive; last attempt Tue 2026-10-13 12:15:39 UTC; last successful completion Tue 2026-10-13 12:15:39 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
      "status": "ok",
-     "detail": "state activating; last attempt Tue 2026-10-13 12:10:01 UTC; last successful completion Tue 2026-10-13 11:43:16 UTC"
+     "detail": "state inactive; last attempt Tue 2026-10-13 12:10:01 UTC; last successful completion Tue 2026-10-13 12:13:04 UTC"
     },
     {
      "name": "pipeline-research-context-publish.service",
      "status": "warn",
-     "detail": "state failed; last attempt Tue 2026-10-13 12:05:09 UTC; last successful completion Mon 2026-10-05 22:23:54 UTC"
+     "detail": "state failed; last attempt Tue 2026-10-13 12:15:20 UTC; last successful completion Mon 2026-10-05 22:23:54 UTC"
     },
     {
      "name": "pipeline-research-context-reconcile.service",
@@ -764,7 +764,7 @@
     {
      "name": "corbanu-market-lens-inputs.service",
      "status": "ok",
-     "detail": "state activating; last attempt Tue 2026-10-13 12:05:07 UTC; last successful completion Tue 2026-10-13 11:12:36 UTC"
+     "detail": "state inactive; last attempt Tue 2026-10-13 12:05:07 UTC; last successful completion Tue 2026-10-13 12:12:37 UTC"
     }
    ],
    "status": "warn"
@@ -782,10 +782,10 @@
   },
   {
    "name": "corbanu-ai-capital-stack.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Tue 2026-10-13 12:00:01 UTC",
-   "lastExitAt": "Tue 2026-10-13 12:00:40 UTC",
+   "lastAttemptAt": "Tue 2026-10-13 12:15:18 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Tue 2026-10-13 12:00:40 UTC"
   },
@@ -800,11 +800,11 @@
   },
   {
    "name": "pipeline-coverage-equity-live.service",
-   "state": "failed",
-   "result": "exit-code",
-   "lastAttemptAt": "Mon 2026-10-12 12:15:28 UTC",
-   "lastExitAt": "Mon 2026-10-12 12:20:12 UTC",
-   "exitStatus": "1",
+   "state": "activating",
+   "result": "success",
+   "lastAttemptAt": "Tue 2026-10-13 12:15:33 UTC",
+   "lastExitAt": null,
+   "exitStatus": "0",
    "lastSuccessAt": "Sat 2026-10-03 12:21:27 UTC"
   },
   {
@@ -836,28 +836,28 @@
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Tue 2026-10-13 12:12:28 UTC",
-   "lastExitAt": null,
+   "lastAttemptAt": "Tue 2026-10-13 12:15:39 UTC",
+   "lastExitAt": "Tue 2026-10-13 12:15:39 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-10-13 12:11:58 UTC"
+   "lastSuccessAt": "Tue 2026-10-13 12:15:39 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Tue 2026-10-13 12:10:01 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Tue 2026-10-13 12:13:04 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-10-13 11:43:16 UTC"
+   "lastSuccessAt": "Tue 2026-10-13 12:13:04 UTC"
   },
   {
    "name": "pipeline-research-context-publish.service",
    "state": "failed",
    "result": "exit-code",
-   "lastAttemptAt": "Tue 2026-10-13 12:05:09 UTC",
-   "lastExitAt": "Tue 2026-10-13 12:05:20 UTC",
+   "lastAttemptAt": "Tue 2026-10-13 12:15:20 UTC",
+   "lastExitAt": "Tue 2026-10-13 12:15:30 UTC",
    "exitStatus": "1",
    "lastSuccessAt": "Mon 2026-10-05 22:23:54 UTC"
   },
@@ -881,12 +881,12 @@
   },
   {
    "name": "corbanu-market-lens-inputs.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Tue 2026-10-13 12:05:07 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Tue 2026-10-13 12:12:37 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-10-13 11:12:36 UTC"
+   "lastSuccessAt": "Tue 2026-10-13 12:12:37 UTC"
   }
  ],
  "sources": [
@@ -2429,40 +2429,40 @@
   },
   {
    "name": "A100 rental ask",
-   "observedAt": "2026-10-13T12:00:00Z",
-   "lastSourceCheckAt": "2026-10-13T12:00:00Z",
+   "observedAt": "2026-10-13T12:15:00Z",
+   "lastSourceCheckAt": "2026-10-13T12:15:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
   },
   {
    "name": "H100 rental ask",
-   "observedAt": "2026-10-13T12:00:00Z",
-   "lastSourceCheckAt": "2026-10-13T12:00:00Z",
+   "observedAt": "2026-10-13T12:15:00Z",
+   "lastSourceCheckAt": "2026-10-13T12:15:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
   },
   {
    "name": "H200 rental ask",
-   "observedAt": "2026-10-13T12:00:00Z",
-   "lastSourceCheckAt": "2026-10-13T12:00:00Z",
+   "observedAt": "2026-10-13T12:15:00Z",
+   "lastSourceCheckAt": "2026-10-13T12:15:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
   },
   {
    "name": "B200 rental ask",
-   "observedAt": "2026-10-13T12:00:00Z",
-   "lastSourceCheckAt": "2026-10-13T12:00:00Z",
+   "observedAt": "2026-10-13T12:15:00Z",
+   "lastSourceCheckAt": "2026-10-13T12:15:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
   },
   {
    "name": "GB200 rental ask",
-   "observedAt": "2026-10-13T12:00:00Z",
-   "lastSourceCheckAt": "2026-10-13T12:00:00Z",
+   "observedAt": "2026-10-13T12:15:00Z",
+   "lastSourceCheckAt": "2026-10-13T12:15:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "unavailable"
@@ -2498,9 +2498,9 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "verified",
-   "updatedAt": "2026-10-13T12:02:18.795978Z",
-   "lastAttemptAt": "2026-10-13T12:00:20.036771Z",
+   "state": "started",
+   "updatedAt": "2026-10-13T12:15:35.314253Z",
+   "lastAttemptAt": "2026-10-13T12:15:35.314253Z",
    "generatedAt": "2026-10-13T12:00:33.387658Z",
    "pushedAt": "2026-10-13T12:00:39.450233Z",
    "commit": "854eed49d0674415b9d07db2c6732fdba5d60ced",
@@ -2524,17 +2524,16 @@
   },
   {
    "mode": "inputs",
-   "state": "deferred",
-   "updatedAt": "2026-10-13T12:12:37.136582Z",
+   "state": "verified",
+   "updatedAt": "2026-10-13T12:13:35.318901Z",
    "lastAttemptAt": "2026-10-13T12:05:26.707785Z",
-   "generatedAt": "2026-10-13T12:12:19.456579Z",
-   "pushedAt": "2026-10-13T12:12:30.808392Z",
-   "commit": "72088a958488cfa1f679f3a0879d30aa6b8ac288",
-   "lastSuccessAt": "2026-10-13T11:13:27.626484Z",
-   "verifiedAt": "2026-10-13T11:13:27.626484Z",
-   "verifiedCommit": "5578424bb6ff1c161d16d5bc48b0f74155309c0f",
-   "deferredAt": "2026-10-13T12:12:37.136582Z",
-   "retryDueAt": "2026-10-13T12:13:37.136596+00:00"
+   "generatedAt": "2026-10-13T12:12:43.447589Z",
+   "pushedAt": "2026-10-13T12:12:53.965676Z",
+   "commit": "48875103a2efbf22b82d748890a37105b3a747a5",
+   "lastSuccessAt": "2026-10-13T12:13:35.318901Z",
+   "verifiedAt": "2026-10-13T12:13:35.318901Z",
+   "verifiedCommit": "48875103a2efbf22b82d748890a37105b3a747a5",
+   "deferredAt": "2026-10-13T12:12:57.363827Z"
   },
   {
    "mode": "transcripts",
