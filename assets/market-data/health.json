@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-17T22:00:40.411730Z",
+ "generatedAt": "2026-10-17T22:00:52.713773Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-17T22:00:40.411730Z"
+     "detail": "health snapshot generated 2026-10-17T22:00:52.713773Z"
     }
    ],
    "status": "ok"
@@ -109,8 +109,8 @@
     },
     {
      "name": "ai publication",
-     "status": "ok",
-     "detail": "state started; last verified 2026-10-17T21:46:33.776917Z; retry due None"
+     "status": "warn",
+     "detail": "state deferred; last verified 2026-10-17T21:46:33.776917Z; retry due 2026-10-17T22:01:54.235949+00:00"
     },
     {
      "name": "full publication",
@@ -168,12 +168,12 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state activating; last attempt Sat 2026-10-17 22:00:38 UTC; last successful completion Sat 2026-10-17 21:35:47 UTC"
+     "detail": "state inactive; last attempt Sat 2026-10-17 22:00:38 UTC; last successful completion Sat 2026-10-17 22:00:50 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sat 2026-10-17 22:00:22 UTC; last successful completion Sat 2026-10-17 22:00:22 UTC"
+     "detail": "state activating; last attempt Sat 2026-10-17 22:00:52 UTC; last successful completion Sat 2026-10-17 22:00:22 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -261,19 +261,19 @@
   },
   {
    "name": "pipeline-current-signal-catalog-sync.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Sat 2026-10-17 22:00:38 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Sat 2026-10-17 22:00:50 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sat 2026-10-17 21:35:47 UTC"
+   "lastSuccessAt": "Sat 2026-10-17 22:00:50 UTC"
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Sat 2026-10-17 22:00:22 UTC",
-   "lastExitAt": "Sat 2026-10-17 22:00:22 UTC",
+   "lastAttemptAt": "Sat 2026-10-17 22:00:52 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Sat 2026-10-17 22:00:22 UTC"
   },
@@ -1932,16 +1932,17 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "started",
-   "updatedAt": "2026-10-17T22:00:35.246142Z",
+   "state": "deferred",
+   "updatedAt": "2026-10-17T22:00:54.235934Z",
    "lastAttemptAt": "2026-10-17T22:00:35.246142Z",
-   "generatedAt": "2026-10-17T21:45:42.342512Z",
-   "pushedAt": "2026-10-17T21:45:48.161578Z",
-   "commit": "320015f1d7b62ec2b7d8a61c87a508f1ef798ac8",
+   "generatedAt": "2026-10-17T22:00:47.077821Z",
+   "pushedAt": "2026-10-17T22:00:53.241388Z",
+   "commit": "f00ed812fa2edfb08d86802eebdb787d33410811",
    "lastSuccessAt": "2026-10-17T21:46:33.776917Z",
    "verifiedAt": "2026-10-17T21:46:33.776917Z",
-   "deferredAt": "2026-10-17T21:46:00.923540Z",
-   "verifiedCommit": "320015f1d7b62ec2b7d8a61c87a508f1ef798ac8"
+   "deferredAt": "2026-10-17T22:00:54.235934Z",
+   "verifiedCommit": "320015f1d7b62ec2b7d8a61c87a508f1ef798ac8",
+   "retryDueAt": "2026-10-17T22:01:54.235949+00:00"
   },
   {
    "mode": "full",
