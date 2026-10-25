@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-25T21:46:19.511180Z",
+ "generatedAt": "2026-10-25T21:46:40.301167Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-25T21:46:19.511180Z"
+     "detail": "health snapshot generated 2026-10-25T21:46:40.301167Z"
     }
    ],
    "status": "ok"
@@ -119,13 +119,13 @@
     },
     {
      "name": "ai publication",
-     "status": "warn",
-     "detail": "state deferred; last verified 2026-10-25T21:32:06.794454Z; retry due 2026-10-25T21:46:59.772472+00:00"
+     "status": "ok",
+     "detail": "state verified; last verified 2026-10-25T21:46:32.587820Z; retry due None"
     },
     {
      "name": "full publication",
-     "status": "ok",
-     "detail": "state started; last verified 2026-10-24T21:48:34.509519Z; retry due None"
+     "status": "warn",
+     "detail": "state deferred; last verified 2026-10-24T21:48:34.509519Z; retry due 2026-10-25T21:47:41.273489+00:00"
     },
     {
      "name": "inputs publication",
@@ -183,7 +183,7 @@
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sun 2026-10-25 21:45:45 UTC; last successful completion Sun 2026-10-25 21:45:59 UTC"
+     "detail": "state activating; last attempt Sun 2026-10-25 21:46:30 UTC; last successful completion Sun 2026-10-25 21:45:59 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -193,7 +193,7 @@
     {
      "name": "pipeline-research-context-publish.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sun 2026-10-25 21:35:31 UTC; last successful completion Sun 2026-10-25 21:36:37 UTC"
+     "detail": "state activating; last attempt Sun 2026-10-25 21:46:38 UTC; last successful completion Sun 2026-10-25 21:36:37 UTC"
     },
     {
      "name": "pipeline-research-context-reconcile.service",
@@ -280,10 +280,10 @@
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Sun 2026-10-25 21:45:45 UTC",
-   "lastExitAt": "Sun 2026-10-25 21:45:59 UTC",
+   "lastAttemptAt": "Sun 2026-10-25 21:46:30 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Sun 2026-10-25 21:45:59 UTC"
   },
@@ -298,10 +298,10 @@
   },
   {
    "name": "pipeline-research-context-publish.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Sun 2026-10-25 21:35:31 UTC",
-   "lastExitAt": "Sun 2026-10-25 21:36:37 UTC",
+   "lastAttemptAt": "Sun 2026-10-25 21:46:38 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Sun 2026-10-25 21:36:37 UTC"
   },
@@ -1942,30 +1942,30 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "deferred",
-   "updatedAt": "2026-10-25T21:45:59.772459Z",
+   "state": "verified",
+   "updatedAt": "2026-10-25T21:46:32.587820Z",
    "lastAttemptAt": "2026-10-25T21:45:31.118822Z",
    "generatedAt": "2026-10-25T21:45:53.334549Z",
    "pushedAt": "2026-10-25T21:45:59.222694Z",
    "commit": "a04016e427ef3a7ec2791aaca153df304fb6ddc3",
-   "lastSuccessAt": "2026-10-25T21:32:06.794454Z",
-   "verifiedAt": "2026-10-25T21:32:06.794454Z",
+   "lastSuccessAt": "2026-10-25T21:46:32.587820Z",
+   "verifiedAt": "2026-10-25T21:46:32.587820Z",
    "deferredAt": "2026-10-25T21:45:59.772459Z",
-   "verifiedCommit": "1842bb2b8d47594b193cb13543dbdcd727312b96",
-   "retryDueAt": "2026-10-25T21:46:59.772472+00:00"
+   "verifiedCommit": "a04016e427ef3a7ec2791aaca153df304fb6ddc3"
   },
   {
    "mode": "full",
-   "state": "started",
-   "updatedAt": "2026-10-25T21:22:48.619388Z",
+   "state": "deferred",
+   "updatedAt": "2026-10-25T21:46:41.273473Z",
    "lastAttemptAt": "2026-10-25T21:22:48.619388Z",
-   "generatedAt": "2026-10-24T21:47:45.439344Z",
-   "pushedAt": "2026-10-24T21:47:55.743588Z",
-   "commit": "9c225abf3de856a8c97ff5ac86b9b554550b371e",
-   "deferredAt": "2026-10-24T21:47:58.036276Z",
+   "generatedAt": "2026-10-25T21:46:26.387210Z",
+   "pushedAt": "2026-10-25T21:46:38.693564Z",
+   "commit": "d41e201f3aa8aa21e5756e228e6a8a8232b949db",
+   "deferredAt": "2026-10-25T21:46:41.273473Z",
    "lastSuccessAt": "2026-10-24T21:48:34.509519Z",
    "verifiedAt": "2026-10-24T21:48:34.509519Z",
-   "verifiedCommit": "9c225abf3de856a8c97ff5ac86b9b554550b371e"
+   "verifiedCommit": "9c225abf3de856a8c97ff5ac86b9b554550b371e",
+   "retryDueAt": "2026-10-25T21:47:41.273489+00:00"
   },
   {
    "mode": "inputs",
