@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-28T23:05:27.814246Z",
+ "generatedAt": "2026-10-28T23:07:29.498727Z",
  "overall": "warn",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-28T23:05:27.814246Z"
+     "detail": "health snapshot generated 2026-10-28T23:07:29.498727Z"
     }
    ],
    "status": "ok"
@@ -25,7 +25,7 @@
     {
      "name": "index build",
      "status": "ok",
-     "detail": "coverage indices finished 1.5h ago"
+     "detail": "coverage indices finished 1.6h ago"
     }
    ],
    "status": "ok"
@@ -33,9 +33,15 @@
   {
    "id": "options",
    "label": "Listed Options",
-   "summary": "34/34 chains fresh \u00b7 8 instruments without listed options",
-   "items": [],
-   "status": "ok"
+   "summary": "33/34 chains fresh \u00b7 8 instruments without listed options",
+   "items": [
+    {
+     "name": "CBRS",
+     "status": "warn",
+     "detail": "retained last-good payload (1.0h old); refresh attempted 0.0h ago: remote command failed: requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.brokerapi.com', port=443): Read timed out. (read timeout=20)"
+    }
+   ],
+   "status": "warn"
   },
   {
    "id": "transcripts",
@@ -45,7 +51,7 @@
     {
      "name": "packet build",
      "status": "ok",
-     "detail": "transcript packet generated 0.0h ago"
+     "detail": "transcript packet generated 0.1h ago"
     },
     {
      "name": "fundamentals",
@@ -120,7 +126,7 @@
     {
      "name": "transcripts publication",
      "status": "ok",
-     "detail": "state started; last verified 2026-10-28T18:36:31.061110Z; retry due None"
+     "detail": "state verified; last verified 2026-10-28T23:06:35.271467Z; retry due None"
     }
    ],
    "status": "warn"
@@ -143,7 +149,7 @@
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "ok",
-     "detail": "state activating; last attempt Wed 2026-10-28 23:01:37 UTC; last successful completion Wed 2026-10-28 22:41:46 UTC"
+     "detail": "state inactive; last attempt Wed 2026-10-28 23:01:37 UTC; last successful completion Wed 2026-10-28 23:05:48 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -168,7 +174,7 @@
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Wed 2026-10-28 23:05:26 UTC; last successful completion Wed 2026-10-28 23:05:26 UTC"
+     "detail": "state inactive; last attempt Wed 2026-10-28 23:07:06 UTC; last successful completion Wed 2026-10-28 23:07:06 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -220,12 +226,12 @@
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Wed 2026-10-28 23:01:37 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Wed 2026-10-28 23:05:48 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Wed 2026-10-28 22:41:46 UTC"
+   "lastSuccessAt": "Wed 2026-10-28 23:05:48 UTC"
   },
   {
    "name": "pipeline-coverage-equity-live.service",
@@ -267,10 +273,10 @@
    "name": "corbanu-market-lens-retry.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Wed 2026-10-28 23:05:26 UTC",
-   "lastExitAt": "Wed 2026-10-28 23:05:26 UTC",
+   "lastAttemptAt": "Wed 2026-10-28 23:07:06 UTC",
+   "lastExitAt": "Wed 2026-10-28 23:07:06 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Wed 2026-10-28 23:05:26 UTC"
+   "lastSuccessAt": "Wed 2026-10-28 23:07:06 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
@@ -321,7 +327,7 @@
  "sources": [
   {
    "name": "MU financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -332,7 +338,7 @@
   },
   {
    "name": "NBIS financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-10-28",
     "epsRevision28dPctOfPrice": "2026-10-27"
@@ -341,7 +347,7 @@
   },
   {
    "name": "NVDA financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -352,7 +358,7 @@
   },
   {
    "name": "ORCL financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -363,7 +369,7 @@
   },
   {
    "name": "PLTR financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -374,7 +380,7 @@
   },
   {
    "name": "SPCX financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "epsRevision28dPctOfPrice": "2026-10-27"
@@ -383,7 +389,7 @@
   },
   {
    "name": "SKHX financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -394,7 +400,7 @@
   },
   {
    "name": "SMSN financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -405,7 +411,7 @@
   },
   {
    "name": "SNDK financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -416,7 +422,7 @@
   },
   {
    "name": "SOXL financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -427,7 +433,7 @@
   },
   {
    "name": "SP500 financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -438,7 +444,7 @@
   },
   {
    "name": "MSTR financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -448,7 +454,7 @@
   },
   {
    "name": "RKLB financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-10-28",
     "epsRevision28dPctOfPrice": "2026-10-27"
@@ -457,7 +463,7 @@
   },
   {
    "name": "MSFT financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -468,7 +474,7 @@
   },
   {
    "name": "EWY financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -479,7 +485,7 @@
   },
   {
    "name": "MRNA financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-10-28",
     "epsRevision28dPctOfPrice": "2026-10-27"
@@ -488,7 +494,7 @@
   },
   {
    "name": "META financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -499,7 +505,7 @@
   },
   {
    "name": "LITE financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -510,7 +516,7 @@
   },
   {
    "name": "INTC financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -521,7 +527,7 @@
   },
   {
    "name": "HOOD financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -532,7 +538,7 @@
   },
   {
    "name": "GOOGL financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -543,7 +549,7 @@
   },
   {
    "name": "CXMT financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -554,7 +560,7 @@
   },
   {
    "name": "CRWV financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-10-28",
     "epsRevision28dPctOfPrice": "2026-10-27"
@@ -563,7 +569,7 @@
   },
   {
    "name": "CRCL financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -574,7 +580,7 @@
   },
   {
    "name": "CBRS financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -584,7 +590,7 @@
   },
   {
    "name": "AMZN financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -595,7 +601,7 @@
   },
   {
    "name": "AMD financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -606,7 +612,7 @@
   },
   {
    "name": "AAPL financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -617,7 +623,7 @@
   },
   {
    "name": "TSLA financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -628,7 +634,7 @@
   },
   {
    "name": "MRVL financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-27",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -639,7 +645,7 @@
   },
   {
    "name": "XYZ100 financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -650,7 +656,7 @@
   },
   {
    "name": "SKHY financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -661,7 +667,7 @@
   },
   {
    "name": "COIN financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -672,7 +678,7 @@
   },
   {
    "name": "BE financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -683,7 +689,7 @@
   },
   {
    "name": "DRAM financial fields",
-   "generatedAt": "2026-10-28T22:05:58.213354Z",
+   "generatedAt": "2026-10-28T23:06:02.538412Z",
    "observations": {
     "forwardPE": "2026-10-28",
     "forwardSalesGrowthPct": "2026-10-28",
@@ -696,238 +702,238 @@
    "name": "aapl-options options",
    "observedAt": "2026-10-28T20:15:00.016000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "amd-options options",
    "observedAt": "2026-10-28T20:15:00.078000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "amzn-options options",
    "observedAt": "2026-10-28T20:15:00.092000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "be-options options",
    "observedAt": "2026-10-28T20:00:03.850000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "brentoil-options options",
    "observedAt": "2026-10-28T20:00:04.760000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "btc-options options",
    "observedAt": "2026-10-28T20:15:00.362000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "cbrs-options options",
    "observedAt": "2026-10-28T20:00:04.863000Z",
-   "lastAttemptAt": null,
+   "lastAttemptAt": "2026-10-28T23:06:16.052215Z",
    "generatedAt": "2026-10-28T22:06:14.091400Z",
-   "state": "available"
+   "state": "retained_last_good"
   },
   {
    "name": "cl-options options",
    "observedAt": "2026-10-28T20:00:05.225000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "coin-options options",
    "observedAt": "2026-10-28T20:00:03.130000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "crcl-options options",
    "observedAt": "2026-10-28T20:00:04.319000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "dram-options options",
    "observedAt": "2026-10-28T20:15:00.310000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "eth-options options",
    "observedAt": "2026-10-28T20:00:02.577000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "ewy-options options",
    "observedAt": "2026-10-28T20:15:00.317000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "gold-options options",
    "observedAt": "2026-10-28T20:15:00.229000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "googl-options options",
    "observedAt": "2026-10-28T20:15:00.039000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "intc-options options",
    "observedAt": "2026-10-28T20:15:00.488000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "meta-options options",
    "observedAt": "2026-10-28T20:15:00.378000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "mrvl-options options",
    "observedAt": "2026-10-28T20:15:00.029000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "msft-options options",
    "observedAt": "2026-10-28T20:15:00.015000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "mstr-options options",
    "observedAt": "2026-10-28T20:00:07.652000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "mu-options options",
    "observedAt": "2026-10-28T20:15:00.127000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "natgas-options options",
    "observedAt": "2026-10-28T20:15:00.107000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "nbis-options options",
    "observedAt": "2026-10-28T20:00:03.906000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "nvda-options options",
    "observedAt": "2026-10-28T20:15:00.024000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "pltr-options options",
    "observedAt": "2026-10-28T20:04:07.460000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "silver-options options",
    "observedAt": "2026-10-28T20:15:00.193000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "skhx-options options",
    "observedAt": "2026-10-28T20:00:02.162000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "skhy-options options",
    "observedAt": "2026-10-28T20:00:02.162000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "sndk-options options",
    "observedAt": "2026-10-28T20:15:00.220000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "soxl-options options",
    "observedAt": "2026-10-28T20:15:00.331000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "sp500-options options",
    "observedAt": "2026-10-28T20:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "spcx-options options",
    "observedAt": "2026-10-28T20:00:01.940000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "tsla-options options",
    "observedAt": "2026-10-28T20:14:55.151000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
    "name": "xyz100-options options",
    "observedAt": "2026-10-28T20:15:00.418000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-10-28T22:06:14.091400Z",
+   "generatedAt": "2026-10-28T23:06:16.052215Z",
    "state": "available"
   },
   {
@@ -2003,8 +2009,8 @@
   {
    "mode": "inputs",
    "state": "started",
-   "updatedAt": "2026-10-28T23:05:08.641963Z",
-   "lastAttemptAt": "2026-10-28T23:05:08.641963Z",
+   "updatedAt": "2026-10-28T23:05:43.006307Z",
+   "lastAttemptAt": "2026-10-28T23:05:43.006307Z",
    "generatedAt": "2026-10-28T22:07:49.247382Z",
    "pushedAt": "2026-10-28T22:08:00.269175Z",
    "commit": "2f46cfe148cbb851f00a3604c27ceeec2a9ea765",
@@ -2015,16 +2021,16 @@
   },
   {
    "mode": "transcripts",
-   "state": "started",
-   "updatedAt": "2026-10-28T23:05:19.080368Z",
+   "state": "verified",
+   "updatedAt": "2026-10-28T23:06:35.271467Z",
    "lastAttemptAt": "2026-10-28T23:05:19.080368Z",
-   "generatedAt": "2026-10-28T18:35:02.576891Z",
-   "pushedAt": "2026-10-28T18:35:13.296771Z",
-   "commit": "9346ba1277f544da4d82cd574d9eded06463d9c7",
-   "deferredAt": "2026-10-28T18:35:53.767583Z",
-   "lastSuccessAt": "2026-10-28T18:36:31.061110Z",
-   "verifiedAt": "2026-10-28T18:36:31.061110Z",
-   "verifiedCommit": "9346ba1277f544da4d82cd574d9eded06463d9c7"
+   "generatedAt": "2026-10-28T23:05:35.680408Z",
+   "pushedAt": "2026-10-28T23:05:46.091363Z",
+   "commit": "e7d2d2a63c620aadc726772b19105077d2e9f837",
+   "deferredAt": "2026-10-28T23:05:58.505213Z",
+   "lastSuccessAt": "2026-10-28T23:06:35.271467Z",
+   "verifiedAt": "2026-10-28T23:06:35.271467Z",
+   "verifiedCommit": "e7d2d2a63c620aadc726772b19105077d2e9f837"
   }
  ]
 }
