@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-29T19:30:48.912191Z",
+ "generatedAt": "2026-10-29T19:30:59.782503Z",
  "overall": "warn",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-10-29T19:30:48.912191Z"
+     "detail": "health snapshot generated 2026-10-29T19:30:59.782503Z"
     }
    ],
    "status": "ok"
@@ -275,8 +275,8 @@
     },
     {
      "name": "ai publication",
-     "status": "ok",
-     "detail": "state started; last verified 2026-10-29T19:16:38.238172Z; retry due None"
+     "status": "warn",
+     "detail": "state deferred; last verified 2026-10-29T19:16:38.238172Z; retry due 2026-10-29T19:32:03.181170+00:00"
     },
     {
      "name": "full publication",
@@ -339,12 +339,12 @@
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-10-29 19:30:28 UTC; last successful completion Thu 2026-10-29 19:30:28 UTC"
+     "detail": "state activating; last attempt Thu 2026-10-29 19:30:59 UTC; last successful completion Thu 2026-10-29 19:30:28 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-10-29 19:30:09 UTC; last successful completion Thu 2026-10-29 19:10:54 UTC"
+     "detail": "state inactive; last attempt Thu 2026-10-29 19:30:09 UTC; last successful completion Thu 2026-10-29 19:30:58 UTC"
     },
     {
      "name": "pipeline-research-context-publish.service",
@@ -436,21 +436,21 @@
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-10-29 19:30:28 UTC",
-   "lastExitAt": "Thu 2026-10-29 19:30:28 UTC",
+   "lastAttemptAt": "Thu 2026-10-29 19:30:59 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Thu 2026-10-29 19:30:28 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Thu 2026-10-29 19:30:09 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Thu 2026-10-29 19:30:58 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-10-29 19:10:54 UTC"
+   "lastSuccessAt": "Thu 2026-10-29 19:30:58 UTC"
   },
   {
    "name": "pipeline-research-context-publish.service",
@@ -2148,16 +2148,17 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "started",
-   "updatedAt": "2026-10-29T19:30:42.985990Z",
+   "state": "deferred",
+   "updatedAt": "2026-10-29T19:31:03.181156Z",
    "lastAttemptAt": "2026-10-29T19:30:42.985990Z",
-   "generatedAt": "2026-10-29T19:15:44.969382Z",
-   "pushedAt": "2026-10-29T19:15:51.758198Z",
-   "commit": "4a31af6e70ac438f5f9817e6a4025c019cd53081",
+   "generatedAt": "2026-10-29T19:30:55.526153Z",
+   "pushedAt": "2026-10-29T19:31:02.224499Z",
+   "commit": "953fa54a3a52c35f021fc95563efc59fea695fcb",
    "lastSuccessAt": "2026-10-29T19:16:38.238172Z",
    "verifiedAt": "2026-10-29T19:16:38.238172Z",
-   "deferredAt": "2026-10-29T19:16:03.734632Z",
-   "verifiedCommit": "4a31af6e70ac438f5f9817e6a4025c019cd53081"
+   "deferredAt": "2026-10-29T19:31:03.181156Z",
+   "verifiedCommit": "4a31af6e70ac438f5f9817e6a4025c019cd53081",
+   "retryDueAt": "2026-10-29T19:32:03.181170+00:00"
   },
   {
    "mode": "full",
