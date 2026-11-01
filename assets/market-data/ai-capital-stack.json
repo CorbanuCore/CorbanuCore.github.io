@@ -5,53 +5,53 @@
     "tier1Alerts": 0,
     "tier2Alerts": 1
   },
-  "generatedAt": "2026-11-01T13:00:47.920473Z",
+  "generatedAt": "2026-11-01T13:15:48.377329Z",
   "gpuMarket": {
     "metrics": [
       {
-        "availableGpuCount": 75,
-        "capacityWeightedMedian": 1.0,
-        "machineCount": 36,
+        "availableGpuCount": 73,
+        "capacityWeightedMedian": 1.067,
+        "machineCount": 34,
         "max": 2.0,
-        "median": 0.867,
-        "min": 0.399,
-        "p10": 0.533,
-        "p90": 1.61,
+        "median": 0.933,
+        "min": 0.507,
+        "p10": 0.58,
+        "p90": 1.614,
         "sku": "A100",
         "status": "ok"
       },
       {
-        "availableGpuCount": 17,
-        "capacityWeightedMedian": 1.933,
-        "machineCount": 9,
+        "availableGpuCount": 20,
+        "capacityWeightedMedian": 2.133,
+        "machineCount": 12,
         "max": 3.595,
         "median": 2.2,
         "min": 1.733,
-        "p10": 1.733,
-        "p90": 3.391,
+        "p10": 1.739,
+        "p90": 3.29,
         "sku": "H100",
         "status": "ok"
       },
       {
-        "availableGpuCount": 76,
+        "availableGpuCount": 65,
         "capacityWeightedMedian": 4.533,
-        "machineCount": 28,
-        "max": 12.036,
-        "median": 4.133,
+        "machineCount": 24,
+        "max": 12.637,
+        "median": 4.267,
         "min": 3.08,
-        "p10": 3.6,
+        "p10": 3.64,
         "p90": 6.826,
         "sku": "H200",
         "status": "ok"
       },
       {
-        "availableGpuCount": 21,
-        "capacityWeightedMedian": 10.0,
-        "machineCount": 5,
+        "availableGpuCount": 27,
+        "capacityWeightedMedian": 8.75,
+        "machineCount": 6,
         "max": 10.0,
         "median": 8.75,
         "min": 7.5,
-        "p10": 8.0,
+        "p10": 8.125,
         "p90": 10.0,
         "sku": "B200",
         "status": "ok"
@@ -69,7 +69,7 @@
         "status": "unavailable"
       }
     ],
-    "observedAt": "2026-11-01T13:00:00Z",
+    "observedAt": "2026-11-01T13:15:00Z",
     "source": "Vast.ai"
   },
   "headline": "Leading stress is emerging, but the full trigger is not active",
@@ -794,10 +794,10 @@
       "value": false
     },
     {
-      "change": -50.0,
+      "change": -46.67,
       "change_unit": "% from 90-day observed high",
       "column": "leading",
-      "display_value": "$1.00 / GPU-hour",
+      "display_value": "$1.07 / GPU-hour",
       "expected_update": "every fifteen minutes",
       "freshness": "fresh",
       "history": [
@@ -29470,14 +29470,19 @@
           "availableGpuCount": 75,
           "observedAt": "2026-11-01T13:00:00Z",
           "value": 1.0
+        },
+        {
+          "availableGpuCount": 73,
+          "observedAt": "2026-11-01T13:15:00Z",
+          "value": 1.067
         }
       ],
       "indicator_id": "vast_a100_rental",
       "interpretation": "Capacity-weighted spot asks proxy marginal neocloud pricing power.",
       "label": "A100 rental ask",
-      "last_source_check_at": "2026-11-01T13:00:00Z",
-      "note": "75 GPUs across 36 machines. Building historical baseline.",
-      "observed_at": "2026-11-01T13:00:00Z",
+      "last_source_check_at": "2026-11-01T13:15:00Z",
+      "note": "73 GPUs across 34 machines. Building historical baseline.",
+      "observed_at": "2026-11-01T13:15:00Z",
       "review_due_at": null,
       "reviewed_at": null,
       "source": {
@@ -29491,13 +29496,13 @@
       "tier": 2,
       "unit": "USD per GPU-hour",
       "update_method": "automatic rental offer search",
-      "value": 1.0
+      "value": 1.067
     },
     {
-      "change": -67.78,
+      "change": -64.44,
       "change_unit": "% from 90-day observed high",
       "column": "leading",
-      "display_value": "$1.93 / GPU-hour",
+      "display_value": "$2.13 / GPU-hour",
       "expected_update": "every fifteen minutes",
       "freshness": "fresh",
       "history": [
@@ -58190,14 +58195,19 @@
           "availableGpuCount": 17,
           "observedAt": "2026-11-01T13:00:00Z",
           "value": 1.933
+        },
+        {
+          "availableGpuCount": 20,
+          "observedAt": "2026-11-01T13:15:00Z",
+          "value": 2.133
         }
       ],
       "indicator_id": "vast_h100_rental",
       "interpretation": "Capacity-weighted spot asks proxy marginal neocloud pricing power.",
       "label": "H100 rental ask",
-      "last_source_check_at": "2026-11-01T13:00:00Z",
-      "note": "17 GPUs across 9 machines. At least 20% below 90-day high while Blackwell capacity is listed.",
-      "observed_at": "2026-11-01T13:00:00Z",
+      "last_source_check_at": "2026-11-01T13:15:00Z",
+      "note": "20 GPUs across 12 machines. At least 20% below 90-day high while Blackwell capacity is listed.",
+      "observed_at": "2026-11-01T13:15:00Z",
       "review_due_at": null,
       "reviewed_at": null,
       "source": {
@@ -58211,7 +58221,7 @@
       "tier": 2,
       "unit": "USD per GPU-hour",
       "update_method": "automatic rental offer search",
-      "value": 1.933
+      "value": 2.133
     },
     {
       "change": -57.98,
@@ -86900,14 +86910,19 @@
           "availableGpuCount": 76,
           "observedAt": "2026-11-01T13:00:00Z",
           "value": 4.533
+        },
+        {
+          "availableGpuCount": 65,
+          "observedAt": "2026-11-01T13:15:00Z",
+          "value": 4.533
         }
       ],
       "indicator_id": "vast_h200_rental",
       "interpretation": "Capacity-weighted spot asks proxy marginal neocloud pricing power.",
       "label": "H200 rental ask",
-      "last_source_check_at": "2026-11-01T13:00:00Z",
-      "note": "76 GPUs across 28 machines. Building historical baseline.",
-      "observed_at": "2026-11-01T13:00:00Z",
+      "last_source_check_at": "2026-11-01T13:15:00Z",
+      "note": "65 GPUs across 24 machines. Building historical baseline.",
+      "observed_at": "2026-11-01T13:15:00Z",
       "review_due_at": null,
       "reviewed_at": null,
       "source": {
@@ -86924,10 +86939,10 @@
       "value": 4.533
     },
     {
-      "change": -33.33,
+      "change": -41.67,
       "change_unit": "% from 90-day observed high",
       "column": "leading",
-      "display_value": "$10.00 / GPU-hour",
+      "display_value": "$8.75 / GPU-hour",
       "expected_update": "every fifteen minutes",
       "freshness": "fresh",
       "history": [
@@ -115375,14 +115390,19 @@
           "availableGpuCount": 21,
           "observedAt": "2026-11-01T13:00:00Z",
           "value": 10.0
+        },
+        {
+          "availableGpuCount": 27,
+          "observedAt": "2026-11-01T13:15:00Z",
+          "value": 8.75
         }
       ],
       "indicator_id": "vast_b200_rental",
       "interpretation": "Capacity-weighted spot asks proxy marginal neocloud pricing power.",
       "label": "B200 rental ask",
-      "last_source_check_at": "2026-11-01T13:00:00Z",
-      "note": "21 GPUs across 5 machines. Building historical baseline.",
-      "observed_at": "2026-11-01T13:00:00Z",
+      "last_source_check_at": "2026-11-01T13:15:00Z",
+      "note": "27 GPUs across 6 machines. Building historical baseline.",
+      "observed_at": "2026-11-01T13:15:00Z",
       "review_due_at": null,
       "reviewed_at": null,
       "source": {
@@ -115396,7 +115416,7 @@
       "tier": 2,
       "unit": "USD per GPU-hour",
       "update_method": "automatic rental offer search",
-      "value": 10.0
+      "value": 8.75
     },
     {
       "change": null,
@@ -115409,9 +115429,9 @@
       "indicator_id": "vast_gb200_rental",
       "interpretation": "Capacity-weighted spot asks proxy marginal neocloud pricing power.",
       "label": "GB200 rental ask",
-      "last_source_check_at": "2026-11-01T13:00:00Z",
+      "last_source_check_at": "2026-11-01T13:15:00Z",
       "note": "0 GPUs across 0 machines. No matching rentable offers.",
-      "observed_at": "2026-11-01T13:00:00Z",
+      "observed_at": "2026-11-01T13:15:00Z",
       "review_due_at": null,
       "reviewed_at": null,
       "source": {
