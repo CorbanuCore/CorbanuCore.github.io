@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-04T00:01:00.008681Z",
+ "generatedAt": "2026-11-04T00:07:30.550072Z",
  "overall": "warn",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-11-04T00:01:00.008681Z"
+     "detail": "health snapshot generated 2026-11-04T00:07:30.550072Z"
     }
    ],
    "status": "ok"
@@ -25,7 +25,7 @@
     {
      "name": "index build",
      "status": "ok",
-     "detail": "coverage indices finished 2.5h ago"
+     "detail": "coverage indices finished 2.7h ago"
     }
    ],
    "status": "ok"
@@ -33,9 +33,15 @@
   {
    "id": "options",
    "label": "Listed Options",
-   "summary": "34/34 chains fresh \u00b7 8 instruments without listed options",
-   "items": [],
-   "status": "ok"
+   "summary": "33/34 chains fresh \u00b7 8 instruments without listed options",
+   "items": [
+    {
+     "name": "AMD",
+     "status": "warn",
+     "detail": "retained last-good payload (1.0h old); refresh attempted 0.0h ago: RuntimeError: No forward earnings estimate found for AMD; independent historical refresh unavailable: No forward earnings estimate found for AMD"
+    }
+   ],
+   "status": "warn"
   },
   {
    "id": "transcripts",
@@ -45,7 +51,7 @@
     {
      "name": "packet build",
      "status": "ok",
-     "detail": "transcript packet generated 0.6h ago"
+     "detail": "transcript packet generated 0.7h ago"
     },
     {
      "name": "fundamentals",
@@ -82,7 +88,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 2.4h ago"
+     "detail": "35 instruments, generated 2.5h ago"
     }
    ],
    "status": "ok"
@@ -110,7 +116,7 @@
     {
      "name": "ai publication",
      "status": "ok",
-     "detail": "state started; last verified 2026-11-03T23:47:50.240540Z; retry due None"
+     "detail": "state verified; last verified 2026-11-04T00:02:36.913950Z; retry due None"
     },
     {
      "name": "full publication",
@@ -120,7 +126,7 @@
     {
      "name": "inputs publication",
      "status": "ok",
-     "detail": "state verified; last verified 2026-11-03T23:09:27.318882Z; retry due None"
+     "detail": "state started; last verified 2026-11-03T23:09:27.318882Z; retry due None"
     },
     {
      "name": "transcripts publication",
@@ -143,12 +149,12 @@
     {
      "name": "corbanu-ai-capital-stack.service",
      "status": "ok",
-     "detail": "state activating; last attempt Wed 2026-11-04 00:00:10 UTC; last successful completion Tue 2026-11-03 23:16:12 UTC"
+     "detail": "state inactive; last attempt Wed 2026-11-04 00:00:10 UTC; last successful completion Wed 2026-11-04 00:01:14 UTC"
     },
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "ok",
-     "detail": "state activating; last attempt Wed 2026-11-04 00:00:02 UTC; last successful completion Tue 2026-11-03 23:41:40 UTC"
+     "detail": "state inactive; last attempt Wed 2026-11-04 00:01:31 UTC; last successful completion Wed 2026-11-04 00:01:40 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -168,22 +174,22 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Wed 2026-11-04 00:00:36 UTC; last successful completion Wed 2026-11-04 00:00:48 UTC"
+     "detail": "state inactive; last attempt Wed 2026-11-04 00:05:36 UTC; last successful completion Wed 2026-11-04 00:05:48 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Wed 2026-11-04 00:01:00 UTC; last successful completion Wed 2026-11-04 00:01:00 UTC"
+     "detail": "state inactive; last attempt Wed 2026-11-04 00:07:13 UTC; last successful completion Wed 2026-11-04 00:07:13 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
      "status": "ok",
-     "detail": "state activating; last attempt Wed 2026-11-04 00:00:15 UTC; last successful completion Tue 2026-11-03 23:40:53 UTC"
+     "detail": "state inactive; last attempt Wed 2026-11-04 00:00:15 UTC; last successful completion Wed 2026-11-04 00:01:07 UTC"
     },
     {
      "name": "pipeline-research-context-publish.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Tue 2026-11-03 23:51:04 UTC; last successful completion Tue 2026-11-03 23:52:14 UTC"
+     "detail": "state inactive; last attempt Wed 2026-11-04 00:02:15 UTC; last successful completion Wed 2026-11-04 00:03:26 UTC"
     },
     {
      "name": "pipeline-research-context-reconcile.service",
@@ -197,11 +203,11 @@
     },
     {
      "name": "corbanu-market-lens-inputs.service",
-     "status": "warn",
-     "detail": "state failed; last attempt Tue 2026-11-03 23:05:08 UTC; last successful completion Tue 2026-11-03 22:08:06 UTC"
+     "status": "ok",
+     "detail": "state activating; last attempt Wed 2026-11-04 00:05:07 UTC; last successful completion Tue 2026-11-03 22:08:06 UTC"
     }
    ],
-   "status": "warn"
+   "status": "ok"
   }
  ],
  "jobs": [
@@ -216,21 +222,21 @@
   },
   {
    "name": "corbanu-ai-capital-stack.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Wed 2026-11-04 00:00:10 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Wed 2026-11-04 00:01:14 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-11-03 23:16:12 UTC"
+   "lastSuccessAt": "Wed 2026-11-04 00:01:14 UTC"
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Wed 2026-11-04 00:00:02 UTC",
-   "lastExitAt": null,
+   "lastAttemptAt": "Wed 2026-11-04 00:01:31 UTC",
+   "lastExitAt": "Wed 2026-11-04 00:01:40 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-11-03 23:41:40 UTC"
+   "lastSuccessAt": "Wed 2026-11-04 00:01:40 UTC"
   },
   {
    "name": "pipeline-coverage-equity-live.service",
@@ -263,37 +269,37 @@
    "name": "pipeline-current-signal-catalog-sync.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Wed 2026-11-04 00:00:36 UTC",
-   "lastExitAt": "Wed 2026-11-04 00:00:48 UTC",
+   "lastAttemptAt": "Wed 2026-11-04 00:05:36 UTC",
+   "lastExitAt": "Wed 2026-11-04 00:05:48 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Wed 2026-11-04 00:00:48 UTC"
+   "lastSuccessAt": "Wed 2026-11-04 00:05:48 UTC"
   },
   {
    "name": "corbanu-market-lens-retry.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Wed 2026-11-04 00:01:00 UTC",
-   "lastExitAt": "Wed 2026-11-04 00:01:00 UTC",
+   "lastAttemptAt": "Wed 2026-11-04 00:07:13 UTC",
+   "lastExitAt": "Wed 2026-11-04 00:07:13 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Wed 2026-11-04 00:01:00 UTC"
+   "lastSuccessAt": "Wed 2026-11-04 00:07:13 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Wed 2026-11-04 00:00:15 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Wed 2026-11-04 00:01:07 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-11-03 23:40:53 UTC"
+   "lastSuccessAt": "Wed 2026-11-04 00:01:07 UTC"
   },
   {
    "name": "pipeline-research-context-publish.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Tue 2026-11-03 23:51:04 UTC",
-   "lastExitAt": "Tue 2026-11-03 23:52:14 UTC",
+   "lastAttemptAt": "Wed 2026-11-04 00:02:15 UTC",
+   "lastExitAt": "Wed 2026-11-04 00:03:26 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Tue 2026-11-03 23:52:14 UTC"
+   "lastSuccessAt": "Wed 2026-11-04 00:03:26 UTC"
   },
   {
    "name": "pipeline-research-context-reconcile.service",
@@ -315,18 +321,18 @@
   },
   {
    "name": "corbanu-market-lens-inputs.service",
-   "state": "failed",
-   "result": "exit-code",
-   "lastAttemptAt": "Tue 2026-11-03 23:05:08 UTC",
-   "lastExitAt": "Tue 2026-11-03 23:08:07 UTC",
-   "exitStatus": "1",
+   "state": "activating",
+   "result": "success",
+   "lastAttemptAt": "Wed 2026-11-04 00:05:07 UTC",
+   "lastExitAt": null,
+   "exitStatus": "0",
    "lastSuccessAt": "Tue 2026-11-03 22:08:06 UTC"
   }
  ],
  "sources": [
   {
    "name": "MU financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -337,7 +343,7 @@
   },
   {
    "name": "NBIS financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-11-03",
     "epsRevision28dPctOfPrice": "2026-11-02"
@@ -346,7 +352,7 @@
   },
   {
    "name": "NVDA financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -357,7 +363,7 @@
   },
   {
    "name": "ORCL financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -368,7 +374,7 @@
   },
   {
    "name": "PLTR financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -379,7 +385,7 @@
   },
   {
    "name": "SPCX financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -389,7 +395,7 @@
   },
   {
    "name": "SKHX financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -400,7 +406,7 @@
   },
   {
    "name": "SMSN financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -411,7 +417,7 @@
   },
   {
    "name": "SNDK financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -422,7 +428,7 @@
   },
   {
    "name": "SOXL financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -433,7 +439,7 @@
   },
   {
    "name": "SP500 financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -444,7 +450,7 @@
   },
   {
    "name": "MSTR financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -454,7 +460,7 @@
   },
   {
    "name": "RKLB financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-11-03",
     "epsRevision28dPctOfPrice": "2026-11-02"
@@ -463,7 +469,7 @@
   },
   {
    "name": "MSFT financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -474,7 +480,7 @@
   },
   {
    "name": "EWY financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -485,7 +491,7 @@
   },
   {
    "name": "MRNA financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-11-03",
     "epsRevision28dPctOfPrice": "2026-11-02"
@@ -494,7 +500,7 @@
   },
   {
    "name": "META financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -505,7 +511,7 @@
   },
   {
    "name": "LITE financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -516,7 +522,7 @@
   },
   {
    "name": "INTC financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -527,7 +533,7 @@
   },
   {
    "name": "HOOD financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -538,7 +544,7 @@
   },
   {
    "name": "GOOGL financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -549,7 +555,7 @@
   },
   {
    "name": "CXMT financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -560,7 +566,7 @@
   },
   {
    "name": "CRWV financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-11-03",
     "epsRevision28dPctOfPrice": "2026-11-02"
@@ -569,7 +575,7 @@
   },
   {
    "name": "CRCL financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -580,7 +586,7 @@
   },
   {
    "name": "CBRS financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -590,7 +596,7 @@
   },
   {
    "name": "AMZN financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -601,7 +607,7 @@
   },
   {
    "name": "AMD financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -612,7 +618,7 @@
   },
   {
    "name": "AAPL financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -623,7 +629,7 @@
   },
   {
    "name": "TSLA financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -634,7 +640,7 @@
   },
   {
    "name": "MRVL financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-02",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -645,7 +651,7 @@
   },
   {
    "name": "XYZ100 financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -656,7 +662,7 @@
   },
   {
    "name": "SKHY financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -667,7 +673,7 @@
   },
   {
    "name": "COIN financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -678,7 +684,7 @@
   },
   {
    "name": "BE financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
     "forwardPE": "2026-11-03",
     "forwardSalesGrowthPct": "2026-11-03",
@@ -689,12 +695,12 @@
   },
   {
    "name": "DRAM financial fields",
-   "generatedAt": "2026-11-03T23:06:30.357597Z",
+   "generatedAt": "2026-11-04T00:06:10.646645Z",
    "observations": {
-    "forwardPE": "2026-11-03",
-    "forwardSalesGrowthPct": "2026-11-03",
-    "forwardEPSGrowthPct": "2026-11-03",
-    "epsRevision28dPctOfPrice": "2026-11-03"
+    "forwardPE": "2026-11-04",
+    "forwardSalesGrowthPct": "2026-11-04",
+    "forwardEPSGrowthPct": "2026-11-04",
+    "epsRevision28dPctOfPrice": "2026-11-04"
    },
    "state": "dated_observations"
   },
@@ -702,238 +708,238 @@
    "name": "aapl-options options",
    "observedAt": "2026-11-03T21:00:49.966000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "amd-options options",
    "observedAt": "2026-11-03T21:15:00.032000Z",
-   "lastAttemptAt": null,
+   "lastAttemptAt": "2026-11-04T00:06:31.204931Z",
    "generatedAt": "2026-11-03T23:06:46.266943Z",
-   "state": "available"
+   "state": "retained_last_good"
   },
   {
    "name": "amzn-options options",
    "observedAt": "2026-11-03T21:00:03.835000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "be-options options",
    "observedAt": "2026-11-03T21:00:00.192000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "brentoil-options options",
    "observedAt": "2026-11-03T21:00:04.898000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "btc-options options",
-   "observedAt": "2026-11-03T21:15:00.133000Z",
+   "observedAt": "2026-11-03T21:15:00.087000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "cbrs-options options",
    "observedAt": "2026-11-03T21:00:07.863000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "cl-options options",
    "observedAt": "2026-11-03T21:00:01.288000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "coin-options options",
    "observedAt": "2026-11-03T21:00:00.450000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "crcl-options options",
    "observedAt": "2026-11-03T21:00:05.979000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "dram-options options",
    "observedAt": "2026-11-03T21:15:00.397000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "eth-options options",
    "observedAt": "2026-11-03T21:00:01.173000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "ewy-options options",
    "observedAt": "2026-11-03T21:15:00.856000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "gold-options options",
    "observedAt": "2026-11-03T21:15:00.248000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "googl-options options",
    "observedAt": "2026-11-03T21:00:02.714000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "intc-options options",
    "observedAt": "2026-11-03T21:00:01.768000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "meta-options options",
    "observedAt": "2026-11-03T21:14:46.747000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "mrvl-options options",
    "observedAt": "2026-11-03T21:04:05.812000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "msft-options options",
    "observedAt": "2026-11-03T21:14:43.738000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "mstr-options options",
    "observedAt": "2026-11-03T21:00:00.027000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "mu-options options",
    "observedAt": "2026-11-03T21:12:32.598000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "natgas-options options",
    "observedAt": "2026-11-03T21:15:00.566000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "nbis-options options",
    "observedAt": "2026-11-03T21:00:02.004000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "nvda-options options",
    "observedAt": "2026-11-03T21:15:00.002000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "pltr-options options",
    "observedAt": "2026-11-03T21:00:01.487000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "silver-options options",
    "observedAt": "2026-11-03T21:15:00.205000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "skhx-options options",
    "observedAt": "2026-11-03T21:00:03.094000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "skhy-options options",
    "observedAt": "2026-11-03T21:00:03.094000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "sndk-options options",
    "observedAt": "2026-11-03T21:14:43.773000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "soxl-options options",
    "observedAt": "2026-11-03T21:15:00.260000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "sp500-options options",
    "observedAt": "2026-11-03T21:15:00.363000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "spcx-options options",
    "observedAt": "2026-11-03T21:00:03.528000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "tsla-options options",
    "observedAt": "2026-11-03T21:15:00.062000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
    "name": "xyz100-options options",
    "observedAt": "2026-11-03T21:15:00.627000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-03T23:06:46.266943Z",
+   "generatedAt": "2026-11-04T00:06:31.204931Z",
    "state": "available"
   },
   {
@@ -1982,16 +1988,16 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "started",
-   "updatedAt": "2026-11-04T00:00:53.259462Z",
+   "state": "verified",
+   "updatedAt": "2026-11-04T00:02:36.913950Z",
    "lastAttemptAt": "2026-11-04T00:00:53.259462Z",
-   "generatedAt": "2026-11-03T23:46:18.739054Z",
-   "pushedAt": "2026-11-03T23:46:25.547982Z",
-   "commit": "6e66eeb83eb367c2a2ca26b1fe7fd6e045c96225",
-   "lastSuccessAt": "2026-11-03T23:47:50.240540Z",
-   "verifiedAt": "2026-11-03T23:47:50.240540Z",
-   "deferredAt": "2026-11-03T23:47:17.197665Z",
-   "verifiedCommit": "6e66eeb83eb367c2a2ca26b1fe7fd6e045c96225"
+   "generatedAt": "2026-11-04T00:01:06.665541Z",
+   "pushedAt": "2026-11-04T00:01:13.473194Z",
+   "commit": "12551163e243d57aec10b9f53ed78ee35acf0da7",
+   "lastSuccessAt": "2026-11-04T00:02:36.913950Z",
+   "verifiedAt": "2026-11-04T00:02:36.913950Z",
+   "deferredAt": "2026-11-04T00:02:03.218916Z",
+   "verifiedCommit": "12551163e243d57aec10b9f53ed78ee35acf0da7"
   },
   {
    "mode": "full",
@@ -2008,9 +2014,9 @@
   },
   {
    "mode": "inputs",
-   "state": "verified",
-   "updatedAt": "2026-11-03T23:09:27.318882Z",
-   "lastAttemptAt": "2026-11-03T23:05:56.346988Z",
+   "state": "started",
+   "updatedAt": "2026-11-04T00:05:52.587718Z",
+   "lastAttemptAt": "2026-11-04T00:05:52.587718Z",
    "generatedAt": "2026-11-03T23:08:34.299987Z",
    "pushedAt": "2026-11-03T23:08:45.376187Z",
    "commit": "734de2b0467689217fd52163ba836a0f2ebb9086",
@@ -2022,8 +2028,8 @@
   {
    "mode": "transcripts",
    "state": "unchanged",
-   "updatedAt": "2026-11-03T23:50:10.679420Z",
-   "lastAttemptAt": "2026-11-03T23:50:02.677425Z",
+   "updatedAt": "2026-11-04T00:01:40.284026Z",
+   "lastAttemptAt": "2026-11-04T00:01:32.446000Z",
    "generatedAt": "2026-11-03T23:27:58.352952Z",
    "pushedAt": "2026-11-03T23:28:08.183083Z",
    "commit": "7adb7fa2d7ffec68265153ec9a87df7962b28c79",
