@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-12T14:25:35.283947Z",
+ "generatedAt": "2026-11-12T14:25:59.410496Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-11-12T14:25:35.283947Z"
+     "detail": "health snapshot generated 2026-11-12T14:25:59.410496Z"
     }
    ],
    "status": "ok"
@@ -82,7 +82,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 16.8h ago"
+     "detail": "35 instruments, generated 16.9h ago"
     }
    ],
    "status": "ok"
@@ -124,8 +124,8 @@
     },
     {
      "name": "transcripts publication",
-     "status": "ok",
-     "detail": "state started; last verified 2026-11-10T23:37:39.147831Z; retry due None"
+     "status": "warn",
+     "detail": "state deferred; last verified 2026-11-10T23:37:39.147831Z; retry due 2026-11-12T14:26:56.169250+00:00"
     }
    ],
    "status": "warn"
@@ -148,7 +148,7 @@
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-11-12 14:20:15 UTC; last successful completion Thu 2026-11-12 14:11:34 UTC"
+     "detail": "state inactive; last attempt Thu 2026-11-12 14:20:15 UTC; last successful completion Thu 2026-11-12 14:25:56 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -173,7 +173,7 @@
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-11-12 14:25:20 UTC; last successful completion Thu 2026-11-12 14:25:20 UTC"
+     "detail": "state activating; last attempt Thu 2026-11-12 14:25:51 UTC; last successful completion Thu 2026-11-12 14:25:20 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -225,12 +225,12 @@
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Thu 2026-11-12 14:20:15 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Thu 2026-11-12 14:25:56 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-11-12 14:11:34 UTC"
+   "lastSuccessAt": "Thu 2026-11-12 14:25:56 UTC"
   },
   {
    "name": "pipeline-coverage-equity-live.service",
@@ -270,10 +270,10 @@
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-11-12 14:25:20 UTC",
-   "lastExitAt": "Thu 2026-11-12 14:25:20 UTC",
+   "lastAttemptAt": "Thu 2026-11-12 14:25:51 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Thu 2026-11-12 14:25:20 UTC"
   },
@@ -2021,16 +2021,17 @@
   },
   {
    "mode": "transcripts",
-   "state": "started",
-   "updatedAt": "2026-11-12T14:25:26.733741Z",
+   "state": "deferred",
+   "updatedAt": "2026-11-12T14:25:56.169236Z",
    "lastAttemptAt": "2026-11-12T14:25:26.733741Z",
-   "generatedAt": "2026-11-10T23:36:49.807654Z",
-   "pushedAt": "2026-11-10T23:37:00.126890Z",
-   "commit": "1697db719e61814fd305ac71baf9945040ab915b",
-   "deferredAt": "2026-11-10T23:37:02.281104Z",
+   "generatedAt": "2026-11-12T14:25:41.887108Z",
+   "pushedAt": "2026-11-12T14:25:52.796722Z",
+   "commit": "aa538ce505a6ea941f08ca1c960924fd81f2d81a",
+   "deferredAt": "2026-11-12T14:25:56.169236Z",
    "lastSuccessAt": "2026-11-10T23:37:39.147831Z",
    "verifiedAt": "2026-11-10T23:37:39.147831Z",
-   "verifiedCommit": "1697db719e61814fd305ac71baf9945040ab915b"
+   "verifiedCommit": "1697db719e61814fd305ac71baf9945040ab915b",
+   "retryDueAt": "2026-11-12T14:26:56.169250+00:00"
   }
  ]
 }
