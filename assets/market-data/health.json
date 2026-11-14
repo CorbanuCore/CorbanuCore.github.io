@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-14T21:16:08.163237Z",
+ "generatedAt": "2026-11-14T21:30:58.367898Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-11-14T21:16:08.163237Z"
+     "detail": "health snapshot generated 2026-11-14T21:30:58.367898Z"
     }
    ],
    "status": "ok"
@@ -20,15 +20,30 @@
   {
    "id": "coverage",
    "label": "Spot / Perp Coverage",
-   "summary": "42/42 instruments current",
+   "summary": "39/42 instruments current",
    "items": [
     {
      "name": "index build",
      "status": "ok",
-     "detail": "coverage indices finished 23.8h ago"
+     "detail": "coverage indices finished 0.0h ago"
+    },
+    {
+     "name": "CXMT",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-11-13"
+    },
+    {
+     "name": "SKHX",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-11-13"
+    },
+    {
+     "name": "SMSN",
+     "status": "warn",
+     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-11-13"
     }
    ],
-   "status": "ok"
+   "status": "warn"
   },
   {
    "id": "options",
@@ -45,7 +60,7 @@
     {
      "name": "packet build",
      "status": "ok",
-     "detail": "transcript packet generated 23.8h ago"
+     "detail": "transcript packet generated 24.1h ago"
     },
     {
      "name": "fundamentals",
@@ -82,7 +97,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 23.8h ago"
+     "detail": "35 instruments, generated 24.0h ago"
     }
    ],
    "status": "ok"
@@ -110,12 +125,12 @@
     {
      "name": "ai publication",
      "status": "ok",
-     "detail": "state started; last verified 2026-11-14T21:02:02.039376Z; retry due None"
+     "detail": "state started; last verified 2026-11-14T21:16:57.991939Z; retry due None"
     },
     {
      "name": "full publication",
      "status": "ok",
-     "detail": "state verified; last verified 2026-11-13T21:33:35.270010Z; retry due None"
+     "detail": "state started; last verified 2026-11-13T21:33:35.270010Z; retry due None"
     },
     {
      "name": "inputs publication",
@@ -138,17 +153,17 @@
     {
      "name": "corbanu-market-lens-refresh.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Fri 2026-11-13 21:21:49 UTC; last successful completion Fri 2026-11-13 21:32:54 UTC"
+     "detail": "state activating; last attempt Sat 2026-11-14 21:20:31 UTC; last successful completion Fri 2026-11-13 21:32:54 UTC"
     },
     {
      "name": "corbanu-ai-capital-stack.service",
      "status": "ok",
-     "detail": "state activating; last attempt Sat 2026-11-14 21:15:15 UTC; last successful completion Sat 2026-11-14 21:01:22 UTC"
+     "detail": "state activating; last attempt Sat 2026-11-14 21:30:04 UTC; last successful completion Sat 2026-11-14 21:01:22 UTC"
     },
     {
      "name": "pipeline-coverage-universe-transcripts.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sat 2026-11-14 21:11:11 UTC; last successful completion Sat 2026-11-14 21:11:20 UTC"
+     "detail": "state activating; last attempt Sat 2026-11-14 21:30:00 UTC; last successful completion Sat 2026-11-14 21:11:20 UTC"
     },
     {
      "name": "pipeline-coverage-equity-live.service",
@@ -168,17 +183,17 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sat 2026-11-14 21:14:16 UTC; last successful completion Sat 2026-11-14 21:14:30 UTC"
+     "detail": "state inactive; last attempt Sat 2026-11-14 21:29:17 UTC; last successful completion Sat 2026-11-14 21:29:29 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sat 2026-11-14 21:15:53 UTC; last successful completion Sat 2026-11-14 21:15:53 UTC"
+     "detail": "state inactive; last attempt Sat 2026-11-14 21:30:40 UTC; last successful completion Sat 2026-11-14 21:30:40 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Sat 2026-11-14 21:10:03 UTC; last successful completion Sat 2026-11-14 21:10:51 UTC"
+     "detail": "state activating; last attempt Sat 2026-11-14 21:30:04 UTC; last successful completion Sat 2026-11-14 21:10:51 UTC"
     },
     {
      "name": "pipeline-research-context-publish.service",
@@ -207,10 +222,10 @@
  "jobs": [
   {
    "name": "corbanu-market-lens-refresh.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Fri 2026-11-13 21:21:49 UTC",
-   "lastExitAt": "Fri 2026-11-13 21:32:54 UTC",
+   "lastAttemptAt": "Sat 2026-11-14 21:20:31 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Fri 2026-11-13 21:32:54 UTC"
   },
@@ -218,17 +233,17 @@
    "name": "corbanu-ai-capital-stack.service",
    "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Sat 2026-11-14 21:15:15 UTC",
+   "lastAttemptAt": "Sat 2026-11-14 21:30:04 UTC",
    "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Sat 2026-11-14 21:01:22 UTC"
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Sat 2026-11-14 21:11:11 UTC",
-   "lastExitAt": "Sat 2026-11-14 21:11:20 UTC",
+   "lastAttemptAt": "Sat 2026-11-14 21:30:00 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Sat 2026-11-14 21:11:20 UTC"
   },
@@ -263,26 +278,26 @@
    "name": "pipeline-current-signal-catalog-sync.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Sat 2026-11-14 21:14:16 UTC",
-   "lastExitAt": "Sat 2026-11-14 21:14:30 UTC",
+   "lastAttemptAt": "Sat 2026-11-14 21:29:17 UTC",
+   "lastExitAt": "Sat 2026-11-14 21:29:29 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sat 2026-11-14 21:14:30 UTC"
+   "lastSuccessAt": "Sat 2026-11-14 21:29:29 UTC"
   },
   {
    "name": "corbanu-market-lens-retry.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Sat 2026-11-14 21:15:53 UTC",
-   "lastExitAt": "Sat 2026-11-14 21:15:53 UTC",
+   "lastAttemptAt": "Sat 2026-11-14 21:30:40 UTC",
+   "lastExitAt": "Sat 2026-11-14 21:30:40 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Sat 2026-11-14 21:15:53 UTC"
+   "lastSuccessAt": "Sat 2026-11-14 21:30:40 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Sat 2026-11-14 21:10:03 UTC",
-   "lastExitAt": "Sat 2026-11-14 21:10:51 UTC",
+   "lastAttemptAt": "Sat 2026-11-14 21:30:04 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Sat 2026-11-14 21:10:51 UTC"
   },
@@ -938,506 +953,506 @@
   },
   {
    "name": "BTC cash history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ETH cash history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "HYPE cash history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "LIT cash history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOL cash history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XRP cash history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ZEC cash history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AAPL cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMD cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMZN cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BE cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BRENTOIL cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CBRS cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CL cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COIN cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COPPER cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CRCL cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CXMT cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "DRAM cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "EWY cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOLD cash history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOOGL cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "INTC cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "META cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MRVL cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSFT cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSTR cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MU cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NATGAS cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NBIS cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NVDA cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "PLTR cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SILVER cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHX cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHY cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SMSN cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SNDK cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOXL cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SP500 cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SPCX cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "TSLA cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XYZ100 cash history",
    "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BTC perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ETH perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "HYPE perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "LIT perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOL perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XRP perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ZEC perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AAPL perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMD perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMZN perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BE perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BRENTOIL perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CBRS perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CL perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COIN perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COPPER perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CRCL perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CXMT perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "DRAM perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "EWY perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOLD perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOOGL perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "INTC perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "META perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MRVL perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSFT perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSTR perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MU perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NATGAS perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NBIS perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NVDA perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "PLTR perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SILVER perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHX perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHY perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SMSN perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SNDK perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOXL perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SP500 perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SPCX perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "TSLA perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XYZ100 perp history",
-   "observedAt": "2026-11-13T00:00:00+00:00",
-   "generatedAt": "2026-11-13T21:25:10.334120+00:00",
+   "observedAt": "2026-11-14T00:00:00+00:00",
+   "generatedAt": "2026-11-14T21:28:45.553984+00:00",
    "state": "dated_observations"
   },
   {
@@ -1913,40 +1928,40 @@
   },
   {
    "name": "A100 rental ask",
-   "observedAt": "2026-11-14T21:15:00Z",
-   "lastSourceCheckAt": "2026-11-14T21:15:00Z",
+   "observedAt": "2026-11-14T21:30:00Z",
+   "lastSourceCheckAt": "2026-11-14T21:30:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
   },
   {
    "name": "H100 rental ask",
-   "observedAt": "2026-11-14T21:15:00Z",
-   "lastSourceCheckAt": "2026-11-14T21:15:00Z",
+   "observedAt": "2026-11-14T21:30:00Z",
+   "lastSourceCheckAt": "2026-11-14T21:30:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
   },
   {
    "name": "H200 rental ask",
-   "observedAt": "2026-11-14T21:15:00Z",
-   "lastSourceCheckAt": "2026-11-14T21:15:00Z",
+   "observedAt": "2026-11-14T21:30:00Z",
+   "lastSourceCheckAt": "2026-11-14T21:30:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
   },
   {
    "name": "B200 rental ask",
-   "observedAt": "2026-11-14T21:15:00Z",
-   "lastSourceCheckAt": "2026-11-14T21:15:00Z",
+   "observedAt": "2026-11-14T21:30:00Z",
+   "lastSourceCheckAt": "2026-11-14T21:30:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
   },
   {
    "name": "GB200 rental ask",
-   "observedAt": "2026-11-14T21:15:00Z",
-   "lastSourceCheckAt": "2026-11-14T21:15:00Z",
+   "observedAt": "2026-11-14T21:30:00Z",
+   "lastSourceCheckAt": "2026-11-14T21:30:00Z",
    "updateMethod": "automatic rental offer search",
    "expectedUpdate": "every fifteen minutes",
    "state": "fresh"
@@ -1984,21 +1999,21 @@
   {
    "mode": "ai",
    "state": "started",
-   "updatedAt": "2026-11-14T21:16:01.113937Z",
-   "lastAttemptAt": "2026-11-14T21:16:01.113937Z",
-   "generatedAt": "2026-11-14T21:01:14.005637Z",
-   "pushedAt": "2026-11-14T21:01:20.840360Z",
-   "commit": "f649000ac1bf71e17cb32dae26777e11cf795607",
-   "lastSuccessAt": "2026-11-14T21:02:02.039376Z",
-   "verifiedAt": "2026-11-14T21:02:02.039376Z",
-   "deferredAt": "2026-11-14T21:01:27.930521Z",
-   "verifiedCommit": "f649000ac1bf71e17cb32dae26777e11cf795607"
+   "updatedAt": "2026-11-14T21:30:52.253711Z",
+   "lastAttemptAt": "2026-11-14T21:30:52.253711Z",
+   "generatedAt": "2026-11-14T21:16:14.691225Z",
+   "pushedAt": "2026-11-14T21:16:21.879110Z",
+   "commit": "bc47b067ab36688443fcfcad55182107c487f32c",
+   "lastSuccessAt": "2026-11-14T21:16:57.991939Z",
+   "verifiedAt": "2026-11-14T21:16:57.991939Z",
+   "deferredAt": "2026-11-14T21:16:24.912528Z",
+   "verifiedCommit": "bc47b067ab36688443fcfcad55182107c487f32c"
   },
   {
    "mode": "full",
-   "state": "verified",
-   "updatedAt": "2026-11-13T21:33:35.270010Z",
-   "lastAttemptAt": "2026-11-13T21:22:37.286220Z",
+   "state": "started",
+   "updatedAt": "2026-11-14T21:21:17.200315Z",
+   "lastAttemptAt": "2026-11-14T21:21:17.200315Z",
    "generatedAt": "2026-11-13T21:32:38.791672Z",
    "pushedAt": "2026-11-13T21:32:52.140862Z",
    "commit": "de03d57bb2becd4385a7d34f4d6d6ee95c140deb",
@@ -2023,8 +2038,8 @@
   {
    "mode": "transcripts",
    "state": "unchanged",
-   "updatedAt": "2026-11-14T21:11:20.332326Z",
-   "lastAttemptAt": "2026-11-14T21:11:12.389608Z",
+   "updatedAt": "2026-11-14T21:20:29.550488Z",
+   "lastAttemptAt": "2026-11-14T21:20:21.849776Z",
    "generatedAt": "2026-11-12T23:16:54.989365Z",
    "pushedAt": "2026-11-12T23:17:06.554723Z",
    "commit": "2f7192a72a5ee721524fd9e1dfb07333500034dd",
