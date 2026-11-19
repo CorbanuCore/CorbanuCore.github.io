@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-19T21:31:24.901434Z",
+ "generatedAt": "2026-11-19T21:38:46.716341Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-11-19T21:31:24.901434Z"
+     "detail": "health snapshot generated 2026-11-19T21:38:46.716341Z"
     }
    ],
    "status": "ok"
@@ -20,37 +20,28 @@
   {
    "id": "coverage",
    "label": "Spot / Perp Coverage",
-   "summary": "39/42 instruments current",
+   "summary": "42/42 instruments current",
    "items": [
     {
      "name": "index build",
      "status": "ok",
-     "detail": "coverage indices finished 24.0h ago"
-    },
-    {
-     "name": "CXMT",
-     "status": "warn",
-     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-11-17"
-    },
-    {
-     "name": "SKHX",
-     "status": "warn",
-     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-11-17"
-    },
-    {
-     "name": "SMSN",
-     "status": "warn",
-     "detail": "cached cash reference retained after the source refresh was unavailable; latest observation 2026-11-17"
+     "detail": "coverage indices finished 0.1h ago"
     }
    ],
-   "status": "warn"
+   "status": "ok"
   },
   {
    "id": "options",
    "label": "Listed Options",
-   "summary": "34/34 chains fresh \u00b7 8 instruments without listed options",
-   "items": [],
-   "status": "ok"
+   "summary": "33/34 chains fresh \u00b7 8 instruments without listed options",
+   "items": [
+    {
+     "name": "BE",
+     "status": "warn",
+     "detail": "retained last-good payload (0.5h old); refresh attempted 0.0h ago: remote command failed: FileNotFoundError: [Errno 2] No such file or directory: '~/.config/pipeline/broker_tokens.json.tmp' -> '~/.config/pipeline/broker_tokens.json'"
+    }
+   ],
+   "status": "warn"
   },
   {
    "id": "transcripts",
@@ -60,7 +51,7 @@
     {
      "name": "packet build",
      "status": "ok",
-     "detail": "transcript packet generated 23.9h ago"
+     "detail": "transcript packet generated 0.1h ago"
     },
     {
      "name": "fundamentals",
@@ -97,7 +88,7 @@
     {
      "name": "catalog",
      "status": "ok",
-     "detail": "35 instruments, generated 23.8h ago"
+     "detail": "35 instruments, generated 0.0h ago"
     }
    ],
    "status": "ok"
@@ -125,7 +116,7 @@
     {
      "name": "ai publication",
      "status": "ok",
-     "detail": "state started; last verified 2026-11-19T21:17:39.804295Z; retry due None"
+     "detail": "state verified; last verified 2026-11-19T21:32:29.567581Z; retry due None"
     },
     {
      "name": "full publication",
@@ -158,7 +149,7 @@
     {
      "name": "corbanu-ai-capital-stack.service",
      "status": "ok",
-     "detail": "state activating; last attempt Thu 2026-11-19 21:30:16 UTC; last successful completion Thu 2026-11-19 21:01:32 UTC"
+     "detail": "state inactive; last attempt Thu 2026-11-19 21:30:16 UTC; last successful completion Thu 2026-11-19 21:31:41 UTC"
     },
     {
      "name": "pipeline-coverage-universe-transcripts.service",
@@ -183,12 +174,12 @@
     {
      "name": "pipeline-current-signal-catalog-sync.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-11-19 21:28:39 UTC; last successful completion Thu 2026-11-19 21:28:52 UTC"
+     "detail": "state activating; last attempt Thu 2026-11-19 21:38:41 UTC; last successful completion Thu 2026-11-19 21:28:52 UTC"
     },
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-11-19 21:31:24 UTC; last successful completion Thu 2026-11-19 21:31:24 UTC"
+     "detail": "state inactive; last attempt Thu 2026-11-19 21:38:34 UTC; last successful completion Thu 2026-11-19 21:38:34 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -231,12 +222,12 @@
   },
   {
    "name": "corbanu-ai-capital-stack.service",
-   "state": "activating",
+   "state": "inactive",
    "result": "success",
    "lastAttemptAt": "Thu 2026-11-19 21:30:16 UTC",
-   "lastExitAt": null,
+   "lastExitAt": "Thu 2026-11-19 21:31:41 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-11-19 21:01:32 UTC"
+   "lastSuccessAt": "Thu 2026-11-19 21:31:41 UTC"
   },
   {
    "name": "pipeline-coverage-universe-transcripts.service",
@@ -276,10 +267,10 @@
   },
   {
    "name": "pipeline-current-signal-catalog-sync.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-11-19 21:28:39 UTC",
-   "lastExitAt": "Thu 2026-11-19 21:28:52 UTC",
+   "lastAttemptAt": "Thu 2026-11-19 21:38:41 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Thu 2026-11-19 21:28:52 UTC"
   },
@@ -287,10 +278,10 @@
    "name": "corbanu-market-lens-retry.service",
    "state": "inactive",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-11-19 21:31:24 UTC",
-   "lastExitAt": "Thu 2026-11-19 21:31:24 UTC",
+   "lastAttemptAt": "Thu 2026-11-19 21:38:34 UTC",
+   "lastExitAt": "Thu 2026-11-19 21:38:34 UTC",
    "exitStatus": "0",
-   "lastSuccessAt": "Thu 2026-11-19 21:31:24 UTC"
+   "lastSuccessAt": "Thu 2026-11-19 21:38:34 UTC"
   },
   {
    "name": "pipeline-research-context-refresh.service",
@@ -341,7 +332,7 @@
  "sources": [
   {
    "name": "MU financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -352,7 +343,7 @@
   },
   {
    "name": "NBIS financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-11-19",
     "epsRevision28dPctOfPrice": "2026-11-18"
@@ -361,7 +352,7 @@
   },
   {
    "name": "NVDA financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -372,7 +363,7 @@
   },
   {
    "name": "ORCL financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -383,7 +374,7 @@
   },
   {
    "name": "PLTR financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -394,7 +385,7 @@
   },
   {
    "name": "SPCX financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -404,7 +395,7 @@
   },
   {
    "name": "SKHX financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -415,7 +406,7 @@
   },
   {
    "name": "SMSN financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -426,7 +417,7 @@
   },
   {
    "name": "SNDK financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -437,7 +428,7 @@
   },
   {
    "name": "SOXL financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -448,7 +439,7 @@
   },
   {
    "name": "SP500 financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -459,7 +450,7 @@
   },
   {
    "name": "MSTR financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -469,7 +460,7 @@
   },
   {
    "name": "RKLB financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-11-19",
     "epsRevision28dPctOfPrice": "2026-11-18"
@@ -478,7 +469,7 @@
   },
   {
    "name": "MSFT financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -489,7 +480,7 @@
   },
   {
    "name": "EWY financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -500,7 +491,7 @@
   },
   {
    "name": "MRNA financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-11-19",
     "epsRevision28dPctOfPrice": "2026-11-18"
@@ -509,7 +500,7 @@
   },
   {
    "name": "META financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -520,7 +511,7 @@
   },
   {
    "name": "LITE financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -531,7 +522,7 @@
   },
   {
    "name": "INTC financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -542,7 +533,7 @@
   },
   {
    "name": "HOOD financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -553,7 +544,7 @@
   },
   {
    "name": "GOOGL financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -564,7 +555,7 @@
   },
   {
    "name": "CXMT financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -575,7 +566,7 @@
   },
   {
    "name": "CRWV financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardSalesGrowthPct": "2026-11-19",
     "epsRevision28dPctOfPrice": "2026-11-18"
@@ -584,7 +575,7 @@
   },
   {
    "name": "CRCL financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -595,7 +586,7 @@
   },
   {
    "name": "CBRS financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -605,7 +596,7 @@
   },
   {
    "name": "AMZN financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -616,7 +607,7 @@
   },
   {
    "name": "AMD financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -627,7 +618,7 @@
   },
   {
    "name": "AAPL financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -638,7 +629,7 @@
   },
   {
    "name": "TSLA financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -649,7 +640,7 @@
   },
   {
    "name": "MRVL financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -660,7 +651,7 @@
   },
   {
    "name": "XYZ100 financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -671,7 +662,7 @@
   },
   {
    "name": "SKHY financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -682,7 +673,7 @@
   },
   {
    "name": "COIN financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -693,7 +684,7 @@
   },
   {
    "name": "BE financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-19",
     "forwardSalesGrowthPct": "2026-11-19",
@@ -704,7 +695,7 @@
   },
   {
    "name": "DRAM financial fields",
-   "generatedAt": "2026-11-19T21:06:43.321220Z",
+   "generatedAt": "2026-11-19T21:32:07.489464Z",
    "observations": {
     "forwardPE": "2026-11-18",
     "forwardSalesGrowthPct": "2026-11-18",
@@ -715,1006 +706,1006 @@
   },
   {
    "name": "aapl-options options",
-   "observedAt": "2026-11-19T21:06:54.331000Z",
+   "observedAt": "2026-11-19T21:15:00.032000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "amd-options options",
-   "observedAt": "2026-11-19T21:06:54.265000Z",
+   "observedAt": "2026-11-19T21:15:00.081000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "amzn-options options",
-   "observedAt": "2026-11-19T21:00:02.453000Z",
+   "observedAt": "2026-11-19T21:15:00.034000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "be-options options",
    "observedAt": "2026-11-19T21:00:05.136000Z",
-   "lastAttemptAt": null,
+   "lastAttemptAt": "2026-11-19T21:37:41.074379Z",
    "generatedAt": "2026-11-19T21:06:45.856352Z",
-   "state": "available"
+   "state": "retained_last_good"
   },
   {
    "name": "brentoil-options options",
    "observedAt": "2026-11-19T21:00:07.185000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "btc-options options",
-   "observedAt": "2026-11-19T21:06:59.631000Z",
+   "observedAt": "2026-11-19T21:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "cbrs-options options",
    "observedAt": "2026-11-19T21:00:06.685000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "cl-options options",
    "observedAt": "2026-11-19T21:00:05.563000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "coin-options options",
    "observedAt": "2026-11-19T21:00:00.894000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "crcl-options options",
    "observedAt": "2026-11-19T21:00:05.065000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "dram-options options",
-   "observedAt": "2026-11-19T21:07:04.416000Z",
+   "observedAt": "2026-11-19T21:15:00.207000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "eth-options options",
    "observedAt": "2026-11-19T21:00:02.919000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "ewy-options options",
-   "observedAt": "2026-11-19T21:07:09.096000Z",
+   "observedAt": "2026-11-19T21:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "gold-options options",
-   "observedAt": "2026-11-19T21:07:09.560000Z",
+   "observedAt": "2026-11-19T21:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "googl-options options",
-   "observedAt": "2026-11-19T21:06:58.652000Z",
+   "observedAt": "2026-11-19T21:15:00.034000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "intc-options options",
-   "observedAt": "2026-11-19T21:05:28.708000Z",
+   "observedAt": "2026-11-19T21:15:00.105000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "meta-options options",
-   "observedAt": "2026-11-19T21:07:12.547000Z",
+   "observedAt": "2026-11-19T21:15:00.022000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "mrvl-options options",
-   "observedAt": "2026-11-19T21:01:35.252000Z",
+   "observedAt": "2026-11-19T21:15:00.012000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "msft-options options",
-   "observedAt": "2026-11-19T21:07:14.425000Z",
+   "observedAt": "2026-11-19T21:15:00.013000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "mstr-options options",
    "observedAt": "2026-11-19T21:00:05.215000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "mu-options options",
-   "observedAt": "2026-11-19T21:07:14.486000Z",
+   "observedAt": "2026-11-19T21:15:00.372000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "natgas-options options",
-   "observedAt": "2026-11-19T21:07:20.442000Z",
+   "observedAt": "2026-11-19T21:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "nbis-options options",
    "observedAt": "2026-11-19T21:00:00.473000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "nvda-options options",
-   "observedAt": "2026-11-19T21:07:21.490000Z",
+   "observedAt": "2026-11-19T21:15:00.040000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "pltr-options options",
-   "observedAt": "2026-11-19T21:07:18.090000Z",
+   "observedAt": "2026-11-19T21:15:00.066000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "silver-options options",
-   "observedAt": "2026-11-19T21:07:25.304000Z",
+   "observedAt": "2026-11-19T21:15:00.526000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "skhx-options options",
    "observedAt": "2026-11-19T21:00:07.876000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "skhy-options options",
    "observedAt": "2026-11-19T21:00:07.876000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "sndk-options options",
-   "observedAt": "2026-11-19T21:07:30.188000Z",
+   "observedAt": "2026-11-19T21:15:00.108000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "soxl-options options",
-   "observedAt": "2026-11-19T21:07:30.145000Z",
+   "observedAt": "2026-11-19T21:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "sp500-options options",
-   "observedAt": "2026-11-19T21:07:31Z",
+   "observedAt": "2026-11-19T21:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "spcx-options options",
    "observedAt": "2026-11-19T21:00:08.619000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "tsla-options options",
-   "observedAt": "2026-11-19T21:07:01.488000Z",
+   "observedAt": "2026-11-19T21:15:00.041000Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "xyz100-options options",
-   "observedAt": "2026-11-19T21:07:36Z",
+   "observedAt": "2026-11-19T21:15:00Z",
    "lastAttemptAt": null,
-   "generatedAt": "2026-11-19T21:06:45.856352Z",
+   "generatedAt": "2026-11-19T21:37:41.074379Z",
    "state": "available"
   },
   {
    "name": "BTC cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ETH cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "HYPE cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "LIT cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOL cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XRP cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ZEC cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AAPL cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMD cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMZN cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BE cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BRENTOIL cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CBRS cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CL cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COIN cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COPPER cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CRCL cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CXMT cash history",
-   "observedAt": "2026-11-17T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "DRAM cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "EWY cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOLD cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOOGL cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "INTC cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "META cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MRVL cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSFT cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSTR cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MU cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NATGAS cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NBIS cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NVDA cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "PLTR cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SILVER cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHX cash history",
-   "observedAt": "2026-11-17T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHY cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SMSN cash history",
-   "observedAt": "2026-11-17T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SNDK cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOXL cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SP500 cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SPCX cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "TSLA cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XYZ100 cash history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BTC perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ETH perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "HYPE perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "LIT perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOL perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XRP perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "ZEC perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AAPL perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMD perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "AMZN perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BE perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BRENTOIL perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CBRS perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CL perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COIN perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "COPPER perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CRCL perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "CXMT perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "DRAM perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "EWY perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOLD perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "GOOGL perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "INTC perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "META perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MRVL perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSFT perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MSTR perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "MU perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NATGAS perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NBIS perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "NVDA perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "PLTR perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SILVER perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHX perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SKHY perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SMSN perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SNDK perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SOXL perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SP500 perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "SPCX perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "TSLA perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "XYZ100 perp history",
-   "observedAt": "2026-11-18T00:00:00+00:00",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T00:00:00+00:00",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "dated_observations"
   },
   {
    "name": "BTC funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "ETH funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "HYPE funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "LIT funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SOL funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "XRP funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "ZEC funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "AAPL funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "AMD funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "AMZN funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "BE funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "BRENTOIL funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "CBRS funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "CL funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "COIN funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "COPPER funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "CRCL funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "CXMT funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "DRAM funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "EWY funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "GOLD funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "GOOGL funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "INTC funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "META funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "MRVL funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "MSFT funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "MSTR funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "MU funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "NATGAS funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "NBIS funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "NVDA funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "PLTR funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SILVER funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SKHX funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SKHY funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SMSN funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SNDK funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SOXL funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SP500 funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "SPCX funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "TSLA funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "XYZ100 funding forecast",
-   "observedAt": "2026-11-18T21:00:00Z",
-   "generatedAt": "2026-11-18T21:29:51.978782+00:00",
+   "observedAt": "2026-11-19T21:00:00Z",
+   "generatedAt": "2026-11-19T21:31:38.756815+00:00",
    "state": "available"
   },
   {
    "name": "onchain spot catalog",
-   "generatedAt": "2026-11-18T21:40:51.614830Z",
+   "generatedAt": "2026-11-19T21:36:19.746011Z",
    "state": "dated_observations"
   },
   {
    "name": "transcript briefings",
-   "generatedAt": "2026-11-18T21:36:31.416545Z",
+   "generatedAt": "2026-11-19T21:32:10.906689Z",
    "inputFingerprint": "44e948ff231f3142c295876c6fb2cfbb075bfa1b2a96617308b97e388a1e2430",
    "state": "dated_observations"
   },
@@ -1998,16 +1989,16 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "started",
-   "updatedAt": "2026-11-19T21:31:18.336629Z",
+   "state": "verified",
+   "updatedAt": "2026-11-19T21:32:29.567581Z",
    "lastAttemptAt": "2026-11-19T21:31:18.336629Z",
-   "generatedAt": "2026-11-19T21:16:37.006668Z",
-   "pushedAt": "2026-11-19T21:16:44.430422Z",
-   "commit": "109f1b21c388bb120b7b2a689c6e697b359096bb",
-   "lastSuccessAt": "2026-11-19T21:17:39.804295Z",
-   "verifiedAt": "2026-11-19T21:17:39.804295Z",
-   "deferredAt": "2026-11-19T21:17:06.515283Z",
-   "verifiedCommit": "109f1b21c388bb120b7b2a689c6e697b359096bb"
+   "generatedAt": "2026-11-19T21:31:32.226000Z",
+   "pushedAt": "2026-11-19T21:31:39.974525Z",
+   "commit": "ae51ed0f7575fdd140c66c08300aebed2575ce60",
+   "lastSuccessAt": "2026-11-19T21:32:29.567581Z",
+   "verifiedAt": "2026-11-19T21:32:29.567581Z",
+   "deferredAt": "2026-11-19T21:31:56.210668Z",
+   "verifiedCommit": "ae51ed0f7575fdd140c66c08300aebed2575ce60"
   },
   {
    "mode": "full",
