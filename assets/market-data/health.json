@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-26T03:14:59.551500Z",
+ "generatedAt": "2026-11-26T03:15:21.458643Z",
  "overall": "critical",
  "publishWarnHours": 25,
  "publishCriticalHours": 30,
@@ -12,7 +12,7 @@
     {
      "name": "site build",
      "status": "ok",
-     "detail": "health snapshot generated 2026-11-26T03:14:59.551500Z"
+     "detail": "health snapshot generated 2026-11-26T03:15:21.458643Z"
     }
    ],
    "status": "ok"
@@ -125,7 +125,7 @@
     {
      "name": "ai publication",
      "status": "ok",
-     "detail": "state verified; last verified 2026-11-26T03:02:29.055734Z; retry due None"
+     "detail": "state started; last verified 2026-11-26T03:02:29.055734Z; retry due None"
     },
     {
      "name": "full publication",
@@ -134,8 +134,8 @@
     },
     {
      "name": "inputs publication",
-     "status": "ok",
-     "detail": "state started; last verified 2026-11-26T02:16:07.489581Z; retry due None"
+     "status": "warn",
+     "detail": "state deferred; last verified 2026-11-26T02:16:07.489581Z; retry due 2026-11-26T03:16:24.856321+00:00"
     },
     {
      "name": "transcripts publication",
@@ -158,7 +158,7 @@
     {
      "name": "corbanu-ai-capital-stack.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-11-26 03:00:00 UTC; last successful completion Thu 2026-11-26 03:01:55 UTC"
+     "detail": "state activating; last attempt Thu 2026-11-26 03:15:03 UTC; last successful completion Thu 2026-11-26 03:01:55 UTC"
     },
     {
      "name": "pipeline-coverage-universe-transcripts.service",
@@ -188,7 +188,7 @@
     {
      "name": "corbanu-market-lens-retry.service",
      "status": "ok",
-     "detail": "state inactive; last attempt Thu 2026-11-26 03:14:41 UTC; last successful completion Thu 2026-11-26 03:14:41 UTC"
+     "detail": "state activating; last attempt Thu 2026-11-26 03:15:11 UTC; last successful completion Thu 2026-11-26 03:14:41 UTC"
     },
     {
      "name": "pipeline-research-context-refresh.service",
@@ -231,10 +231,10 @@
   },
   {
    "name": "corbanu-ai-capital-stack.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-11-26 03:00:00 UTC",
-   "lastExitAt": "Thu 2026-11-26 03:01:55 UTC",
+   "lastAttemptAt": "Thu 2026-11-26 03:15:03 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Thu 2026-11-26 03:01:55 UTC"
   },
@@ -285,10 +285,10 @@
   },
   {
    "name": "corbanu-market-lens-retry.service",
-   "state": "inactive",
+   "state": "activating",
    "result": "success",
-   "lastAttemptAt": "Thu 2026-11-26 03:14:41 UTC",
-   "lastExitAt": "Thu 2026-11-26 03:14:41 UTC",
+   "lastAttemptAt": "Thu 2026-11-26 03:15:11 UTC",
+   "lastExitAt": null,
    "exitStatus": "0",
    "lastSuccessAt": "Thu 2026-11-26 03:14:41 UTC"
   },
@@ -1998,9 +1998,9 @@
  "publishing": [
   {
    "mode": "ai",
-   "state": "verified",
-   "updatedAt": "2026-11-26T03:02:29.055734Z",
-   "lastAttemptAt": "2026-11-26T03:01:34.213541Z",
+   "state": "started",
+   "updatedAt": "2026-11-26T03:15:03.676951Z",
+   "lastAttemptAt": "2026-11-26T03:15:03.676951Z",
    "generatedAt": "2026-11-26T03:01:47.532615Z",
    "pushedAt": "2026-11-26T03:01:54.092904Z",
    "commit": "9871f1f522514f97295e5ae3e0e2113b243a00d2",
@@ -2024,16 +2024,17 @@
   },
   {
    "mode": "inputs",
-   "state": "started",
-   "updatedAt": "2026-11-26T03:06:51.926620Z",
+   "state": "deferred",
+   "updatedAt": "2026-11-26T03:15:24.856299Z",
    "lastAttemptAt": "2026-11-26T03:06:51.926620Z",
-   "generatedAt": "2026-11-26T02:15:16.572148Z",
-   "pushedAt": "2026-11-26T02:15:26.983755Z",
-   "commit": "b53f3965b308325a26a7556f5809032e1bd88ccd",
+   "generatedAt": "2026-11-26T03:15:06.745695Z",
+   "pushedAt": "2026-11-26T03:15:17.893990Z",
+   "commit": "ea035e28fb997eda172e27fb4f3fe5970dbc0cee",
    "lastSuccessAt": "2026-11-26T02:16:07.489581Z",
    "verifiedAt": "2026-11-26T02:16:07.489581Z",
    "verifiedCommit": "b53f3965b308325a26a7556f5809032e1bd88ccd",
-   "deferredAt": "2026-11-26T02:15:31.132262Z"
+   "deferredAt": "2026-11-26T03:15:24.856299Z",
+   "retryDueAt": "2026-11-26T03:16:24.856321+00:00"
   },
   {
    "mode": "transcripts",
